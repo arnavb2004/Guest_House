@@ -45,7 +45,7 @@ const Login = () => {
                 placeholder="Password"
                 className="p-2 border rounded-md text-sm h-12 w-full "
               />
-              <button className="border bg-black text-white w-full p-2 rounded-lg">
+              <button className="border bg-black text-white w-full p-2 lg">
                 Log In
               </button>
 
