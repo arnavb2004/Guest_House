@@ -5,21 +5,24 @@ import Menu from './Components/Menu';
 import Footer from "./Components/Footer";
 import backgroundImage from "./images/backgroundImage.jpeg";
 
+
+
+import React from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Login from "./pages/Login";
+
 function App() {
-  return (
-    <div className="App flex flex-col h-screen" style={{ backgroundImage: `url(${backgroundImage})`, backgroundSize: 'cover' }}>
-      {/* Header starts */}
-      <Header />
-      <Menu />
-      {/* Header ends */}
+  return <div className="">
+    <BrowserRouter>
+    <Routes>
+      <Route path="/login" element={<Login />} />
+      {/* <Route path="/home" element={<Login />} /> */}
 
-      <HomePage />
-
-      {/* Footer starts */}
-      <Footer />
-      {/* Footer ends */}
-    </div>
-  );
+    </Routes>
+    
+    </BrowserRouter>
+  </div>;
 }
 
 export default App;
+
