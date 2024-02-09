@@ -1,3 +1,10 @@
+import react from "react";
+import HomePage from "./pages/HomePage";
+import Header from "./Components/Header";
+import Menu from './Components/Menu';
+import Footer from "./Components/Footer";
+import backgroundImage from "./images/backgroundImage.jpeg";
+
 
 
 import React from "react";

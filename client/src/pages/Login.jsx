@@ -1,5 +1,5 @@
 import React from "react";
-import GoogleLogin from "react-google-login";
+// import GoogleLogin from "react-google-login";
 import { useNavigate } from "react-router-dom";
 
 const clientId =
@@ -49,7 +49,7 @@ const Login = () => {
                 Log In
               </button>
 
-              <GoogleLogin
+              {/* <GoogleLogin
                 clientId={clientId}
                 buttonText="Log In"
                 onSuccess={() => {
@@ -62,7 +62,7 @@ const Login = () => {
                 }}
                 cookiePolicy={"single_host_origin"}
                 isSignedIn={true}
-              />
+              /> */}
             </div>
           </div>
         </div>
