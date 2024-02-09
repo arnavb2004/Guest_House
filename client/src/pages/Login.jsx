@@ -1,14 +1,23 @@
 import React from "react";
+import GoogleLogin from "react-google-login";
+import { useNavigate } from "react-router-dom";
+
+const clientId =
+  "516253965885-l50g9mqi21i2qcle027tbdth7oht3aan.apps.googleusercontent.com";
 
 const Login = () => {
+  const navigate = useNavigate();
   return (
     <div className="flex flex-col h-screen w-screen">
       <div className="flex flex-col items-center justify-center bg-[#365899] text-white p-5">
-        <img
+        {/* <img
           className="h-24 text-white "
           src="https://upload.wikimedia.org/wikipedia/en/f/f9/Indian_Institute_of_Technology_Ropar_logo.png"
+        /> */}
+        <img
+          className="h-24 "
+          src="https://www.iitrpr.ac.in/sites/default/files/logo_0_2.png"
         />
-        {/* <img className="h-24 " src="https://www.iitrpr.ac.in/sites/default/files/logo_0_2.png" /> */}
         {/* <img className="h-24 " src="https://www.iitrpr.ac.in/sites/default/files/logo_0_2.png" /> */}
         <div className="text-3xl font-semibold p-2">
           Welcome to Guest House Portal
@@ -39,6 +48,21 @@ const Login = () => {
               <button className="border bg-black text-white w-full p-2 rounded-lg">
                 Log In
               </button>
+
+              <GoogleLogin
+                clientId={clientId}
+                buttonText="Log In"
+                onSuccess={() => {
+                  navigate("/", { replace: true });
+                  console.log("Success");
+                  console.log("Logged In");
+                }}
+                onFailure={() => {
+                  console.log("Failed");
+                }}
+                cookiePolicy={"single_host_origin"}
+                isSignedIn={true}
+              />
             </div>
           </div>
         </div>
