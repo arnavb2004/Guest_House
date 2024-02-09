@@ -20,7 +20,7 @@ code {
 
 .footer {
   flex-shrink: 0; /* Prevents the footer from shrinking */
-  padding: 20px;
+  padding: 10px;
   text-align: center;
   background-color: #C7F4FF;
 }
