@@ -1,9 +1,10 @@
 import React from 'react';
 import IITLogo from '../images/IIT-logo.png'
+import Menu from './Menu';
 
 const Header = () => {
   return (
-    <div className="header flex justify-center py-4">
+    <div className="header flex flex-col items-center py-4 gap-3">
       <div className="header-container w-7/12 h-32 flex justify-between py-2">
         <div className='w-56 flex flex-col justify-end'>
             {/* <img src="" alt="" /> */}
@@ -17,6 +18,7 @@ const Header = () => {
             <img className='' src={IITLogo} alt="IIT Ropar logo" />
         </div>
       </div>
+      <Menu/>
     </div>
   )
 }

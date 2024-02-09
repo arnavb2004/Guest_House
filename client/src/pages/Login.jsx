@@ -2,11 +2,11 @@ import React from "react";
 // import GoogleLogin from "react-google-login";
 import { useNavigate } from "react-router-dom";
 
-const clientId =
-  "516253965885-l50g9mqi21i2qcle027tbdth7oht3aan.apps.googleusercontent.com";
+import { GoogleLogin } from "@react-oauth/google";
 
 const Login = () => {
   const navigate = useNavigate();
+
   return (
     <div className="flex flex-col h-screen w-screen">
       <div className="flex flex-col items-center justify-center bg-[#365899] text-white p-5">
@@ -36,7 +36,7 @@ const Login = () => {
           <div className="m-5 flex flex-col items-center w-full ">
             <div className=" font-semibold text-2xl">LOG IN</div>
 
-            <div className="w-full p-5 flex flex-col gap-5">
+            <div className="w-full p-5 flex flex-col gap-5 items-center">
               <input
                 placeholder="Username"
                 className="p-2 border rounded-md text-sm h-12 w-full "
@@ -48,21 +48,21 @@ const Login = () => {
               <button className="border bg-black text-white w-full p-2 lg">
                 Log In
               </button>
-
-              {/* <GoogleLogin
-                clientId={clientId}
-                buttonText="Log In"
-                onSuccess={() => {
+              <div className="text-center">OR</div>
+              
+              <GoogleLogin
+                className="w-full border border-red-600"
+                onSuccess={(res) => {
                   navigate("/", { replace: true });
+
                   console.log("Success");
                   console.log("Logged In");
+                  console.log(res);
                 }}
-                onFailure={() => {
+                onError={() => {
                   console.log("Failed");
                 }}
-                cookiePolicy={"single_host_origin"}
-                isSignedIn={true}
-              /> */}
+              />
             </div>
           </div>
         </div>
