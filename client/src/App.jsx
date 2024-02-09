@@ -1,8 +1,8 @@
 import react from "react";
 import HomePage from "./pages/HomePage";
-import Header from "./Components/Header";
-import Menu from './Components/Menu';
-import Footer from "./Components/Footer";
+import Header from "./components/Header";
+import Menu from './components/Menu';
+import Footer from "./components/Footer";
 import backgroundImage from "./images/backgroundImage.jpeg";
 
 
