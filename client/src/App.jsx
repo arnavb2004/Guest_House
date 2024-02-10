@@ -9,8 +9,6 @@ import Location from "./pages/Location";
 import Dining from "./pages/Dining";
 import People from "./pages/People";
 
-import backgroundImage from "./images/backgroundImage.jpeg";
-
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Login from "./pages/Login";
