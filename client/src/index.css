@@ -11,10 +11,10 @@ body {
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
+  monospace;
 }
 
-.home-page {
+.content {
   flex: 1;
 }
 
@@ -22,7 +22,7 @@ code {
   flex-shrink: 0; /* Prevents the footer from shrinking */
   padding: 10px;
   text-align: center;
-  background-color: #C7F4FF;
+  background-color: #B4E6FF;
 }
 
 @tailwind base;

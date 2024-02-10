@@ -7,8 +7,8 @@ const Header = () => {
       <div className="header-container w-7/12 h-32 flex justify-between py-2">
         <div className='w-56 flex flex-col justify-end'>
             {/* <img src="" alt="" /> */}
-            <p className='font-["Single Day"] text-4xl font-bold'>Guest House</p>
-            <p className='text-3xl'>IIT Ropar</p>
+            <a className='font-["Single Day"] text-4xl font-bold' href="/">Guest House</a>
+            <a className='text-3xl' href='/'>IIT Ropar</a>
         </div>
         <div className='py-2'>
 
