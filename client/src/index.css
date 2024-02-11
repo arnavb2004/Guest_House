@@ -27,6 +27,10 @@ code {
 }
 
 .footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
   padding: 10px;
   text-align: center;
   background-color: #B4E6FF;
