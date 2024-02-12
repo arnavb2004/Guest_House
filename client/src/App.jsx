@@ -25,8 +25,7 @@ function App() {
             <Route path="/reservation" element={<Reservation />} />
             <Route path="/contact" element={<Contact />} />
           </Route>
-          {/* <Route path="/menu" element={<Menu />} />
-          </Route> */}
+          
 
         </Routes>
       </BrowserRouter>
