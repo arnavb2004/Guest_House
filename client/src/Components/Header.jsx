@@ -1,4 +1,5 @@
 import React from 'react';
+// import IITLogo from '../images/IIT_Ropar_logo.png'
 import IITLogo from '../images/IIT-logo.png'
 import Menu from './Menu';
 
