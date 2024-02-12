@@ -26,7 +26,7 @@ const FooterComponent = () => (
       <section className="footer-links-section"> {/* Separate section for links */}
         <div className="footer-links">
           <LinkBox href="https://www.iitrpr.ac.in/">IIT ROPAR OFFICIAL WEBSITE</LinkBox>
-          <LinkBox href="https://en.wikipedia.org/wiki/IIT_Ropar">IIT ROPAR WIKIPEDIA</LinkBox>
+          <LinkBox href="https://en.wikipedia.org/wiki/IIT_Ropar  ">IIT ROPAR WIKIPEDIA</LinkBox>
           <LinkBox href="#">Link 3</LinkBox>
         </div>
       </section>
