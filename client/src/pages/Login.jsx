@@ -6,12 +6,10 @@ import axios from "axios";
 import { GoogleLogin } from "@react-oauth/google";
 import { BASE_URL } from "../constants";
 
+import logo from "./../images/IIT_Ropar_logo.png";
 import { jwtDecode } from "jwt-decode";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
-import { TextField, toolbarClasses } from "@mui/material";
 import "./Login.css"
 
 const OTP_RESEND_TIME = 60;
@@ -154,7 +152,7 @@ const Login = () => {
       <div className="flex flex-col items-center justify-center bg-[#365899] text-white p-5">
         <img
           className="h-24 "
-          src="https://www.iitrpr.ac.in/sites/default/files/logo_0_2.png"
+          src={logo}
         />
         <div className="text-3xl font-semibold p-2">
           Welcome to Guest House Portal
