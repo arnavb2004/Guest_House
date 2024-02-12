@@ -15,12 +15,23 @@ code {
   monospace;
 }
 
+.links {
+  background-color: #DFF2FF;
+}
+
 .content {
-  flex: 1;
+  background-color: #EFF9FF;
+}
+
+.customized-menu-item {
+  background-color: #A0E0FF;
 }
 
 .footer {
-  flex-shrink: 0; /* Prevents the footer from shrinking */
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
   padding: 10px;
   text-align: center;
   background-color: #B4E6FF;

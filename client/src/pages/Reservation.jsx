@@ -1,11 +1,11 @@
 import React from 'react';
 
-const Dining = () => {
+const Reservation = () => {
   return (
-    <div className='dining w-7/12 grid grid-cols-4'>
+    <div className='reservation w-7/12 grid grid-cols-4'>
         <div className="content col-span-3 p-4">
-            <p className='text-2xl'>Welcome to Dining Page</p>
-            <p className='font-serif'>Dining Page content</p>
+            <p className='text-2xl'>Welcome to Reservation Page</p>
+            <p className='font-serif'>Reservation Page content</p>
         </div>
         
         <div className="links col-span-1 p-4">
@@ -16,4 +16,4 @@ const Dining = () => {
   )
 }
 
-export default Dining
+export default Reservation

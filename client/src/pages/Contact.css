@@ -1,0 +1,192 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-image: url('../images/backgroundImage.jpeg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+  }
+  
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  
+  /* Add any other styles you have */
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 2rem; /* Decrease the padding as desired */
+    background-color: rgb(125, 186, 243); /* Or a specific navy blue shade you prefer */
+    color: #ffffff;
+    width: 100%;
+  }
+  
+  .main-content {
+    margin-top: 100px;
+    width: 70%;
+  }
+  
+  .container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin: auto;
+  }
+  
+  .logo-container {
+    display: flex;
+    align-items: center;
+  }
+  
+  .logo-img {
+    width: 100px; /* Adjust the width as desired */
+    height: 100px; /* Adjust the height as desired */
+  }
+  
+  .logo-text {
+    margin-left: 40px; /* Adjust as needed */
+    font-size: 16px; /* Decrease the font size */
+    font-weight: bold; /* Adjust as needed */
+  }
+  
+  .nav-list {
+    list-style: none;
+    display: flex;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .nav-list li {
+    margin-left: 20px;
+  }
+  
+  .nav-list li a {
+    color: #ffffff;
+    text-decoration: none;
+  }
+  
+  /* Centering Welcome Section */
+  .welcome-section {
+    text-align: center;
+    margin: 2rem 0;
+  }
+  
+  .welcome-section h1 {
+    margin-bottom: 0.5rem;
+  }
+  
+  .welcome-section p {
+    margin-top: 0;
+  }
+  
+  /* Additional adjustments for responsiveness */
+  @media (max-width: 768px) {
+    .header {
+      flex-direction: column;
+    }
+  
+    .nav-list {
+      margin-top: 1rem;
+    }
+  }
+  
+  .nav ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .nav ul li {
+    display: inline;
+    margin-right: 20px;
+  }
+  
+  .contact-us {
+    margin-top: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+  
+  .contact-form {
+    max-width: 500px;
+    margin: auto;
+    padding: 2rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+  }
+  
+  .form-group {
+    margin-bottom: 1rem;
+  }
+  
+  .form-group input,
+  .form-group textarea {
+    width: 100%;
+    padding: 0.5rem;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+  }
+  
+  .submit-button {
+    background-color: #007bff;
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .submit-button:hover {
+    background-color: #0056b3;
+  }
+  
+  .footerComponent {
+    background-color: #333; /* Dark background color */
+    background-color: #0056b3; /* Text color */
+    padding: 20px;
+    margin-bottom: 80px;
+  }
+  
+  .dark-background {
+    background-color: #002366; /* Dark blue background color */
+    padding: 20px; /* Adjust padding as needed */
+  }
+  
+  .footer-links-section {
+    margin-top: 20px; /* Add margin to separate from other content */
+    margin-bottom: 20px; /* Add space after links */
+  }
+  
+  .footer-links {
+    display: flex;
+    margin-bottom: 10px; /* Add space after links */
+  }
+
+  .link-box {
+    background-color: #fff; /* Background color for the box */
+    border: 1px solid #ccc; /* Border style */
+    border-radius: 4px; /* Border radius */
+    margin-right: 10px; /* Margin between boxes */
+    padding: 10px; /* Padding inside the box */
+  }
+  
+  .link-box a {
+    color: #000; /* Link color */
+    text-decoration: none; /* Remove underline */
+  }
+
+  .link-separator {
+    margin-right: 10px; /* Additional space between links */
+  }
