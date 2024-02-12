@@ -10,7 +10,7 @@ const HomePage = () => {
       <div>
         <Header />
       </div>
-      <div className="w-full flex justify-center h-full">
+      <div className="w-full flex justify-center">
         <Outlet />
       </div>
       <div>
