@@ -25,7 +25,7 @@ const Menu = () => {
 
   return (
     <div className="menu w-full h-full flex justify-center pt-2">
-      <div className="menu-container w-7/12 h-10 pr-3" style={{ background: 'linear-gradient(to bottom, #E8F4FF, #B4E6FF)' }}>
+      <div className="menu-container w-2/3 h-10 pr-3" style={{ background: 'linear-gradient(to bottom, #E8F4FF, #B4E6FF)' }}>
         <ul className="tabs h-full flex justify-end">
           {menuItems.map((item) => (
               <li

@@ -9,14 +9,14 @@ const Home = () => {
     ]
 
   return (
-    <div className='home w-7/12 grid grid-cols-4'>
+    <div className='home w-2/3 grid grid-cols-4'>
         <div className="content col-span-3 p-4">
             <p className='text-2xl font-semibold'>Welcome to IIT Ropar's Guest House...</p>
 
             <p className="text-xl font-medium underline underline-offset-4 pt-4">
                 The Guest House:
             </p>
-            <p className='py-2'>
+            <p className='py-2 text-l'>
                 Nestled within the greenery of IIT Ropar's campus, the guest house offers a welcoming retreat for visitors. 
                 With its modern design blending seamlessly with the serene environment, it provides a comfortable and inviting atmosphere.
                 Each room is well-appointed, combining tasteful decor with cozy furnishings for a relaxing stay. 
@@ -27,7 +27,7 @@ const Home = () => {
             <p className="text-xl font-medium underline underline-offset-4 pt-4">
                 The Campus:
             </p>
-            <p className='py-2'>
+            <p className='py-2 text-l'>
                 Nestled in the heart of Punjab's Rupnagar district, the campus of the Indian Institute of Technology, Ropar,
                 is a blend of modern architecture and natural beauty spread across 500 acres. Walking through its green pathways,
                 surrounded by lush trees and colorful flora, offers a sense of tranquility away from the outside world. 
