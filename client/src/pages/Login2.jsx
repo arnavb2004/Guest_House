@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -10,37 +10,27 @@ import { jwtDecode } from "jwt-decode";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.min.css";
-import { TextField, toolbarClasses } from "@mui/material";
-import "./Login.css"
-
-const OTP_RESEND_TIME = 60;
+import "react-toastify/dist/ReactToastify.css";
 
 const Login = () => {
   const navigate = useNavigate();
 
-  const [showOtp, setShowOtp] = useState(false);
+  const [showOtp, setShowOtp] = useState(true);
   const [isLogin, setIsLogin] = useState(true);
 
-  const [seconds, setSeconds] = useState(0);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (seconds > 0) setSeconds(seconds - 1);
-      if (seconds === 0) clearInterval(interval);
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [seconds]);
-
+  const [seconds,setSeconds] = useState(0);
+  
   const [credentials, setCredentials] = useState({
     email: "",
     otp: "",
     name: "",
-    contact: "",
+    password: "",
   });
 
-  // const [showPassword, setShowPassword] = useState(false);
+  const [canResend,setCanResend] = useState(false);
+
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleOtp = (e) => {
     console.log(e.target.value);
@@ -51,99 +41,73 @@ const Login = () => {
   };
 
   const handleChange = (e) => {
-    console.log(e.target.validity);
     setCredentials((user) => ({ ...user, [e.target.name]: e.target.value }));
   };
 
   const sendOtp = async () => {
-    try {
-      const res = await axios.post(BASE_URL + "/auth/otp", {
-        email: credentials.email,
-      });
-      setSeconds(OTP_RESEND_TIME);
-      toast.success("OTP sent successfully");
-    } catch (error) {
-      toast.error(error.response.data.message);
-    }
+    const res = await axios.post(BASE_URL + "/auth/otp", {
+      email: credentials.email,
+    });
   };
 
-  // const verifyOTP = async (e) => {
-  //   e.preventDefault();
-  //   try {
-  //     const res = await axios.post(BASE_URL + "/auth/verifyOTP", {
-  //       email: credentials.email,
-  //       otp: credentials.otp,
-  //     });
-  //     console.log(res);
-  //     if (res.data.success) {
-  //       toast("OTP verified successfully");
-  //       if (res.data.user) {
-  //         navigate("/home");
-  //       } else {
-  //         setIsLogin(false);
-  //       }
-  //     } else {
-  //       toast(res.data.message);
-  //     }
-  //   } catch (err) {
-  //     console.log(err);
-  //     toast(err.response.data?.message);
-  //   }
-  // };
+  const verifyOTP = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await axios.post(BASE_URL + "/auth/verifyOTP", {
+        email: credentials.email,
+        otp: credentials.otp,
+      });
+      console.log(res);
+      if (res.data.success) {
+        toast("OTP verified successfully");
+        if (res.data.user) {
+          navigate("/home");
+        } else {
+          setIsLogin(false);
+        }
+      } else {
+        toast(res.data.message);
+      }
+    } catch (err) {
+      console.log(err);
+      toast(err.response.data?.message);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // if (
-    //   credentials.email.match("[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,}$") === null
-    // ) {
-    //   toast("invalid email");
-    //   return;
-    // }
+    if (
+      credentials.email.match("[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,}$") === null
+    ) {
+      toast("invalid email");
+      return;
+    }
 
     if (!showOtp) {
-      try {
-        const res = await toast.promise(
-          axios.post(BASE_URL + "/auth/otp", {
-            email: credentials.email,
-          }),
-          {
-            pending: "Sending OTP",
-            success: "OTP sent successfully",
-            error: {
-              render({ data }) {
-                return data.response.data.error;
-              },
-            },
-          }
-        );
-        setShowOtp(true);
-        setSeconds(OTP_RESEND_TIME);
-
-        console.log(res);
-      } catch (error) {
-        console.log(error);
-      }
+      setShowOtp(true);
+      const res = await axios.post(BASE_URL + "/auth/otp", {
+        email: credentials.email,
+      });
+      // const data = await res.data();
+      console.log(res);
     } else {
       console.log(credentials);
-      try {
-        const res = await axios.post(
-          BASE_URL + `/auth/${isLogin ? "login" : "register"}`,
-          {
-            ...credentials,
-          }
-        );
-        console.log(res);
+      const res = await axios.post(
+        BASE_URL + `/auth/${isLogin ? "login" : "register"}}`,
+        {
+          credentials,
+        }
+      );
+      console.log(res);
 
+      if (res.data.success) {
         if (res.data.user) {
-          navigate("/");
+          navigate("/home");
         } else {
-          console.log("here");
           setIsLogin(false);
         }
-      } catch (error) {
-        console.log(error);
-        toast.error(error.response.data.message);
+      } else {
       }
     }
   };
@@ -178,47 +142,30 @@ const Login = () => {
                 <div className="w-full p-5 flex flex-col gap-5 items-center">
                   <input
                     placeholder="Email"
-                    pattern="[0-9]+"
                     className="p-2 border rounded-md text-sm h-12 w-full "
-                    onChange={handleChange}
+                    onChange={(e) => {
+                      setCredentials({ ...credentials, email: e.target.value });
+                    }}
                     name="email"
                     value={credentials.email}
                   />
-                  {/* <TextField
-                    id="outlined-basic"
-                    label="Outlined"
-                    variant="outlined"
-                    fullWidth
-                    size="small"
-                    className="text-red-500"
-                  /> */}
                   {showOtp && (
-                    <div className="w-full flex flex-col">
-                      <div className="flex w-full justify-between gap-3">
-                        <input
-                          type="text"
-                          inputMode="numeric"
-                          name="otp"
-                          value={credentials.otp}
-                          onChange={handleOtp}
-                          placeholder="OTP"
-                          className="p-2 border rounded-md text-sm h-12 w-full "
-                        />
-                        <button
-                          className="border bg-black bg-[rgba(0,0,0,0.9)] disabled:cursor-not-allowed disabled:opacity-70 text-white w-full p-2 lg"
-                          onClick={() => sendOtp()}
-                          disabled={seconds > 0}
-                        >
-                          Resend OTP
-                        </button>
-                      </div>
-                      {seconds > 0 && (
-                        <div className="text-sm mt-2">
-                          Time Remaining: {Math.floor(seconds / 60) < 10 && "0"}
-                          {Math.floor(seconds / 60)}:{seconds % 60 < 10 && "0"}
-                          {seconds % 60}
-                        </div>
-                      )}
+                    <div className="flex w-full justify-between gap-3">
+                      <input
+                        type="text"
+                        inputMode="numeric"
+                        name="otp"
+                        value={credentials.otp}
+                        onChange={handleOtp}
+                        placeholder="OTP"
+                        className="p-2 border rounded-md text-sm h-12 w-full "
+                      />
+                      <button
+                      className="border bg-black bg-[rgba(0,0,0,0.9)] text-white w-full p-2 lg"
+                      onClick={() => sendOtp()}
+                    >
+                      Resend OTP
+                    </button>
                     </div>
                   )}
                   <button
@@ -227,7 +174,7 @@ const Login = () => {
                   >
                     {showOtp ? "Log In" : "Send OTP"}
                   </button>
-
+                  
                   <div className="text-center">OR</div>
 
                   <GoogleLogin
@@ -269,14 +216,26 @@ const Login = () => {
                       name="name"
                       value={credentials.name}
                     />
-                    <input
-                      placeholder="Contact"
-                      pattern="[0-9]+"
-                      className="p-2 border rounded-md text-sm h-12 w-full"
-                      onChange={handleChange}
-                      name="contact"
-                      value={credentials.contact}
-                    />
+                    <div className="w-full flex relative">
+                      <input
+                        placeholder="Password"
+                        className="p-2 border rounded-md text-sm h-12 w-full"
+                        onChange={handleChange}
+                        name="password"
+                        type={showPassword ? "text" : "password"}
+                        value={credentials.password}
+                      />
+                      <div
+                        className="cursor-pointer absolute w-fit right-6 top-3"
+                        onClick={() => setShowPassword((prev) => !prev)}
+                      >
+                        {showPassword ? (
+                          <VisibilityOffIcon />
+                        ) : (
+                          <VisibilityIcon />
+                        )}
+                      </div>
+                    </div>
                     <button
                       className="border bg-black text-white w-full p-2 lg"
                       onClick={handleSubmit}

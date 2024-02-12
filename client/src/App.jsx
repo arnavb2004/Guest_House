@@ -12,6 +12,7 @@ import People from "./pages/People";
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Login from "./pages/Login";
+import Register from "./pages/Register";
 
 function App() {
   return (
@@ -19,7 +20,8 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<Login />} />
-          <Route path="/" element={<HomePage />}/>
+          <Route path="/register" element={<Register />} />
+          <Route path="/" element={<HomePage />}>
 
           <Route path="/dining" element={<Dining />} />
           <Route path="/people" element={<People />} />
@@ -28,6 +30,7 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           {/* <Route path="/menu" element={<Menu />} />
           </Route> */}
+          </Route>
 
         </Routes>
       </BrowserRouter>
