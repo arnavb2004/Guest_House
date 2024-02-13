@@ -23,6 +23,11 @@ const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
 
   const [seconds, setSeconds] = useState(0);
+  const [isError,setIsError] = useState({
+    email:false,
+    name:false,
+    contact:false
+  });
 
   useEffect(() => {
     const interval = setInterval(() => {

@@ -18,7 +18,7 @@ const Menu = () => {
     { id: 2, name: 'dining', label: 'DINING', link: '/dining' },
     { id: 3, name: 'people', label: 'PEOPLE', link: '/people' },
     { id: 4, name: 'location', label: 'LOCATION', link: '/location' },
-    { id: 5, name: 'reservation', label: 'RESERVATION', link: '/reservation' },
+    { id: 5, name: 'reservation', label: 'RESERVATION', link: '/reservation/login' },
     { id: 6, name: 'contact', label: 'CONTACT', link: '/contact' },
   ];
 
