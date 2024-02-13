@@ -7,13 +7,13 @@ import backgroundImage from "../images/backgroundImage.jpeg";
 const HomePage = () => {
   return (
     <div
-      className="homePage min-h-screen gap-4 flex flex-col justify-between bg-cover"
+      className="homePage min-h-screen flex flex-col justify-between bg-cover "
       style={{ backgroundImage: `url(${backgroundImage})` }}
     >
       <div className="">
         <Header />
       </div>
-      <div className="w-full flex justify-center min-h-screen">
+      <div className="flex justify-center min-h-screen overflow-hidden">
         <Outlet />
       </div>
       <div className="">

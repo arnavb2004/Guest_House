@@ -21,16 +21,16 @@ const Menu = () => {
     { id: 5, name: 'reservation', label: 'RESERVATION', link: '/reservation/login' },
     { id: 6, name: 'contact', label: 'CONTACT', link: '/contact' },
   ];
-
+  // style={{ background: 'linear-gradient(to bottom, #E8F4FF, #B4E6FF)' }}
 
   return (
-    <div className="menu w-full h-full flex justify-center pt-2">
-      <div className="menu-container w-2/3 h-10 pr-3" style={{ background: 'linear-gradient(to bottom, #E8F4FF, #B4E6FF)' }}>
-        <ul className="tabs h-full flex justify-end">
+    <div className="menu w-full h-full flex justify-center ">
+      <div className="menu-container w-full h-12 pr-3  text-white bg-[#365899]" >
+        <ul className="tabs h-full flex justify-center">
           {menuItems.map((item) => (
               <li
                 key={item.id}
-                className={`flex justify-center items-center px-2 text-l ${
+                className={`flex justify-center items-center px-8 text-l ${
                   selectedItem === `${item.name}` ? 'customized-menu-item' : hovered === `${item.name}` ? 'customized-menu-item' : ''
                 }`}
                 onMouseOver={() => setHovered(`${item.name}`)}
@@ -39,7 +39,7 @@ const Menu = () => {
                 <Link
                   exact
                   to={item.link}
-                  className="text-center font-serif"
+                  className="text-center"
                   activeClassName="text-black"
                   onClick={() => handleItemClick(`${item.name}`)}
                 >

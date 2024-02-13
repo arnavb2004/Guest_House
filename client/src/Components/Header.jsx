@@ -4,9 +4,9 @@ import Menu from "./Menu";
 
 const Header = () => {
   return (
-    <div className="header flex flex-col items-center py-4 gap-3">
-      <div className="header-container w-2/3 h-32 flex justify-between py-2">
-        <div className="w-56 flex flex-col justify-end">
+    <div className="header flex flex-col items-center ">
+      <div className="header-container w-full px-10 bg-slate-100 h-40 flex justify-around py-2 pb-5">
+        <div className="w-56 flex flex-col justify-end pb-2">
           <a className='font-["Single Day"] text-4xl font-bold' href="/">
             Guest House
           </a>
@@ -14,8 +14,7 @@ const Header = () => {
             IIT Ropar
           </a>
         </div>
-        <div className="py-2"></div>
-        <div className="w-28 h-32 py-2">
+        <div className="w-28 h-32 pt-4">
           <img className="" src={Logo} alt="IIT Ropar logo" />
         </div>
       </div>

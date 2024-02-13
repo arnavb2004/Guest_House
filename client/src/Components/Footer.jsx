@@ -4,18 +4,18 @@ import logo from "../images/IIT_Ropar_logo.png";
 
 const Footer = () => {
   return (
-    <footer className="flex flex-col pt-[2rem] w-full  bg-[gray]  text-white bottom-0 ">
-      <div className="flex justify-around">
-        <div className=" flex flex-col gap-1 items-center">
-          <h4>About Us</h4>
-          <img src={logo} className="h-20 flex w-20 m-auto"></img>
-          <p>
-            Indian Institute of Technology Ropar (IIT Ropar) is a public
-            technical university located in Rupnagar, Punjab, India. (IITs).
+    <footer className="flex flex-col pt-[2rem] w-full  bg-slate-700  text-white bottom-0 font-sans">
+      <div className="flex justify-around px-32">
+        <div className=" flex flex-col gap-4 items-center text-lg">
+          {/* <h4>About Us</h4> */}
+          <img src={logo} className="h-24 flex m-auto"></img>
+          <p className="text-center">
+            Indian Institute of Technology<br/> Ropar, Rupnagar - 140001,<br/>Punjab, Bharat
           </p>
         </div>
-        <div className="footer-section quick-links">
-          <h4 className="mb-2">Quick Links</h4>
+        <div className="border-gray-500 border-[0.1px] "></div>
+        <div className="footer-section quick-links text-md">
+          <h4 className="mb-2 text-xl">Quick Links</h4>
           <ul>
             <li>
               <a href="#home">Home</a>
@@ -34,8 +34,8 @@ const Footer = () => {
             </li>
           </ul>
         </div>
-        <div className="footer-section contact-info">
-          <h4 className="mb-2">Contact Info</h4>
+        <div className="footer-section contact-info text-md">
+          <h4 className="mb-2 text-xl">Contact Info</h4>
           <p>
             <strong>Email:</strong> contact@yourguesthouse.com
           </p>
@@ -48,8 +48,8 @@ const Footer = () => {
         </div>
       </div>
 
-      <div className=" flex justify-center ">
-        <div className="px-2 pt-4 pb-2 text-sm ">Copyright @2024 IIT Ropar</div>
+      <div className=" flex mt-20 justify-center bg-gray-600">
+        <div className="px-2 pt-4 pb-4 text-sm ">© 2024 Indian Institute of Technology Ropar, Rupnagar - 140001, INDIA</div>
       </div>
     </footer>
   );

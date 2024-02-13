@@ -2,7 +2,7 @@ import React from 'react';
 
 const Location = () => {
   return (
-    <div className='location w-7/12 grid grid-cols-4'>
+    <div className='location w-7/12 grid grid-cols-4 my-10'>
         <div className="content col-span-3 p-4">
             <p className='text-2xl'>Welcome to Location Page</p>
             <p className='font-serif'>Location Page content</p>
