@@ -22,11 +22,13 @@ const Login = () => {
   const [showOtp, setShowOtp] = useState(false);
   const [isLogin, setIsLogin] = useState(true);
 
+  const [isDisabled, setIsDisabled] = useState(false);
+
   const [seconds, setSeconds] = useState(0);
-  const [isError,setIsError] = useState({
-    email:false,
-    name:false,
-    contact:false
+  const [isError, setIsError] = useState({
+    email: false,
+    name: false,
+    contact: false,
   });
 
   useEffect(() => {
@@ -62,13 +64,26 @@ const Login = () => {
 
   const sendOtp = async () => {
     try {
-      const res = await axios.post(BASE_URL + "/auth/otp", {
-        email: credentials.email,
-      });
-      setSeconds(OTP_RESEND_TIME);
-      toast.success("OTP sent successfully");
+      setIsDisabled(true);
+      const res = await toast.promise(
+        axios.post(BASE_URL + "/auth/otp", {
+          email: credentials.email,
+        }),
+        {
+          pending: "Sending OTP",
+          success: "OTP sent successfully",
+          error: {
+            render({ data }) {
+              return data.response.data.error;
+            },
+          },
+        }
+      );
+      setIsDisabled(false);
     } catch (error) {
-      toast.error(error.response.data.message);
+      setIsDisabled(false);
+
+      console.log(error.response.data.message);
     }
   };
 
@@ -108,6 +123,8 @@ const Login = () => {
 
     if (!showOtp) {
       try {
+        setIsDisabled(true);
+
         const res = await toast.promise(
           axios.post(BASE_URL + "/auth/otp", {
             email: credentials.email,
@@ -123,10 +140,14 @@ const Login = () => {
           }
         );
         setShowOtp(true);
+        setIsDisabled(false);
+
         setSeconds(OTP_RESEND_TIME);
 
         console.log(res);
       } catch (error) {
+        setIsDisabled(false);
+
         console.log(error);
       }
     } else {
@@ -163,7 +184,7 @@ const Login = () => {
             Welcome to Guest House Portal
           </div>
           <div className="font-medium pl-3 ">
-            Indian Institute of Technology, Ropar 
+            Indian Institute of Technology, Ropar
           </div>
         </div>
       </div>
@@ -177,7 +198,7 @@ const Login = () => {
           <div className="m-5 flex flex-col items-center w-full ">
             {isLogin ? (
               <>
-                <div className=" font-semibold text-2xl">LOG IN</div>
+                <div className="font-semibold text-2xl">LOG IN</div>
 
                 <div className="w-full p-5 flex flex-col gap-5 items-center">
                   <input
@@ -211,7 +232,7 @@ const Login = () => {
                         <button
                           className="border bg-[#212529] disabled:cursor-not-allowed disabled:opacity-70 text-white w-full p-2 lg"
                           onClick={() => sendOtp()}
-                          disabled={seconds > 0}
+                          disabled={seconds > 0 || isDisabled}
                         >
                           Resend OTP
                         </button>
@@ -226,8 +247,9 @@ const Login = () => {
                     </div>
                   )}
                   <button
-                    className="border bg-[#212529] text-white w-full p-2 lg"
+                    className="border bg-[#212529] text-white w-full p-2 lg disabled:cursor-not-allowed disabled:opacity-70"
                     onClick={handleSubmit}
+                    disabled={isDisabled}
                   >
                     {showOtp ? "Log In" : "Send OTP"}
                   </button>

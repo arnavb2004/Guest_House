@@ -49,7 +49,7 @@ const Slider = () => {
   };
 
   return (
-    <div className="slider-container mx-7 border border-black">
+    <div className="slider-container mx-7 ">
       <div className="arrow arrow-left">
         <KeyboardArrowLeftOutlinedIcon onClick={() => handleClick("left")} />
       </div>

@@ -91,7 +91,7 @@ export const loginUser = async (req, res) => {
     const { email, otp } = req?.body;
 
     if (!email || !otp)
-      return res.json({
+      return res.status(400).json({
         success: false,
         message: "Email and OTP cannot be empty",
       });
@@ -117,15 +117,13 @@ export const loginUser = async (req, res) => {
         );
         user.refreshToken = refreshToken;
         await user.save();
-        res
-          .status(200)
-          .json({
-            success: true,
-            user: user,
-            message: "User logged in successfully",
-            accessToken,
-            refreshToken,
-          });
+        res.status(200).json({
+          success: true,
+          user: user,
+          message: "User logged in successfully",
+          accessToken,
+          refreshToken,
+        });
       } else {
         res.status(200).json({
           success: false,
