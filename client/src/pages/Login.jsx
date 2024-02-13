@@ -10,7 +10,9 @@ import logo from "./../images/IIT_Ropar_logo.png";
 import { jwtDecode } from "jwt-decode";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
-import "./Login.css"
+import "./Login.css";
+
+import bg from "./../images/Guesthouse2.jpeg";
 
 const OTP_RESEND_TIME = 60;
 
@@ -147,23 +149,22 @@ const Login = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen w-screen">
+    <div className="flex flex-col h-screen w-screen ">
       <ToastContainer />
-      <div className="flex flex-col items-center justify-center bg-[#365899] text-white p-5">
-        <img
-          className="h-24 "
-          src={logo}
-        />
-        <div className="text-3xl font-semibold p-2">
-          Welcome to Guest House Portal
-        </div>
-        <div className="font-medium">
-          Indian Institute of Technology, Ropar(Punjab)
+      <div className="flex  items-center justify-center gap-5 bg-[#365899] text-white p-2 h-36">
+        <img className="h-24 " src={logo} />
+        <div className="">
+          <div className="text-3xl font-semibold p-2 text-gg ">
+            Welcome to Guest House Portal
+          </div>
+          <div className="font-medium pl-3 ">
+            Indian Institute of Technology, Ropar 
+          </div>
         </div>
       </div>
 
-      <div className="flex justify-center items-center h-full border bg-[#f4f4f4]">
-        <div className="flex flex-col border justify-center items-center w-[29%] bg-white rounded-lg overflow-hidden shadow-lg">
+      <div className="flex justify-center items-center h-full border bg-[#f4f4f4] login-container">
+        <div className="flex flex-col justify-center items-center w-[29%] bg-white rounded-lg overflow-hidden shadow-2xl opacity-90">
           <div className="p-2 text-3xl font-semibold bg-[#3498db] text-white w-full text-center">
             Welcome
           </div>
@@ -203,7 +204,7 @@ const Login = () => {
                           className="p-2 border rounded-md text-sm h-12 w-full "
                         />
                         <button
-                          className="border bg-black bg-[rgba(0,0,0,0.9)] disabled:cursor-not-allowed disabled:opacity-70 text-white w-full p-2 lg"
+                          className="border bg-[#212529] disabled:cursor-not-allowed disabled:opacity-70 text-white w-full p-2 lg"
                           onClick={() => sendOtp()}
                           disabled={seconds > 0}
                         >
@@ -220,7 +221,7 @@ const Login = () => {
                     </div>
                   )}
                   <button
-                    className="border bg-black bg-[rgba(0,0,0,0.9)] text-white w-full p-2 lg"
+                    className="border bg-[#212529] text-white w-full p-2 lg"
                     onClick={handleSubmit}
                   >
                     {showOtp ? "Log In" : "Send OTP"}
