@@ -114,12 +114,12 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // if (
-    //   credentials.email.match("[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,}$") === null
-    // ) {
-    //   toast("invalid email");
-    //   return;
-    // }
+    if (
+      credentials.email.match("[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,}$") === null
+    ) {
+      toast("invalid email");
+      return;
+    }
 
     if (!showOtp) {
       try {
