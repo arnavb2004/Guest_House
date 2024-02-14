@@ -6,6 +6,7 @@ import {
   verifyOtp,
 } from "../controllers/auth.js";
 
+import {checkAuth} from "../middlewares/tokens.js";
 import express from "express";
 
 const Router = express.Router();

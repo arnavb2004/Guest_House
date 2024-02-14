@@ -7,3 +7,4 @@ export const transporter = nodemailer.createTransport({
     pass: "tfpfrvmxalvwlupl",
   },
 });
+
