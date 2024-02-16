@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 import { GoogleLogin } from "@react-oauth/google";
@@ -11,7 +11,7 @@ import { jwtDecode } from "jwt-decode";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
 import "./Login.css";
-
+import HomeIcon from "@mui/icons-material/Home";
 import bg from "./../images/Guesthouse2.jpeg";
 
 const OTP_RESEND_TIME = 60;
@@ -87,30 +87,6 @@ const Login = () => {
     }
   };
 
-  // const verifyOTP = async (e) => {
-  //   e.preventDefault();
-  //   try {
-  //     const res = await axios.post(BASE_URL + "/auth/verifyOTP", {
-  //       email: credentials.email,
-  //       otp: credentials.otp,
-  //     });
-  //     console.log(res);
-  //     if (res.data.success) {
-  //       toast("OTP verified successfully");
-  //       if (res.data.user) {
-  //         navigate("/home");
-  //       } else {
-  //         setIsLogin(false);
-  //       }
-  //     } else {
-  //       toast(res.data.message);
-  //     }
-  //   } catch (err) {
-  //     console.log(err);
-  //     toast(err.response.data?.message);
-  //   }
-  // };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -162,7 +138,7 @@ const Login = () => {
         console.log(res);
 
         if (res.data.user) {
-          navigate("/");
+          navigate(-1);
         } else {
           console.log("here");
           setIsLogin(false);
@@ -178,6 +154,12 @@ const Login = () => {
     <div className="flex flex-col h-screen w-screen ">
       <ToastContainer />
       <div className="flex  items-center justify-center gap-5 bg-[#365899] text-white p-2 h-36">
+        <Link
+          to="/"
+          className="left-20 absolute p-2 rounded-md cursor-pointer hover:bg-[#294476] "
+        >
+          <HomeIcon />
+        </Link>
         <img className="h-24 " src={logo} />
         <div className="">
           <div className="text-3xl font-semibold p-2 text-gg ">
@@ -315,7 +297,8 @@ const Login = () => {
                   <GoogleLogin
                     className="w-full"
                     onSuccess={(res) => {
-                      navigate("/", { replace: true });
+                      // navigate("/", { replace: true });
+                      navigate(-1);
                       if (res.credential != null) {
                         const cred = jwtDecode(res.credential);
                         console.log(cred);

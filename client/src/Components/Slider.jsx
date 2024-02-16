@@ -3,9 +3,6 @@ import KeyboardArrowLeftOutlinedIcon from "@mui/icons-material/KeyboardArrowLeft
 import KeyboardArrowRightOutlinedIcon from "@mui/icons-material/KeyboardArrowRightOutlined";
 import "./Slider.css";
 import { useEffect } from "react";
-import Slide from "react-reveal/Slide";
-import Fade from "react-reveal/Fade";
-import { ShimmerThumbnail } from "react-shimmer-effects";
 
 import { sliderItems } from "../data";
 

@@ -3,11 +3,10 @@ import cors from "cors";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import {expressjwt} from 'express-jwt';
-//const expressJwt=require('express-jwt')
 import authRoute from "./routes/authRoute.js";
 import {checkAuth} from "./middlewares/tokens.js";
 const app = express();
-const port = process.env.PORT || 6000;
+const port = process.env.PORT || 4751;
 
 app.use(cors());
 app.use(express.json());
