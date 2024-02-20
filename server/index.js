@@ -2,12 +2,11 @@ import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-
-
+import {expressjwt} from 'express-jwt';
 import authRoute from "./routes/authRoute.js";
-
+import {checkAuth} from "./middlewares/tokens.js";
 const app = express();
-const port = process.env.PORT || 6969;
+const port = process.env.PORT || 4751;
 
 app.use(cors());
 app.use(express.json());
@@ -19,7 +18,15 @@ app.get("/", (req, res) => {
   });
 });
 
+//app.use(expressjwt({ secret: process.env.ACCESS_TOKEN_SECRET, algorithms: ['HS256'] }).unless({ path: ["/auth/login", "/auth/register"] }));
 app.use("/auth", authRoute);
+
+app.get("/protected",checkAuth, (req, res) => {
+  res.json({
+    message: "Protected route",
+    user:req.body.user
+  });
+});
 
 mongoose
   .connect(process.env.MONGO_URL)
