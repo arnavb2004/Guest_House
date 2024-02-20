@@ -5,6 +5,9 @@ import { Outlet } from "react-router-dom";
 import backgroundImage from "../images/backgroundImage.jpeg";
 
 const HomePage = () => {
+
+
+
   return (
     <div
       className="homePage min-h-screen flex flex-col justify-between bg-cover "

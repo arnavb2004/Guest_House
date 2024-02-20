@@ -13,6 +13,8 @@ import "react-toastify/dist/ReactToastify.min.css";
 import "./Login.css";
 import HomeIcon from "@mui/icons-material/Home";
 import bg from "./../images/Guesthouse2.jpeg";
+import { useDispatch, useSelector } from "react-redux";
+import { setUserSlice } from "../redux/userSlice";
 
 const OTP_RESEND_TIME = 60;
 
@@ -30,6 +32,9 @@ const Login = () => {
     name: false,
     contact: false,
   });
+
+  const dispatch = useDispatch();
+  
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -139,6 +144,7 @@ const Login = () => {
         console.log(res);
 
         if (res.data.user) {
+          dispatch(setUserSlice(res.data.user))
           navigate(-1);
         } else {
           console.log("here");

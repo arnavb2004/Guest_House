@@ -1,6 +1,7 @@
 import React from "react";
 import Guesthouse2 from "../images/Guesthouse2.jpeg";
 import Slider from "../components/Slider";
+import { useDispatch, useSelector } from "react-redux";
 
 const Home = () => {
   const otherLinks = [
