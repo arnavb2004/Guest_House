@@ -134,7 +134,8 @@ const Login = () => {
             success: "OTP sent successfully",
             error: {
               render({ data }) {
-                return data.response.data.error;
+                console.log(data)
+                // return data.response.data.error;
               },
             },
           }
