@@ -13,6 +13,7 @@ import PrivateRoute from "./utils/PrivateRoute";
 import DiningRoute from "./utils/DiningRoute";
 import ReservationRoute from "./utils/ReservationRoute";
 import { PersistGate } from "redux-persist/integration/react";
+import Register from "./pages/Register";
 
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
             <Route path="/" element={<HomePage />}>
               <Route path="/" element={<Home />} />
               <Route path="/people" element={<People />} />

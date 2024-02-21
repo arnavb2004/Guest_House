@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 // import { saveAs } from 'file-saver';
 // import { PDFDocument, rgb } from 'pdf-lib';
-import "./Reservation.css"; // Import CSS for styling
+import "./Reservation.css";
 import Header from "../components/Header";
 import axios from "axios";
-// import fontkit from '@pdf-lib/fontkit';
 
 function Dining() {
   const [formData, setFormData] = useState({

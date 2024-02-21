@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 import { GoogleLogin } from "@react-oauth/google";
@@ -12,20 +12,19 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
 import "./Login.css";
 import HomeIcon from "@mui/icons-material/Home";
-import bg from "./../images/Guesthouse2.jpeg";
 import { useDispatch, useSelector } from "react-redux";
 import { setUserSlice } from "../redux/userSlice";
+import { setCredentialSlice } from "../redux/credentialSlice";
 
 const OTP_RESEND_TIME = 60;
 
-const Login = () => {
-
+const Login = ({ isRegister }) => {
   const inputRef1 = useRef(null);
   const inputRef2 = useRef(null);
   const navigate = useNavigate();
 
   const [showOtp, setShowOtp] = useState(false);
-  const [isLogin, setIsLogin] = useState(true);
+  const [isLogin, setIsLogin] = useState(isRegister ? false : true);
 
   const [isDisabled, setIsDisabled] = useState(false);
 
@@ -37,7 +36,7 @@ const Login = () => {
   });
 
   const dispatch = useDispatch();
-  
+  const user = useSelector((state) => state.user);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -50,8 +49,8 @@ const Login = () => {
 
   useEffect(() => {
     // Focus on the input field when the component mounts
-    if(inputRef1.current && !showOtp) inputRef1.current.focus();
-    if(inputRef2.current && showOtp) inputRef2.current.focus();
+    if (inputRef1.current && !showOtp) inputRef1.current.focus();
+    if (inputRef2.current && showOtp) inputRef2.current.focus();
   }, [showOtp]);
 
   const [credentials, setCredentials] = useState({
@@ -61,7 +60,9 @@ const Login = () => {
     contact: "",
   });
 
-  // const [showPassword, setShowPassword] = useState(false);
+  if (user.email) {
+    return <Navigate to="/" />;
+  }
 
   const handleOtp = (e) => {
     console.log(e.target.value);
@@ -72,7 +73,7 @@ const Login = () => {
   };
 
   const handleChange = (e) => {
-    console.log(e.target.validity);
+    // console.log(e.target.validity);
     setCredentials((user) => ({ ...user, [e.target.name]: e.target.value }));
   };
 
@@ -124,7 +125,7 @@ const Login = () => {
             success: "OTP sent successfully",
             error: {
               render({ data }) {
-                console.log(data)
+                console.log(data);
                 // return data.response.data.error;
               },
             },
@@ -144,20 +145,19 @@ const Login = () => {
     } else {
       console.log(credentials);
       try {
-        const res = await axios.post(
-          BASE_URL + `/auth/${isLogin ? "login" : "register"}`,
-          {
-            ...credentials,
-          }
-        );
+        const res = await axios.post(BASE_URL + "/auth/login", {
+          ...credentials,
+        });
         console.log(res);
 
         if (res.data.user) {
-          dispatch(setUserSlice(res.data.user))
+          dispatch(setUserSlice(res.data.user));
           navigate(-1);
         } else {
+          dispatch(setCredentialSlice(credentials));
           console.log("here");
-          setIsLogin(false);
+          // setIsLogin(false);
+          navigate("/register");
         }
       } catch (error) {
         console.log(error);
@@ -194,144 +194,92 @@ const Login = () => {
           </div>
 
           <div className="m-5 flex flex-col items-center w-full ">
-            {isLogin ? (
-              <>
-                <div className="font-semibold text-2xl">LOG IN</div>
+            <div className="font-semibold text-2xl">LOG IN</div>
 
-                <div className="w-full p-5 flex flex-col gap-5 items-center">
-                  <input
-                    placeholder="Email"
-                    pattern="[0-9]+"
-                    className="p-2 border rounded-md text-sm h-12 w-full "
-                    onChange={handleChange}
-                    name="email"
-                    value={credentials.email}
-                    ref={inputRef1}
-                  />
-                  {/* <TextField
-                    id="outlined-basic"
-                    label="Outlined"
-                    variant="outlined"
-                    fullWidth
-                    size="small"
-                    className="text-red-500"
-                  /> */}
-                  {showOtp && (
-                    <div className="w-full flex flex-col">
-                      <div className="flex w-full justify-between gap-3">
-                        <input
-                          type="text"
-                          inputMode="numeric"
-                          name="otp"
-                          value={credentials.otp}
-                          onChange={handleOtp}
-                          placeholder="OTP"
-                          className="p-2 border rounded-md text-sm h-12 w-full "
-                          ref={inputRef2}
-                        />
-                        <button
-                          className="border bg-[#212529] disabled:cursor-not-allowed disabled:opacity-70 text-white w-full p-2 lg"
-                          onClick={() => sendOtp()}
-                          disabled={seconds > 0 || isDisabled}
-                        >
-                          Resend OTP
-                        </button>
-                      </div>
-                      {seconds > 0 && (
-                        <div className="text-sm mt-2">
-                          Time Remaining: {Math.floor(seconds / 60) < 10 && "0"}
-                          {Math.floor(seconds / 60)}:{seconds % 60 < 10 && "0"}
-                          {seconds % 60}
-                        </div>
-                      )}
-                    </div>
-                  )}
-                  <button
-                    className="border bg-[#212529] text-white w-full p-2 lg disabled:cursor-not-allowed disabled:opacity-70"
-                    onClick={handleSubmit}
-                    disabled={isDisabled}
-                  >
-                    {showOtp ? "Log In" : "Send OTP"}
-                  </button>
-
-                  <div className="text-center">OR</div>
-
-                  <GoogleLogin
-                    className="w-full"
-                    onSuccess={(res) => {
-                      navigate("/", { replace: true });
-                      if (res.credential != null) {
-                        const cred = jwtDecode(res.credential);
-                        console.log(cred);
-                      }
-
-                      console.log("Success");
-                      console.log("Logged In");
-                    }}
-                    onError={() => {
-                      console.log("Failed");
-                    }}
-                  />
-                </div>
-              </>
-            ) : (
-              <>
-                <div className=" font-semibold text-2xl">REGISTER</div>
-
-                <div className="w-full p-5 flex flex-col gap-5 items-center">
-                  <form className="flex flex-col gap-5 items-center w-full">
+            <div className="w-full p-5 flex flex-col gap-5 items-center">
+              <input
+                placeholder="Email"
+                pattern="[0-9]+"
+                className="p-2 border rounded-md text-sm h-12 w-full "
+                onChange={handleChange}
+                name="email"
+                value={credentials.email}
+                ref={inputRef1}
+              />
+              {showOtp && (
+                <div className="w-full flex flex-col">
+                  <div className="flex w-full justify-between gap-3">
                     <input
-                      placeholder="Email"
-                      disabled
-                      className="p-2 border rounded-md text-sm h-12 w-full"
-                      onChange={handleChange}
-                      name="email"
-                      value={credentials.email}
-                    />
-                    <input
-                      placeholder="Name"
-                      className="p-2 border rounded-md text-sm h-12 w-full"
-                      onChange={handleChange}
-                      name="name"
-                      value={credentials.name}
-                    />
-                    <input
-                      placeholder="Contact"
-                      pattern="[0-9]+"
-                      className="p-2 border rounded-md text-sm h-12 w-full"
-                      onChange={handleChange}
-                      name="contact"
-                      value={credentials.contact}
+                      type="text"
+                      inputMode="numeric"
+                      name="otp"
+                      value={credentials.otp}
+                      onChange={handleOtp}
+                      placeholder="OTP"
+                      className="p-2 border rounded-md text-sm h-12 w-full "
+                      ref={inputRef2}
                     />
                     <button
-                      className="border bg-black text-white w-full p-2 lg"
-                      onClick={handleSubmit}
+                      className="border bg-[#212529] disabled:cursor-not-allowed disabled:opacity-70 text-white w-full p-2 lg"
+                      onClick={() => sendOtp()}
+                      disabled={seconds > 0 || isDisabled}
                     >
-                      Register
+                      Resend OTP
                     </button>
-                  </form>
-                  <div className="text-center">OR</div>
-
-                  <GoogleLogin
-                    className="w-full"
-                    onSuccess={(res) => {
-                      // navigate("/", { replace: true });
-                      navigate(-1);
-                      if (res.credential != null) {
-                        const cred = jwtDecode(res.credential);
-                        console.log(cred);
-                      }
-
-                      console.log("Success");
-                      console.log("Logged In");
-                    }}
-                    onError={() => {
-                      console.log("Failed");
-                    }}
-                  />
+                  </div>
+                  {seconds > 0 && (
+                    <div className="text-sm mt-2">
+                      Time Remaining: {Math.floor(seconds / 60) < 10 && "0"}
+                      {Math.floor(seconds / 60)}:{seconds % 60 < 10 && "0"}
+                      {seconds % 60}
+                    </div>
+                  )}
                 </div>
-              </>
-            )}
+              )}
+              <button
+                className="border bg-[#212529] text-white w-full p-2 lg disabled:cursor-not-allowed disabled:opacity-70"
+                onClick={handleSubmit}
+                disabled={isDisabled}
+              >
+                {showOtp ? "Log In" : "Send OTP"}
+              </button>
+
+              <div className="text-center">OR</div>
+
+              <GoogleLogin
+                className="w-full"
+                onSuccess={async (res) => {
+                  // navigate("/", { replace: true });
+                  if (res.credential != null) {
+                    const cred = jwtDecode(res.credential);
+                    console.log(cred);
+                    try {
+                      const res = await axios.post(BASE_URL + "/user", {
+                        email: cred.email,
+                      });
+                      console.log(user);
+                      if (res.data.user) {
+                        dispatch(setUserSlice(res.data.user));
+                        navigate(-1);
+                      }
+                      else{
+                        dispatch(setCredentialSlice({email:cred.email}));
+                        navigate("/register");
+                      }
+                    } catch (error) {
+                      toast.error(error.response.data.message);
+                    }
+                  }
+
+                  console.log("Success");
+                  console.log("Logged In");
+                }}
+                onError={() => {
+                  console.log("Failed");
+                  toast.error("Login failed");
+                }}
+              />
+            </div>
           </div>
         </div>
       </div>
