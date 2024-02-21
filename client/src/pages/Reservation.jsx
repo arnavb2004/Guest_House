@@ -2,9 +2,11 @@ import React, { useState, useEffect } from "react";
 // import { saveAs } from 'file-saver';
 // import { PDFDocument, rgb } from 'pdf-lib';
 import "./Reservation.css"; // Import CSS for styling
+import Header from "../components/Header";
+import axios from "axios";
 // import fontkit from '@pdf-lib/fontkit';
 
-function Reservation() {
+function Dining() {
   const [formData, setFormData] = useState({
     guestName: "",
     address: "",
@@ -41,6 +43,7 @@ function Reservation() {
   const handleSubmit = (e) => {
     e.preventDefault();
     // Handle form submission
+    axios.post('http://localhost:4751/reservation',formData);
     console.log("Form submitted");
   };
 
@@ -93,6 +96,8 @@ function Reservation() {
   // };
 
   return (
+    <>
+    <Header/>
     <div className="reservation-container">
       <h2>Guest House Reservation Form</h2>
       <form onSubmit={handleSubmit}>
@@ -301,7 +306,9 @@ function Reservation() {
       </form>
         {/* <button onClick={updateFilledPDF} className="convert-to-pdf-btn">Convert to PDF</button> */}
       </div>
+      
+      </>
   );
 }
 
-export default Reservation;
+export default Dining;

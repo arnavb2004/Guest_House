@@ -6,7 +6,7 @@ import Admin_Reservation from "../pages/Admin_Reservation";
 
 const ReservationRoute = () => {
 
-    const user = useSelector((state) => state.user)
+    const user = useSelector((state) => state.user).user
 
     const dispatch = useDispatch()
 

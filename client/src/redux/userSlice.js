@@ -18,7 +18,7 @@ const userSlice = createSlice({
       state.user.role = role;
       state.user.contact = contact;
       state.user.email = email;
-
+ 
       //   Object.assign(state, action.payload);
       //   const {...state} = {...action.payload};
       localStorage.setItem("user", JSON.stringify(state.user));
