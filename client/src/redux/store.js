@@ -1,5 +1,5 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
-import menuSlice from "./menuSlice";
+import menuSlice from "./formSlice";
 import userSlice from "./userSlice";
 import userReducer from "./userSlice";
 import { persistReducer, persistStore } from 'redux-persist';

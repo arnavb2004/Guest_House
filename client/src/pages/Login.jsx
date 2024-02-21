@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -19,6 +19,9 @@ import { setUserSlice } from "../redux/userSlice";
 const OTP_RESEND_TIME = 60;
 
 const Login = () => {
+
+  const inputRef1 = useRef(null);
+  const inputRef2 = useRef(null);
   const navigate = useNavigate();
 
   const [showOtp, setShowOtp] = useState(false);
@@ -44,6 +47,12 @@ const Login = () => {
 
     return () => clearInterval(interval);
   }, [seconds]);
+
+  useEffect(() => {
+    // Focus on the input field when the component mounts
+    if(inputRef1.current && !showOtp) inputRef1.current.focus();
+    if(inputRef2.current && showOtp) inputRef2.current.focus();
+  }, [showOtp]);
 
   const [credentials, setCredentials] = useState({
     email: "",
@@ -197,6 +206,7 @@ const Login = () => {
                     onChange={handleChange}
                     name="email"
                     value={credentials.email}
+                    ref={inputRef1}
                   />
                   {/* <TextField
                     id="outlined-basic"
@@ -217,6 +227,7 @@ const Login = () => {
                           onChange={handleOtp}
                           placeholder="OTP"
                           className="p-2 border rounded-md text-sm h-12 w-full "
+                          ref={inputRef2}
                         />
                         <button
                           className="border bg-[#212529] disabled:cursor-not-allowed disabled:opacity-70 text-white w-full p-2 lg"

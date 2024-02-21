@@ -1,8 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
 
 const userSlice = createSlice({
-  name: "user",
+  name: "form",
   initialState: {
     user: {
         name: "",
@@ -18,7 +17,10 @@ const userSlice = createSlice({
       state.user.role = role;
       state.user.contact = contact;
       state.user.email = email;
-      // localStorage.setItem("user", JSON.stringify(state.user));
+ 
+      //   Object.assign(state, action.payload);
+      //   const {...state} = {...action.payload};
+      localStorage.setItem("user", JSON.stringify(state.user));
     },
     logout: (state) => {
         state.user.name = "";
