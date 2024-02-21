@@ -22,7 +22,7 @@ const Header = () => {
             INDIAN INSTITUTE OF TECHNOLOGY ROPAR
           </a>
         </div>
-        {userName && <div className="flex p-3 flex-col justify-end mb-4 font-serif text-2xl font-medium">Hello {user.name}</div>}
+        {user.name && <div className="flex p-3 flex-col justify-end mb-4 font-serif text-2xl font-medium">Hello {user.name}</div>}
         <div className=" flex gap-4 w-28 h-32 pt-4">
           <img className="" src={Logo} alt="IIT Ropar logo" />
         </div>
