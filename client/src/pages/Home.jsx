@@ -66,11 +66,11 @@ const Home = () => {
 
         <div className="links col-span-1 p-4">
           <p className="text-2xl font-semibold">Other links</p>
-          <a className="my-1" href="https://www.iitrpr.ac.in/guest-house/">
+          <a className="my-1" href="https://www.iitrpr.ac.in/guest-house/" target="_blank">
             More details about Guest House
           </a>
           <hr className="border-dotted border-t-2 border-gray-400 my-1" />
-          <a className="my-1" href="https://www.iitrpr.ac.in/">
+          <a className="my-1" href="https://www.iitrpr.ac.in/" target="_blank">
             Explore other things in IIT Ropar
           </a>
         </div>

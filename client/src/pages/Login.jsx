@@ -31,6 +31,9 @@ const Login = () => {
     contact: false,
   });
 
+  const dispatch = useDispatch();
+  
+
   useEffect(() => {
     const interval = setInterval(() => {
       if (seconds > 0) setSeconds(seconds - 1);
@@ -110,7 +113,8 @@ const Login = () => {
             success: "OTP sent successfully",
             error: {
               render({ data }) {
-                return data.response.data.error;
+                console.log(data)
+                // return data.response.data.error;
               },
             },
           }
@@ -138,6 +142,7 @@ const Login = () => {
         console.log(res);
 
         if (res.data.user) {
+          dispatch(setUserSlice(res.data.user))
           navigate(-1);
         } else {
           console.log("here");

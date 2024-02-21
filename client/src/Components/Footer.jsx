@@ -18,19 +18,19 @@ const Footer = () => {
           <h4 className="mb-2 text-xl">Quick Links</h4>
           <ul>
             <li>
-              <a href="#home">Home</a>
+              <a href="/">Home</a>
             </li>
             <li>
-              <a href="#about">About Us</a>
+              <a href="https://www.iitrpr.ac.in/" target="_blank">About Us</a>
             </li>
             <li>
               <a href="#services">Services</a>
             </li>
             <li>
-              <a href="#gallery">Gallery</a>
+              <a href="/">Gallery</a>
             </li>
             <li>
-              <a href="#contact">Contact Us</a>
+              <a href="contact">Contact Us</a>
             </li>
           </ul>
         </div>
