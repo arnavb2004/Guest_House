@@ -10,7 +10,7 @@ import Contact from "./pages/Contact";
 import Login from "./pages/Login";
 
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import PrivateRoute from "./utils/PrivateRoute";
+// import PrivateRoute from "./utils/PrivateRoute";
 
 function App() {
   return (
@@ -24,10 +24,10 @@ function App() {
             <Route path="/location" element={<Location />} />
             <Route path="/contact" element={<Contact />} />
           </Route>
-          <Route element={<PrivateRoute />}>
+          {/* <Route element={<PrivateRoute />}> */}
             <Route path="/dining" element={<Dining />} />
             <Route path="/reservation" element={<Reservation />} />
-          </Route>
+          {/* </Route> */}
         </Routes>
       </BrowserRouter>
     </div>
