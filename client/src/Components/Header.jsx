@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import Logo from "../images/IIT-logo.png";
 import Menu from "./Menu";
 
-
 const Header = () => {
 
   const [user, setUser] = useState({});

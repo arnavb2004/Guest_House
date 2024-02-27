@@ -10,6 +10,8 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import PrivateRoute from "./utils/PrivateRoute";
 import DiningRoute from "./utils/DiningRoute";
 import ReservationRoute from "./utils/ReservationRoute";
+import { Provider } from "react-redux";
+import { store } from "react-redux";
 
 function App() {
   return (
@@ -31,6 +33,7 @@ function App() {
               <Route path="/dining" element={<DiningRoute />} />
               <Route path="/reservation" element={<ReservationRoute />} />
             </Route> */}
+
           </Routes>
         </BrowserRouter>
       </Provider>

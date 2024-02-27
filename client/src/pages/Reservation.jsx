@@ -303,6 +303,5 @@ function Reservation() {
       </div>
   );
 }
-}
 
 export default Reservation;
