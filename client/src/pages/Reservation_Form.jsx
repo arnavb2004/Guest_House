@@ -6,7 +6,7 @@ import Header from "../components/Header";
 import axios from "axios";
 import styles from './Reservation_Form.module.css';
 
-function Reservation_Form() {
+function ReservationForm() {
   const [formData, setFormData] = useState({
     guestName: "",
     address: "",
@@ -323,4 +323,4 @@ function Reservation_Form() {
   );
 }
 
-export default Reservation_Form;
+export default ReservationForm;

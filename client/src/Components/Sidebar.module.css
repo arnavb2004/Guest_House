@@ -4,7 +4,7 @@
   top: 48px; /* Adjusted to start below the header */
   height: 100%; /* Adjust height to account for header */
   width: 250px;
-  background: linear-gradient(to bottom, #0d6ca7, #c0dded); /* Light blue gradient */
+  background: linear-gradient(to bottom,#365899, #365899); /* Light blue gradient */
   padding: 20px;
   border-right: 1px solid #ccc; /* Adding partition */
   transition: transform 0.3s ease; /* Smooth opening & closing */
