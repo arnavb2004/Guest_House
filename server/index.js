@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import {expressjwt} from 'express-jwt';
 import authRoute from "./routes/authRoute.js";
+import formRoute from "./routes/formRoute.js";
 import {checkAuth} from "./middlewares/tokens.js";
 import Reservation from "./models/reservationModel.js";
 const app = express();
@@ -21,6 +22,7 @@ app.get("/", (req, res) => {
 
 //app.use(expressjwt({ secret: process.env.ACCESS_TOKEN_SECRET, algorithms: ['HS256'] }).unless({ path: ["/auth/login", "/auth/register"] }));
 app.use("/auth", authRoute);
+app.use("/reservation",formRoute)
 
 app.get("/protected",checkAuth, (req, res) => {
   res.json({
