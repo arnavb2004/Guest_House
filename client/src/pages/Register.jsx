@@ -1,71 +1,135 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useRef, useState } from "react";
+
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import axios from "axios";
+
+import { GoogleLogin } from "@react-oauth/google";
 import { BASE_URL } from "../constants";
 
-const Register = () => {
-  // const email = useSelector((state) => state.user.email);
-  const [user, setUser] = useState({
-    name: "",
-    address: "",
-    contact: "",
-    email: "",
-  });
+import logo from "./../images/IIT_Ropar_logo.png";
+import { jwtDecode } from "jwt-decode";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.min.css";
+import "./Login.css";
+import HomeIcon from "@mui/icons-material/Home";
+import bg from "./../images/Guesthouse2.jpeg";
+import { useDispatch, useSelector } from "react-redux";
+import { setUserSlice } from "../redux/userSlice";
 
+const OTP_RESEND_TIME = 60;
+
+const Register = () => {
+  const inputRef1 = useRef(null);
+  const inputRef2 = useRef(null);
   const navigate = useNavigate();
-  // const dispatch = useDispatch();
+
+  const credentialSlice = useSelector((state) => state.credentials);
+  const [credentials, setCredentials] = useState(credentialSlice);
+  const dispatch = useDispatch();
+
+  const user = useSelector((state) => state.user);
+  if(user.email) {
+    return <Navigate to="/" />;
+  }
+
+  if (!credentialSlice || !credentialSlice.email) {
+    // navigate("/login");
+    return <Navigate to="/login" />;
+  }
+
 
   const handleChange = (e) => {
-    setUser((user) => ({ ...user, [e.target.name]: e.target.value }));
+    setCredentials((user) => ({ ...user, [e.target.name]: e.target.value }));
   };
 
-  const handleClick = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // dispatch(setUserSlice({ ...user }));
-    navigate("/home");
-    axios.post(BASE_URL + "/auth/register", { user });
+
+    console.log(credentials);
+    try {
+      const res = await axios.post(BASE_URL + "/auth/register", {
+        ...credentials,
+      });
+      console.log(res);
+
+      if (res.data.user) {
+        dispatch(setUserSlice(res.data.user));
+        navigate('/',{replace:true})
+      } else {
+        console.log("here");
+        toast.error("Something went wrong");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.message);
+    }
   };
 
   return (
-    <div className="w-screen h-screen flex items-center justify-center">
-      <div className="w-[40%] p-[20px]">
-        <h1 className="text-2xl font-light">CREATE AN ACCOUNT</h1>
-        <form className="flex flex-wrap">
-          <input
-            className="flex-1 min-w-[40%] mt-5 mr-3 p-2 border-black border-[1px]"
-            placeholder="name"
-            name="name"
-            onChange={(e) => handleChange(e)}
-          />
-          <input
-            className="flex-1 min-w-[40%] mt-5 mr-3 p-2 border-black border-[1px]"
-            placeholder="contact"
-            name="contact"
-            pattern="[0-9]+"
-            onChange={(e) => handleChange(e)}
-          />
-          <input
-            className="flex-1 min-w-[40%] mt-5 mr-3 p-2 border-black border-[1px]"
-            placeholder="email"
-            name="email"
-            disabled
-            value={user.email}
-            onChange={(e) => handleChange(e)}
-          />
-          <input
-            className="flex-1 min-w-[40%] mt-5 mr-3 p-2 border-black border-[1px]"
-            placeholder="address"
-            name="address"
-            onChange={(e) => handleChange(e)}
-          />
+    <div className="flex flex-col h-screen w-screen ">
+      <ToastContainer />
+      <div className="flex  items-center justify-center gap-5 bg-[#365899] text-white p-2 h-36">
+        <Link
+          to="/"
+          className="left-20 absolute p-2 rounded-md cursor-pointer hover:bg-[#294476] "
+        >
+          <HomeIcon />
+        </Link>
+        <img className="h-24 " src={logo} />
+        <div className="">
+          <div className="text-3xl font-semibold p-2 text-gg ">
+            Welcome to Guest House Portal
+          </div>
+          <div className="font-medium pl-3 ">
+            Indian Institute of Technology, Ropar
+          </div>
+        </div>
+      </div>
 
-          <input
-            type="submit"
-            className="w-[25%] border-none py-4 px-5 my-5 min-w-max bg-teal-400 text-white cursor-pointer"
-            onClick={(e) => handleClick(e)}
-            value="REGISTER"
-          />
-        </form>
+      <div className="flex justify-center items-center h-full border bg-[#f4f4f4] login-container">
+        <div className="flex flex-col justify-center items-center w-[29%] bg-white rounded-lg overflow-hidden shadow-2xl opacity-90">
+          <div className="p-2 text-3xl font-semibold bg-[#3498db] text-white w-full text-center">
+            Welcome
+          </div>
+
+          <div className="m-5 flex flex-col items-center w-full ">
+            <div className=" font-semibold text-2xl">REGISTER</div>
+
+            <div className="w-full p-5 flex flex-col gap-5 items-center">
+              <form className="flex flex-col gap-5 items-center w-full">
+                <input
+                  placeholder="Email"
+                  disabled
+                  className="p-2 border rounded-md text-sm h-12 w-full"
+                  onChange={handleChange}
+                  name="email"
+                  value={credentials.email}
+                />
+                <input
+                  placeholder="Name"
+                  className="p-2 border rounded-md text-sm h-12 w-full"
+                  onChange={handleChange}
+                  name="name"
+                  value={credentials.name}
+                />
+                <input
+                  placeholder="Contact"
+                  pattern="[0-9]+"
+                  className="p-2 border rounded-md text-sm h-12 w-full"
+                  onChange={handleChange}
+                  name="contact"
+                  value={credentials.contact}
+                />
+                <button
+                  className="border bg-black text-white w-full p-2 lg"
+                  onClick={handleSubmit}
+                >
+                  Register
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

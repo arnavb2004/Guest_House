@@ -4,7 +4,9 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import {expressjwt} from 'express-jwt';
 import authRoute from "./routes/authRoute.js";
+import userRoute from "./routes/userRoute.js";
 import {checkAuth} from "./middlewares/tokens.js";
+import Reservation from "./models/reservationModel.js";
 const app = express();
 const port = process.env.PORT || 4751;
 
@@ -20,6 +22,7 @@ app.get("/", (req, res) => {
 
 //app.use(expressjwt({ secret: process.env.ACCESS_TOKEN_SECRET, algorithms: ['HS256'] }).unless({ path: ["/auth/login", "/auth/register"] }));
 app.use("/auth", authRoute);
+app.use('/user',userRoute);
 
 app.get("/protected",checkAuth, (req, res) => {
   res.json({
@@ -27,6 +30,24 @@ app.get("/protected",checkAuth, (req, res) => {
     user:req.body.user
   });
 });
+
+
+
+app.post('/reservation',async (req,res)=>{
+
+  try {
+    console.log(req.body)
+    await Reservation.create(req.body);
+  
+    res.status(200).json({message:"Reservation Request added successfully"})
+    
+  } catch (error) {
+
+    res.status(400).json({message:error.message})
+
+  }
+  
+})
 
 mongoose
   .connect(process.env.MONGO_URL)
