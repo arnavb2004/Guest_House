@@ -16,11 +16,15 @@ code {
 }
 
 .links {
-  background-color: #DFF2FF;
+  background-color: #dff2ff85;
+  
+  /* opacity: 0.8; */
+  /* background-color: rgba(200,200,255,0.5); */
 }
 
 .content {
-  background-color: #EFF9FF;
+  /* background-color: #EFF9FF; */
+  /* background-color: white; */
 }
 
 .customized-menu-item {

@@ -3,6 +3,8 @@ import Guesthouse2 from "../images/Guesthouse2.jpeg";
 import Slider from "../components/Slider";
 import { useDispatch, useSelector } from "react-redux";
 
+
+
 const Home = () => {
   const otherLinks = [
     {
@@ -24,7 +26,7 @@ const Home = () => {
       <div className="">
         <Slider />
       </div>
-      <div className="home w-2/3 grid grid-cols-4 my-10">
+      <div className="home w-5/6 grid grid-cols-4 my-10 text-justify">
         <div className="content col-span-3 p-4">
           <p className="text-2xl font-semibold">
             Welcome to IIT Ropar's Guest House...
@@ -65,13 +67,13 @@ const Home = () => {
           <img className="bg-cover" src={Guesthouse2} alt="Guesthouse" />
         </div>
 
-        <div className="links col-span-1 p-4">
+        <div className="links col-span-1 p-4 rounded-xl">
           <p className="text-2xl font-semibold">Other links</p>
-          <a className="my-1" href="https://www.iitrpr.ac.in/guest-house/" target="_blank">
+          <a className="my-1" href="https://www.iitrpr.ac.in/guest-house/" target="_blank" rel="noreferrer">
             More details about Guest House
           </a>
           <hr className="border-dotted border-t-2 border-gray-400 my-1" />
-          <a className="my-1" href="https://www.iitrpr.ac.in/" target="_blank">
+          <a className="my-1" href="https://www.iitrpr.ac.in/" target="_blank" rel="noreferrer">
             Explore other things in IIT Ropar
           </a>
         </div>
