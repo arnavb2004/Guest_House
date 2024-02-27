@@ -52,7 +52,7 @@ const Slider = () => {
       </div>
       <div className="slide-wrapper " ref={ref}>
         {sliderItems.map((slide, i) => (
-          <div className="slide" key={slide.id}>
+          <div className="slide" key={slide.key}>
             <div className="imgContainer">
               <img
                 loading={i === 0 ? "eager" : "lazy"}

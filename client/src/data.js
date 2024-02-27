@@ -5,23 +5,23 @@ import img4 from "./images/Loungearea.jpeg";
 
 export const sliderItems = [
   {
-    id: 1,
+    key: 1,
     img: img3,
     title: "Guest House",
   },
   {
-    id: 2,
+    key: 2,
     img: img2,
     title: "Gate Entry",
   },
 
   {
-    id: 3,
+    key: 3,
     img: img4,
     title: "Lounge Area",
   },
   {
-    id: 1,
+    key: 4,
     img: img1,
     title: "Dining Hall",
   },

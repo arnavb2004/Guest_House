@@ -1,19 +1,26 @@
 import React from 'react';
+import UserProfileBox from '../components/UserProfileBox';
 
 const People = () => {
+
+  const users = [
+    { key: 1, name: "Prof1", post: "incharge1", email: "prof1@gmail.com", contact: "0123456781"},
+    { key: 2, name: "Prof2", post: "incharge2", email: "prof2@gmail.com", contact: "0123456782"},
+    { key: 3, name: "Prof3", post: "incharge3", email: "prof3@gmail.com", contact: "0123456783"},
+    { key: 4, name: "Prof4", post: "incharge4", email: "prof4@gmail.com", contact: "0123456784"},
+    { key: 5, name: "Prof5", post: "incharge5", email: "prof5@gmail.com", contact: "0123456785"},
+    { key: 6, name: "Prof6", post: "incharge6", email: "prof6@gmail.com", contact: "0123456786"}
+  ];
+
+  console.log(users)
+
   return (
-    <div className='people w-7/12 grid grid-cols-4 my-10'>
-        <div className="content col-span-3 p-4">
-            <p className='text-2xl'>Welcome to People Page</p>
-            <p className='font-serif'>People Page content</p>
-        </div>
-        
-        <div className="links col-span-1 p-4">
-            <p className='text-2xl'>Other links</p>
-            <p className='font-serif'>links</p>
-        </div>
+    <div className='people w-5/6 grid grid-cols-3 my-10 gap-24'>
+      {users.map((item, index) => {
+        return <UserProfileBox key={index} user={item}/>
+      })}
     </div>
   )
 }
 
-export default People
+export default People;
