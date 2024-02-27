@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const reservationSchema = new mongoose.Schema({
-  guestName: {
+  guestEmail: {
     type: String,
     required: true,
     trim: true,
@@ -26,7 +26,18 @@ const reservationSchema = new mongoose.Schema({
   departureDate: {
     type: Date,
     
-  }
+  },
+  status:{
+    type:String,
+    enum:['PENDING','APPROVED','REJECTED'],
+    default:'PENDING'
+  },
+  approvals:[
+    {
+      type:mongoose.Schema.Types.ObjectId,
+      ref:'User'
+    }
+  ]
 }, {
   timestamps: true, // Adds createdAt and updatedAt timestamps
 });
