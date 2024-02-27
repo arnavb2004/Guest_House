@@ -4,21 +4,6 @@ import Slider from "../components/Slider";
 import { useDispatch, useSelector } from "react-redux";
 
 const Home = () => {
-  const otherLinks = [
-    {
-      id: 1,
-      name: "guest-house",
-      url: "https://www.iitrpr.ac.in/guest-house/",
-      title: "More detail about Guest House",
-    },
-    {
-      id: 2,
-      name: "iit-ropar",
-      url: "https://www.iitrpr.ac.in/",
-      title: "Explore other things in IIT Ropar",
-    },
-  ];
-
   return (
     <div className="flex flex-col items-center w-screen">
       <div className="">
