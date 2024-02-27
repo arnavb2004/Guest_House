@@ -1,0 +1,6 @@
+.menuIcon {
+  cursor: pointer;
+  margin-top: 10px; 
+  margin-left: 30px; 
+  margin-right: 0px; /* Space between icon and menu items */
+}

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Navigate, Outlet } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
 import Dining from "../pages/Dining";
 import Admin_Dining from "../pages/Admin_Dining";
+import { useSelector , useDispatch} from "react-redux"; 
 
 const DiningRoute = () => {
 

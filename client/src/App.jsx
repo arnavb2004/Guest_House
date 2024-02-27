@@ -41,6 +41,7 @@ function App() {
               <Route path="/dining" element={<DiningRoute />} />
               <Route path="/reservation" element={<ReservationRoute />} />
             </Route> */}
+
           </Routes>
         </BrowserRouter>
       </Provider>

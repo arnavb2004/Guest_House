@@ -1,6 +1,6 @@
 import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector , useDispatch} from "react-redux"; 
 
 const PrivateRoute = () => {
 
