@@ -38,7 +38,7 @@ export default function RecordList() {
   };
 
   return (
-    <div className=" flex items-center justify-center p-5 w-5/6">
+    <div className=" flex p-5 px-0 w-full">
       <List sx={{ width: "100%", padding: "0px" }} className="bg-gray-50 rounded-md overflow-hidden">
         <ListItem
           className=" bg-[#365899] text-white"

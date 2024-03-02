@@ -10,22 +10,23 @@ const Menu = () => {
   }, [selectedItem]);
 
   const menuItems = [
-    { id: 1, name: "home", label: "HOME", link: "/" },
-    { id: 2, name: "dining", label: "DINING", link: "/dining" },
-    { id: 3, name: "people", label: "PEOPLE", link: "/people" },
-    { id: 4, name: "location", label: "LOCATION", link: "/location" },
-    { id: 5, name: "reservation", label: "RESERVATION", link: "/reservation" },
-    { id: 6, name: "contact", label: "CONTACT", link: "/contact" },
+    { key: 1, name: "home", label: "HOME", link: "/" },
+    { key: 2, name: "dining", label: "DINING", link: "/dining" },
+    { key: 3, name: "people", label: "PEOPLE", link: "/people" },
+    { key: 4, name: "location", label: "LOCATION", link: "/location" },
+    { key: 5, name: "reservation", label: "RESERVATION", link: "/reservation" },
+    { key: 6, name: "contact", label: "CONTACT", link: "/contact" },
   ];
 
   return (
-    <div className="col-span-2 menu w-full h-full flex justify-center ">
+    <div className="col-span-2 menu w-full h-15 flex justify-center ">
       <div className="menu-container w-full h-12 pr-3  text-white bg-[#365899]">
         <ul className="tabs h-full flex justify-center items-center">
           {menuItems.map((item) => (
             <Link
-              exact
+              exact='true'
               to={item.link}
+              key={item.key}
               onClick={() => setSelectedItem(`${item.name}`)}
               className={`flex justify-center items-center px-8 h-full ${
                 (selectedItem === item.name || hovered === item.name) &&
@@ -36,8 +37,8 @@ const Menu = () => {
             >
               {/* 284272d7 */}
 
-              <li key={item.id}>
-                <div className="text-center" activeClassName="text-black">
+              <li>
+                <div className="text-center">
                   {item.label}
                 </div>
               </li>

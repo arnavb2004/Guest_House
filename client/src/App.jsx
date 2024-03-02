@@ -14,6 +14,9 @@ import DiningRoute from "./utils/DiningRoute";
 import ReservationRoute from "./utils/ReservationRoute";
 import { PersistGate } from "redux-persist/integration/react";
 import Register from "./pages/Register";
+import PDFViewer from "./components/PDFViewer";
+import ReservationForm from "./pages/Reservation_Form";
+import RecordList from "./components/RecordList";
 
 
 function App() {
@@ -32,12 +35,19 @@ function App() {
               <Route path="/contact" element={<Contact />} />
             </Route>
             <Route path="/dining" element={<DiningRoute/>} />
-            <Route path="/reservation" element={<ReservationRoute/>} />
+            <Route path="/reservation" element={<ReservationRoute/>} >
+              
+              <Route path='' element={<RecordList/>} />
+              <Route path='reservation-form' element={<ReservationForm/>} />
 
+            </Route>
+            <Route path="/iitropar-campus-map" element={<PDFViewer />} />
+            <Route path="/reservation-form" element={<ReservationForm />} />
             {/* <Route element={<PrivateRoute />}>
               <Route path="/dining" element={<DiningRoute />} />
               <Route path="/reservation" element={<ReservationRoute />} />
             </Route> */}
+
           </Routes>
         </BrowserRouter>
       </Provider>

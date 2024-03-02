@@ -41,7 +41,7 @@ const Header = () => {
         </div>
         <div className="col-span-6 flex flex-col pl-5 justify-end pb-2">
           <a
-            className='font-["Single Day"] font-["Dosis"] text-5xl text-justify  font-bold'
+            className='font-["Dosis"] text-5xl text-justify  font-bold'
             href="/"
           >
             GUEST HOUSE
@@ -63,7 +63,7 @@ const Header = () => {
           </a>
         </div>
         <div
-          className="col-span-4 flex p-3 pr-12 flex-col w-full justify-end mb-4 font-serif text-2xl text-right font-medium cursor-pointer"
+          className='font-["Dosis"] col-span-4 uppercase flex p-3 pr-12 flex-col w-full justify-end mb-4 text-2xl text-right font-medium cursor-pointer'
           onMouseOver={() => setShowLogout(true)}
           onMouseOut={() => setShowLogout(false)}
           onClick={user.email ? handleLogout : goToLoginPage}
@@ -72,11 +72,11 @@ const Header = () => {
             showLogout ? (
               "Logout"
             ) : (
-              <div className="">Hello {user.name}</div>
-            )
+              <div className='font-["Dosis"] uppercase'>Hello {user.name}</div>
+            ) 
           ) : (
             <>
-              <div>Login</div>
+              <div className='font-["Dosis"] uppercase'>Login</div>
             </>
           )}
         </div>
