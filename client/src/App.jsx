@@ -17,7 +17,7 @@ import Register from "./pages/Register";
 import PDFViewer from "./components/PDFViewer";
 import ReservationForm from "./pages/Reservation_Form";
 import RecordList from "./components/RecordList";
-
+import BookDining from "./pages/BookDining";
 
 function App() {
   return (
@@ -34,7 +34,12 @@ function App() {
               <Route path="/location" element={<Location />} />
               <Route path="/contact" element={<Contact />} />
             </Route>
-            <Route path="/dining" element={<DiningRoute/>} />
+            <Route path="/dining" element={<DiningRoute/>} >
+                
+              <Route path='' element={<RecordList/>} />
+              <Route path='book-dining' element={<BookDining/>} />
+
+            </Route>
             <Route path="/reservation" element={<ReservationRoute/>} >
               
               <Route path='' element={<RecordList/>} />

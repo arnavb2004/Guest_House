@@ -4,9 +4,7 @@ import KeyboardArrowRightOutlinedIcon from "@mui/icons-material/KeyboardArrowRig
 import "./Slider.css";
 import { useEffect } from "react";
 
-import { sliderItems } from "../data";
-
-const Slider = () => {
+const Slider = (sliderItems) => {
   const [slideIndex, setSlideIndex] = useState(0);
   // const [titleColor, setTitleColor] = useState("black");
 
@@ -38,10 +36,10 @@ const Slider = () => {
 
     direction === "left"
       ? setSlideIndex((slideIndex) =>
-          slideIndex === 0 ? sliderItems.length - 1 : slideIndex - 1
+          slideIndex === 0 ? sliderItems.items.length - 1 : slideIndex - 1
         )
       : setSlideIndex((slideIndex) =>
-          slideIndex === sliderItems.length - 1 ? 0 : slideIndex + 1
+          slideIndex === sliderItems.items.length - 1 ? 0 : slideIndex + 1
         );
   };
 
@@ -51,7 +49,7 @@ const Slider = () => {
         <KeyboardArrowLeftOutlinedIcon onClick={() => handleClick("left")} />
       </div>
       <div className="slide-wrapper " ref={ref}>
-        {sliderItems.map((slide, i) => (
+        {sliderItems.items.map((slide, i) => (
           <div className="slide" key={slide.key}>
             <div className="imgContainer">
               <img

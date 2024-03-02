@@ -1,0 +1,73 @@
+.sliderContainer {
+  width: 30vw; /* Ensure the slider container fills the viewport width */
+  height: 40vh; /* Adjust height as necessary */
+  display: flex;
+  position: relative;
+  overflow: hidden;
+  margin: 7px;
+}
+
+.arrow {
+  height: 50px;
+  width: 50px;
+  background-color: #fff7f7;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  position: absolute;
+  cursor: pointer;
+  opacity: 0.5;
+  z-index: 2;
+}
+
+.arrow:hover {
+  opacity: 1;
+}
+
+.arrowLeft {
+  left: 10px;
+}
+
+.arrowRight {
+  right: 10px;
+}
+
+.slideWrapper {
+  display: flex;
+  width: 100%;
+  transition: transform 1s;
+}
+
+.slide {
+  width: 100%; /* Each slide fills the entire slider container */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.imgContainer {
+  width: 100%;
+  height: 100%; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  overflow: hidden; /* Ensure images are contained within the container */
+}
+
+.imgContainer img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; 
+  overflow: hidden;
+}
+
+.sliderbutton{
+  padding: 10px;
+  font-size: 20px;
+  background-color: transparent;
+  cursor: pointer;
+}
