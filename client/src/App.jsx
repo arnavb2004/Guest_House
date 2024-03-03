@@ -18,8 +18,10 @@ import PDFViewer from "./components/PDFViewer";
 import ReservationForm from "./pages/Reservation_Form";
 import RecordList from "./components/RecordList";
 import BookDining from "./pages/BookDining";
+import AdminHomePage from "./pages/AdminHomePage";
+import AdminRoute from "./utils/AdminRoute";
+import UserList from "./components/UserList";
 import Cart from "./pages/Cart";
-
 function App() {
   return (
     <div className="">
@@ -50,6 +52,12 @@ function App() {
               <Route path='reservation-form' element={<ReservationForm/>} />
 
             </Route>
+            <Route path="/admin" element={<AdminRoute />}>
+              <Route path='' element={<RecordList />} />
+              <Route path="users" element={<UserList />} />
+              {/* <Route path="/reservations" element={<ReservationList />} /> */}
+            </Route>
+
             <Route path="/iitropar-campus-map" element={<PDFViewer />} />
             <Route path="/reservation-form" element={<ReservationForm />} />
             {/* <Route element={<PrivateRoute />}>

@@ -8,6 +8,6 @@ Router.post('/create',checkAuth,createReservation)
 
 Router.get('/details/:id',checkAuth,getReservationDetails)
 
-Router.post('/approve/:id',checkAuth,approveReservation)
+Router.put('/approve/:id',checkAuth,approveReservation)
 
 export default Router;

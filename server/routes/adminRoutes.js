@@ -20,7 +20,8 @@ Router.get("/user/:id",checkAuth, async (req,res)=>{
     }
     try{
         const user=await User.findById(req.params.id)
-        res.json(user)
+        const reservations=await Reservation.find({guestEmail:user.email})
+        res.json(user,reservations)
     }catch(err){
         res.status(500).json({message:err.message})
     }
@@ -42,11 +43,15 @@ Router.get("/reservations",checkAuth, async (req,res)=>{
     }
 })
 
-// Router.get("/reservations/:id",checkAuth, async (req,res)=>{
-//     try{
-//         const reservation=await Reservation.findById(req.params.id)
-//         res.json(reservation)
-//     }catch(err){
-//         res.status(500).json({message:err.message})
-//     }
-// })
+Router.get("/reservations/:id",checkAuth, async (req,res)=>{
+    if(req.body.user.role!=='ADMIN'){
+        return res.status(403).json({message:"You are not authorized to perform this action"})
+    }
+    try{
+        const reservation=await Reservation.findById(req.params.id)
+        res.status(200).json(reservation)
+    }catch(err){
+        res.status(500).json({message:err.message})
+    }
+})
+
