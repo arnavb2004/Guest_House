@@ -23,7 +23,6 @@ app.get("/", (req, res) => {
 //app.use(expressjwt({ secret: process.env.ACCESS_TOKEN_SECRET, algorithms: ['HS256'] }).unless({ path: ["/auth/login", "/auth/register"] }));
 app.use("/auth", authRoute);
 app.use("/reservation",formRoute)
-
 app.get("/protected",checkAuth, (req, res) => {
   res.json({
     message: "Protected route",

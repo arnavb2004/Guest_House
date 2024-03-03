@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 
-import { PDFDocument, rgb } from "pdf-lib";
-import fontkit from "@pdf-lib/fontkit";
 import Header from "../components/Header";
 import axios from "axios";
 // import styles from "./Reservation_Form.module.css";
@@ -9,6 +7,7 @@ import FormControl from "@mui/material/FormControl";
 import { TextField } from "@mui/material";
 // import ReservationForm from './Reservation_Form';
 import "./Reservation_Form.css";
+import { updateFilledPDF } from "../utils/generatePDF";
 
 function ReservationForm() {
   const [formData, setFormData] = useState({
@@ -42,15 +41,15 @@ function ReservationForm() {
   const requiredFields = {
     guestName: true,
     address: true,
-    numberOfGuests: true,
+    numberOfGuests: false,
     numberOfRooms: false,
-    roomType: true,
-    arrivalDate: true,
-    arrivalTime: true,
-    departureDate: true,
-    departureTime: true,
-    purpose: true,
-    category: true,
+    roomType: false,
+    arrivalDate: false,
+    arrivalTime: false,
+    departureDate: false,
+    departureTime: false,
+    purpose: false,
+    category: false,
   };
 
   const patterns = {
@@ -79,7 +78,6 @@ function ReservationForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
 
     //Handle form validation
 
@@ -110,123 +108,11 @@ function ReservationForm() {
     console.log(errorText);
 
     if (!passed) return;
+    console.log("passed");
 
     // Handle form submission
     axios.post("http://localhost:4751/reservation", formData);
     console.log("Form submitted");
-  };
-
-  const generateFilledPDF = async () => {
-    try {
-      // Assuming this URL and fetch operation work correctly
-      const fontUrl = "https://pdf-lib.js.org/assets/ubuntu/Ubuntu-R.ttf";
-      const fontBytes = await fetch(fontUrl).then((res) => res.arrayBuffer());
-
-      // Fetch the PDF from a URL or local assets (adjust the URL as needed)
-      const pdfUrl = `${process.env.PUBLIC_URL}/forms/Register_Form.pdf`;
-      const pdfData = await fetch(pdfUrl).then((res) => res.arrayBuffer());
-      const pdfDoc = await PDFDocument.load(pdfData);
-
-      pdfDoc.registerFontkit(fontkit);
-      const ubuntuFont = await pdfDoc.embedFont(fontBytes);
-
-      const form = pdfDoc.getForm();
-      const pages = pdfDoc.getPages();
-      const firstPage = pages[0]; // Assuming all fields are on the first page
-
-      // Example for a few fields, you'll need to add the rest following this pattern
-      firstPage.drawText(formData.guestName, {
-        x: 165,
-        y: 711,
-        size: 12,
-        font: ubuntuFont,
-        color: rgb(0, 0, 0),
-      });
-      firstPage.drawText(formData.address, {
-        x: 120,
-        y: 690,
-        size: 12,
-        font: ubuntuFont,
-        color: rgb(0, 0, 0),
-      });
-      firstPage.drawText(formData.numberOfGuests, {
-        x: 165,
-        y: 670,
-        size: 12,
-        font: ubuntuFont,
-        color: rgb(0, 0, 0),
-      });
-      firstPage.drawText(formData.numberOfRooms, {
-        x: 460,
-        y: 670,
-        size: 12,
-        font: ubuntuFont,
-        color: rgb(0, 0, 0),
-      });
-      firstPage.drawText(formData.roomType, {
-        x: 350,
-        y: 650,
-        size: 12,
-        font: ubuntuFont,
-        color: rgb(0, 0, 0),
-      });
-      firstPage.drawText(formData.arrivalDate, {
-        x: 90,
-        y: 605,
-        size: 12,
-        font: ubuntuFont,
-        color: rgb(0, 0, 0),
-      });
-      firstPage.drawText(formData.arrivalTime, {
-        x: 210,
-        y: 605,
-        size: 12,
-        font: ubuntuFont,
-        color: rgb(0, 0, 0),
-      });
-      firstPage.drawText(formData.departureDate, {
-        x: 330,
-        y: 602,
-        size: 12,
-        font: ubuntuFont,
-        color: rgb(0, 0, 0),
-      });
-      firstPage.drawText(formData.departureTime, {
-        x: 460,
-        y: 607,
-        size: 12,
-        font: ubuntuFont,
-        color: rgb(0, 0, 0),
-      });
-      // Add the rest of your form fields here in a similar manner.
-
-      // Ensure the field names match exactly what's in your PDF
-      // form.getTextField("pdfjs_internal_id_342R").setText("hohoho");
-      // form.getTextField("pdfjs_internal_id_342R").setText("hohoho");
-      // form.getTextField('address').setText("h");
-      // form.updateFieldAppearances(ubuntuFont); // Update appearances with the embedded font
-
-      const filledPdfBytes = await pdfDoc.save();
-      return filledPdfBytes;
-    } catch (error) {
-      console.error("Error generating filled PDF:", error);
-      throw error; // Ensure error handling is in place
-    }
-  };
-
-  const updateFilledPDF = async () => {
-    console.log("herer");
-    try {
-      // Load existing PDF bytes
-      const filledPdfBytes = await generateFilledPDF();
-      const blob = new Blob([filledPdfBytes], { type: "application/pdf" });
-      console.log(blob);
-      const pdfUrl = URL.createObjectURL(blob);
-      window.open(pdfUrl);
-      // saveAs(blob, 'filled_form.pdf');
-    } catch (error) {
-      console.error("Error updating filled PDF:", error);
-    }
   };
 
   return (
@@ -238,7 +124,7 @@ function ReservationForm() {
           <div>
             <TextField
               label="Name of Guest"
-              error={errorText.guestName}
+              error={errorText.guestName !== ""}
               required={requiredFields.guestName}
               helperText={errorText.guestName && errorText.guestName}
               fullWidth
@@ -253,7 +139,7 @@ function ReservationForm() {
           <div>
             <TextField
               label="Address"
-              error={errorText.address}
+              error={errorText.address !== ""}
               helperText={errorText.address && errorText.address}
               fullWidth
               required={requiredFields.address}
@@ -268,7 +154,7 @@ function ReservationForm() {
           <TextField
             label="Number of Guests"
             fullWidth
-            error={errorText.numberOfGuests}
+            error={errorText.numberOfGuests !== ""}
             required={requiredFields.numberOfGuests}
             helperText={errorText.numberOfGuests && errorText.numberOfGuests}
             className="bg-white"
@@ -280,7 +166,7 @@ function ReservationForm() {
           <TextField
             label="Number of Rooms Required"
             fullWidth
-            error={errorText.numberOfRooms}
+            error={errorText.numberOfRooms !== ""}
             required={requiredFields.numberOfRooms}
             helperText={errorText.numberOfRooms && errorText.numberOfRooms}
             className="bg-white"
@@ -290,8 +176,7 @@ function ReservationForm() {
             onChange={handleChange}
           />
 
-          
-<div className="form-group">
+          <div className="form-group">
             <label>Category: (Refer to this page for categories)</label>
 
             <select
@@ -301,15 +186,13 @@ function ReservationForm() {
               value={formData.roomType}
             >
               <option className="" value="Single Occupancy">
-                <div className="w-32 text-wrap">Single Occupancy</div>
+                Single Occupancy
               </option>
               <option className="" value="Double Occupancy">
-              Double Occupancy
+                Double Occupancy
               </option>
             </select>
           </div>
-
-
 
           <div className="form-group">
             <label>Arrival Time:</label>
@@ -341,7 +224,7 @@ function ReservationForm() {
 
           <TextField
             label="Purpose of Booking"
-            error={errorText.purpose}
+            error={errorText.purpose !== ""}
             helperText={errorText.purpose && errorText.purpose}
             required={requiredFields.purpose}
             fullWidth
@@ -362,7 +245,7 @@ function ReservationForm() {
               value={formData.category}
             >
               <option className="" value="A">
-                <div className="w-32 text-wrap">Category A</div>
+                Category A
               </option>
               <option className="" value="B">
                 Category B
@@ -375,7 +258,12 @@ function ReservationForm() {
           <button type="submit" onClick={handleSubmit} className="submit-btn">
             Submit
           </button>
-          <button onClick={updateFilledPDF} className="convert-to-pdf-btn">
+          <button
+            onClick={() => {
+              updateFilledPDF(formData);
+            }}
+            className="convert-to-pdf-btn"
+          >
             See Preview - PDF
           </button>
         </FormControl>
