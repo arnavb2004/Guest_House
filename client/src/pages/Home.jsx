@@ -1,15 +1,13 @@
 import React from "react";
 import Guesthouse2 from "../images/Guesthouse2.jpeg";
 import Slider from "../components/Slider";
-import { useDispatch, useSelector } from "react-redux";
-
-
+import { sliderItems } from "../data";
 
 const Home = () => {
   return (
     <div className="flex flex-col items-center w-screen">
       <div className="">
-        <Slider />
+        <Slider items = {sliderItems}/>
       </div>
       <div className="home w-5/6 grid grid-cols-4 my-10 text-justify">
         <div className="content col-span-3 p-4">

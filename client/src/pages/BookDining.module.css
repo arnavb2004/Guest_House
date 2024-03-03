@@ -1,0 +1,153 @@
+/* BookDining.module.css */
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center;
+}
+
+.options {
+  margin-bottom: 20px;
+}
+
+.menuItems {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+/* BookDining.module.css */
+
+.menuItem {
+  width: calc(33.33% - 20px);
+  margin: 10px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add box shadow */
+  background-color: #fff; /* Add background color */
+}
+
+.menuItem:hover {
+  transform: translateY(-5px);
+}
+
+.menuItem img {
+  width: 100%;
+  border-top-left-radius: 5px; /* Adjust border radius */
+  border-top-right-radius: 5px; /* Adjust border radius */
+}
+
+.itemInfo {
+  padding: 10px; /* Increase padding */
+}
+
+.price {
+  font-size: 16px; /* Adjust font size */
+  margin-bottom: 5px; /* Add margin */
+}
+
+.count {
+  margin-bottom: 5px; /* Add margin */
+}
+
+.remove {
+  background-color: #ff6347; /* Change background color */
+  color: #fff; /* Change text color */
+  border: none;
+  padding: 6px 12px; /* Adjust padding */
+  border-radius: 4px; /* Add border radius */
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.remove:hover {
+  background-color: #ff4737; /* Change background color on hover */
+}
+
+.itemInfo {
+  padding: 5px;
+  text-align: center;
+}
+
+.cart {
+  margin-top: 20px;
+  /* background-color: #f5f5f5;  */
+  background-color: #365899; 
+  color: white;
+  border-radius: 5px;
+  padding: 20px; /* Add padding */
+}
+
+.cart table {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 5px;
+  overflow: hidden;
+
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.cart th,
+.cart td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #dddddde7;
+}
+
+.cart th:first-child,
+.cart td:first-child {
+  border-left: none;
+}
+
+.cart th:last-child,
+.cart td:last-child {
+  border-right: none;
+}
+
+.cart td:last-child {
+  text-align: center;
+}
+
+.total {
+  font-weight: bold;
+  padding: 12px;
+}
+
+.button {
+  margin-top: 20px;
+  margin-right: 10px;
+  padding: 10px 20px; /* Add padding */
+  background-color: #4CAF50; /* Green background */
+  color: white; /* White text color */
+  border: none; /* Remove border */
+  border-radius: 5px; /* Add border radius */
+  cursor: pointer; /* Add pointer cursor on hover */
+  transition: background-color 0.3s; /* Smooth transition for background color */
+}
+
+.button:hover {
+  background-color: #45a049; /* Darker green on hover */
+}
+
+/* Filter input styles */
+.searchInput {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: #365899; /* Change border color on focus */
+}
+
+.noResult {
+  text-align: center;
+  margin-top: 10px;
+  color: white;
+}

@@ -38,8 +38,8 @@ export default function RecordList() {
   };
 
   return (
-    <div className=" flex items-center justify-center p-5 w-5/6">
-      <List sx={{ width: "100%", padding: "0px" }} className="bg-gray-50">
+    <div className=" flex p-5 px-0 w-full">
+      <List sx={{ width: "100%", padding: "0px" }} className="bg-gray-50 rounded-md overflow-hidden">
         <ListItem
           className=" bg-[#365899] text-white"
           key="#"
@@ -50,7 +50,7 @@ export default function RecordList() {
           }
           disablePadding
         >
-          <ListItemButton role={undefined} onClick={handleToggle("#")} dense>
+          <ListItemButton role={undefined} onClick={handleToggle("#")} dense sx={{paddingY:"10px"}}>
             <ListItemIcon>
               <Checkbox
                 edge="start"
@@ -102,6 +102,8 @@ export default function RecordList() {
               disablePadding
             >
               <ListItemButton
+                className=""
+                sx={{paddingY:"10px"}}
                 role={undefined}
                 onClick={handleToggle(value)}
                 dense

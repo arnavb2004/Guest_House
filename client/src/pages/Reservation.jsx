@@ -1,44 +1,18 @@
-import React, { useState, useEffect } from "react";
-// import { saveAs } from 'file-saver';
-// import { PDFDocument, rgb } from 'pdf-lib';
-import "./Reservation.css";
-import Header from "../components/Header";
-import axios from "axios";
+import React from "react";
+import Header2 from "../components/Header2";
+import Menu from "../components/Menu";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormHelperText from "@mui/material/FormHelperText";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import { TextField } from "@mui/material";
+import ReservationForm from "./Reservation_Form";
 import RecordList from "../components/RecordList";
-import Stepper from "../components/Stepper";
+import Sidebar from "../components/Sidebar";
+import { Outlet } from "react-router-dom";
 
-function Dining() {
-  const [formData, setFormData] = useState({
-    guestName: "",
-    address: "",
-    numberOfGuests: "",
-    numberOfRooms: "",
-    roomType: "",
-    arrivalDate: "",
-    arrivalTime: "",
-    departureDate: "",
-    departureTime: "",
-    purpose: "",
-    category: "",
-  });
-
-  console.log(formData);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Handle form submission
-    axios.post("http://localhost:4751/reservation", formData);
-    console.log("Form submitted");
-  };
-
+function Reservation() {
   // const generateFilledPDF = async () => {
   //   try {
   //     // Assuming this URL and fetch operation work correctly
@@ -86,194 +60,27 @@ function Dining() {
   //     console.error('Error updating filled PDF:', error);
   //   }
   // };
-
+  const ifsubmit = false;
   return (
     <>
-      <Header />
-      <div className="w-full flex flex-col items-center justify-center mt-10">
-        <Stepper />
-        <RecordList />
+      {/* <Header /> */}
+      {/* <Menu /> */}
+      {/* <Header2/> */}
+      <div className="w-full flex flex-col h-screen">
+        <Menu />
+        <div className="w-full flex h-screen overflow-hidden">
+          <Sidebar />
+          <div className="w-full px-9 overflow-y-scroll">
+            <Outlet />
+          </div>
+          {/* <RecordList /> */}
+        </div>
+        {/* <Stepper /> */}
       </div>
-      <div className="reservation-container">
-        <h2>Guest House Reservation Form</h2>
-        <form onSubmit={handleSubmit}>
-          {/* Form fields */}
-          <div className="form-group">
-            <label>Name of the Guest:</label>
-            <input
-              type="text"
-              name="guestName"
-              value={formData.guestName}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-group">
-            <label>Address:</label>
-            <input
-              type="text"
-              name="address"
-              value={formData.address}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-group">
-            <label>Number of guests:</label>
-            <input
-              type="text"
-              name="numberOfGuests"
-              value={formData.numberOfGuests}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-group">
-            <label>Number of Rooms required:</label>
-            <input
-              type="text"
-              name="numberOfRooms"
-              value={formData.numberOfRooms}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-group">
-            <label>Room Type (Single Occupancy/Double Occupancy):</label>
-            <select
-              name="roomType"
-              className="w-full h-12 border rounded-md border-gray-300 p-2"
-              onChange={handleChange}
-              value={formData.roomType}
-            >
-              <option className="p-2" value="Single Occupancy">Single Occupancy</option>
-              <option className="p-2" value="Double Occupancy">Double Occupancy</option>
-            </select>
-            
-          </div>
-          <div className="form-group">
-            <label>Arrival Date:</label>
-            <input
-              type="date"
-              name="arrivalDate"
-              value={formData.arrivalDate}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-group">
-            <label>Arrival Time:</label>
-            <input
-              type="time"
-              name="arrivalTime"
-              value={formData.arrivalTime}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-group">
-            <label>Departure Date:</label>
-            <input
-              type="date"
-              name="departureDate"
-              value={formData.departureDate}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-group">
-            <label>Departure Time:</label>
-            <input
-              type="time"
-              name="departureTime"
-              value={formData.departureTime}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-group">
-            <label>Purpose of Booking:</label>
-            <input
-              type="text"
-              name="purpose"
-              value={formData.purpose}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-group">
-            <label>Category (Cat-A, Cat-B, Cat-C):</label>
-            <select
-              name="category"
-              className="w-full h-12 border rounded-md border-gray-300 p-2"
-              onChange={handleChange}
-              value={formData.category}
-            >
-              <option value="A">A</option>
-              <option value="B">B</option>
-              <option value="C">C</option>
-            </select>
-            {/* <input
-              type="text"
-              name="category"
-              value={formData.category}
-              onChange={handleChange}
-            /> */}
-          </div>
-          {/* <div className="form-group">
-            <label>Payment:</label>
-            <input
-              type="text"
-              name="payment"
-              value={formData.payment}
-              onChange={handleChange}
-            />
-          </div> */}
-          {/*          
-          <div className="form-group">
-            <label>HoD/Section Head Name:</label>
-            <input
-              type="text"
-              name="hodName"
-              value={formData.hodName}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-group">
-            <label>HoD/Section Head Designation:</label>
-            <input
-              type="text"
-              name="hodDesignation"
-              value={formData.hodDesignation}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-group">
-            <label>Approving Authority Name:</label>
-            <input
-              type="text"
-              name="approvingAuthorityName"
-              value={formData.approvingAuthorityName}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-group">
-            <label>Approving Authority Designation:</label>
-            <input
-              type="text"
-              name="approvingAuthorityDesignation"
-              value={formData.approvingAuthorityDesignation}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-group">
-            <label>Recommendation:</label>
-            <input
-              type="text"
-              name="recommendation"
-              value={formData.recommendation}
-              onChange={handleChange}
-            />
-          </div> */}
-          <button type="submit" className="submit-btn">
-            Submit
-          </button>
-        </form>
-        {/* <button onClick={updateFilledPDF} className="convert-to-pdf-btn">Convert to PDF</button> */}
-      </div>
+      {/* <ReservationForm/> */}
+      {/* <Sidebar isOpen={true}/> */}
     </>
   );
 }
 
-export default Dining;
+export default Reservation;

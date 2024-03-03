@@ -19,7 +19,7 @@ const Menu = () => {
   ];
 
   return (
-    <div className="col-span-2 menu w-full h-full flex justify-center ">
+    <div className="col-span-2 menu w-full h-15 flex justify-center ">
       <div className="menu-container w-full h-12 pr-3  text-white bg-[#365899]">
         <ul className="tabs h-full flex justify-center items-center">
           {menuItems.map((item) => (
