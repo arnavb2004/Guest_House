@@ -54,17 +54,17 @@ export const sliderItems1 = [
   {
     key: 4,
     img: food4,
-    title: "Sandwitch",
+    title: "Sandwich",
   },
   {
     key: 5,
     img: food5,
-    title: "Sandwitch",
+    title: "Sandwich",
   },
   {
     key: 6,
     img: food6,
-    title: "Sandwitch",
+    title: "Sandwich",
   },
 ];
 
@@ -88,17 +88,17 @@ export const sliderItems2 = [
   {
     key: 4,
     img: food4,
-    title: "Sandwitch",
+    title: "Sandwich",
   },
   {
     key: 5,
     img: food5,
-    title: "Sandwitch",
+    title: "Sandwich",
   },
   {
     key: 6,
     img: food6,
-    title: "Sandwitch",
+    title: "Sandwich",
   },
 ];
 
@@ -122,16 +122,16 @@ export const sliderItems3 = [
   {
     key: 4,
     img: food4,
-    title: "Sandwitch",
+    title: "Sandwich",
   },
   {
     key: 5,
     img: food5,
-    title: "Sandwitch",
+    title: "Sandwich",
   },
   {
     key: 6,
     img: food6,
-    title: "Sandwitch",
+    title: "Sandwich",
   },
 ];

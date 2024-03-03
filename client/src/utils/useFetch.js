@@ -11,3 +11,11 @@ export const privateRequest=function (accessToken,refreshToken){
     )
     return instance;
 }
+
+export const publicRequest=function (){
+    const instance=axios.create({
+        baseURL:"http://localhost:4751"
+    }
+    )
+    return instance;
+}

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -9,12 +9,33 @@ import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
 import CommentIcon from "@mui/icons-material/Comment";
 import { useSelector, useDispatch } from "react-redux";
+import { privateRequest } from "../utils/useFetch";
 
 export default function RecordList() {
   const [checked, setChecked] = useState([]);
   const [values, setValues] = useState([0, 1, 2, 3]);
-  const user = useSelector((state) => state.user)
-  const dispatch = useDispatch()
+  const user = useSelector((state) => state.user);
+  const [records, setRecords] = useState([]);
+
+  const makeRequest = privateRequest(user.accessToken, user.refreshToken);
+  console.log(makeRequest);
+
+  const fetchRecords = async () => {
+    try {
+      const res = await makeRequest.get("/reservation/details");
+      console.log(res.data);
+      setRecords(res.data.reservations);
+    } catch (err) {
+      // toast(err.response.data);
+      console.log(err.response.data);
+    }
+  };
+
+  useEffect(() => {
+    fetchRecords();
+  }, []);
+
+  const dispatch = useDispatch();
   const handleToggle = (value) => () => {
     const currentIndex = checked.indexOf(value);
 
@@ -41,7 +62,10 @@ export default function RecordList() {
 
   return (
     <div className=" flex p-5 px-0 w-full">
-      <List sx={{ width: "100%", padding: "0px" }} className="bg-gray-50 rounded-md overflow-hidden">
+      <List
+        sx={{ width: "100%", padding: "0px" }}
+        className="bg-gray-50 rounded-md overflow-hidden"
+      >
         <ListItem
           className=" bg-[#365899] text-white"
           key="#"
@@ -52,7 +76,12 @@ export default function RecordList() {
           }
           disablePadding
         >
-          <ListItemButton role={undefined} onClick={handleToggle("#")} dense sx={{paddingY:"10px"}}>
+          <ListItemButton
+            role={undefined}
+            onClick={handleToggle("#")}
+            dense
+            sx={{ paddingY: "10px" }}
+          >
             <ListItemIcon>
               <Checkbox
                 edge="start"
@@ -64,38 +93,62 @@ export default function RecordList() {
             </ListItemIcon>
             <ListItemText
                   id="checkbox-list-label-header"
-                  className=" text-wrap w-10 mr-5" 
-                  sx={{overflow: "hidden"}}
+                  className=" text-wrap w-12"
+                  sx={{ overflow: "hidden" }}
                   primary="Name"
                 />
-            <ListItemText
-              id="checkbox-list-label-header"
-              primary="Number of guests"
-            />
-            <ListItemText
-              id="checkbox-list-label-header"
-              primary="Number of rooms"
-            />
-            <ListItemText id="checkbox-list-label-header" primary="Category" />
-            <ListItemText
-              id="checkbox-list-label-header"
-              primary="Arrival Date"
-            />
-            <ListItemText
-              id="checkbox-list-label-header"
-              primary="Departure Date"
-            />
-            <ListItemText id="checkbox-list-label-header" primary="Room type" />
-            { user.role === "ADMIN"?<ListItemText id="checkbox-list-label-header" primary="Status" />:null} 
+                <ListItemText
+                  id="checkbox-list-label-header"
+                  className=" text-wrap w-8 text-center"
+                  primary="Number of Guests"
+                />
+                <ListItemText
+                  id="checkbox-list-label-header"
+                  className=" text-wrap w-8 text-center"
+                  primary="Number of Rooms"
+                />
+                <ListItemText
+                  id="checkbox-list-label-header"
+                  className=" text-wrap w-10 text-center"
+                  primary="Category"
+                />
+                <ListItemText
+                  id="checkbox-list-label-header"
+                  className="w-20 text-center"
+                  primary="Arrival Date"
+                  />
+                <ListItemText
+                  id="checkbox-list-label-header"
+                  className="w-20 text-center"
+                  primary="Departure Date"
+                  />
+                <ListItemText
+                  id="checkbox-list-label-header"
+                  className="w-20 text-center"
+                  primary="Room Type"
+                  />
+                {user.role === "ADMIN" ? (
+                  <ListItemText
+                  id="checkbox-list-label-header"
+                  className="w-10"
+                    primary="Status"
+                  />
+                ) : null}
           </ListItemButton>
         </ListItem>
 
-        {values.map((value) => {
-          const labelId = `checkbox-list-label-${value}`;
+        {records.map((record) => {
+          const labelId = `checkbox-list-label-${record._id}`;
+          const currArrDate = new Date(record.arrivalDate);
+          const currDepDate = new Date(record.departureDate);
+
+          // const getDate =(date) => {
+          //   return date.getDate();
+          // }
 
           return (
             <ListItem
-              key={value}
+              key={record._id}
               className="border-b"
               secondaryAction={
                 <IconButton edge="end" aria-label="comments">
@@ -106,52 +159,65 @@ export default function RecordList() {
             >
               <ListItemButton
                 className=""
-                sx={{paddingY:"10px"}}
+                sx={{ paddingY: "10px" }}
                 role={undefined}
-                onClick={handleToggle(value)}
+                onClick={handleToggle(record._id)}
                 dense
               >
                 <ListItemIcon>
                   <Checkbox
                     edge="start"
-                    checked={checked.indexOf(value) !== -1}
+                    checked={checked.indexOf(record._id) !== -1}
                     tabIndex={-1}
                     disableRipple
                     inputProps={{ "aria-labelledby": labelId }}
                   />
                 </ListItemIcon>
                 {/* <ListItemText id={labelId} primary={`Line item ${value + 1}`} /> */}
+
                 <ListItemText
                   id="checkbox-list-label-header"
-                  className=" text-wrap w-10 mr-5" 
-                  sx={{overflow: "hidden"}}
-                  primary="Namevnsndsndkdjsnvkkjk"
+                  className=" text-wrap w-12"
+                  sx={{ overflow: "hidden" }}
+                  primary={record.guestName}
                 />
                 <ListItemText
                   id="checkbox-list-label-header"
-                  primary="Number of guests"
+                  className=" text-wrap w-10 text-center"
+                  primary={record.numberOfGuests}
                 />
                 <ListItemText
                   id="checkbox-list-label-header"
-                  primary="Number of rooms"
+                  className=" text-wrap w-10 text-center"
+                  primary={record.numberOfRooms}
                 />
                 <ListItemText
                   id="checkbox-list-label-header"
-                  primary="Category"
+                  className=" text-wrap w-10"
+                  primary={record.category}
                 />
                 <ListItemText
                   id="checkbox-list-label-header"
-                  primary="Arrival Date"
-                />
+                  className="w-20 text-center"
+                  primary={new Date(record.arrivalDate).toLocaleDateString()}
+                  />
                 <ListItemText
                   id="checkbox-list-label-header"
-                  primary="Departure Date"
-                />
+                  className="w-20 text-center"
+                  primary={new Date(record.departureDate).toLocaleDateString()}
+                  />
                 <ListItemText
                   id="checkbox-list-label-header"
-                  primary="Room type"
-                />
-                { user.role === "ADMIN"?<ListItemText id="checkbox-list-label-header" primary="Pending" />:null}
+                  className="w-20 text-center"
+                  primary={record.roomType}
+                  />
+                {user.role === "ADMIN" ? (
+                  <ListItemText
+                  id="checkbox-list-label-header"
+                  className="w-10"
+                    primary="Pending"
+                  />
+                ) : null}
               </ListItemButton>
             </ListItem>
           );

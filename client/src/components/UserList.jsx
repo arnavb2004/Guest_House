@@ -9,7 +9,7 @@ import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
 import CommentIcon from "@mui/icons-material/Comment";
 import axios from "axios";
-import { privateRequest } from "../utils/userRequest";
+import { privateRequest } from "../utils/useFetch";
 export default function RecordList() {
   const [checked, setChecked] = useState([]);
   const [values, setValues] = useState([0, 1, 2, 3]);

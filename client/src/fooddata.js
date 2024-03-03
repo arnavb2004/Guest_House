@@ -11,15 +11,14 @@ export const menuItems1 = [
     image: food1,
     price: 5.99,
     name: "Pizza",
-    category:"Dinner"
-
+    category: "Dinner",
   },
   {
     id: 2,
     image: food2,
     price: 6.99,
     name: "Burger",
-    category:"Lunch"
+    category: "Lunch",
   },
 
   {
@@ -27,28 +26,28 @@ export const menuItems1 = [
     image: food3,
     price: 7.99,
     name: "Paratha",
-    category:"Breakfast"
+    category: "Breakfast",
   },
   {
     id: 4,
     image: food4,
     price: 9.99,
-    name: "Sandwitch1",
-    category:"Breakfast"
+    name: "Sandwich1",
+    category: "Breakfast",
   },
   {
     id: 5,
     image: food5,
     price: 15.99,
-    name: "Sandwitch2",
-    category:"Breakfast"
+    name: "Sandwich2",
+    category: "Breakfast",
   },
   {
     id: 6,
     image: food6,
     price: 25.99,
-    name: "Sandwitch3",
-    category:"Breakfast"
+    name: "Sandwich3",
+    category: "Breakfast",
   },
 ];
 
@@ -72,17 +71,17 @@ export const sliderItems2 = [
   {
     key: 4,
     img: food4,
-    title: "Sandwitch",
+    title: "Sandwich",
   },
   {
     key: 5,
     img: food5,
-    title: "Sandwitch",
+    title: "Sandwich",
   },
   {
     key: 6,
     img: food6,
-    title: "Sandwitch",
+    title: "Sandwich",
   },
 ];
 
@@ -106,16 +105,16 @@ export const sliderItems3 = [
   {
     key: 4,
     img: food4,
-    title: "Sandwitch",
+    title: "Sandwich",
   },
   {
     key: 5,
     img: food5,
-    title: "Sandwitch",
+    title: "Sandwich",
   },
   {
     key: 6,
     img: food6,
-    title: "Sandwitch",
+    title: "Sandwich",
   },
 ];
