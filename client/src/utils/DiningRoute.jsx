@@ -7,21 +7,12 @@ import { useSelector , useDispatch} from "react-redux";
 const DiningRoute = () => {
 
   const user = useSelector((state) => state.user);
-
-
+  
   if(user.email){
-    console.log("in email")
-    if(user.role==='ADMIN'){
-      console.log("in ADMIN")
-        return <Admin_Dining />
-    }
-    else{
-        return <Dining />
-    }
-
+    return <Dining />
   }
   else{
-        return <Navigate to="/login" />;
+    return <Navigate to="/login" />;
   }
 
 };
