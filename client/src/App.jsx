@@ -21,6 +21,7 @@ import BookDining from "./pages/BookDining";
 import AdminHomePage from "./pages/AdminHomePage";
 import AdminRoute from "./utils/AdminRoute";
 import UserList from "./components/UserList";
+import Cart from "./pages/Cart";
 function App() {
   return (
     <div className="">
@@ -40,6 +41,9 @@ function App() {
                 
               <Route path='' element={<RecordList/>} />
               <Route path='book-dining' element={<BookDining/>} />
+              <Route path='cart' element={<Cart/>} />
+
+
 
             </Route>
             <Route path="/reservation" element={<ReservationRoute/>} >

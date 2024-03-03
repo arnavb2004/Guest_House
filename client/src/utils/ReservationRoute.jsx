@@ -17,7 +17,6 @@ const ReservationRoute = () => {
     else{
         return <Navigate to="/login" />;
     }
-
 };
 
 export default ReservationRoute;

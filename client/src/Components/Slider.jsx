@@ -44,7 +44,7 @@ const Slider = (sliderItems) => {
   };
 
   return (
-    <div className="slider-container mx-7 ">
+    <div className="slider-container mx-7 transition-transform ">
       <div className="arrow arrow-left">
         <KeyboardArrowLeftOutlinedIcon onClick={() => handleClick("left")} />
       </div>
