@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useRef, useState, useEffect } from "react";
 
 import Header from "../components/Header";
 import axios from "axios";
@@ -8,6 +8,37 @@ import { TextField } from "@mui/material";
 // import ReservationForm from './Reservation_Form';
 import "./Reservation_Form.css";
 import { updateFilledPDF } from "../utils/generatePDF";
+import { FileUpload } from "primereact/fileupload";
+import { Toast } from "primereact/toast";
+import InputFileUpload from "../components/uploadFile";
+
+function AutoDemo() {
+  const toast = useRef(null);
+
+  const onUpload = () => {
+    toast.current.show({
+      severity: "info",
+      summary: "Success",
+      detail: "File Uploaded",
+    });
+  };
+
+  return (
+    <div className="card flex justify-content-center">
+      <Toast ref={toast}></Toast>
+      <FileUpload
+        mode="basic"
+        name="demo[]"
+        url="/api/upload"
+        accept="image/*"
+        maxFileSize={1000000}
+        onUpload={onUpload}
+        auto
+        chooseLabel="Browse"
+      />
+    </div>
+  );
+}
 
 function ReservationForm() {
   const [formData, setFormData] = useState({
@@ -250,7 +281,7 @@ function ReservationForm() {
 
             <select
               name="category"
-              className="w-full h-12 border rounded-md border-gray-300 p-2 whitespace-pre"
+              className="w-full h-12 border rounded-md border-gray-300 p-2 mb-5 whitespace-pre"
               onChange={handleChange}
               value={formData.category}
             >
@@ -267,6 +298,21 @@ function ReservationForm() {
                 Category D
               </option>
             </select>
+            {/* <AutoDemo/> */}
+            <InputFileUpload className='' />
+
+            {/* <div className="card">
+              <FileUpload
+                name="demo[]"
+                url={"/api/upload"}
+                multiple
+                accept="image/*"
+                maxFileSize={1000000}
+                emptyTemplate={
+                  <p className="m-0">Drag and drop files to here to upload.</p>
+                }
+              />
+            </div> */}
           </div>
           <button type="submit" onClick={handleSubmit} className="submit-btn">
             Submit

@@ -19,12 +19,10 @@ export async function createReservation(req, res) {
       departureDate,
       status: "PENDING",
     });
-    res
-      .status(200)
-      .json({
-        message:
-          "Reservation Request added successfully. Please wait for approval from the admin.",
-      });
+    res.status(200).json({
+      message:
+        "Reservation Request added successfully. Please wait for approval from the admin.",
+    });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
@@ -55,11 +53,7 @@ export async function getReservationDetails(req, res) {
         .status(403)
         .json({ message: "You are not authorized to view this application" });
     }
-    res.status(200).json({
-      user: reservation.guestEmail,
-      status: reservation.status,
-      approvals: reservation.approvals,
-    });
+    res.status(200).json({ reservation });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
