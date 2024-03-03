@@ -8,13 +8,12 @@ import ListItemText from "@mui/material/ListItemText";
 import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
 import CommentIcon from "@mui/icons-material/Comment";
-import { useSelector, useDispatch } from "react-redux";
-
+import axios from "axios";
+import { privaterequest } from "../utils/userRequest";
 export default function RecordList() {
   const [checked, setChecked] = useState([]);
   const [values, setValues] = useState([0, 1, 2, 3]);
-  const user = useSelector((state) => state.user)
-  const dispatch = useDispatch()
+
   const handleToggle = (value) => () => {
     const currentIndex = checked.indexOf(value);
 
@@ -39,6 +38,7 @@ export default function RecordList() {
     setChecked(newChecked);
   };
 
+  const userData=privaterequest("","").get("/users")
   return (
     <div className=" flex p-5 px-0 w-full">
       <List sx={{ width: "100%", padding: "0px" }} className="bg-gray-50 rounded-md overflow-hidden">
@@ -70,23 +70,22 @@ export default function RecordList() {
                 />
             <ListItemText
               id="checkbox-list-label-header"
-              primary="Number of guests"
+              primary="Email"
             />
             <ListItemText
               id="checkbox-list-label-header"
-              primary="Number of rooms"
+              primary="Contact"
             />
-            <ListItemText id="checkbox-list-label-header" primary="Category" />
+            {/* <ListItemText id="checkbox-list-label-header" primary="Category" /> */}
             <ListItemText
               id="checkbox-list-label-header"
-              primary="Arrival Date"
+              primary="Pending requests"
             />
-            <ListItemText
+            {/* <ListItemText
               id="checkbox-list-label-header"
               primary="Departure Date"
-            />
-            <ListItemText id="checkbox-list-label-header" primary="Room type" />
-            { user.role === "ADMIN"?<ListItemText id="checkbox-list-label-header" primary="Status" />:null} 
+            /> */}
+            {/* <ListItemText id="checkbox-list-label-header" primary="Room type" /> */}
           </ListItemButton>
         </ListItem>
 
@@ -131,10 +130,10 @@ export default function RecordList() {
                   id="checkbox-list-label-header"
                   primary="Number of guests"
                 />
-                <ListItemText
+                {/* <ListItemText
                   id="checkbox-list-label-header"
                   primary="Number of rooms"
-                />
+                /> */}
                 <ListItemText
                   id="checkbox-list-label-header"
                   primary="Category"
@@ -143,15 +142,14 @@ export default function RecordList() {
                   id="checkbox-list-label-header"
                   primary="Arrival Date"
                 />
-                <ListItemText
+                {/* <ListItemText
                   id="checkbox-list-label-header"
                   primary="Departure Date"
-                />
-                <ListItemText
+                /> */}
+                {/* <ListItemText
                   id="checkbox-list-label-header"
                   primary="Room type"
-                />
-                { user.role === "ADMIN"?<ListItemText id="checkbox-list-label-header" primary="Pending" />:null}
+                /> */}
               </ListItemButton>
             </ListItem>
           );
