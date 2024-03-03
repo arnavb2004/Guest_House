@@ -195,6 +195,16 @@ function ReservationForm() {
           </div>
 
           <div className="form-group">
+            <label>Arrival Date:</label>
+            <input
+              type="date"
+              name="arrivalDate"
+              value={formData.arrivalDate}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="form-group">
             <label>Arrival Time:</label>
             <input
               type="time"
@@ -252,6 +262,9 @@ function ReservationForm() {
               </option>
               <option className="" value="C">
                 Category C
+              </option>
+              <option className="" value="D">
+                Category D
               </option>
             </select>
           </div>
