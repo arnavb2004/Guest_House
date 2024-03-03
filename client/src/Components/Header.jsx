@@ -7,7 +7,6 @@ import { BASE_URL } from "../constants";
 import { logout } from "../redux/userSlice";
 // import PersonIcon from "@mui/icons-material/Person";
 // import Roll from "react-reveal/Roll";
-import Fade from "react-reveal/Fade";
 
 const Header = () => {
   const user = useSelector((state) => state.user);
