@@ -7,8 +7,7 @@ export const privateRequest=function (accessToken,refreshToken){
             'accesstoken':accessToken,
             'refreshtoken':refreshToken
         }
-    }
-    )
+    })
     return instance;
 }
 

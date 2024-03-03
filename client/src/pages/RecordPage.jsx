@@ -1,38 +1,47 @@
 import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import axios from 'axios'; // Assuming you use axios for API requests
 import Workflow from '../components/Workflow';
+import { privateRequest } from '../utils/useFetch';
 
 export default function RecordPage() {
   const { id } = useParams();
 
-  // useEffect(() => {
-  //   const fetchRecord = async () => {
-  //     try {
-  //       const response = await axios.get(`/api/users/${userId}`); // Replace with your API endpoint
-  //       setRecordData(response.data);
-  //     } catch (error) {
-  //       console.error('Error fetching user data:', error);
-  //     }
-  //   };
+  const user = useSelector((state) => state.user);
 
-  //   fetchRecord();
-  // }, []);
+  const makeRequest = privateRequest(user.accessToken, user.refreshToken);
+
+  const [userRecord, setUserRecord] = useState({
+    guestName: "",
+    address: "",
+    numberOfGuests: "",
+    numberOfRooms: "",
+    roomType: "",
+    arrivalDate: "",
+    arrivalTime: "",
+    departureDate: "",
+    departureTime: "",
+    purpose: "",
+    category: "",
+  });
+
+  useEffect(() => {
+    const fetchRecord = async () => {
+      try {
+        const response = await makeRequest.get(`/reservation/details/${id}`);
+        console.log(response.data);
+        // setUserRecord(response.data);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
+    fetchRecord();
+  }, []);
   console.log(id);
 
-  // const [userRecord, setUserRecord] = useState({
-  //   guestName: "",
-  //   address: "",
-  //   numberOfGuests: "",
-  //   numberOfRooms: "",
-  //   roomType: "",
-  //   arrivalDate: "",
-  //   arrivalTime: "",
-  //   departureDate: "",
-  //   departureTime: "",
-  //   purpose: "",
-  //   category: "",
-  // });
+  
   // const HTMLRecord = []
 
   // for ([key, value] of Object.entries(userRecord)) {
@@ -46,20 +55,6 @@ export default function RecordPage() {
   //     </>
   //   )
   // }
-
-  const userRecord = {
-    guestName: "Hardik",
-    address: "IIT Ropar",
-    numberOfGuests: "2",
-    numberOfRooms: "1",
-    roomType: "Double Occupency",
-    arrivalDate: "08/03/2024",
-    arrivalTime: "",
-    departureDate: "",
-    departureTime: "",
-    purpose: "Stay",
-    category: "B",
-  }
   
 
   return (
