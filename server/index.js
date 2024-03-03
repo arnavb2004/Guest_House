@@ -26,9 +26,11 @@ app.use("/auth", authRoute);
 app.use("/user",userRoute)
 app.use("/reservation",formRoute)
 app.get("/protected",checkAuth, (req, res) => {
+  console.log("Protected route Getting executed!!!")
   res.json({
     message: "Protected route",
-    user:req.body.user
+    user:req.body.user,
+    accessToken:req.body.newaccessToken
   });
 });
 
