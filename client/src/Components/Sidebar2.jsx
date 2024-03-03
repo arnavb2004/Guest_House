@@ -24,13 +24,12 @@ const Sidebar2 = () => {
     <div className="flex flex-col">
       <div
         className={
-          "absolute top-3 text-white cursor-pointer left-4 z-20 text-xl flex gap-2 items-baseline" +
+          "absolute top-3 text-white left-4 z-20 text-xl flex gap-2 items-baseline" +
           styles.menuIcon
         }
-        onClick={() => setIsOpen((prev) => !prev)}
       >
-        <div>☰</div>
-        <div className='text-xl relative font-["Single Day"] font-["Dosis"]'>
+        <div className="cursor-pointer" onClick={() => setIsOpen((prev) => !prev)}>☰</div>
+        <div className='text-xl cursor-default relative font-["Single Day"] font-["Dosis"]'>
           GUEST HOUSE
         </div>
         <div className="bottom-[2px] relative ">

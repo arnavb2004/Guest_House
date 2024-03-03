@@ -38,7 +38,7 @@
 
 .slide-wrapper {
   height: 100%;
-  /* transition: transform 1s; */
+  transition: transform 1s;
 }
 
 .slide {

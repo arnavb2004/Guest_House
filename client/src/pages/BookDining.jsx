@@ -26,7 +26,7 @@ export const DiningCard = ({ items }) => {
             </div>
             <div className="flex justify-between w-full items-center">
               <div className="text-lg font-semibold">
-                ${item.price.toFixed(2)}
+              ₹{item.price.toFixed(2)}
               </div>
               {cart[item.id] ? (
                 <div className=" text-2xl flex gap-2 font-semibold border-2 p-1 rounded-lg border-black">

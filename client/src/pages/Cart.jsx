@@ -5,8 +5,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { addToCart, removeFromCart } from "../redux/cartSlice";
 
 const Cart = () => {
-  // const [cart, setCart] = useState({});
-  // const [totalAmount, setTotalAmount] = useState(0);
 
   const cartSlice = useSelector((state) => state.cart);
   console.log(cartSlice);
@@ -17,7 +15,7 @@ const Cart = () => {
   const isCartEmpty = Object.keys(cart).length === 0;
 
   const handleOrder = () => {
-    alert(`Total Amount: $${totalAmount.toFixed(2)}`);
+    alert(`Total Amount: ₹${totalAmount.toFixed(2)}`);
     // Further actions like sending the order to a server or resetting the cart can be performed here.
   };
 
@@ -58,7 +56,7 @@ const Cart = () => {
                   return (
                     <tr key={index}>
                       <td>{item.name}</td>
-                      <td>${(item.price * cart[item.id]).toFixed(2)}</td>
+                      <td>₹{(item.price * cart[item.id]).toFixed(2)}</td>
                       <td className="">{cart[item.id]}</td>
                       <td className="w-1/4">
                         <button
@@ -79,7 +77,7 @@ const Cart = () => {
                 })}
               </tbody>
             </table>
-            <p className={styles.total + ' font-["Dosis"] text-xl'}>AMOUNT : ${totalAmount.toFixed(2)}</p>
+            <p className={styles.total + ' font-["Dosis"] text-xl'}>AMOUNT : ₹{totalAmount.toFixed(2)}</p>
             <div className="flex justify-center ">
               <button onClick={handleOrder} className={styles.button + " "}>
                 Order
