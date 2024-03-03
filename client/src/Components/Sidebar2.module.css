@@ -27,6 +27,7 @@
     padding: 10px 5px; /* Adjust vertical padding between items */
     cursor: pointer;
     transition: background-color 0.3s ease;
+    
   }
   
   .menu-item:hover {
@@ -54,7 +55,7 @@
     display: none;
   }
   
-  
+/*   
   
   
   
@@ -62,4 +63,4 @@
   *{
     transition: all 0.3s ease;
   }
-  
+   */

@@ -37,6 +37,7 @@
   width: 100%;
   border-top-left-radius: 5px; /* Adjust border radius */
   border-top-right-radius: 5px; /* Adjust border radius */
+
 }
 
 .itemInfo {
@@ -66,6 +67,21 @@
   background-color: #ff4737; /* Change background color on hover */
 }
 
+
+.add {
+  background-color: #4CAF50; /* Change background color */
+  color: #fff; /* Change text color */
+  border: none;
+  padding: 6px 12px; /* Adjust padding */
+  border-radius: 4px; /* Add border radius */
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.add:hover {
+  background-color: #45a049; /* Change background color on hover */
+}
+
 .itemInfo {
   padding: 5px;
   text-align: center;
@@ -89,11 +105,17 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+
 .cart th,
 .cart td {
   padding: 12px;
   text-align: left;
   border-bottom: 1px solid #dddddde7;
+  font-size:17px;
+  
+}
+.cart th {
+  font-size: 20px;
 }
 
 .cart th:first-child,
@@ -149,5 +171,6 @@
 .noResult {
   text-align: center;
   margin-top: 10px;
-  color: white;
+  font-size: 20px;
+  font-family: 'Dosis';
 }

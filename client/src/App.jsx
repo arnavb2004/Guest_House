@@ -18,6 +18,7 @@ import PDFViewer from "./components/PDFViewer";
 import ReservationForm from "./pages/Reservation_Form";
 import RecordList from "./components/RecordList";
 import BookDining from "./pages/BookDining";
+import Cart from "./pages/Cart";
 
 function App() {
   return (
@@ -38,6 +39,9 @@ function App() {
                 
               <Route path='' element={<RecordList/>} />
               <Route path='book-dining' element={<BookDining/>} />
+              <Route path='cart' element={<Cart/>} />
+
+
 
             </Route>
             <Route path="/reservation" element={<ReservationRoute/>} >

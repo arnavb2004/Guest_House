@@ -18,7 +18,7 @@ const Sidebar2 = () => {
   const content =
     user.role === "ADMIN"
       ? ["Home", "Pending Requests", "Contact"]
-      : ["Home", "Book Dining", "Services", "Contact"];
+      : ["Home", "Book Dining", "Cart", "Services", "Contact"];
 
   return (
     <div className="flex flex-col">
@@ -56,7 +56,11 @@ const Sidebar2 = () => {
           {content.map((item, index) => (
             <Link
               className=""
-              to={item==='Home' ? '/dining' :`/dining/${item.toLowerCase().replace(" ", "-")}`}
+              to={
+                item === "Home"
+                  ? "/dining"
+                  : `/dining/${item.toLowerCase().replace(" ", "-")}`
+              }
             >
               <li className={" " + styles["menu-item"]} key={index}>
                 {item}
