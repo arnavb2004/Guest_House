@@ -252,30 +252,26 @@ const Login = ({ isRegister }) => {
               <GoogleLogin
                 className="w-full"
                 onSuccess={async (res) => {
-                  // navigate("/", { replace: true });
-                  if (res.credential != null) {
-                    const cred = jwtDecode(res.credential);
-                    console.log(cred);
-                    try {
-                      const res = await axios.post(BASE_URL + "/user", {
-                        email: cred.email,
-                      });
-                      console.log(user);
-                      if (res.data.user) {
-                        dispatch(setUserSlice(res.data.user));
-                        navigate(-1);
+                  const credential = res.credential;
+                  try {
+                    const res = await axios.post(
+                      BASE_URL + "/auth/googleLogin",
+                      {
+                        credential,
                       }
-                      else{
-                        dispatch(setCredentialSlice({email:cred.email}));
-                        navigate("/register");
-                      }
-                    } catch (error) {
-                      toast.error(error.response.data.message);
+                    );
+                    // console.log(user);
+                    // console.log(res.data)
+                    if (res.data.user) {
+                      dispatch(setUserSlice(res.data));
+                      navigate(-1);
+                    } else {
+                      dispatch(setCredentialSlice({ email: res.data.email }));
+                      navigate("/register");
                     }
+                  } catch (error) {
+                    toast.error(error.response.data.message);
                   }
-
-                  console.log("Success");
-                  console.log("Logged In");
                 }}
                 onError={() => {
                   console.log("Failed");

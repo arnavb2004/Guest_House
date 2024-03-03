@@ -11,12 +11,15 @@ export const menuItems1 = [
     image: food1,
     price: 5.99,
     name: "Pizza",
+    category:"Dinner"
+
   },
   {
     id: 2,
     image: food2,
     price: 6.99,
     name: "Burger",
+    category:"Lunch"
   },
 
   {
@@ -24,24 +27,28 @@ export const menuItems1 = [
     image: food3,
     price: 7.99,
     name: "Paratha",
+    category:"Breakfast"
   },
   {
     id: 4,
     image: food4,
     price: 9.99,
     name: "Sandwitch1",
+    category:"Breakfast"
   },
   {
     id: 5,
     image: food5,
     price: 15.99,
     name: "Sandwitch2",
+    category:"Breakfast"
   },
   {
     id: 6,
     image: food6,
     price: 25.99,
     name: "Sandwitch3",
+    category:"Breakfast"
   },
 ];
 

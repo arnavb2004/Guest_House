@@ -5,9 +5,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../constants";
 import { logout } from "../redux/userSlice";
-// import PersonIcon from "@mui/icons-material/Person";
-// import Roll from "react-reveal/Roll";
-import Fade from "react-reveal/Fade";
 
 const Header = () => {
   const user = useSelector((state) => state.user);
@@ -50,7 +47,6 @@ const Header = () => {
             className='text-3xl text-justify min-w-max font-medium font-["Dosis"]'
             href="/"
           >
-            <Fade>
               <div className="flex flex-col h-9 py-1 ">
                 <div className={!showHindi && "h-0 overflow-hidden"}>
                   भारतीय प्रौद्योगिकी संस्थान रोपड़
@@ -59,7 +55,6 @@ const Header = () => {
                   INDIAN INSTITUTE OF TECHNOLOGY ROPAR
                 </div>
               </div>
-            </Fade>
           </a>
         </div>
         <div

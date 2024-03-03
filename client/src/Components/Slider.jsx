@@ -44,7 +44,7 @@ const Slider = (sliderItems) => {
   };
 
   return (
-    <div className="slider-container mx-7 ">
+    <div className="slider-container mx-7 transition-transform ">
       <div className="arrow arrow-left">
         <KeyboardArrowLeftOutlinedIcon onClick={() => handleClick("left")} />
       </div>
@@ -59,18 +59,7 @@ const Slider = (sliderItems) => {
                 alt=""
               />
             </div>
-            {/* <div className="infoContainer"> */}
-              {/* <Fade
-                delay={50}
-                appear
-                opposite
-                left={direct === "left"}
-                right={direct === "right"}
-                when={sliderItems[slideIndex] === slide}
-              >
-                <h1 className="slider-title">{slide.title}</h1>
-              </Fade> */}
-            {/* </div> */}
+            
           </div>
         ))}
       </div>

@@ -2,6 +2,7 @@ import OTP from "./../models/otpModel.js";
 import User from "./../models/userModel.js";
 
 import jwt from "jsonwebtoken";
+import {jwtDecode} from "jwt-decode";
 
 export const sendOtp = async (req, res) => {
   const generateOtp = () => {
@@ -83,6 +84,57 @@ export const registerUser = async (req, res) => {
     refreshToken,
     message: "User added successfully",
   });
+};
+
+export const googleLoginUser = async (req, res) => {
+
+  try {
+    const { credential } = req?.body;
+    const cred = jwtDecode(credential);
+    const email = cred?.email;
+    if (email) {
+      const user = await User.findOne({ email });
+      if (user) {
+        const refreshToken = jwt.sign(
+          { email },
+          process.env.REFRESH_TOKEN_SECRET,
+          {
+            expiresIn: "180d",
+          }
+        );
+        const accessToken = jwt.sign(
+          { email },
+          process.env.ACCESS_TOKEN_SECRET,
+          {
+            expiresIn: "5m",
+          }
+        );
+        user.refreshToken = refreshToken;
+        await user.save();
+        res.status(200).json({
+          success: true,
+          user: user,
+          message: "User logged in successfully",
+          accessToken,
+          refreshToken,
+        });
+      } else {
+        res.status(200).json({
+          success: false,
+          email,
+          message: "User does not exist",
+        });
+      }
+    } else {
+      res.status(400).json({
+        success: false,
+        message: "Wrong Credentials",
+      });
+    }
+  } catch (err) {
+    console.log(err.message);
+    res.status(400).json({ success: false, error: err.message });
+  }
 };
 
 export const loginUser = async (req, res) => {

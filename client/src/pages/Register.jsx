@@ -53,7 +53,7 @@ const Register = () => {
       console.log(res);
 
       if (res.data.user) {
-        dispatch(setUserSlice(res.data.user));
+        dispatch(setUserSlice(res.data));
         navigate('/',{replace:true})
       } else {
         console.log("here");

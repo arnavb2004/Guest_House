@@ -17,20 +17,19 @@ const Sidebar = () => {
 
   const content =
     user.role === "ADMIN"
-      ? ["Home", "Pending Requests", "Contact"]
+      ? ["Home", "Pending Requests","Users","Contact"]
       : ["Home", "Reservation Form", "Services", "Contact"];
 
   return (
     <div className="flex flex-col">
       <div
         className={
-          "absolute top-3 text-white cursor-pointer left-4 z-20 text-xl flex gap-2 items-baseline" +
+          "absolute top-3 text-white  left-4 z-20 text-xl flex gap-2 items-baseline" +
           styles.menuIcon
         }
-        onClick={() => setIsOpen((prev) => !prev)}
       >
-        <div>☰</div>
-        <div className='text-xl relative font-["Single Day"] font-["Dosis"]'>
+        <div className="cursor-pointer" onClick={() => setIsOpen((prev) => !prev)}>☰</div>
+        <div className='cursor-default text-xl relative font-["Single Day"] font-["Dosis"]'>
           GUEST HOUSE
         </div>
         <div className="bottom-[2px] relative ">
@@ -56,9 +55,14 @@ const Sidebar = () => {
           {content.map((item, index) => (
             <Link
               className=""
-              to={item==='Home' ? '/reservation' :`/reservation/${item.toLowerCase().replace(" ", "-")}`}
+              key={index}
+              to={
+                item === "Home"
+                  ? (user.role==="ADMIN"? "/admin":"/reservation")
+                  : (user.role==="ADMIN"? `/admin/${item.toLowerCase().replace(" ", "-")}`:`/reservation/${item.toLowerCase().replace(" ", "-")}`)
+              }
             >
-              <li className={" " + styles["menu-item"]} key={index}>
+              <li className={" " + styles["menu-item"]} >
                 {item}
               </li>
               <hr></hr>

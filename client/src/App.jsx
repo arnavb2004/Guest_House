@@ -18,6 +18,10 @@ import PDFViewer from "./components/PDFViewer";
 import ReservationForm from "./pages/Reservation_Form";
 import RecordList from "./components/RecordList";
 import BookDining from "./pages/BookDining";
+import AdminHomePage from "./pages/AdminHomePage";
+import AdminRoute from "./utils/AdminRoute";
+import UserList from "./components/UserList";
+import Cart from "./pages/Cart";
 import RecordPage from "./pages/RecordPage";
 
 function App() {
@@ -39,6 +43,7 @@ function App() {
                 
               <Route path='' element={<RecordList/>} />
               <Route path='book-dining' element={<BookDining/>} />
+              <Route path='cart' element={<Cart/>} />
 
             </Route>
             <Route path="/reservation" element={<ReservationRoute/>} >
@@ -47,6 +52,11 @@ function App() {
               <Route path='reservation-form' element={<ReservationForm/>} />
               <Route path=':id' element={<RecordPage />} />
 
+            </Route>
+            <Route path="/admin" element={<AdminRoute />}>
+              <Route path='' element={<RecordList />} />
+              <Route path="users" element={<UserList />} />
+              {/* <Route path="/reservations" element={<ReservationList />} /> */}
             </Route>
             <Route path="/iitropar-campus-map" element={<PDFViewer />} />
             <Route path="/reservation-form" element={<ReservationForm />} />
@@ -61,5 +71,5 @@ function App() {
     </div>
   );
 }
-
 export default App;
+

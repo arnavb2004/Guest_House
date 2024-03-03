@@ -6,6 +6,10 @@ const reservationSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
+  name: {
+    type: String,
+    required: true,
+  },
   numberOfGuests: {
     type: Number,
     required: true,
@@ -27,6 +31,14 @@ const reservationSchema = new mongoose.Schema({
     type: Date,
     
   },
+  description: {
+    type: String,
+    required: true,
+  },
+  category: {
+    type: String,
+    enum: ['A','B','C'], // Assuming only three types for simplicity
+  },
   status:{
     type:String,
     enum:['PENDING','APPROVED','REJECTED'],
@@ -37,7 +49,11 @@ const reservationSchema = new mongoose.Schema({
       type:mongoose.Schema.Types.ObjectId,
       ref:'User'
     }
-  ]
+  ],
+  address:{
+    type:String,
+    required:true
+  }
 }, {
   timestamps: true, // Adds createdAt and updatedAt timestamps
 });

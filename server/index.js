@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import {expressjwt} from 'express-jwt';
 import authRoute from "./routes/authRoute.js";
 import formRoute from "./routes/formRoute.js";
+import userRoute from "./routes/userRoute.js";
 import {checkAuth} from "./middlewares/tokens.js";
 import Reservation from "./models/reservationModel.js";
 const app = express();
@@ -22,12 +23,14 @@ app.get("/", (req, res) => {
 
 //app.use(expressjwt({ secret: process.env.ACCESS_TOKEN_SECRET, algorithms: ['HS256'] }).unless({ path: ["/auth/login", "/auth/register"] }));
 app.use("/auth", authRoute);
+app.use("/user",userRoute)
 app.use("/reservation",formRoute)
-
 app.get("/protected",checkAuth, (req, res) => {
+  console.log("Protected route Getting executed!!!")
   res.json({
     message: "Protected route",
-    user:req.body.user
+    user:req.body.user,
+    accessToken:req.body.newaccessToken
   });
 });
 

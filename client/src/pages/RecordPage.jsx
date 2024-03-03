@@ -33,20 +33,6 @@ export default function RecordPage() {
   //   purpose: "",
   //   category: "",
   // });
-
-  // const userRecord = {
-  //   "Guest Name": "Maan",
-  //   "Address": "GB Road",
-  //   "Number Of Guests": "69",
-  //   "Number Of Rooms": "69",
-  //   "Room Type": "single bed",
-  //   "Arrival Date": "any day",
-  //   "Arrival Time": "any time",
-  //   "Departure Date": "same day of arrival or maybe sometime next day",
-  //   "Departure Time": "1hr after arrival",
-  //   "Purpose": "chodampatti",
-  //   "Category": "B",
-  // };
   // const HTMLRecord = []
 
   // for ([key, value] of Object.entries(userRecord)) {
@@ -81,7 +67,7 @@ export default function RecordPage() {
       <Workflow />
       
       <div className='col-span-5 shadow-lg flex flex-col justify-center gap-4 font-["Dosis"]'>
-        <div classNamez='flex justify-between px-32'>
+        <div className='flex justify-between px-32'>
           <p className='p-2 text-xl font-semibold'>Guest Name:</p>
           <p className='p-2 text-lg'>{userRecord.guestName}</p>
         </div>
