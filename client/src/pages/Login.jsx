@@ -148,10 +148,13 @@ const Login = ({ isRegister }) => {
         const res = await axios.post(BASE_URL + "/auth/login", {
           ...credentials,
         });
-        console.log(res);
 
         if (res.data.user) {
-          dispatch(setUserSlice(res.data.user));
+          console.log(res.data)
+          dispatch(setUserSlice({
+            user : res.data.user, 
+            accessToken : res.data.accessToken, 
+            refreshToken: res.data.refreshToken}));
           navigate(-1);
         } else {
           dispatch(setCredentialSlice(credentials));
@@ -161,7 +164,7 @@ const Login = ({ isRegister }) => {
         }
       } catch (error) {
         console.log(error);
-        toast.error(error.response.data.message);
+        // toast.error(error.response.data.message);
       }
     }
   };

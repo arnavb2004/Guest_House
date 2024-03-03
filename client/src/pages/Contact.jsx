@@ -12,6 +12,8 @@ const Contact = () => {
     console.log("Captcha value:", value);
   };
 
+  // console.log(process.env);
+
   return (
     <>
       <div className={styles.container}>
@@ -31,13 +33,13 @@ const Contact = () => {
               </iframe>
             </div>
           </div>
-          <div className={styles.captchaContainer}>
+          {/* <div className={styles.captchaContainer}>
             <ReCAPTCHA
               sitekey={process.env.REACT_APP_SITE_KEY}
               onChange={onCaptchaChange}
               className={styles.recaptcha}
             />
-          </div>
+          </div> */}
         </main>
       </div>
     </>

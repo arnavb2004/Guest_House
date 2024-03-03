@@ -7,6 +7,7 @@ const BookDining = () => {
   const [totalAmount, setTotalAmount] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
 
+
   const handleAddToCart = (itemId) => {
     const updatedCart = { ...cart };
     updatedCart[itemId] = (updatedCart[itemId] || 0) + 1;

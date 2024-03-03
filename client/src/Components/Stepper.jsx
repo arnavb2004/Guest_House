@@ -6,7 +6,7 @@ import Typography, { typographyClasses } from "@mui/joy/Typography";
 import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
 import AppRegistrationRoundedIcon from "@mui/icons-material/AppRegistrationRounded";
 
-export default function StepperComponent() {
+export default function StepperComponent({steps, stepsCompleted}) {
   return (
     <Stepper
       orientation="vertical"
@@ -39,51 +39,30 @@ export default function StepperComponent() {
         },
       }}
     >
-      <Step
-        completed
-        indicator={
-          <StepIndicator variant="solid" color="success">
-            <CheckRoundedIcon />
-          </StepIndicator>
-        }
-      >
-        <div>
-          <Typography level="title-sm">Step 1</Typography>
-          Basic Details
-        </div>
-      </Step>
-      <Step
-        completed
-        indicator={
-          <StepIndicator variant="solid" color="success">
-            <CheckRoundedIcon />
-          </StepIndicator>
-        }
-      >
-        <div>
-          <Typography level="title-sm">Step 2</Typography>
-          Company Details
-        </div>
-      </Step>
-      <Step
-        active
-        indicator={
-          <StepIndicator variant="solid" color="primary">
-            <AppRegistrationRoundedIcon />
-          </StepIndicator>
-        }
-      >
-        <div>
-          <Typography level="title-sm">Step 3</Typography>
-          Subscription plan
-        </div>
-      </Step>
-      <Step disabled indicator={<StepIndicator>3</StepIndicator>}>
-        <div>
-          <Typography level="title-sm">Step 4</Typography>
-          Payment details
-        </div>
-      </Step>
+      {steps.map((step, index) => {
+        
+        return (
+          <Step
+            className = "pl-12"
+            completed = {index < stepsCompleted}
+            active = {index === stepsCompleted}
+            disabled = {index > stepsCompleted}
+            indicator = {
+              <StepIndicator 
+                  variant="solid" 
+                  color = {(index < stepsCompleted) && "success" || (index === stepsCompleted) && "primary"}>
+                  {index <  stepsCompleted && <CheckRoundedIcon />}
+                  {index === stepsCompleted && <AppRegistrationRoundedIcon />}
+                  {index > stepsCompleted && (index + 1)}
+                </StepIndicator>
+              }>
+                <div>
+                  <Typography level="title-sm">Step {index + 1}</Typography>
+                  {step}
+                </div>
+          </Step>
+          )
+        })}
     </Stepper>
   );
 }

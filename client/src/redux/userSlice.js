@@ -8,20 +8,26 @@ const userSlice = createSlice({
     email: "",
     contact: "",
     role: "",
+    accessToken: "",
+    refreshToken: "",
   },
   reducers: {
     setUserSlice: (state, action) => {
-      const { name, contact, role, email } = action.payload;
-      state.name = name;
-      state.role = role;
-      state.contact = contact;
-      state.email = email;
+      const { user, accessToken, refreshToken } = action.payload;
+      state.name = user.name;
+      state.role = user.role;
+      state.contact = user.contact;
+      state.email = user.email;
+      state.accessToken = accessToken;
+      state.refreshToken = refreshToken;
     },
     logout: (state) => {
       state.name = "";
       state.contact = "";
       state.email = "";
       state.role = "";
+      state.accessToken = "";
+      state.refreshToken = "";
     },
   },
 });

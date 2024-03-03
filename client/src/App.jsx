@@ -18,6 +18,7 @@ import PDFViewer from "./components/PDFViewer";
 import ReservationForm from "./pages/Reservation_Form";
 import RecordList from "./components/RecordList";
 import BookDining from "./pages/BookDining";
+import RecordPage from "./pages/RecordPage";
 
 function App() {
   return (
@@ -44,6 +45,7 @@ function App() {
               
               <Route path='' element={<RecordList/>} />
               <Route path='reservation-form' element={<ReservationForm/>} />
+              <Route path=':id' element={<RecordPage />} />
 
             </Route>
             <Route path="/iitropar-campus-map" element={<PDFViewer />} />
