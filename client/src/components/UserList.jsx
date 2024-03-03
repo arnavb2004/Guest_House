@@ -9,7 +9,7 @@ import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
 import CommentIcon from "@mui/icons-material/Comment";
 import axios from "axios";
-import { privaterequest } from "../utils/userRequest";
+import { privateRequest } from "../utils/userRequest";
 export default function RecordList() {
   const [checked, setChecked] = useState([]);
   const [values, setValues] = useState([0, 1, 2, 3]);
@@ -38,7 +38,7 @@ export default function RecordList() {
     setChecked(newChecked);
   };
 
-  const userData=privaterequest("","").get("/users")
+  const userData=privateRequest("","").get("/users")
   return (
     <div className=" flex p-5 px-0 w-full">
       <List sx={{ width: "100%", padding: "0px" }} className="bg-gray-50 rounded-md overflow-hidden">
