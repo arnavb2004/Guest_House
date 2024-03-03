@@ -15,7 +15,7 @@ export const generateFilledPDF = async (formData) => {
     const pdfDoc = await PDFDocument.load(pdfData);
 
     pdfDoc.registerFontkit(fontkit);
-    const ubuntuFont = await pdfDoc.embedFont(fontBytes);
+    const ubuntuFont = await pdfDoc.embedFont(fontBytes, { subset: true });
 
     const form = pdfDoc.getForm();
     const pages = pdfDoc.getPages();
@@ -59,21 +59,21 @@ export const generateFilledPDF = async (formData) => {
     });
     firstPage.drawText(formData.arrivalDate, {
       x: 90,
-      y: 605,
+      y: 607,
       size: 12,
       font: ubuntuFont,
       color: rgb(0, 0, 0),
     });
     firstPage.drawText(formData.arrivalTime, {
       x: 210,
-      y: 605,
+      y: 607,
       size: 12,
       font: ubuntuFont,
       color: rgb(0, 0, 0),
     });
     firstPage.drawText(formData.departureDate, {
       x: 330,
-      y: 602,
+      y: 607,
       size: 12,
       font: ubuntuFont,
       color: rgb(0, 0, 0),
@@ -81,6 +81,48 @@ export const generateFilledPDF = async (formData) => {
     firstPage.drawText(formData.departureTime, {
       x: 460,
       y: 607,
+      size: 12,
+      font: ubuntuFont,
+      color: rgb(0, 0, 0),
+    });
+
+    var tick = "Tick";
+    if(formData.category === 'A'){
+      firstPage.drawText( tick, {
+        x: 116,
+        y: 510,
+        size: 12,
+        color: rgb(0, 0, 0),
+      });
+    }
+    if(formData.category === 'B'){
+      firstPage.drawText( tick, {
+        x: 246,
+        y: 510,
+        size: 12,
+        color: rgb(0, 0, 0),
+      });
+    }
+    if(formData.category === 'C'){
+      firstPage.drawText( tick, {
+        x: 376,
+        y: 510,
+        size: 12,
+        color: rgb(0, 0, 0),
+      });
+    }
+    if(formData.category === 'D'){
+      firstPage.drawText( tick, {
+        x: 506,
+        y: 510,
+        size: 12,
+        color: rgb(0, 0, 0),
+      });
+    }
+
+    firstPage.drawText(formData.purpose, {
+      x: 175,
+      y: 585,
       size: 12,
       font: ubuntuFont,
       color: rgb(0, 0, 0),
