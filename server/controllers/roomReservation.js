@@ -3,12 +3,9 @@ import Reservation from "../models/reservationModel.js";
 export async function createReservation(req, res) {
   try {
     //user details are contained in req.body.user
-    const numberOfGuests = req.body.numberOfGuests;
-    const numberOfRooms = req.body.numberOfRooms;
-    const roomType = req.body.roomType;
-    const arrivalDate = req.body.arrivalDate;
-    const departureDate = req.body.departureDate;
-    const email = req.body.user.email;
+    
+    const {numberOfGuests,numberOfRooms,roomType,arrivalDate,departureDate,email,category,address,description}=req.body;
+    const name=req.body.user.name;
     console.log(req.body);
     await Reservation.create({
       guestEmail: email,
@@ -17,7 +14,11 @@ export async function createReservation(req, res) {
       roomType,
       arrivalDate,
       departureDate,
+      guestName: name,
       status: "PENDING",
+      description: description,
+      category: category,
+      address: address,
     });
     res
       .status(200)

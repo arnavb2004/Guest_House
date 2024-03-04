@@ -56,6 +56,7 @@ function App() {
             <Route path="/admin" element={<AdminRoute />}>
               <Route path='' element={<RecordList />} />
               <Route path="users" element={<UserList />} />
+              <Route path="pending-requests" element={<RecordList pending={true}/>} />
               {/* <Route path="/reservations" element={<ReservationList />} /> */}
             </Route>
             <Route path="/iitropar-campus-map" element={<PDFViewer />} />

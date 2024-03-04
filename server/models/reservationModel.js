@@ -6,7 +6,7 @@ const reservationSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
-  name: {
+  guestName: {
     type: String,
     required: true,
   },
