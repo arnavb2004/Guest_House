@@ -19,22 +19,22 @@ export default function RecordList() {
 
   const makeRequest = privateRequest(user.accessToken, user.refreshToken);
   console.log(makeRequest);
-
+  const url=user.role==="ADMIN"?"/reservation/details":"/user/reservations"
   const fetchRecords = async () => {
     try {
-      const res = await makeRequest.get("/reservation/details");
+      const res = await makeRequest.get(url);
       console.log(res.data);
-      setRecords(res.data.reservations);
+      setRecords(res.data);
     } catch (err) {
       // toast(err.response.data);
       console.log(err.response.data);
     }
   };
-
+  //console.log(records);
   useEffect(() => {
     fetchRecords();
   }, []);
-
+  console.log(records)
   const dispatch = useDispatch();
   const handleToggle = (value) => () => {
     const currentIndex = checked.indexOf(value);
@@ -152,7 +152,7 @@ export default function RecordList() {
                 ) : null}
           </ListItemButton>
         </ListItem>
-
+        {console.log(records)}
         {records.map((record) => {
           const labelId = `checkbox-list-label-${record._id}`;
           const currArrDate = new Date(record.arrivalDate);
