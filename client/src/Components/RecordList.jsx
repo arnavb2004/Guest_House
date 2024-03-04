@@ -66,8 +66,24 @@ export default function RecordList() {
     setChecked(newChecked);
   };
 
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
   return (
-    <div className=" flex p-5 px-0 w-full">
+    <div className=" flex p-5 px-0 w-full flex-col">
+      <div className='text-center text-3xl font-["Dosis"] font-semibold py-4 uppercase'>User Records</div>
+      <div>
+        <input
+          type="text"
+          placeholder="Search items..."
+          value={searchTerm}
+          onChange={handleSearchChange}
+          className="w-full p-2.5 border-2 border-slate-200 my-4 rounded-lg box-border focus:border-slate-400 focus:outline-none"
+        />
+      </div>
       <List
         sx={{ width: "100%", padding: "0px" }}
         className="bg-gray-50 rounded-md overflow-hidden"
