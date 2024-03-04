@@ -11,7 +11,8 @@ import CommentIcon from "@mui/icons-material/Comment";
 import { useSelector, useDispatch } from "react-redux";
 import { privateRequest } from "../utils/useFetch";
 
-export default function RecordList() {
+export default function RecordList({pending=false}) {
+  console.log(pending);
   const [checked, setChecked] = useState([]);
   const [values, setValues] = useState([0, 1, 2, 3]);
   const user = useSelector((state) => state.user);
@@ -19,7 +20,7 @@ export default function RecordList() {
 
   const makeRequest = privateRequest(user.accessToken, user.refreshToken);
   console.log(makeRequest);
-  const url=user.role==="ADMIN"?"/reservation/details":"/user/reservations"
+  const url=user.role==="ADMIN"?(pending?"/admin/pending-reservations":"/reservation/details"):("/user/reservations")
   const fetchRecords = async () => {
     try {
       const res = await makeRequest.get(url);
@@ -33,7 +34,7 @@ export default function RecordList() {
   //console.log(records);
   useEffect(() => {
     fetchRecords();
-  }, []);
+  }, [pending]);
   console.log(records)
   const dispatch = useDispatch();
   const handleToggle = (value) => () => {
