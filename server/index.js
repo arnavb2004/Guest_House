@@ -6,6 +6,7 @@ import {expressjwt} from 'express-jwt';
 import authRoute from "./routes/authRoute.js";
 import formRoute from "./routes/formRoute.js";
 import userRoute from "./routes/userRoute.js";
+import adminRoute from "./routes/adminRoute.js";
 import {checkAuth} from "./middlewares/tokens.js";
 import Reservation from "./models/reservationModel.js";
 const app = express();
@@ -23,10 +24,12 @@ app.get("/", (req, res) => {
 
 //app.use(expressjwt({ secret: process.env.ACCESS_TOKEN_SECRET, algorithms: ['HS256'] }).unless({ path: ["/auth/login", "/auth/register"] }));
 app.use("/auth", authRoute);
-app.use("/user",userRoute)
+app.use("/user",userRoute);
+app.use('/admin',adminRoute);
 app.use("/reservation",formRoute)
+
 app.get("/protected",checkAuth, (req, res) => {
-  console.log("Protected route Getting executed!!!")
+  console.log("Protected route Getting executed!!!");
   res.json({
     message: "Protected route",
     user:req.body.user,
@@ -36,24 +39,23 @@ app.get("/protected",checkAuth, (req, res) => {
 
 
 
-app.post('/reservation',async (req,res)=>{
+// app.post('/reservation',async (req,res)=>{
 
-  try {
-    console.log(req.body)
-    await Reservation.create(req.body);
+//   try {
+//     console.log(req.body)
+//     await Reservation.create(req.body);
   
-    res.status(200).json({message:"Reservation Request added successfully"})
+//     res.status(200).json({message:"Reservation Request added successfully"})
     
-  } catch (error) {
+//   } catch (error) {
 
-    res.status(400).json({message:error.message})
+//     res.status(400).json({message:error.message})
 
     
-  }
-
+//   }
 
   
-})
+// })
 
 mongoose
   .connect(process.env.MONGO_URL)

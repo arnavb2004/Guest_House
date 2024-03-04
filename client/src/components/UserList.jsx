@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, {useEffect, useState } from "react";
 
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
+import { useSelector,useDispatch } from "react-redux";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Checkbox from "@mui/material/Checkbox";
@@ -10,10 +11,11 @@ import IconButton from "@mui/material/IconButton";
 import CommentIcon from "@mui/icons-material/Comment";
 import axios from "axios";
 import { privateRequest } from "../utils/useFetch";
-export default function RecordList() {
+export default function UserList() {
   const [checked, setChecked] = useState([]);
   const [values, setValues] = useState([0, 1, 2, 3]);
-
+  const user= useSelector((state) => state.user);
+  const [users, setUsers] = useState([]);
   const handleToggle = (value) => () => {
     const currentIndex = checked.indexOf(value);
 
@@ -37,8 +39,22 @@ export default function RecordList() {
 
     setChecked(newChecked);
   };
+  const makeRequest=privateRequest(user.accessToken,user.refreshToken)
+  const fetchUsers = async () => {
+    try {
+      const res = await makeRequest.get("/admin/allusers");
+      console.log(res.data);
+      setUsers(res.data);
+    } catch (err) {
+      // toast(err.response.data);
+      console.log(err.response.data);
+    }
+  };
 
-  const userData=privateRequest("","").get("/users")
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
   return (
     <div className=" flex p-5 px-0 w-full">
       <List sx={{ width: "100%", padding: "0px" }} className="bg-gray-50 rounded-md overflow-hidden">
@@ -88,13 +104,15 @@ export default function RecordList() {
             {/* <ListItemText id="checkbox-list-label-header" primary="Room type" /> */}
           </ListItemButton>
         </ListItem>
-
-        {values.map((value) => {
-          const labelId = `checkbox-list-label-${value}`;
-
+        {console.log("Users will be printed here!!")}
+        {console.log(users)}
+        {users.map((user) => {
+          const labelId = `checkbox-list-label-${user._id}`;
+          if (user.role === "ADMIN")
+            return;
           return (
             <ListItem
-              key={value}
+              key={user._id}
               className="border-b"
               secondaryAction={
                 <IconButton edge="end" aria-label="comments">
@@ -107,13 +125,13 @@ export default function RecordList() {
                 className=""
                 sx={{paddingY:"10px"}}
                 role={undefined}
-                onClick={handleToggle(value)}
+                onClick={handleToggle(user._id)}
                 dense
               >
                 <ListItemIcon>
                   <Checkbox
                     edge="start"
-                    checked={checked.indexOf(value) !== -1}
+                    checked={checked.indexOf(user._id) !== -1}
                     tabIndex={-1}
                     disableRipple
                     inputProps={{ "aria-labelledby": labelId }}
@@ -124,11 +142,11 @@ export default function RecordList() {
                   id="checkbox-list-label-header"
                   className=" text-wrap w-10 mr-5" 
                   sx={{overflow: "hidden"}}
-                  primary="Namevnsndsndkdjsnvkkjk"
+                  primary={`${user.name}`}
                 />
                 <ListItemText
                   id="checkbox-list-label-header"
-                  primary="Number of guests"
+                  primary={`${user.email}`}
                 />
                 {/* <ListItemText
                   id="checkbox-list-label-header"
@@ -136,11 +154,11 @@ export default function RecordList() {
                 /> */}
                 <ListItemText
                   id="checkbox-list-label-header"
-                  primary="Category"
+                  primary={'+'+`${user.contact}`}
                 />
                 <ListItemText
                   id="checkbox-list-label-header"
-                  primary="Arrival Date"
+                  primary="0 requests pending"
                 />
                 {/* <ListItemText
                   id="checkbox-list-label-header"

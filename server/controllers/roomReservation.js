@@ -37,8 +37,9 @@ export async function getAllReservationDetails(req, res) {
         .status(403)
         .json({ message: "You are not authorized to view this application" });
     }
+    console.log("Getting all reservations...")
     const reservations = await Reservation.find();
-    res.status(200).json({ reservations });
+    res.status(200).json( reservations );
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
