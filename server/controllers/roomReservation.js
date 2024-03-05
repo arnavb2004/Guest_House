@@ -8,10 +8,12 @@ export async function createReservation(req, res) {
       numberOfGuests,
       numberOfRooms,
       roomType,
+      purpose,
       guestName,
       arrivalDate,
       arrivalTime,
       address,
+      category,
       departureTime,
       departureDate,
     } = req.body;
@@ -22,6 +24,7 @@ export async function createReservation(req, res) {
       guestEmail: email,
       guestName,
       address,
+      purpose,
       arrivalTime,
       departureTime,
       numberOfGuests,
@@ -29,10 +32,7 @@ export async function createReservation(req, res) {
       roomType,
       arrivalDate,
       departureDate,
-      guestName: name,
-      status: "PENDING",
-      description: description,
-      category: category,
+      category,
       address: address,
     });
     res.status(200).json({
