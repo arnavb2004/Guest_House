@@ -1,16 +1,21 @@
-import User from "../models/userModel";
-import Reservation from "../models/reservationModel";
+import User from "../models/userModel.js";
+import Reservation from "../models/reservationModel.js";
 import express from "express";
-const Router=express.Router
+const Router=express.Router()
 import {checkAuth} from "../middlewares/tokens.js"
 import {getUser} from "../controllers/user.js"
 
 Router.get("/allusers",checkAuth, async (req,res)=>{
+    if(req.body.user.role!=='ADMIN'){
+        return res.status(403).json({message:"You are not authorized to perform this action"})
+    }
+    console.log("Accessing all users...")
     try{
         const users=await User.find()
-        res.json(users)
+        //console.log(users)
+        return res.status(200).json(users)
     }catch(err){
-        res.status(500).json({message:err.message})
+        return res.status(500).json({message:err.message})
     }
 })
 
@@ -21,7 +26,21 @@ Router.get("/user/:id",checkAuth, async (req,res)=>{
     try{
         const user=await User.findById(req.params.id)
         const reservations=await Reservation.find({guestEmail:user.email})
-        res.json(user,reservations)
+        user.reservations=reservations
+        res.json(user)
+    }catch(err){
+        res.status(500).json({message:err.message})
+    }
+})
+
+Router.get("/pending-reservations",checkAuth, async (req,res)=>{
+    console.log("Getting pending reservations...")
+    if(req.body.user.role!=='ADMIN'){
+        return res.status(403).json({message:"You are not authorized to perform this action"})
+    }
+    try{
+        const reservations=await Reservation.find({status:"PENDING"}).sort({createdAt:-1})
+        res.json(reservations)
     }catch(err){
         res.status(500).json({message:err.message})
     }
@@ -54,4 +73,6 @@ Router.get("/reservations/:id",checkAuth, async (req,res)=>{
         res.status(500).json({message:err.message})
     }
 })
+
+export default Router
 
