@@ -53,7 +53,7 @@ export async function getAllReservationDetails(req, res) {
     }
     console.log("Getting all reservations...")
     const reservations = await Reservation.find();
-    res.status(200).json( reservations );
+    res.status(200).json( {reservations} );
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
