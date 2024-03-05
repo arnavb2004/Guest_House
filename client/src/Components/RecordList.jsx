@@ -11,13 +11,13 @@ import CommentIcon from "@mui/icons-material/Comment";
 import { useSelector, useDispatch } from "react-redux";
 import { privateRequest } from "../utils/useFetch";
 import { useNavigate } from "react-router-dom";
-import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
-        
-
+import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
+import tick from "../images/tick.png";
+import cross from "../images/cross.png";
 
 export default function RecordList() {
   const [checked, setChecked] = useState([]);
-  const [values, setValues] = useState([0, 1, 2, 3]);
+  const [values, setValues] = useState([]);
   const user = useSelector((state) => state.user);
   const [records, setRecords] = useState([]);
 
@@ -30,6 +30,8 @@ export default function RecordList() {
     try {
       const res = await makeRequest.get("/reservation/details");
       console.log(res.data);
+      const reservations = res.data.reservations;
+      setValues(reservations.map((res) => res._id));
       setRecords(res.data.reservations);
     } catch (err) {
       // toast(err.response.data);
@@ -74,7 +76,9 @@ export default function RecordList() {
 
   return (
     <div className=" flex p-5 px-0 w-full flex-col">
-      <div className='text-center text-3xl font-["Dosis"] font-semibold py-4 uppercase'>User Records</div>
+      <div className='text-center text-3xl font-["Dosis"] font-semibold py-4 uppercase'>
+        User Records
+      </div>
       <div>
         <input
           type="text"
@@ -98,12 +102,17 @@ export default function RecordList() {
           }
           disablePadding
         >
-          <ListItemButton role={undefined} dense sx={{ paddingY: "10px" }}>
+          <ListItemButton
+            role={undefined}
+            dense
+            onClick={handleToggle("#")}
+            sx={{ paddingY: "10px" }}
+          >
             <ListItemIcon>
               <Checkbox
                 edge="start"
+                color="secondary"
                 checked={checked.indexOf("#") !== -1}
-                onClick={handleToggle("#")}
                 tabIndex={-1}
                 disableRipple
                 inputProps={{ "aria-labelledby": "checkbox-list-label-header" }}
@@ -163,17 +172,44 @@ export default function RecordList() {
               key={record._id}
               className="border-b"
               secondaryAction={
-                <IconButton edge="end" aria-label="comments">
-                  <InsertDriveFileIcon color="black"/>
-                </IconButton>
+                <div>
+                  <IconButton edge="end" aria-label="comments">
+                    <img
+                      className="h-5"
+                      onClick={async () => {
+                        await makeRequest.put(
+                          "/reservation/approve/" + record._id
+                        );
+                      }}
+                      src={tick}
+                    />
+                  </IconButton>
+                  <IconButton edge="end" aria-label="comments">
+                    <img
+                      className="h-5"
+                      onClick={async () => {
+                        await makeRequest.put(
+                          "/reservation/reject/" + record._id
+                        );
+                      }}
+                      src={cross}
+                    />
+                  </IconButton>
+                  <IconButton edge="end" aria-label="comments">
+                    <InsertDriveFileIcon
+                      color="black"
+                      onClick={() => navigate(`${record._id}`)}
+                    />
+                  </IconButton>
+                </div>
               }
               disablePadding
             >
               <ListItemButton
                 className=""
                 sx={{ paddingY: "10px" }}
+                onClick={handleToggle(record._id)}
                 role={undefined}
-                onClick={() => navigate(`/${record._id}`)}
                 dense
               >
                 <ListItemIcon>
@@ -181,7 +217,6 @@ export default function RecordList() {
                     edge="start"
                     checked={checked.indexOf(record._id) !== -1}
                     tabIndex={-1}
-                    onClick={handleToggle(record._id)}
                     disableRipple
                     inputProps={{ "aria-labelledby": labelId }}
                   />

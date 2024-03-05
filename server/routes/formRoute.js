@@ -5,6 +5,7 @@ import {
   getReservationDetails,
   approveReservation,
   getAllReservationDetails,
+  rejectReservation,
 } from "../controllers/roomreservation.js";
 
 const Router = express.Router();
@@ -15,5 +16,6 @@ Router.get("/details/:id", checkAuth, getReservationDetails);
 Router.get("/details", checkAuth, getAllReservationDetails);
 
 Router.put("/approve/:id", checkAuth, approveReservation);
+Router.put("/reject/:id", checkAuth, rejectReservation);
 
 export default Router;

@@ -55,8 +55,8 @@ function App() {
             </Route>
             <Route path="/admin" element={<AdminRoute />}>
               <Route path='' element={<RecordList />} />
+              <Route path=':id' element={<RecordPage />} />
               <Route path="users" element={<UserList />} />
-              {/* <Route path="/reservations" element={<ReservationList />} /> */}
             </Route>
             <Route path="/iitropar-campus-map" element={<PDFViewer />} />
             <Route path="/reservation-form" element={<ReservationForm />} />

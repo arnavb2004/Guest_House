@@ -150,11 +150,14 @@ const Login = ({ isRegister }) => {
         });
 
         if (res.data.user) {
-          console.log(res.data)
-          dispatch(setUserSlice({
-            user : res.data.user, 
-            accessToken : res.data.accessToken, 
-            refreshToken: res.data.refreshToken}));
+          console.log(res.data);
+          dispatch(
+            setUserSlice({
+              user: res.data.user,
+              accessToken: res.data.accessToken,
+              refreshToken: res.data.refreshToken,
+            })
+          );
           navigate(-1);
         } else {
           dispatch(setCredentialSlice(credentials));

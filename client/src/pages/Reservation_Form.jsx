@@ -11,6 +11,8 @@ import { updateFilledPDF } from "../utils/generatePDF";
 import { FileUpload } from "primereact/fileupload";
 import { Toast } from "primereact/toast";
 import InputFileUpload from "../components/uploadFile";
+import { useSelector } from "react-redux";
+import { privateRequest } from "../utils/useFetch";
 
 function AutoDemo() {
   const toast = useRef(null);
@@ -41,6 +43,9 @@ function AutoDemo() {
 }
 
 function ReservationForm() {
+  const user = useSelector((state) => state.user);
+  const makeRequest = privateRequest(user.accessToken, user.refreshToken);
+
   const [formData, setFormData] = useState({
     guestName: "",
     address: "",
@@ -54,6 +59,8 @@ function ReservationForm() {
     purpose: "",
     category: "",
   });
+
+  console.log(formData)
 
   const [errorText, setErrorText] = useState({
     guestName: "",
@@ -72,15 +79,15 @@ function ReservationForm() {
   const requiredFields = {
     guestName: true,
     address: true,
-    numberOfGuests: false,
-    numberOfRooms: false,
-    roomType: false,
-    arrivalDate: false,
-    arrivalTime: false,
-    departureDate: false,
-    departureTime: false,
-    purpose: false,
-    category: false,
+    numberOfGuests: true,
+    numberOfRooms: true,
+    roomType: true,
+    arrivalDate: true,
+    arrivalTime: true,
+    departureDate: true,
+    departureTime: true,
+    purpose: true,
+    category: true,
   };
 
   const patterns = {
@@ -107,7 +114,7 @@ function ReservationForm() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     //Handle form validation
@@ -115,8 +122,11 @@ function ReservationForm() {
     let passed = true;
 
     for (let [key, value] of Object.entries(formData)) {
+      console.log(key, value);
+      // console.log(key, value);
       if (requiredFields[key] && value === "") {
         console.log("here");
+
 
         setErrorText((prev) => ({
           ...prev,
@@ -142,7 +152,11 @@ function ReservationForm() {
     console.log("passed");
 
     // Handle form submission
-    axios.post("http://localhost:4751/reservation", formData);
+    // axios.post("http://localhost:4751/reservation", formData);
+    await makeRequest.post(
+      "http://localhost:4751/reservation/create",
+      formData
+    );
     console.log("Form submitted");
   };
 
@@ -208,7 +222,7 @@ function ReservationForm() {
           />
 
           <div className="form-group">
-            <label>Category: (Refer to this page for categories)</label>
+            <label>Room Type</label>
 
             <select
               name="roomType"
@@ -299,7 +313,7 @@ function ReservationForm() {
               </option>
             </select>
             {/* <AutoDemo/> */}
-            <InputFileUpload className='' />
+            <InputFileUpload className="" />
 
             {/* <div className="card">
               <FileUpload

@@ -1,13 +1,13 @@
 import { PDFDocument, rgb } from "pdf-lib";
 import fontkit from "@pdf-lib/fontkit";
-
+import pdfFont from "../forms/Ubuntu-R.ttf";
 
 
 export const generateFilledPDF = async (formData) => {
   try {
     // Assuming this URL and fetch operation work correctly
-    const fontUrl = "https://pdf-lib.js.org/assets/ubuntu/Ubuntu-R.ttf";
-    const fontBytes = await fetch(fontUrl).then((res) => res.arrayBuffer());
+    // const fontUrl = {pdfFont};
+    const fontBytes = await fetch(pdfFont).then((res) => res.arrayBuffer());
 
     // Fetch the PDF from a URL or local assets (adjust the URL as needed)
     const pdfUrl = `${process.env.PUBLIC_URL}/forms/Register_Form.pdf`;

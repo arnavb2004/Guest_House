@@ -19,8 +19,6 @@ const Contact = () => {
       <div className={styles.container}>
         <main className={styles.mainContent}>
           <div className={styles.welcomeSection}>
-            <h1>Welcome to Our Guest House</h1>
-            <p>Your comfort is our priority.</p>
           </div>
           <div className={styles.contentLayout}>
             <ContactForm />
@@ -49,7 +47,7 @@ const Contact = () => {
 const ContactForm = () => (
   <section className={styles.contact}>
     <form className={styles.contactForm}>
-      <h2 className={styles.contactUs}>CONTACT US</h2>
+      <h2 className={styles.contactUs + ' text-center font-semibold font-["Dosis"] text-2xl pb-5'}>CONTACT US</h2>
       <div className={styles.formGroup}>
         <FontAwesomeIcon icon={faUser} />
         <input
@@ -80,7 +78,7 @@ const ContactForm = () => (
           required
         ></textarea>
       </div>
-      <button type="submit" className={styles.submitButton}>
+      <button type="submit" className={styles.submitButton+ ' ml-7 mt-2'}>
         Send Message
       </button>
     </form>

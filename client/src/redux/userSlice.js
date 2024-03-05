@@ -10,8 +10,6 @@ const userSlice = createSlice({
     role: "",
     accessToken: "",
     refreshToken: "",
-    accessToken: "",
-    refreshToken: "",
   },
   reducers: {
     setUserSlice: (state, action) => {
@@ -28,8 +26,6 @@ const userSlice = createSlice({
       state.contact = "";
       state.email = "";
       state.role = "";
-      state.accessToken = "";
-      state.refreshToken = "";
       state.accessToken = "";
       state.refreshToken = "";
     },
