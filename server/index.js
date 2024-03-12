@@ -9,14 +9,42 @@ import userRoute from "./routes/userRoute.js";
 import { checkAuth } from "./middlewares/tokens.js";
 import Reservation from "./models/reservationModel.js";
 import adminRoute from "./routes/adminRoute.js";
-const app = express();
+import multer from "multer";
+import {GridFsStorage} from 'multer-gridfs-storage';
+
+
 const port = process.env.PORT || 4751;
+dotenv.config();
+const app = express();
+// var storage,upload;
+const connection=mongoose
+.connect(process.env.MONGO_URL)
+.then(() => {
+  console.log("Connected to database");
+  // storage= new GridFsStorage({db:mongoose.connection.db})
+  // upload=multer({storage});)
+  app.listen(port, () => {
+    console.log(`Server is runnning at port ${port}`);
+  });
+})
+.catch((err) => console.log(err));
+
+await connection;
+// var upload
+const storage= new GridFsStorage({url:process.env.MONGO_URL})
+storage.on('connection',()=>{
+})
+const upload=multer({storage});
+
+
 
 app.use(cors());
-app.use(express.json());
-dotenv.config();
+app.use(express.json());//for parsing application/json
+// app.use(upload.array('files',10));
+app.use(express.urlencoded({ extended: true }));//for parsing application/x-www-form-urlencoded
 
 app.get("/", (req, res) => {
+  console.log(req.files)
   res.json({
     message: "A simple API",
   });
@@ -36,23 +64,3 @@ app.get("/protected", checkAuth, (req, res) => {
   });
 });
 
-app.post("/reservation", async (req, res) => {
-  try {
-    console.log(req.body);
-    await Reservation.create(req.body);
-
-    res.status(200).json({ message: "Reservation Request added successfully" });
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-});
-
-mongoose
-  .connect(process.env.MONGO_URL)
-  .then(() => {
-    console.log("Connected to database");
-    app.listen(port, () => {
-      console.log(`Server is runnning at port ${port}`);
-    });
-  })
-  .catch((err) => console.log(err));

@@ -52,6 +52,9 @@ const reservationSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    files:[{
+      type:String,
+    }]
   },
   {
     timestamps: true, // Adds createdAt and updatedAt timestamps

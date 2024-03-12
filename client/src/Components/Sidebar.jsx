@@ -17,7 +17,7 @@ const Sidebar = () => {
 
   const content =
     user.role === "ADMIN"
-      ? ["Pending Requests", "Rejected Requests","Accepted Requests","Users","Contact"]
+      ? ["Home", "Rejected Requests","Accepted Requests","Users","Contact"]
       : ["Home", "Reservation Form", "Services", "Contact"];
 
   return (
@@ -57,7 +57,7 @@ const Sidebar = () => {
               className=""
               key={index}
               to={
-                item === "Pending Requests"
+                item === "Home"
                   ? (user.role==="ADMIN"? "/admin":"/reservation")
                   : (user.role==="ADMIN"? `/admin/${item.toLowerCase().replace(" ", "-")}`:`/reservation/${item.toLowerCase().replace(" ", "-")}`)
               }
