@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styles from "./BookDining.module.css";
 import { menuItems1 } from "../fooddata";
 import { useDispatch, useSelector } from "react-redux";
-import { addToCart, removeFromCart } from "../redux/cartSlice";
+import { addToCart, removeFromCart, clearCart } from "../redux/cartSlice";
 import { PDFDocument, rgb} from "pdf-lib"; // Import pdf-lib
 import fontkit from "@pdf-lib/fontkit";
 import pdfFont from "../forms/Ubuntu-R.ttf";
@@ -120,7 +120,10 @@ const Cart = () => {
     }
   };
 
-  
+  const handleClearCart = () => {
+    dispatch(clearCart());
+  };
+
   return (
     <div>
       <div className={styles.cart + ' font-["Dosis"]'}>
@@ -186,6 +189,9 @@ const Cart = () => {
               </button>
               <button onClick={handleGetReceipt} className={styles.button + " "}>
                 Get Receipt
+              </button>
+              <button onClick={handleClearCart} className={styles.button + " "}>
+                Clear Cart
               </button>
             </div>
           </div>
