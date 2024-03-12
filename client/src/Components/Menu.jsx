@@ -12,9 +12,9 @@ const Menu = () => {
   const menuItems = [
     { key: 1, name: "home", label: "HOME", link: "/" },
     { key: 2, name: "dining", label: "DINING", link: "/dining" },
+    { key: 5, name: "reservation", label: "RESERVATION", link: "/reservation" },
     { key: 3, name: "people", label: "PEOPLE", link: "/people" },
     { key: 4, name: "location", label: "LOCATION", link: "/location" },
-    { key: 5, name: "reservation", label: "RESERVATION", link: "/reservation" },
     { key: 6, name: "contact", label: "CONTACT", link: "/contact" },
   ];
 

@@ -17,7 +17,13 @@ const Sidebar = () => {
 
   const content =
     user.role === "ADMIN"
-      ? ["Pending Requests", "Rejected Requests","Accepted Requests","Users","Contact"]
+      ? [
+          "Pending Requests",
+          "Rejected Requests",
+          "Approved Requests",
+          "Users",
+          "Contact",
+        ]
       : ["Home", "Reservation Form", "Services", "Contact"];
 
   return (
@@ -28,7 +34,12 @@ const Sidebar = () => {
           styles.menuIcon
         }
       >
-        <div className="cursor-pointer" onClick={() => setIsOpen((prev) => !prev)}>☰</div>
+        <div
+          className="cursor-pointer"
+          onClick={() => setIsOpen((prev) => !prev)}
+        >
+          ☰
+        </div>
         <div className='cursor-default text-xl relative font-["Single Day"] font-["Dosis"]'>
           GUEST HOUSE
         </div>
@@ -58,13 +69,15 @@ const Sidebar = () => {
               key={index}
               to={
                 item === "Pending Requests"
-                  ? (user.role==="ADMIN"? "/admin":"/reservation")
-                  : (user.role==="ADMIN"? `/admin/${item.toLowerCase().replace(" ", "-")}`:`/reservation/${item.toLowerCase().replace(" ", "-")}`)
+                  ? user.role === "ADMIN"
+                    ? "/admin"
+                    : "/reservation"
+                  : user.role === "ADMIN"
+                  ? `/admin/${item.toLowerCase().replace(" ", "-")}`
+                  : `/reservation/${item.toLowerCase().replace(" ", "-")}`
               }
             >
-              <li className={" " + styles["menu-item"]} >
-                {item}
-              </li>
+              <li className={" " + styles["menu-item"]}>{item}</li>
               <hr></hr>
             </Link>
           ))}

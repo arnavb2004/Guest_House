@@ -1,33 +1,32 @@
-import OTP from "./../models/otpModel.js";
 import User from "./../models/userModel.js";
-import jwt from "jsonwebtoken";
+
 
 export const getUser = async (req, res) => {
-  const { email } = req.body;
-
-  if (!email) return res.status(400).json({ message: "Email cannot be empty" });
-
+  if (req.body.user.role !== "ADMIN") {
+    return res
+      .status(403)
+      .json({ message: "You are not authorized to perform this action" });
+  }
   try {
-    const user = await User.findOne({ email });
-    if (user) {
-      const refreshToken = jwt.sign(
-        { email },
-        process.env.REFRESH_TOKEN_SECRET,
-        {
-          expiresIn: "180d",
-        }
-      );
-      const accessToken = jwt.sign({ email }, process.env.ACCESS_TOKEN_SECRET, {
-        expiresIn: "5m",
-      });
-      user.refreshToken = refreshToken;
-      await user.save();
-     
-      res.status(200).json({ user, refreshToken, accessToken });
-    } else {
-      res.status(200).json({ message: "User does not exist" });
-    }
-  } catch (error) {
-    res.status(400).json({ message: error.message });
+    const user = await User.findById(req.params.id);
+    res.status(200).json(user);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+}
+
+export const getAllUsers = async (req, res) => {
+  if (req.body.user.role !== "ADMIN") {
+    return res
+      .status(403)
+      .json({ message: "You are not authorized to perform this action" });
+  }
+  console.log("Accessing all users...");
+  try {
+    const users = await User.find();
+    //console.log(users)
+    return res.status(200).json(users);
+  } catch (err) {
+    return res.status(500).json({ message: err.message });
   }
 };

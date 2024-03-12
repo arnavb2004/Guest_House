@@ -154,7 +154,7 @@ function ReservationForm() {
     // Handle form submission
     // axios.post("http://localhost:4751/reservation", formData);
     await makeRequest.post(
-      "http://localhost:4751/reservation/create",
+      "http://localhost:4751/reservation/",
       formData
     );
     console.log("Form submitted");
