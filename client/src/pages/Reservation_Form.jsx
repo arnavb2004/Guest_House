@@ -1,6 +1,8 @@
 import React, { useRef, useState, useEffect } from "react";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.min.css";
+
 import Header from "../components/Header";
 import axios from "axios";
 // import styles from "./Reservation_Form.module.css";
@@ -16,10 +18,10 @@ import { useSelector } from "react-redux";
 import { privateRequest } from "../utils/useFetch";
 
 function AutoDemo() {
-  const toast = useRef(null);
+  const toast_temp = useRef(null);
 
   const onUpload = () => {
-    toast.current.show({
+    toast_temp.current.show({
       severity: "info",
       summary: "Success",
       detail: "File Uploaded",
@@ -28,7 +30,7 @@ function AutoDemo() {
 
   return (
     <div className="card flex justify-content-center">
-      <Toast ref={toast}></Toast>
+      <Toast ref={toast_temp}></Toast>
       <FileUpload
         mode="basic"
         name="demo[]"
@@ -151,12 +153,42 @@ function ReservationForm() {
     }
     console.log(errorText);
 
-    const arrivalDateTime = new Date(`${formData.arrivalDate.split('-').reverse().join('-')}T${formData.arrivalTime}`);
-    const departureDateTime = new Date(`${formData.departureDate.split('-').reverse().join('-')}T${formData.departureTime}`);
+    const arrivalDateTime = new Date(`${formData.arrivalDate}T${formData.arrivalTime}`);
+    const departureDateTime = new Date(`${formData.departureDate}T${formData.departureTime}`);
     
     console.log(departureDateTime)
     console.log(arrivalDateTime)
-    
+   
+    // Check if no of rooms are Sufficient for Double occupancy
+    if (formData.roomType === "Double Occupancy") {
+      const numberOfGuests = parseInt(formData.numberOfGuests);
+      const numberOfRooms = parseInt(formData.numberOfRooms);
+      if (2 * numberOfRooms < numberOfGuests) {
+        setErrorText((prev) => ({
+          ...prev,
+          numberOfRooms: "Number of rooms are not sufficient as per number of guests and room type",
+        }));
+        passed = false;
+        toast.error("Number of rooms are not sufficient as per number of guests and room type");
+        return;
+      }
+    }
+
+    // Check if no of rooms are Sufficient for Single occupancy
+    if (formData.roomType === "Single Occupancy") {
+      const numberOfGuests = parseInt(formData.numberOfGuests);
+      const numberOfRooms = parseInt(formData.numberOfRooms);
+      if (numberOfRooms < numberOfGuests) {
+        setErrorText((prev) => ({
+          ...prev,
+          numberOfRooms: "Number of rooms are not sufficient as per number of guests and room type",
+        }));
+        passed = false;
+        toast.error("Number of rooms are not sufficient as per number of guests and room type");
+        return;
+      }
+    }
+
     // Check if departure is after arrival
     if (departureDateTime <= arrivalDateTime) {
       passed = false;
@@ -165,9 +197,14 @@ function ReservationForm() {
         departureDate: "Departure date must be after arrival date",
         departureTime: "Departure time must be after arrival time",
       }));
+      toast.error("Departure should be After Arrival");
+      return;
     }
-
-    if (!passed) return;
+    
+    if (!passed) {
+      toast.error("Please Fill All Necessary Fields Correctly.");
+      return;
+    }
 
     console.log("passed");
 
@@ -176,7 +213,7 @@ function ReservationForm() {
 
     try {
       await makeRequest.post(
-        "http://localhost:4751/reservation/create",
+        "http://localhost:4751/reservation/",
         formData
       );
       console.log("Form submitted");
@@ -192,6 +229,7 @@ function ReservationForm() {
   return (
     <div className="w-full">
       {/* <Header /> */}
+      <ToastContainer />
       <div className="reservation-container border shadow-xl rounded-lg  bg-white">
         <h2 className="py-2 mb-5">Guest House Reservation Form</h2>
         <FormControl className="w-full flex gap-4">
