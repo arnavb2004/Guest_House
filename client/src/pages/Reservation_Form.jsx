@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
-
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Header from "../components/Header";
 import axios from "axios";
 // import styles from "./Reservation_Form.module.css";
@@ -51,7 +52,7 @@ function ReservationForm() {
     address: "",
     numberOfGuests: "",
     numberOfRooms: "",
-    roomType: "",
+    roomType: "Single Occupancy",
     arrivalDate: "",
     arrivalTime: "",
     departureDate: "",
@@ -67,7 +68,7 @@ function ReservationForm() {
     address: "",
     numberOfGuests: "",
     numberOfRooms: "",
-    roomType: "Single Occupancy",
+    roomType: "",
     arrivalDate: "",
     arrivalTime: "",
     departureDate: "",
@@ -148,16 +149,42 @@ function ReservationForm() {
     }
     console.log(errorText);
 
+    const arrivalDateTime = new Date(`${formData.arrivalDate.split('-').reverse().join('-')}T${formData.arrivalTime}`);
+    const departureDateTime = new Date(`${formData.departureDate.split('-').reverse().join('-')}T${formData.departureTime}`);
+    
+    console.log(departureDateTime)
+    console.log(arrivalDateTime)
+    
+    // Check if departure is after arrival
+    if (departureDateTime <= arrivalDateTime) {
+      passed = false;
+      setErrorText((prev) => ({
+        ...prev,
+        departureDate: "Departure date must be after arrival date",
+        departureTime: "Departure time must be after arrival time",
+      }));
+    }
+
     if (!passed) return;
+
     console.log("passed");
 
     // Handle form submission
     // axios.post("http://localhost:4751/reservation", formData);
-    await makeRequest.post(
-      "http://localhost:4751/reservation/create",
-      formData
-    );
-    console.log("Form submitted");
+
+    try {
+      await makeRequest.post(
+        "http://localhost:4751/reservation/create",
+        formData
+      );
+      console.log("Form submitted");
+      toast.success("Form submitted successfully!");
+    } catch (error) {
+      console.error("Form submission failed:", error);
+      // Show error toast notification
+      toast.error("Form submission failed. Please try again later.");
+    }
+    
   };
 
   return (
