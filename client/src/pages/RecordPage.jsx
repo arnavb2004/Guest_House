@@ -38,14 +38,16 @@ export default function RecordPage() {
     };
 
     fetchRecord();
-  }, []);
+  }, [id]);
+
+
   console.log(id);
 
 
 
   return (
     <div className="grid grid-cols-8 m-9 gap-4">
-      <Workflow id={id} />
+      <Workflow id={id} userRecord={userRecord} setUserRecord={setUserRecord}/>
 
       <div className='col-span-5 shadow-lg flex flex-col justify-center gap-4 font-["Dosis"]'>
         <div className="flex justify-between px-32">

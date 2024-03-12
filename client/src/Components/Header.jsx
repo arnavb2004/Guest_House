@@ -11,7 +11,7 @@ const Header = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [showLogout, setShowLogout] = useState(false);
+  // const [showLogout, setShowLogout] = useState(false);
 
   const [showHindi, setShowHindi] = useState(false);
   console.log(showHindi);
@@ -47,34 +47,50 @@ const Header = () => {
             className='text-3xl text-justify min-w-max font-medium font-["Dosis"]'
             href="/"
           >
-              <div className="flex flex-col h-9 py-1 ">
-                <div className={!showHindi && "h-0 overflow-hidden"}>
-                  भारतीय प्रौद्योगिकी संस्थान रोपड़
-                </div>
-                <div className={showHindi && "h-0 overflow-hidden"}>
-                  INDIAN INSTITUTE OF TECHNOLOGY ROPAR
-                </div>
+            <div className="flex flex-col h-9 py-1 ">
+              <div className={!showHindi && "h-0 overflow-hidden"}>
+                भारतीय प्रौद्योगिकी संस्थान रोपड़
               </div>
+              <div className={showHindi && "h-0 overflow-hidden"}>
+                INDIAN INSTITUTE OF TECHNOLOGY ROPAR
+              </div>
+            </div>
           </a>
         </div>
-        <div
+        {/* <div
           className='font-["Dosis"] col-span-4 uppercase flex p-3 pr-12 flex-col w-full justify-end mb-4 text-2xl text-right font-medium cursor-pointer'
           onMouseOver={() => setShowLogout(true)}
           onMouseOut={() => setShowLogout(false)}
           onClick={user.email ? handleLogout : goToLoginPage}
-        >
+          >
           {user.email ? (
             showLogout ? (
               "Logout"
-            ) : (
-              <div className='font-["Dosis"] uppercase'>Hello {user.name}</div>
-            ) 
+              ) : (
+                <div className='font-["Dosis"] uppercase'>Hello {user.name}</div>
+                ) 
+                ) : (
+                  <>
+                  <div className='font-["Dosis"] uppercase'>Login</div>
+                  </>
+                  )}
+                </div> */}
+
+        <div className='font-["Dosis"] col-span-4 uppercase flex p-3 pr-12 flex-col w-full justify-end mb-4 text-2xl text-right font-medium'>
+          {user.email && (
+            <div className="cursor-default">HELLO {user.name}</div>
+          )}
+          {user.email ? (
+            <div className="cursor-pointer" onClick={handleLogout}>
+              LOGOUT
+            </div>
           ) : (
-            <>
-              <div className='font-["Dosis"] uppercase'>Login</div>
-            </>
+            <div className="cursor-pointer" onClick={goToLoginPage}>
+              LOGIN
+            </div>
           )}
         </div>
+
         {/* <div className=" flex gap-4 w-28 h-32 pt-4">
           <img className="" src={Logo} alt="IIT Ropar logo" />
         </div> */}

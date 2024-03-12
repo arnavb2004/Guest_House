@@ -2,13 +2,13 @@ import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import { expressjwt } from "express-jwt";
 import authRoute from "./routes/authRoute.js";
-import formRoute from "./routes/formRoute.js";
 import userRoute from "./routes/userRoute.js";
 import { checkAuth } from "./middlewares/tokens.js";
 import Reservation from "./models/reservationModel.js";
 import adminRoute from "./routes/adminRoute.js";
+import reservationRoute from "./routes/reservationRoute.js";
+
 const app = express();
 const port = process.env.PORT || 4751;
 
@@ -26,7 +26,7 @@ app.get("/", (req, res) => {
 app.use("/auth", authRoute);
 app.use("/user", userRoute);
 app.use("/admin", adminRoute);
-app.use("/reservation", formRoute);
+app.use("/reservation", reservationRoute);
 app.get("/protected", checkAuth, (req, res) => {
   console.log("Protected route Getting executed!!!");
   res.json({
@@ -36,16 +36,6 @@ app.get("/protected", checkAuth, (req, res) => {
   });
 });
 
-app.post("/reservation", async (req, res) => {
-  try {
-    console.log(req.body);
-    await Reservation.create(req.body);
-
-    res.status(200).json({ message: "Reservation Request added successfully" });
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-});
 
 mongoose
   .connect(process.env.MONGO_URL)

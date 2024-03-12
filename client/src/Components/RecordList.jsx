@@ -15,8 +15,7 @@ import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 import tick from "../images/tick.png";
 import cross from "../images/cross.png";
 
-export default function RecordList({ pending = false }) {
-  console.log(pending);
+export default function RecordList({ status = "pending" }) {
   const [checked, setChecked] = useState([]);
   const [values, setValues] = useState([]);
   const user = useSelector((state) => state.user);
@@ -26,19 +25,14 @@ export default function RecordList({ pending = false }) {
 
   const makeRequest = privateRequest(user.accessToken, user.refreshToken);
   console.log(makeRequest);
-  const url =
-    user.role === "ADMIN"
-      ? pending
-        ? "/admin/pending-reservations"
-        : "/reservation/details"
-      : "/user/reservations";
+
   const fetchRecords = async () => {
     try {
-      const res = await makeRequest.get(url);
+      const res = await makeRequest.get("/reservation/" + status);
       console.log(res.data);
-      const reservations = res.data.reservations;
+      const reservations = res.data;
       setValues(reservations.map((res) => res._id));
-      setRecords(res.data.reservations);
+      setRecords(reservations);
     } catch (err) {
       // toast(err.response.data);
       console.log(err.response.data);
@@ -47,7 +41,7 @@ export default function RecordList({ pending = false }) {
   //console.log(records);
   useEffect(() => {
     fetchRecords();
-  }, [pending]);
+  }, [status]);
   console.log(records);
   const dispatch = useDispatch();
   const handleToggle = (value) => () => {
