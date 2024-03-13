@@ -59,7 +59,7 @@ function ReservationForm() {
     purpose: "",
     category: "A",
   });
-
+  
   console.log(formData)
 
   const [errorText, setErrorText] = useState({

@@ -29,7 +29,7 @@ export default function RecordPage() {
   useEffect(() => {
     const fetchRecord = async () => {
       try {
-        const response = await makeRequest.get(`/reservation/details/${id}`);
+        const response = await makeRequest.get(`/reservation/${id}`);
         console.log(response.data);
         setUserRecord(response.data.reservation);
       } catch (error) {
@@ -100,7 +100,7 @@ export default function RecordPage() {
           <p className="p-2 text-lg">{userRecord.purpose}</p>
         </div>
         <hr />
-        <div className="flex justify-between px-32">
+        <div className="flex justify-between px-32 pb-5">
           <p className="p-2 text-xl font-semibold">Category:</p>
           <p className="p-2 text-lg">{userRecord.category}</p>
         </div>

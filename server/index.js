@@ -5,9 +5,8 @@ import dotenv from "dotenv";
 import authRoute from "./routes/authRoute.js";
 import userRoute from "./routes/userRoute.js";
 import { checkAuth } from "./middlewares/tokens.js";
-import Reservation from "./models/reservationModel.js";
-import adminRoute from "./routes/adminRoute.js";
 import reservationRoute from "./routes/reservationRoute.js";
+import diningRoute from "./routes/diningRoute.js";
 
 const app = express();
 const port = process.env.PORT || 4751;
@@ -25,7 +24,7 @@ app.get("/", (req, res) => {
 //app.use(expressjwt({ secret: process.env.ACCESS_TOKEN_SECRET, algorithms: ['HS256'] }).unless({ path: ["/auth/login", "/auth/register"] }));
 app.use("/auth", authRoute);
 app.use("/user", userRoute);
-app.use("/admin", adminRoute);
+app.use("/dining", diningRoute);
 app.use("/reservation", reservationRoute);
 app.get("/protected", checkAuth, (req, res) => {
   console.log("Protected route Getting executed!!!");

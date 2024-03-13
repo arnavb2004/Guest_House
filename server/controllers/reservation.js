@@ -1,8 +1,26 @@
 import Reservation from "../models/reservationModel.js";
+import { transporter } from "../utils.js";
+
+async function sendVerificationEmail(to, subject, body) {
+  try {
+    const info = await transporter.sendMail({
+      from: "dep.test.p04@gmail.com",
+      to: to, // list of receivers
+      subject: subject, // Subject line
+      html: body, // plain text body
+    });
+    console.log("Message sent", info.messageId);
+  } catch (error) {
+    console.log("Error occurred while sending email: ", error);
+    throw error;
+  }
+}
 
 export async function createReservation(req, res) {
   try {
     //user details are contained in req.body.user
+
+    console.log(req.body);
 
     const {
       numberOfGuests,
@@ -18,9 +36,11 @@ export async function createReservation(req, res) {
       departureDate,
     } = req.body;
 
+    console.log(arrivalTime);
+
     const email = req.body.user.email;
     console.log(req.body);
-    await Reservation.create({
+    const reservation = await Reservation.create({
       guestEmail: email,
       guestName,
       address,
@@ -34,6 +54,37 @@ export async function createReservation(req, res) {
       departureDate,
       category,
     });
+    console.log("sending mail");
+
+    sendVerificationEmail(
+      "hardik32904@gmail.com",
+      "New Reservation Request",
+      "<div>A new reservation request has been made.</div><br><br><div>Guest Name: " +
+        guestName +
+        "</div><br><div>Guest Email: " +
+        email +
+        "</div><br><div>Number of Guests: " +
+        numberOfGuests +
+        "</div><br><div>Number of Rooms: " +
+        numberOfRooms +
+        "</div><br><div>Room Type: " +
+        roomType +
+        "</div><br><div>Purpose: " +
+        purpose +
+        "</div><br><div>Arrival Date: " +
+        arrivalDate +
+        "</div><br><div>Arrival Time: " +
+        arrivalTime +
+        "</div><br><div>Departure Date: " +
+        departureDate +
+        "</div><br><div>Departure Time: " +
+        departureTime +
+        "</div><br><div>Address: " +
+        address +
+        "</div><br><div>Category: " +
+        category +
+        "</div>"
+    );
     res.status(200).json({
       message:
         "Reservation Request added successfully. Please wait for approval from the admin.",
@@ -86,6 +137,15 @@ export async function approveReservation(req, res) {
     reservation.status = "APPROVED";
     reservation.approvals.push(req.body.user._id);
     if (req.body.comments) reservation.comments = req.body.comments;
+    const body =
+      "<div>Your reservation has been approved</div><br><div>Comments: " +
+      req.body.comments +
+      "</div>";
+    sendVerificationEmail(
+      reservation.guestEmail,
+      "Reservation status updated",
+      body
+    );
     await reservation.save();
     res.status(200).json({ message: "Reservation Approved" });
   } catch (error) {
@@ -106,6 +166,15 @@ export async function rejectReservation(req, res) {
       (res) => res !== req.body.user._id
     );
     if (req.body.comments) reservation.comments = req.body.comments;
+    const body =
+      "<div>Your reservation has been rejected</div><br><div>Comments: " +
+      req.body.comments +
+      "</div>";
+    sendVerificationEmail(
+      reservation.guestEmail,
+      "Reservation status updated",
+      body
+    );
 
     await reservation.save();
     res.status(200).json({ message: "Reservation Rejected" });
@@ -127,6 +196,16 @@ export async function holdReservation(req, res) {
       (res) => res !== req.body.user._id
     );
     if (req.body.comments) reservation.comments = req.body.comments;
+
+    const body =
+      "<div>Your reservation has been put on hold.</div><br><div>Comments: " +
+      req.body.comments +
+      "</div>";
+    sendVerificationEmail(
+      reservation.guestEmail,
+      "Reservation status updated",
+      body
+    );
 
     await reservation.save();
     res.status(200).json({ message: "Reservation Rejected" });

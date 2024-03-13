@@ -15,7 +15,7 @@ import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 import tick from "../images/tick.png";
 import cross from "../images/cross.png";
 
-export default function RecordList({ status = "pending" }) {
+export default function DiningList({ status = "pending" }) {
   const [checked, setChecked] = useState([]);
   const [values, setValues] = useState([]);
   const user = useSelector((state) => state.user);
@@ -28,13 +28,12 @@ export default function RecordList({ status = "pending" }) {
 
   const fetchRecords = async () => {
     try {
-      const res = await makeRequest.get("/reservation/" + status);
+      const res = await makeRequest.get("/dining/all");
       console.log(res.data);
-      const reservations = res.data;
-      setValues(reservations.map((res) => res._id));
-      setRecords(reservations);
+      const orders = res.data;
+      setValues(orders.map((res) => res._id));
+      setRecords(orders);
     } catch (err) {
-      // toast(err.response.data);
       console.log(err.response.data);
     }
   };
@@ -77,7 +76,7 @@ export default function RecordList({ status = "pending" }) {
   return (
     <div className=" flex p-5 px-0 w-full flex-col">
       <div className='text-center text-3xl font-["Dosis"] font-semibold py-4 uppercase'>
-        User Records
+        Dining Records
       </div>
       <div>
         <input
@@ -122,41 +121,16 @@ export default function RecordList({ status = "pending" }) {
               id="checkbox-list-label-header"
               className=" text-wrap w-12"
               sx={{ overflow: "hidden" }}
-              primary="Name"
+              primary="Email"
             />
             <ListItemText
               id="checkbox-list-label-header"
               className=" text-wrap w-8 text-center"
-              primary="Number of Guests"
+              primary="Total Amount"
             />
             <ListItemText
               id="checkbox-list-label-header"
               className=" text-wrap w-8 text-center"
-              primary="Number of Rooms"
-            />
-            <ListItemText
-              id="checkbox-list-label-header"
-              className=" text-wrap w-10 text-center"
-              primary="Category"
-            />
-            <ListItemText
-              id="checkbox-list-label-header"
-              className="w-20 text-center"
-              primary="Arrival Date"
-            />
-            <ListItemText
-              id="checkbox-list-label-header"
-              className="w-20 text-center"
-              primary="Departure Date"
-            />
-            <ListItemText
-              id="checkbox-list-label-header"
-              className="w-20 text-center"
-              primary="Room Type"
-            />
-            <ListItemText
-              id="checkbox-list-label-header"
-              className="w-10"
               primary="Status"
             />
           </ListItemButton>
@@ -202,43 +176,19 @@ export default function RecordList({ status = "pending" }) {
                   id="checkbox-list-label-header"
                   className=" text-wrap w-12"
                   sx={{ overflow: "hidden" }}
-                  primary={record.guestName}
+                  primary={record.email}
                 />
                 <ListItemText
                   id="checkbox-list-label-header"
                   className=" text-wrap w-10 text-center"
-                  primary={record.numberOfGuests}
+                  primary={record.amount}
                 />
                 <ListItemText
                   id="checkbox-list-label-header"
                   className=" text-wrap w-10 text-center"
-                  primary={record.numberOfRooms}
+                  primary={"PENDING"}
                 />
-                <ListItemText
-                  id="checkbox-list-label-header"
-                  className=" text-wrap w-10 text-center"
-                  primary={record.category}
-                />
-                <ListItemText
-                  id="checkbox-list-label-header"
-                  className="w-20 text-center"
-                  primary={new Date(record.arrivalDate).toLocaleDateString()}
-                />
-                <ListItemText
-                  id="checkbox-list-label-header"
-                  className="w-20 text-center"
-                  primary={new Date(record.departureDate).toLocaleDateString()}
-                />
-                <ListItemText
-                  id="checkbox-list-label-header"
-                  className="w-20 text-center"
-                  primary={record.roomType}
-                />
-                <ListItemText
-                  id="checkbox-list-label-header"
-                  className="w-10"
-                  primary={record.status}
-                />
+                
               </ListItemButton>
             </ListItem>
           );

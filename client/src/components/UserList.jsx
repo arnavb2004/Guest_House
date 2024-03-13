@@ -9,7 +9,6 @@ import ListItemText from "@mui/material/ListItemText";
 import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
 import CommentIcon from "@mui/icons-material/Comment";
-import axios from "axios";
 import { privateRequest } from "../utils/useFetch";
 export default function UserList() {
   const [checked, setChecked] = useState([]);
@@ -42,7 +41,7 @@ export default function UserList() {
   const makeRequest=privateRequest(user.accessToken,user.refreshToken)
   const fetchUsers = async () => {
     try {
-      const res = await makeRequest.get("/admin/allusers");
+      const res = await makeRequest.get("/user/all");
       console.log(res.data);
       setUsers(res.data);
     } catch (err) {
@@ -80,12 +79,13 @@ export default function UserList() {
             </ListItemIcon>
             <ListItemText
                   id="checkbox-list-label-header"
-                  className=" text-wrap w-10 mr-5" 
+                  className=" text-wrap w-14 mr-5" 
                   sx={{overflow: "hidden"}}
                   primary="Name"
                 />
             <ListItemText
               id="checkbox-list-label-header"
+              className="w-18 ml-10"
               primary="Email"
             />
             <ListItemText
@@ -140,12 +140,13 @@ export default function UserList() {
                 {/* <ListItemText id={labelId} primary={`Line item ${value + 1}`} /> */}
                 <ListItemText
                   id="checkbox-list-label-header"
-                  className=" text-wrap w-10 mr-5" 
+                  className=" text-wrap w-12 mr-5" 
                   sx={{overflow: "hidden"}}
                   primary={`${user.name}`}
                 />
                 <ListItemText
                   id="checkbox-list-label-header"
+                  className="w-14"
                   primary={`${user.email}`}
                 />
                 {/* <ListItemText
@@ -154,10 +155,12 @@ export default function UserList() {
                 /> */}
                 <ListItemText
                   id="checkbox-list-label-header"
-                  primary={'+'+`${user.contact}`}
+                  className="w-10"
+                  primary={user.contact}
                 />
                 <ListItemText
                   id="checkbox-list-label-header"
+                  className=""
                   primary="0 requests pending"
                 />
                 {/* <ListItemText
