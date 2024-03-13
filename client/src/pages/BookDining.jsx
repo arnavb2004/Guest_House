@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addToCart, removeFromCart } from "../redux/cartSlice";
 import BasicTabs from "../components/Tabs";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import { Link } from "react-router-dom"; // Import Link for navigation
 
 export const DiningCard = ({ items }) => {
   const cartSlice = useSelector((state) => state.cart);
@@ -109,6 +110,11 @@ const BookDining = () => {
         />
 
         <BasicTabs tabs={tabs} tabItems={tabItems} />
+      </div>
+      <div className="flex justify-center mt-5">
+        <Link to="/dining/cart" className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">
+          Go to Cart
+        </Link>
       </div>
     </div>
   );

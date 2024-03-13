@@ -145,11 +145,12 @@ export default function DiningList({ status = "pending" }) {
               className="border-b"
               secondaryAction={
                 <div>
-                  <IconButton edge="end" aria-label="comments">
-                    <InsertDriveFileIcon
-                      color="black"
-                      onClick={() => navigate(`${record._id}`)}
-                    />
+                  <IconButton
+                    edge="end"
+                    aria-label="comments"
+                    onClick={() => navigate(`${record._id}`)}
+                  >
+                    <InsertDriveFileIcon color="black" />
                   </IconButton>
                 </div>
               }
@@ -188,7 +189,6 @@ export default function DiningList({ status = "pending" }) {
                   className=" text-wrap w-10 text-center"
                   primary={"PENDING"}
                 />
-                
               </ListItemButton>
             </ListItem>
           );

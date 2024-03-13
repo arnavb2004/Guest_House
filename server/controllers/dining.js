@@ -28,7 +28,8 @@ export async function getOrders(req, res) {
     const user = req.body.user;
 
     if(user.role !== 'ADMIN') {
-      return res.status(400).json({ message: "Access denied" });
+      const orders = await Meal.find({ email: user.email });
+      return res.status(200).json(orders);
     }
     const orders = await Meal.find();
     res.status(200).json(orders);
@@ -36,6 +37,9 @@ export async function getOrders(req, res) {
     res.status(400).json({ message: error.message });
   }
 }
+
+
+
 
 
 export async function getOrder(req, res) {

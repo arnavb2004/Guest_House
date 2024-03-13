@@ -51,7 +51,7 @@ const Workflow = ({ id, userRecord, setUserRecord }) => {
       <div className="w-full">
         <textarea
           disabled={user.role !== "ADMIN"}
-          className="w-full p-2"
+          className="w-full p-2 bg-white border-gray-500 rounded-lg"
           rows={5}
           value={comments || ""}
           onChange={(e) =>

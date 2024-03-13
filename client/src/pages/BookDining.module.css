@@ -4,16 +4,19 @@
   max-width: 1000px;
   margin: 0 auto;
   padding: 20px;
+  
   text-align: center;
 }
 
 .options {
   margin-bottom: 20px;
+  
 }
 
 .menuItems {
   display: flex;
   flex-wrap: wrap;
+  
 }
 
 /* BookDining.module.css */
@@ -21,9 +24,13 @@
 .menuItem {
   width: calc(33.33% - 20px);
   margin: 10px;
+  
+  
+  height: 400px;
   cursor: pointer;
   transition: transform 0.3s ease;
   border: 1px solid #ddd;
+  
   border-radius: 5px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add box shadow */
   background-color: #fff; /* Add background color */
@@ -35,6 +42,7 @@
 
 .menuItem img {
   width: 100%;
+  height: 70%;
   border-top-left-radius: 5px; /* Adjust border radius */
   border-top-right-radius: 5px; /* Adjust border radius */
 
