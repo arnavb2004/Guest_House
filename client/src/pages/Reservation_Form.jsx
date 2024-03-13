@@ -51,13 +51,13 @@ function ReservationForm() {
     address: "",
     numberOfGuests: "",
     numberOfRooms: "",
-    roomType: "",
+    roomType: "Single Occupancy",
     arrivalDate: "",
     arrivalTime: "",
     departureDate: "",
     departureTime: "",
     purpose: "",
-    category: "",
+    category: "A",
   });
 
   console.log(formData)
