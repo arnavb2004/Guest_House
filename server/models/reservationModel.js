@@ -39,8 +39,13 @@ const reservationSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["PENDING", "APPROVED", "REJECTED"],
+      enum: ["PENDING", "APPROVED", "REJECTED", "HOLD"],
       default: "PENDING",
+    },
+    stepsCompleted: {
+      type: Number,
+      required: true,
+      default: 0,
     },
     approvals: [
       {
@@ -52,6 +57,12 @@ const reservationSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    comments: {
+      type: String,
+    },
+    files:[{
+      type:String,
+    }]
   },
   {
     timestamps: true, // Adds createdAt and updatedAt timestamps

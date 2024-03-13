@@ -17,7 +17,7 @@ const Slider = (sliderItems) => {
   const titleRef = useRef(0);
 
   useEffect(() => {
-    ref.current.style.transform = `translateX(${-slideIndex * 100}vw)`;
+    ref.current.style.transform = `translateX(${-slideIndex * 80}vw)`;
   }, [slideIndex]);
 
   useEffect(() =>{
@@ -44,7 +44,7 @@ const Slider = (sliderItems) => {
   };
 
   return (
-    <div className="slider-container mx-7 transition-transform ">
+    <div className="slider-container mx-7 transition-transform rounded-lg border-2 border-black">
       <div className="arrow arrow-left">
         <KeyboardArrowLeftOutlinedIcon onClick={() => handleClick("left")} />
       </div>

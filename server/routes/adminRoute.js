@@ -6,7 +6,7 @@ import {checkAuth} from "../middlewares/tokens.js"
 import {getUser} from "../controllers/user.js"
 
 Router.get("/allusers",checkAuth, async (req,res)=>{
-    if(req.body.user.role!=='ADMIN'){
+    if(req.user.role!=='ADMIN'){
         return res.status(403).json({message:"You are not authorized to perform this action"})
     }
     console.log("Accessing all users...")
@@ -20,7 +20,7 @@ Router.get("/allusers",checkAuth, async (req,res)=>{
 })
 
 Router.get("/user/:id",checkAuth, async (req,res)=>{
-    if(req.body.user.role!=='ADMIN'){
+    if(req.user.role!=='ADMIN'){
         return res.status(403).json({message:"You are not authorized to perform this action"})
     }
     try{
@@ -35,7 +35,7 @@ Router.get("/user/:id",checkAuth, async (req,res)=>{
 
 Router.get("/pending-reservations",checkAuth, async (req,res)=>{
     console.log("Getting pending reservations...")
-    if(req.body.user.role!=='ADMIN'){
+    if(req.user.role!=='ADMIN'){
         return res.status(403).json({message:"You are not authorized to perform this action"})
     }
     try{
@@ -47,7 +47,7 @@ Router.get("/pending-reservations",checkAuth, async (req,res)=>{
 })
 
 Router.get("/reservations",checkAuth, async (req,res)=>{
-    if(req.body.user.role!=='ADMIN'){
+    if(req.user.role!=='ADMIN'){
         return res.status(403).json({message:"You are not authorized to perform this action"})
     }
     try{
@@ -63,7 +63,7 @@ Router.get("/reservations",checkAuth, async (req,res)=>{
 })
 
 Router.get("/reservations/:id",checkAuth, async (req,res)=>{
-    if(req.body.user.role!=='ADMIN'){
+    if(req.user.role!=='ADMIN'){
         return res.status(403).json({message:"You are not authorized to perform this action"})
     }
     try{
@@ -74,5 +74,4 @@ Router.get("/reservations/:id",checkAuth, async (req,res)=>{
     }
 })
 
-export default Router
-
+export default Router;

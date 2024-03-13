@@ -55,6 +55,8 @@ function App() {
             </Route>
             <Route path="/admin" element={<AdminRoute />}>
               <Route path='' element={<RecordList />} />
+              <Route path='rejected-requests' element={<RecordList status="rejected" />} />
+              <Route path='approved-requests' element={<RecordList status="approved" />} />
               <Route path=':id' element={<RecordPage />} />
               <Route path="users" element={<UserList />} />
             </Route>

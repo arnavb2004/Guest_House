@@ -6,7 +6,7 @@ import { sliderItems } from "../data";
 const Home = () => {
   return (
     <div className="flex flex-col items-center w-screen">
-      <div className="">
+      <div className="mt-10">
         <Slider items = {sliderItems}/>
       </div>
       <div className="home w-5/6 grid grid-cols-4 my-10 text-justify">

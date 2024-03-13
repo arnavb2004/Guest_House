@@ -1,5 +1,4 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
-import menuSlice from "./formSlice";
 import credentialReducer from "./credentialSlice";
 import userReducer from "./userSlice";
 import cartReducer from "./cartSlice";
