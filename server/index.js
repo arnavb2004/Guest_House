@@ -9,42 +9,14 @@ import Reservation from "./models/reservationModel.js";
 import adminRoute from "./routes/adminRoute.js";
 import reservationRoute from "./routes/reservationRoute.js";
 
-import multer from "multer";
-import {GridFsStorage} from 'multer-gridfs-storage';
-
-
-const port = process.env.PORT || 4751;
-dotenv.config();
 const app = express();
-// var storage,upload;
-const connection=mongoose
-.connect(process.env.MONGO_URL)
-.then(() => {
-  console.log("Connected to database");
-  // storage= new GridFsStorage({db:mongoose.connection.db})
-  // upload=multer({storage});)
-  app.listen(port, () => {
-    console.log(`Server is runnning at port ${port}`);
-  });
-})
-.catch((err) => console.log(err));
-
-await connection;
-// var upload
-const storage= new GridFsStorage({url:process.env.MONGO_URL})
-storage.on('connection',()=>{
-})
-const upload=multer({storage});
-
-
+const port = process.env.PORT || 4751;
 
 app.use(cors());
-app.use(express.json());//for parsing application/json
-// app.use(upload.array('files',10));
-app.use(express.urlencoded({ extended: true }));//for parsing application/x-www-form-urlencoded
+app.use(express.json());
+dotenv.config();
 
 app.get("/", (req, res) => {
-  console.log(req.files)
   res.json({
     message: "A simple API",
   });
@@ -64,3 +36,13 @@ app.get("/protected", checkAuth, (req, res) => {
   });
 });
 
+
+mongoose
+  .connect(process.env.MONGO_URL)
+  .then(() => {
+    console.log("Connected to database");
+    app.listen(port, () => {
+      console.log(`Server is runnning at port ${port}`);
+    });
+  })
+  .catch((err) => console.log(err));
