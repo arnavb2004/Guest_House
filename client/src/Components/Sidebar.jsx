@@ -24,7 +24,7 @@ const Sidebar = () => {
           "Users",
           "Contact",
         ]
-      : ["Home", "Reservation Form", "Services", "Contact"];
+      : ["Pending Requests", "Reservation Form", "Services", "Contact"];
 
   return (
     <div className="flex flex-col">
