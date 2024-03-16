@@ -263,8 +263,6 @@ const Login = ({ isRegister }) => {
                         credential,
                       }
                     );
-                    // console.log(user);
-                    // console.log(res.data)
                     if (res.data.user) {
                       dispatch(setUserSlice(res.data));
                       navigate(-1);
