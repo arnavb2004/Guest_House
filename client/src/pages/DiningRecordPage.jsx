@@ -1,16 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { Navigate, useLocation, useParams } from "react-router-dom";
 import axios from "axios"; // Assuming you use axios for API requests
 import Workflow from "../components/Workflow";
 import { privateRequest } from "../utils/useFetch";
+import NotFound from "./NotFound";
 
 export default function DiningRecordPage() {
   const { id } = useParams();
 
   const user = useSelector((state) => state.user);
 
+
   const makeRequest = privateRequest(user.accessToken, user.refreshToken);
+  const [status, setStatus] = useState("Loading");
+
 
   const [userRecord, setUserRecord] = useState({
     email: "",
@@ -23,8 +27,10 @@ export default function DiningRecordPage() {
       try {
         const response = await makeRequest.get(`/dining/${id}`);
         console.log(response.data);
+        setStatus("Success");
         setUserRecord(response.data.order);
       } catch (error) {
+        setStatus("Error");
         console.error("Error fetching user data:", error);
       }
     };
@@ -33,6 +39,10 @@ export default function DiningRecordPage() {
   }, [id]);
 
   console.log(id);
+  console.log(userRecord);
+
+  if (status === "Error") return <Navigate to="/error" />;
+
 
   return (
     <div className="grid grid-cols-8 m-9 gap-4">
@@ -60,8 +70,6 @@ export default function DiningRecordPage() {
           <p className="p-2 text-xl font-semibold">Amount: </p>
           <p className="p-2 text-xl">{userRecord.amount}</p>
         </div>
-
-
       </div>
     </div>
   );

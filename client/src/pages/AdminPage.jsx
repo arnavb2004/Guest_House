@@ -1,5 +1,4 @@
 import React from "react";
-import Header2 from "../components/Header2";
 import Menu from "../components/Menu";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";

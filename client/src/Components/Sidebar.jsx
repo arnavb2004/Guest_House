@@ -69,12 +69,9 @@ const Sidebar = () => {
               key={index}
               to={
                 item === "Pending Requests"
-                  ? user.role === "ADMIN"
-                    ? "/admin"
-                    : "/reservation"
-                  : user.role === "ADMIN"
-                  ? `/admin/${item.toLowerCase().replace(" ", "-")}`
-                  : `/reservation/${item.toLowerCase().replace(" ", "-")}`
+                    ? ""
+                  :
+                  `${item.toLowerCase().replace(" ", "-")}`
               }
             >
               <li className={" " + styles["menu-item"]}>{item}</li>

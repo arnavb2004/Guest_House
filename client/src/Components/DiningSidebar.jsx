@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import { Navigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-import styles from "./Sidebar2.module.css"; // Ensure CSS Module is correctly imported
+import styles from "./DiningSidebar.module.css"; // Ensure CSS Module is correctly imported
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 
-const Sidebar2 = () => {
+const DiningSidebar = () => {
   // Accept isOpen as prop
 
   const user = useSelector((state) => state.user);
@@ -14,7 +14,6 @@ const Sidebar2 = () => {
   if (!user.email) {
     return <Navigate to="/login" />;
   }
-
   const content =
     user.role === "ADMIN"
       ? ["Home", "Pending Requests", "Contact"]
@@ -57,8 +56,8 @@ const Sidebar2 = () => {
               className=""
               to={
                 item === "Home"
-                  ? "/dining"
-                  : `/dining/${item.toLowerCase().replace(" ", "-")}`
+                  ? ""
+                  : `${item.toLowerCase().replace(" ", "-")}`
               }
             >
               <li className={" " + styles["menu-item"]} key={index}>
@@ -73,4 +72,4 @@ const Sidebar2 = () => {
   );
 };
 
-export default Sidebar2;
+export default DiningSidebar;

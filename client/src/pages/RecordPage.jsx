@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import axios from "axios"; // Assuming you use axios for API requests
 import Workflow from "../components/Workflow";
 import { privateRequest } from "../utils/useFetch";
@@ -11,6 +11,8 @@ export default function RecordPage() {
   const user = useSelector((state) => state.user);
 
   const makeRequest = privateRequest(user.accessToken, user.refreshToken);
+
+  const [status, setStatus] = useState("Loading");
 
   const [userRecord, setUserRecord] = useState({
     guestName: "",
@@ -31,8 +33,10 @@ export default function RecordPage() {
       try {
         const response = await makeRequest.get(`/reservation/${id}`);
         console.log(response.data);
+        setStatus("Success");
         setUserRecord(response.data.reservation);
       } catch (error) {
+        setStatus("Error");
         console.error("Error fetching user data:", error);
       }
     };
@@ -40,14 +44,11 @@ export default function RecordPage() {
     fetchRecord();
   }, [id]);
 
-
-  console.log(id);
-
-
+  if (status === "Error") return <Navigate to="/error" />;
 
   return (
     <div className="grid grid-cols-8 m-9 gap-4">
-      <Workflow id={id} userRecord={userRecord} setUserRecord={setUserRecord}/>
+      <Workflow id={id} userRecord={userRecord} setUserRecord={setUserRecord} />
 
       <div className='col-span-5 shadow-lg flex flex-col justify-center gap-4 font-["Dosis"]'>
         <div className="flex justify-between px-32">

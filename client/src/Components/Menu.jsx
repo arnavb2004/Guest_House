@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 const Menu = () => {
   const [selectedItem, setSelectedItem] = useState(null);
   const [hovered, setHovered] = useState(null);
+
+  const user = useSelector((state) => state.user);
 
   useEffect(() => {
     localStorage.setItem("selectedItem", selectedItem);
@@ -11,8 +14,18 @@ const Menu = () => {
 
   const menuItems = [
     { key: 1, name: "home", label: "HOME", link: "/" },
-    { key: 2, name: "dining", label: "DINING", link: "/dining" },
-    { key: 5, name: "reservation", label: "RESERVATION", link: "/reservation" },
+    {
+      key: 2,
+      name: "dining",
+      label: "DINING",
+      link: "/" + user.role.toLowerCase() + "/dining",
+    },
+    {
+      key: 5,
+      name: "reservation",
+      label: "RESERVATION",
+      link: "/" + user.role.toLowerCase() + "/reservation",
+    },
     { key: 3, name: "people", label: "PEOPLE", link: "/people" },
     { key: 4, name: "location", label: "LOCATION", link: "/location" },
     { key: 6, name: "contact", label: "CONTACT", link: "/contact" },
@@ -24,7 +37,7 @@ const Menu = () => {
         <ul className="tabs h-full flex justify-center items-center">
           {menuItems.map((item) => (
             <Link
-              exact='true'
+              exact="true"
               to={item.link}
               key={item.key}
               onClick={() => setSelectedItem(`${item.name}`)}
@@ -38,9 +51,7 @@ const Menu = () => {
               {/* 284272d7 */}
 
               <li>
-                <div className="text-center">
-                  {item.label}
-                </div>
+                <div className="text-center">{item.label}</div>
               </li>
             </Link>
           ))}

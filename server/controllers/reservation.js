@@ -1,4 +1,4 @@
-import Reservation from "../models/reservationModel.js";
+import Reservation from "../models/Reservation.js";
 import { transporter } from "../utils.js";
 
 async function sendVerificationEmail(to, subject, body) {
