@@ -7,7 +7,6 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
-import CommentIcon from "@mui/icons-material/Comment";
 import { useSelector, useDispatch } from "react-redux";
 import { privateRequest } from "../utils/useFetch";
 import { useNavigate } from "react-router-dom";
@@ -15,7 +14,7 @@ import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 import tick from "../images/tick.png";
 import cross from "../images/cross.png";
 
-export default function RecordList({ status = "pending" }) {
+export default function AdminRecordList({ status = "pending" }) {
   const [checked, setChecked] = useState([]);
   const [values, setValues] = useState([]);
   const user = useSelector((state) => state.user);
@@ -170,7 +169,29 @@ export default function RecordList({ status = "pending" }) {
               key={record._id}
               className="border-b"
               secondaryAction={
-                <div>
+                <div className="">
+                  <IconButton edge="end" aria-label="comments">
+                    <img
+                      className="h-5"
+                      onClick={async () => {
+                        await makeRequest.put(
+                          "/reservation/approve/" + record._id
+                        );
+                      }}
+                      src={tick}
+                    />
+                  </IconButton>
+                  <IconButton edge="end" aria-label="comments">
+                    <img
+                      className="h-5"
+                      onClick={async () => {
+                        await makeRequest.put(
+                          "/reservation/reject/" + record._id
+                        );
+                      }}
+                      src={cross}
+                    />
+                  </IconButton>
                   <IconButton edge="end" aria-label="comments">
                     <InsertDriveFileIcon
                       color="black"
