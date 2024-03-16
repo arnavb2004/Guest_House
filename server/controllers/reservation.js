@@ -1,6 +1,7 @@
 import Reservation from "../models/Reservation.js";
 import { transporter } from "../utils.js";
-
+import archiver from 'archiver';
+import { getFileById } from "../middlewares/fileStore.js";
 async function sendVerificationEmail(to, subject, body) {
   try {
     const info = await transporter.sendMail({
@@ -18,9 +19,9 @@ async function sendVerificationEmail(to, subject, body) {
 
 export async function createReservation(req, res) {
   try {
-    //user details are contained in req.body.user
+    //user details are contained in req.user
 
-    console.log(req.body);
+    // console.log(req.body);
 
     const {
       numberOfGuests,
@@ -36,10 +37,12 @@ export async function createReservation(req, res) {
       departureDate,
     } = req.body;
 
-    console.log(arrivalTime);
+    // console.log(arrivalTime);
 
-    const email = req.body.user.email;
-    console.log(req.body);
+    const email = req.user.email;
+    // console.log(req.body);
+    console.log(req.files);
+    const fileids=req.files.map((f)=>f.id);
     const reservation = await Reservation.create({
       guestEmail: email,
       guestName,
@@ -53,6 +56,8 @@ export async function createReservation(req, res) {
       arrivalDate,
       departureDate,
       category,
+      stepsCompleted: 0,
+      files:fileids
     });
     console.log("sending mail");
 
@@ -96,7 +101,7 @@ export async function createReservation(req, res) {
 
 export async function getAllReservationDetails(req, res) {
   try {
-    if (req.body.user.role !== "ADMIN") {
+    if (req.user.role !== "ADMIN") {
       return res
         .status(403)
         .json({ message: "You are not authorized to view this application" });
@@ -113,8 +118,8 @@ export async function getReservationDetails(req, res) {
   try {
     const reservation = await Reservation.findById(req.params.id);
     if (
-      req.body.user.email != reservation.guestEmail &&
-      req.body.user.role !== "ADMIN"
+      req.user.email != reservation.guestEmail &&
+      req.user.role !== "ADMIN"
     ) {
       return res
         .status(403)
@@ -126,8 +131,39 @@ export async function getReservationDetails(req, res) {
   }
 }
 
+export async function getReservationDocuments(req, res) {
+  try {
+    const reservation = await Reservation.findById(req.params.id);
+    if (
+      req.user.email != reservation.guestEmail &&
+      req.user.role !== "ADMIN"
+    ) {
+      return res
+        .status(403)
+        .json({ message: "You are not authorized to view this application" });
+    }
+    // res.status(200).json({ reservation });
+    const archive=archiver('zip');
+    // res.setHeader('Content-Type', 'application/zip');
+    // res.setHeader('Content-Disposition', 'attachment; filename=files.zip');
+    // res.json({reservation});
+    res.attachment('files.zip');
+    archive.pipe(res);
+    for(const fileId of reservation.files){
+      const downloadStream=await getFileById(fileId);
+      archive.append(downloadStream, {name:fileId});
+    }
+    archive.finalize();
+    res.on('finish',()=>{
+      console.log("Download finished");
+    })
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+}
+
 export async function approveReservation(req, res) {
-  if (req.body.user.role !== "ADMIN") {
+  if (req.user.role !== "ADMIN") {
     return res
       .status(403)
       .json({ message: "You are not authorized to perform this action" });
@@ -135,7 +171,7 @@ export async function approveReservation(req, res) {
   try {
     const reservation = await Reservation.findById(req.params.id);
     reservation.status = "APPROVED";
-    reservation.approvals.push(req.body.user._id);
+    reservation.approvals.push(req.user._id);
     if (req.body.comments) reservation.comments = req.body.comments;
     const body =
       "<div>Your reservation has been approved</div><br><div>Comments: " +
@@ -154,7 +190,7 @@ export async function approveReservation(req, res) {
 }
 
 export async function rejectReservation(req, res) {
-  if (req.body.user.role !== "ADMIN") {
+  if (req.user.role !== "ADMIN") {
     return res
       .status(403)
       .json({ message: "You are not authorized to perform this action" });
@@ -163,7 +199,7 @@ export async function rejectReservation(req, res) {
     const reservation = await Reservation.findById(req.params.id);
     reservation.status = "REJECTED";
     reservation.approvals = reservation.approvals.filter(
-      (res) => res !== req.body.user._id
+      (res) => res !== req.user._id
     );
     if (req.body.comments) reservation.comments = req.body.comments;
     const body =
@@ -184,7 +220,7 @@ export async function rejectReservation(req, res) {
 }
 
 export async function holdReservation(req, res) {
-  if (req.body.user.role !== "ADMIN") {
+  if (req.user.role !== "ADMIN") {
     return res
       .status(403)
       .json({ message: "You are not authorized to perform this action" });
@@ -193,7 +229,7 @@ export async function holdReservation(req, res) {
     const reservation = await Reservation.findById(req.params.id);
     reservation.status = "HOLD";
     reservation.approvals = reservation.approvals.filter(
-      (res) => res !== req.body.user._id
+      (res) => res !== req.user._id
     );
     if (req.body.comments) reservation.comments = req.body.comments;
 
@@ -216,9 +252,9 @@ export async function holdReservation(req, res) {
 
 export const getPendingReservations = async (req, res) => {
   console.log("Getting pending reservations...");
-  if (req.body.user.role !== "ADMIN") {
+  if (req.user.role !== "ADMIN") {
     const reservations = await Reservation.find({
-      guestEmail: req.body.user.email,
+      guestEmail: req.user.email,
       status: "PENDING",
     }).sort({
       createdAt: -1,
@@ -237,9 +273,9 @@ export const getPendingReservations = async (req, res) => {
 
 export const getApprovedReservations = async (req, res) => {
   console.log("Getting approved reservations...");
-  if (req.body.user.role !== "ADMIN") {
+  if (req.user.role !== "ADMIN") {
     const reservations = await Reservation.find({
-      guestEmail: req.body.user.email,
+      guestEmail: req.user.email,
       status: "APPROVED",
     }).sort({
       createdAt: -1,
@@ -258,9 +294,9 @@ export const getApprovedReservations = async (req, res) => {
 
 export const getRejectedReservations = async (req, res) => {
   console.log("Getting rejected reservations...");
-  if (req.body.user.role !== "ADMIN") {
+  if (req.user.role !== "ADMIN") {
     const reservations = await Reservation.find({
-      guestEmail: req.body.user.email,
+      guestEmail: req.user.email,
       status: "REJECTED",
     }).sort({
       createdAt: -1,
