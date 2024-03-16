@@ -1,5 +1,7 @@
 import express from "express";
 import { checkAuth } from "../middlewares/tokens.js";
+import {upload} from "../middlewares/fileStore.js";
+
 import {
   createReservation,
   getReservationDetails,
@@ -14,8 +16,7 @@ import {
 
 const Router = express.Router();
 
-Router.post("/", checkAuth, createReservation);
-
+Router.post("/", checkAuth,upload.array('files',10),createReservation);
 Router.get("/all", checkAuth, getAllReservationDetails);
 
 Router.put("/approve/:id", checkAuth, approveReservation);

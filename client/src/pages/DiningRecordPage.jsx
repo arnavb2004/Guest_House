@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Navigate, useLocation, useParams } from "react-router-dom";
-import axios from "axios"; // Assuming you use axios for API requests
+import { Navigate, useParams } from "react-router-dom";
 import Workflow from "../components/Workflow";
 import { privateRequest } from "../utils/useFetch";
-import NotFound from "./NotFound";
 
 export default function DiningRecordPage() {
   const { id } = useParams();
@@ -42,6 +40,7 @@ export default function DiningRecordPage() {
   console.log(userRecord);
 
   if (status === "Error") return <Navigate to="/error" />;
+  else if (status === "Loading") return <div>Loading...</div>;
 
 
   return (

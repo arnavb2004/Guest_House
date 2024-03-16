@@ -45,6 +45,7 @@ export default function RecordPage() {
   }, [id]);
 
   if (status === "Error") return <Navigate to="/error" />;
+  else if (status === "Loading") return <div>Loading...</div>;
 
   return (
     <div className="grid grid-cols-8 m-9 gap-4">
