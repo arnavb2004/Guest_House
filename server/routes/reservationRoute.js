@@ -12,7 +12,9 @@ import {
   getPendingReservations,
   getApprovedReservations,
   getRejectedReservations,
+  getReservationDocuments,
 } from "../controllers/reservation.js";
+
 
 const Router = express.Router();
 
@@ -26,6 +28,6 @@ Router.put("/hold/:id", checkAuth, holdReservation);
 Router.get("/pending", checkAuth, getPendingReservations);
 Router.get("/approved", checkAuth, getApprovedReservations);
 Router.get("/rejected", checkAuth, getRejectedReservations);
-
+Router.get("/documents/:id", checkAuth, getReservationDocuments);
 Router.get("/:id", checkAuth, getReservationDetails);
 export default Router;

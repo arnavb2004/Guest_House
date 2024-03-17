@@ -39,7 +39,7 @@ export const checkAuth = async (req, res, next) => {
         const user = await User.findOne({ email: decodedToken.email });
         console.log("User found!! adding to the req body");
         req.user=user;
-        req.body.user = user;
+        // req.body.user = user;
         //generate new access token
         const newaccessToken = jwt.sign(
           { email: decodedToken.email },
