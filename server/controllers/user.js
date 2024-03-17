@@ -2,7 +2,7 @@ import User from "./../models/User.js";
 
 
 export const getUser = async (req, res) => {
-  if (req.body.user.role !== "ADMIN") {
+  if (req.user.role !== "ADMIN") {
     return res
       .status(403)
       .json({ message: "You are not authorized to perform this action" });
@@ -16,7 +16,7 @@ export const getUser = async (req, res) => {
 }
 
 export const getAllUsers = async (req, res) => {
-  if (req.body.user.role !== "ADMIN") {
+  if (req.user.role !== "ADMIN") {
     return res
       .status(403)
       .json({ message: "You are not authorized to perform this action" });
