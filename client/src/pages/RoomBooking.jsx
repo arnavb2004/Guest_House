@@ -29,6 +29,7 @@ const RoomBooking = () => {
   const [rooms, setRooms] = useState(roomsData);
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
+  const [roomList, setRoomList] = useState([]);
 
   const handleFilter = () => {
     try {
@@ -57,10 +58,38 @@ const RoomBooking = () => {
     }
   };
 
+  const addRoom = (room) => {
+
+    if(startDate && endDate) {
+      let tempRoomList = [...roomList];
+      
+      let present = false
+
+      let newRoom = { id: room.id, startDate, endDate, name: room.name}
+
+      const updatedRoomList = tempRoomList.map((currRoom) => {
+        if(currRoom.name === room.name) {
+          present = true;
+          return newRoom
+        }
+        return currRoom
+      })
+
+      if(!present){
+        setRoomList((prev)=>[...prev, newRoom])
+      } else {
+        setRoomList(updatedRoomList)
+      }
+      
+    } else {
+      toast.error("Select Start, End Date and Room number.")
+    }
+  }
+
   return (
     <div className="room-booking">
       <ToastContainer/>
-      <h2 className="room-heading">Room Booking</h2>
+      <h2 className="room-heading text-4xl font-bold">Room Booking</h2>
       <div className="filter-container">
         <label className="filter-label">Start Date:</label>
         <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} className="filter-input" />
@@ -71,7 +100,7 @@ const RoomBooking = () => {
       <div className="room-grid">
         {rooms.map(room => (
           <div key={room.id} className={`room ${room.bookings.length > 0 ? 'booked-during-range' : 'available'}`}>
-            <div className="room-info">
+            <div className="room-info" onClick={() => {addRoom(room)}}>
               <h3>{room.name}</h3>
               {room.bookings.map((booking, index) => (
                 <div key={index} className="booking-info">
@@ -82,6 +111,21 @@ const RoomBooking = () => {
             </div>
           </div>
         ))}
+      </div>
+      <div className='room-list flex flex-col gap-4 m-4 p-2'>
+        <div className='flex justify-center text-3xl font-bold'>Room List</div>
+        <div className='grid grid-cols-12'>
+          <div className='col-span-3 font-semibold text-xl'>Arrival Date</div>
+          <div className='col-span-3 font-semibold text-xl'>Departure Date</div>
+          <div className='col-span-6 font-semibold text-xl'>Room Number</div>
+        </div>
+        {roomList.map((room) => {
+          return (<div className='grid grid-cols-12'>
+            <div className='col-span-3'>{room.startDate}</div>
+            <div className='col-span-3'>{room.endDate}</div>
+            <div className='col-span-6'>{room.name}</div>
+          </div>)
+        })}
       </div>
     </div>
   );
