@@ -26,6 +26,7 @@ import Dining from "./pages/Dining";
 import NotFound from "./pages/NotFound";
 import Unauthorized from "./pages/Unauthorized";
 import Reserve from "./components/Reserve";
+import RoomBooking from "./pages/RoomBooking";
 
 function App() {
   return (
@@ -67,6 +68,7 @@ function App() {
                 <Route path="rejected-requests/:id" element={<RecordPage />} />
                 <Route path="approved-requests/:id" element={<RecordPage />} />
                 <Route path="users" element={<UserList />} />
+                <Route path="rooms" element={<RoomBooking />} />
               </Route>
             </Route>
 
