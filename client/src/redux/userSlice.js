@@ -29,8 +29,17 @@ const userSlice = createSlice({
       state.accessToken = "";
       state.refreshToken = "";
     },
+    updateUserDetails: (state, action) => {
+      const { name, contact } = action.payload;
+      if (name !== undefined) {
+        state.name = name;
+      }
+      if (contact !== undefined) {
+        state.contact = contact;
+      }
+    },
   },
 });
 
-export const { setUserSlice, logout } = userSlice.actions;
+export const { setUserSlice, logout, updateUserDetails} = userSlice.actions;
 export default userSlice.reducer;

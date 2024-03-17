@@ -1,5 +1,5 @@
-import OTP from "./../models/otpModel.js";
-import User from "./../models/userModel.js";
+import OTP from "./../models/Otp.js";
+import User from "../models/User.js";
 
 import jwt from "jsonwebtoken";
 import {jwtDecode} from "jwt-decode";
