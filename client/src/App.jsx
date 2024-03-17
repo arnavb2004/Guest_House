@@ -23,6 +23,9 @@ import AdminRoute from "./utils/AdminRoute";
 import UserList from "./components/UserList";
 import Cart from "./pages/Cart";
 import RecordPage from "./pages/RecordPage";
+import AdminRecordList from "./components/AdminRecordList";
+import DiningList from "./components/DiningList";
+import DiningRecordPage from "./pages/DiningRecordPage";
 
 function App() {
   return (
@@ -41,9 +44,12 @@ function App() {
             </Route>
             <Route path="/dining" element={<DiningRoute/>} >
                 
-              <Route path='' element={<RecordList/>} />
+              <Route path='' element={<DiningList/>} />
               <Route path='book-dining' element={<BookDining/>} />
               <Route path='cart' element={<Cart/>} />
+              <Route path=':id' element={<DiningRecordPage />} />
+
+
 
             </Route>
             <Route path="/reservation" element={<ReservationRoute/>} >
@@ -54,19 +60,19 @@ function App() {
 
             </Route>
             <Route path="/admin" element={<AdminRoute />}>
-              <Route path='' element={<RecordList />} />
-              <Route path='rejected-requests' element={<RecordList status="rejected" />} />
-              <Route path='approved-requests' element={<RecordList status="approved" />} />
+              <Route path='' element={<AdminRecordList />} />
+              <Route path='rejected-requests' element={<AdminRecordList status="rejected" />} />
+              <Route path='approved-requests' element={<AdminRecordList status="approved" />} />
               <Route path=':id' element={<RecordPage />} />
+              <Route path='rejected-requests/:id' element={<RecordPage />} />
+              <Route path='approved-requests/:id' element={<RecordPage />} />
               <Route path="users" element={<UserList />} />
+
+
             </Route>
             <Route path="/iitropar-campus-map" element={<PDFViewer />} />
             <Route path="/reservation-form" element={<ReservationForm />} />
-            {/* <Route element={<PrivateRoute />}>
-              <Route path="/dining" element={<DiningRoute />} />
-              <Route path="/reservation" element={<ReservationRoute />} />
-            </Route> */}
-
+            
           </Routes>
         </BrowserRouter>
       </Provider>
