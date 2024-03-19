@@ -16,12 +16,29 @@ import cross from "../images/cross.png";
 import { getDate } from "../utils/handleDate";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
+import Button from "@mui/material/Button";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
+import TextField from "@mui/material/TextField";
 
 export default function AdminRecordList({ status = "pending" }) {
   const [checked, setChecked] = useState([]);
   const [values, setValues] = useState([]);
+  const [loadingStatus, setLoadingStatus] = useState("Loading");
   const user = useSelector((state) => state.user);
   const [records, setRecords] = useState([]);
+  const [newRecords, setNewRecords] = useState([]);
+
+  const filterMap = {
+    "Guest Name": "guestName",
+    "Number of Rooms": "numberOfRooms",
+    "Number of Guests": "numberOfGuests",
+    Category: "category",
+    "Arrival Date": "arrivalDate",
+    "Departure Date": "departureDate",
+    "Room Type": "roomType",
+    Status: "status",
+  };
 
   const navigate = useNavigate();
 
@@ -33,10 +50,13 @@ export default function AdminRecordList({ status = "pending" }) {
       const res = await makeRequest.get("/reservation/" + status);
       console.log(res.data);
       const reservations = res.data;
+      setLoadingStatus("Success");
       setValues(reservations.map((res) => res._id));
       setRecords(reservations);
+      setNewRecords(reservations);
     } catch (err) {
       toast(err.response.data);
+      setLoadingStatus("Error");
       console.log(err.response.data);
     }
   };
@@ -44,6 +64,7 @@ export default function AdminRecordList({ status = "pending" }) {
   useEffect(() => {
     fetchRecords();
   }, [status]);
+
   console.log(records);
   const dispatch = useDispatch();
   const handleToggle = (value) => () => {
@@ -71,23 +92,107 @@ export default function AdminRecordList({ status = "pending" }) {
   };
 
   const [searchTerm, setSearchTerm] = useState("");
+  const [searchChoice, setSearchChoice] = useState("Filter");
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
   };
+
+  const filterRecords = () => {
+    const tempRecords = records.filter((record) => {
+      if (typeof record[filterMap[searchChoice]] === "string") {
+        if (
+          searchChoice === "Arrival Date" ||
+          searchChoice === "Departure Date"
+        ) {
+          const date = new Date(record[filterMap[searchChoice]]);
+          const formattedDate = getDate(date);
+
+          return formattedDate.includes(searchTerm);
+        } else {
+          return record[filterMap[searchChoice]]
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase());
+        }
+      } else {
+        const inputNum = parseInt(searchTerm);
+        const num = record[filterMap[searchChoice]];
+        return num === inputNum;
+      }
+    });
+
+    setNewRecords(tempRecords);
+
+    console.log(tempRecords);
+  };
+
+  useEffect(() => {
+    if (searchTerm) filterRecords();
+    else setNewRecords(records);
+  }, [searchTerm, searchChoice]);
+
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
+  };
+  const toggleDropup = () => {
+    if (isOpen) {
+      setIsOpen(false);
+    }
+  };
+
+  const options = [
+    "Guest Name",
+    "Number of Rooms",
+    "Number of Guests",
+    "Category",
+    "Arrival Date",
+    "Departure Date",
+    "Room Type",
+    "Status",
+  ];
 
   return (
     <div className=" flex p-5 px-0 w-full flex-col">
       <div className='text-center text-3xl font-["Dosis"] font-semibold py-4 uppercase'>
         User Records
       </div>
-      <div>
-        <input
-          type="text"
-          placeholder="Search items..."
+      <div className="grid grid-cols-12 gap-8 mb-4">
+        <div className="col-span-2 flex flex-col justify-center relative h-full">
+          <Button
+            variant="contained"
+            size="large"
+            onClick={toggleDropdown}
+            endIcon={isOpen ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
+            style={{ backgroundColor: "#DFDFDF", color: "#606060" }}
+            className="h-full"
+          >
+            {searchChoice}
+          </Button>
+          {isOpen && (
+            <div className="absolute top-12 z-10 mt-2 py-2 w-full bg-white border border-gray-300 rounded-md shadow-lg">
+              {options.map((option) => (
+                <button
+                  // key={option.value}
+                  className="block px-4 py-2 text-gray-800 hover:bg-gray-200 w-full text-left"
+                  onClick={() => {
+                    setSearchChoice(option);
+                    setIsOpen(!isOpen);
+                  }}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+        <TextField
+          label="Search items"
+          variant="outlined"
+          className="col-span-10 w-full p-2.5 h-full"
           value={searchTerm}
           onChange={handleSearchChange}
-          className="w-full p-2.5 border-2 border-slate-200 my-4 rounded-lg box-border focus:border-slate-400 focus:outline-none"
         />
       </div>
       <List
@@ -168,8 +273,7 @@ export default function AdminRecordList({ status = "pending" }) {
             />
           </ListItemButton>
         </ListItem>
-        {console.log(records)}
-        {records.map((record) => {
+        {newRecords.map((record) => {
           const labelId = `checkbox-list-label-${record._id}`;
 
           return (
@@ -285,7 +389,14 @@ export default function AdminRecordList({ status = "pending" }) {
           );
         })}
       </List>
-      {records.length === 0 && <div className="p-2 text-center pt-5 font-semibold">No records found</div>}
+      {loadingStatus === "Loading" && (
+        <div className="p-2 text-center pt-5 font-semibold">Loading...</div>
+      )}
+      {loadingStatus !== "Loading" && records.length === 0 && (
+        <div className="p-2 text-center pt-5 font-semibold">
+          No records found
+        </div>
+      )}
     </div>
   );
 }

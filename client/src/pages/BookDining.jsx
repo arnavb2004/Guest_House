@@ -93,7 +93,7 @@ const BookDining = () => {
   //   <DiningCard items={filteredMenuItems} />,
 
   // ]
-  console.log(tabItems);
+  // console.log(tabItems);
 
   return (
     <div className={styles.container}>

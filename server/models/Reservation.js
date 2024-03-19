@@ -84,11 +84,20 @@ const reservationSchema = new mongoose.Schema(
     comments: {
       type: String,
     },
-    files: [
-      {
-        type: String,
-      },
-    ],
+    receipt:{
+      type:String,
+      required:true
+    },
+    files:[{
+        refid:{
+        type:String,
+        required:true
+        },
+        extension:{
+          type:String,
+          required:true
+        }
+    }]
   },
   {
     timestamps: true, // Adds createdAt and updatedAt timestamps
