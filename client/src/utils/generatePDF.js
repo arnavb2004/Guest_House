@@ -152,6 +152,7 @@ export const updateFilledPDF = async (formData) => {
     console.log(blob);
     const pdfUrl = URL.createObjectURL(blob);
     window.open(pdfUrl);
+    return blob;
     // saveAs(blob, 'filled_form.pdf');
   } catch (error) {
     console.error("Error updating filled PDF:", error);

@@ -1,4 +1,5 @@
 import  React from "react";
+import { useState } from "react";
 import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
@@ -15,7 +16,13 @@ const VisuallyHiddenInput = styled("input")({
   width: 1,
 });
 
-export default function InputFileUpload() {
+export default function InputFileUpload({onFileUpload}) {
+  const onFileChange=(event)=>{
+    const file=event.target.files[0];
+    if(file){
+      onFileUpload(file);
+    }
+  }
   return (
     <Button
       component="label"
@@ -28,7 +35,7 @@ export default function InputFileUpload() {
       Upload file
       <VisuallyHiddenInput
         type="file"
-        onChange={(e) => console.log(e.target.value)}
+        onChange={onFileChange}
       />
     </Button>
   );
