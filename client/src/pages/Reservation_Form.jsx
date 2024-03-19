@@ -49,12 +49,13 @@ function ReservationForm() {
   const user = useSelector((state) => state.user);
   const makeRequest = privateRequest(user.accessToken, user.refreshToken);
 
+  const [files, setFiles] = useState([]);
+  const [receipt, setReceipt] = useState(null);
   const [formData, setFormData] = useState({
     guestName: "",
     address: "",
     numberOfGuests: "",
     numberOfRooms: "",
-    roomType: "Single Occupancy",
     roomType: "Single Occupancy",
     arrivalDate: "",
     arrivalTime: "",
@@ -71,7 +72,6 @@ function ReservationForm() {
     address: "",
     numberOfGuests: "",
     numberOfRooms: "",
-    roomType: "",
     roomType: "",
     arrivalDate: "",
     arrivalTime: "",
@@ -118,8 +118,28 @@ function ReservationForm() {
       [name]: value,
     });
   };
-
+  const handleFileUpload=(file)=>{
+    // if(!Array.isArray(formData.files)) {
+    //   formData.files=[];
+    // }
+    // formData.append('files',file);
+    // formData.files.push(file);
+    // setFormData({
+    //   ...formData,
+    // })
+    setFiles([...files,file]);
+  }
+  const handleReceiptUpload=()=>{
+    const file=updateFilledPDF(formData);
+    // formData.append('receipt',file);
+    // setFormData({
+    //   ...formData,
+    //   receipt:file
+    // })
+    setReceipt(file);
+  }
   const handleSubmit = async (e) => {
+    handleReceiptUpload();
     e.preventDefault();
 
     //Handle form validation
@@ -129,6 +149,9 @@ function ReservationForm() {
     for (let [key, value] of Object.entries(formData)) {
       console.log(key, value);
       // console.log(key, value);
+      if(key==="files" || key==="receipt"){
+        continue;
+      }
       if (requiredFields[key] && value === "") {
         console.log("here");
 
@@ -212,9 +235,25 @@ function ReservationForm() {
     // axios.post("http://localhost:4751/reservation", formData);
 
     try {
+      const formDataToSend=new FormData();
+      Object.entries(formData).forEach(([fieldName, fieldValue]) => {
+        formDataToSend.append(fieldName, fieldValue);
+      });
+      var temp
+      files.forEach((file)=>{
+        formDataToSend.append('files',file);
+        temp=file;
+      });
+      // formDataToSend.append('receipt',receipt);
+      formDataToSend.append('receipt',temp);
       await makeRequest.post(
         "http://localhost:4751/reservation/",
-        formData
+        formDataToSend,
+        {
+          headers: {
+            "Content-Type": 'multipart/form-data',
+          }
+        }
       );
       console.log("Form submitted");
       toast.success("Form submitted successfully!");
@@ -380,7 +419,7 @@ function ReservationForm() {
               </option>
             </select>
             {/* <AutoDemo/> */}
-            <InputFileUpload className="" />
+            <InputFileUpload className="" onFileUpload={handleFileUpload}/>
 
             {/* <div className="card">
               <FileUpload
@@ -399,9 +438,7 @@ function ReservationForm() {
             Submit
           </button>
           <button
-            onClick={() => {
-              updateFilledPDF(formData);
-            }}
+            onClick={handleReceiptUpload}
             className="convert-to-pdf-btn"
           >
             See Preview - PDF

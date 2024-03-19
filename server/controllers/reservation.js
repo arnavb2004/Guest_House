@@ -40,8 +40,9 @@ export async function createReservation(req, res) {
     // console.log(arrivalTime);
 
     const email = req.user.email;
-    // console.log(req.body);
-    console.log(req.files);
+    // console.log(req.user);
+    console.log(req.files['files'])
+    console.log(req.files['receipt']);
     const receiptid=req.files['receipt'][0].id;
     const fileids=req.files['files'].map((f)=>(
       {
@@ -49,6 +50,7 @@ export async function createReservation(req, res) {
         extension:f.originalname.split('.')[1]
       }
     ));
+    // console.log(fileids)
     console.log(fileids)
     const reservation = await Reservation.create({
       guestEmail: email,
