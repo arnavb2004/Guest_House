@@ -14,6 +14,8 @@ import { useNavigate } from "react-router-dom";
 import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 import tick from "../images/tick.png";
 import cross from "../images/cross.png";
+import {toast} from "react-toastify";
+import "react-toastify/dist/ReactToastify.min.css";
 
 export default function RecordList({ status = "pending" }) {
   const [checked, setChecked] = useState([]);
@@ -34,7 +36,7 @@ export default function RecordList({ status = "pending" }) {
       setValues(reservations.map((res) => res._id));
       setRecords(reservations);
     } catch (err) {
-      // toast(err.response.data);
+      toast(err.response.data);
       console.log(err.response.data);
     }
   };

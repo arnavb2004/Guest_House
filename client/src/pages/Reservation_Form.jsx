@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
 
 import Header from "../components/Header";
@@ -63,8 +63,8 @@ function ReservationForm() {
     purpose: "",
     category: "A",
   });
-  
-  console.log(formData)
+
+  console.log(formData);
 
   const [errorText, setErrorText] = useState({
     guestName: "",
@@ -128,10 +128,10 @@ function ReservationForm() {
 
     for (let [key, value] of Object.entries(formData)) {
       console.log(key, value);
+      console.log(typeof value);
       // console.log(key, value);
       if (requiredFields[key] && value === "") {
         console.log("here");
-
 
         setErrorText((prev) => ({
           ...prev,
@@ -153,12 +153,22 @@ function ReservationForm() {
     }
     console.log(errorText);
 
-    const arrivalDateTime = new Date(`${formData.arrivalDate}T${formData.arrivalTime}`);
-    const departureDateTime = new Date(`${formData.departureDate}T${formData.departureTime}`);
-    
-    console.log(departureDateTime)
-    console.log(arrivalDateTime)
-   
+    const arrivalDateTime = new Date(
+      `${formData.arrivalDate}T${formData.arrivalTime}`
+    );
+    const departureDateTime = new Date(
+      `${formData.departureDate}T${formData.departureTime}`
+    );
+
+    console.log(departureDateTime);
+    console.log(arrivalDateTime);
+
+    // setFormData((prev) => ({
+    //   ...prev,
+    //   arrivalDate: arrivalDateTime,
+    //   departureDate: departureDateTime,
+    // }));
+
     // Check if no of rooms are Sufficient for Double occupancy
     if (formData.roomType === "Double Occupancy") {
       const numberOfGuests = parseInt(formData.numberOfGuests);
@@ -166,10 +176,13 @@ function ReservationForm() {
       if (2 * numberOfRooms < numberOfGuests) {
         setErrorText((prev) => ({
           ...prev,
-          numberOfRooms: "Number of rooms are not sufficient as per number of guests and room type",
+          numberOfRooms:
+            "Number of rooms are not sufficient as per number of guests and room type",
         }));
         passed = false;
-        toast.error("Number of rooms are not sufficient as per number of guests and room type");
+        toast.error(
+          "Number of rooms are not sufficient as per number of guests and room type"
+        );
         return;
       }
     }
@@ -181,10 +194,13 @@ function ReservationForm() {
       if (numberOfRooms < numberOfGuests) {
         setErrorText((prev) => ({
           ...prev,
-          numberOfRooms: "Number of rooms are not sufficient as per number of guests and room type",
+          numberOfRooms:
+            "Number of rooms are not sufficient as per number of guests and room type",
         }));
         passed = false;
-        toast.error("Number of rooms are not sufficient as per number of guests and room type");
+        toast.error(
+          "Number of rooms are not sufficient as per number of guests and room type"
+        );
         return;
       }
     }
@@ -200,7 +216,17 @@ function ReservationForm() {
       toast.error("Departure should be After Arrival");
       return;
     }
-    
+
+    if (formData.arrivalTime < "13:00") {
+      toast.error("Arrival time should be after 01:00 PM");
+      return;
+    }
+
+    if (formData.departureTime > "11:00") {
+      toast.error("Departure time should be before 11:00 AM");
+      return;
+    }
+
     if (!passed) {
       toast.error("Please Fill All Necessary Fields Correctly.");
       return;
@@ -212,10 +238,11 @@ function ReservationForm() {
     // axios.post("http://localhost:4751/reservation", formData);
 
     try {
-      await makeRequest.post(
-        "http://localhost:4751/reservation/",
-        formData
-      );
+      await makeRequest.post("http://localhost:4751/reservation", {
+        ...formData,
+        arrivalDate: arrivalDateTime,
+        departureDate: departureDateTime,
+      });
       console.log("Form submitted");
       toast.success("Form submitted successfully!");
     } catch (error) {
@@ -223,13 +250,10 @@ function ReservationForm() {
       // Show error toast notification
       toast.error("Form submission failed. Please try again later.");
     }
-    
   };
 
   return (
     <div className="w-full">
-      {/* <Header /> */}
-      <ToastContainer />
       <div className="reservation-container border shadow-xl rounded-lg  bg-white">
         <h2 className="py-2 mb-5">Guest House Reservation Form</h2>
         <FormControl className="w-full flex gap-4">

@@ -39,7 +39,7 @@ export default function DiningRecordPage() {
   console.log(id);
   console.log(userRecord);
 
-  if (status === "Error") return <Navigate to="/error" />;
+  if (status === "Error") return <Navigate to="/404" />;
   else if (status === "Loading") return <div>Loading...</div>;
 
 

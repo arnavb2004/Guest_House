@@ -1,6 +1,6 @@
 import Reservation from "../models/Reservation.js";
-import { transporter } from "../utils.js";
-import archiver from 'archiver';
+import { getDate, getTime, transporter } from "../utils.js";
+import archiver from "archiver";
 import { getFileById } from "../middlewares/fileStore.js";
 async function sendVerificationEmail(to, subject, body) {
   try {
@@ -18,6 +18,8 @@ async function sendVerificationEmail(to, subject, body) {
 }
 
 export async function createReservation(req, res) {
+  console.log("body", req.body);
+  console.log("user", req.user);
   try {
     //user details are contained in req.user
 
@@ -30,10 +32,8 @@ export async function createReservation(req, res) {
       purpose,
       guestName,
       arrivalDate,
-      arrivalTime,
       address,
       category,
-      departureTime,
       departureDate,
     } = req.body;
 
@@ -41,15 +41,13 @@ export async function createReservation(req, res) {
 
     const email = req.user.email;
     // console.log(req.body);
-    console.log(req.files);
-    const fileids=req.files.map((f)=>f.id);
+    // console.log(req.files);
+    // const fileids=req.files.map((f)=>f.id);
     const reservation = await Reservation.create({
       guestEmail: email,
       guestName,
       address,
       purpose,
-      arrivalTime,
-      departureTime,
       numberOfGuests,
       numberOfRooms,
       roomType,
@@ -57,8 +55,10 @@ export async function createReservation(req, res) {
       departureDate,
       category,
       stepsCompleted: 0,
-      files:fileids
+      reviewers: ["ADMIN"],
     });
+
+    console.log(reservation);
     console.log("sending mail");
 
     sendVerificationEmail(
@@ -77,13 +77,13 @@ export async function createReservation(req, res) {
         "</div><br><div>Purpose: " +
         purpose +
         "</div><br><div>Arrival Date: " +
-        arrivalDate +
+        getDate(arrivalDate) +
         "</div><br><div>Arrival Time: " +
-        arrivalTime +
+        getTime(arrivalDate) +
         "</div><br><div>Departure Date: " +
-        departureDate +
+        getDate(departureDate) +
         "</div><br><div>Departure Time: " +
-        departureTime +
+        getTime(departureDate) +
         "</div><br><div>Address: " +
         address +
         "</div><br><div>Category: " +
@@ -114,12 +114,45 @@ export async function getAllReservationDetails(req, res) {
   }
 }
 
+export async function updateReservation(req, res) {
+  try {
+    if (req.user.role !== "ADMIN") {
+      return res
+        .status(403)
+        .json({ message: "You are not authorized to perform this action" });
+    }
+    await Reservation.findByIdAndUpdate(req.params.id, req.body);
+    res.status(200).json({ message: "Reservation Approved" });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+}
+export async function assignReservation(req, res) {
+  try {
+    if (req.user.role !== "ADMIN") {
+      return res
+      .status(403)
+      .json({ message: "You are not authorized to perform this action" });
+    }
+    const reservation = await Reservation.findById(req.params.id);
+    console.log(reservation)
+    console.log(req.body)
+    reservation.reviewers = req.body.reviewers;
+    await reservation.save();
+    console.log(reservation);
+    res.status(200).json({ message: "Reservation Approved" });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+}
+
 export async function getReservationDetails(req, res) {
   try {
     const reservation = await Reservation.findById(req.params.id);
     if (
       req.user.email != reservation.guestEmail &&
-      req.user.role !== "ADMIN"
+      req.user.role !== "ADMIN" &&
+      !reservation.reviewers.includes(req.user.role)
     ) {
       return res
         .status(403)
@@ -136,42 +169,46 @@ export async function getReservationDocuments(req, res) {
     const reservation = await Reservation.findById(req.params.id);
     if (
       req.user.email != reservation.guestEmail &&
-      req.user.role !== "ADMIN"
+      req.user.role !== "ADMIN" &&
+      !reservation.reviewers.includes(req.user.role)
     ) {
       return res
         .status(403)
         .json({ message: "You are not authorized to view this application" });
     }
     // res.status(200).json({ reservation });
-    const archive=archiver('zip');
+    const archive = archiver("zip");
     // res.setHeader('Content-Type', 'application/zip');
     // res.setHeader('Content-Disposition', 'attachment; filename=files.zip');
     // res.json({reservation});
-    res.attachment('files.zip');
+    res.attachment("files.zip");
     archive.pipe(res);
-    for(const fileId of reservation.files){
-      const downloadStream=await getFileById(fileId);
-      archive.append(downloadStream, {name:fileId});
+    for (const fileId of reservation.files) {
+      const downloadStream = await getFileById(fileId);
+      archive.append(downloadStream, { name: fileId });
     }
     archive.finalize();
-    res.on('finish',()=>{
+    res.on("finish", () => {
       console.log("Download finished");
-    })
+    });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
 }
 
 export async function approveReservation(req, res) {
-  if (req.user.role !== "ADMIN") {
-    return res
-      .status(403)
-      .json({ message: "You are not authorized to perform this action" });
-  }
   try {
     const reservation = await Reservation.findById(req.params.id);
+    if (
+      req.user.role !== "ADMIN" &&
+      !reservation.reviewers.includes(req.user.role)
+    ) {
+      return res
+        .status(403)
+        .json({ message: "You are not authorized to perform this action" });
+    }
     reservation.status = "APPROVED";
-    reservation.approvals.push(req.user._id);
+    reservation.approvals.push(req.user.role);
     if (req.body.comments) reservation.comments = req.body.comments;
     const body =
       "<div>Your reservation has been approved</div><br><div>Comments: " +
@@ -190,16 +227,19 @@ export async function approveReservation(req, res) {
 }
 
 export async function rejectReservation(req, res) {
-  if (req.user.role !== "ADMIN") {
-    return res
-      .status(403)
-      .json({ message: "You are not authorized to perform this action" });
-  }
   try {
     const reservation = await Reservation.findById(req.params.id);
+    if (
+      req.user.role !== "ADMIN" &&
+      !reservation.reviewers.includes(req.user.role)
+    ) {
+      return res
+        .status(403)
+        .json({ message: "You are not authorized to perform this action" });
+    }
     reservation.status = "REJECTED";
     reservation.approvals = reservation.approvals.filter(
-      (res) => res !== req.user._id
+      (res) => res !== req.user.role
     );
     if (req.body.comments) reservation.comments = req.body.comments;
     const body =
@@ -220,16 +260,19 @@ export async function rejectReservation(req, res) {
 }
 
 export async function holdReservation(req, res) {
-  if (req.user.role !== "ADMIN") {
-    return res
-      .status(403)
-      .json({ message: "You are not authorized to perform this action" });
-  }
   try {
     const reservation = await Reservation.findById(req.params.id);
+    if (
+      req.user.role !== "ADMIN" &&
+      !reservation.reviewers.includes(req.user.role)
+    ) {
+      return res
+        .status(403)
+        .json({ message: "You are not authorized to perform this action" });
+    }
     reservation.status = "HOLD";
     reservation.approvals = reservation.approvals.filter(
-      (res) => res !== req.user._id
+      (res) => res !== req.user.role
     );
     if (req.body.comments) reservation.comments = req.body.comments;
 
@@ -252,7 +295,7 @@ export async function holdReservation(req, res) {
 
 export const getPendingReservations = async (req, res) => {
   console.log("Getting pending reservations...");
-  if (req.user.role !== "ADMIN") {
+  if (req.user.role === "USER") {
     const reservations = await Reservation.find({
       guestEmail: req.user.email,
       status: "PENDING",
@@ -261,8 +304,12 @@ export const getPendingReservations = async (req, res) => {
     });
     return res.status(200).json(reservations);
   }
+
   try {
-    const reservations = await Reservation.find({ status: "PENDING" }).sort({
+    const reservations = await Reservation.find({
+      status: "PENDING",
+      reviewers: { $in: [req.user.role] },
+    }).sort({
       createdAt: -1,
     });
     res.status(200).json(reservations);
@@ -273,7 +320,7 @@ export const getPendingReservations = async (req, res) => {
 
 export const getApprovedReservations = async (req, res) => {
   console.log("Getting approved reservations...");
-  if (req.user.role !== "ADMIN") {
+  if (req.user.role === "USER") {
     const reservations = await Reservation.find({
       guestEmail: req.user.email,
       status: "APPROVED",
@@ -283,7 +330,10 @@ export const getApprovedReservations = async (req, res) => {
     return res.status(200).json(reservations);
   }
   try {
-    const reservations = await Reservation.find({ status: "APPROVED" }).sort({
+    const reservations = await Reservation.find({
+      status: "APPROVED",
+      reviewers: { $in: [req.user.role] },
+    }).sort({
       createdAt: -1,
     });
     res.json(reservations);
@@ -294,7 +344,7 @@ export const getApprovedReservations = async (req, res) => {
 
 export const getRejectedReservations = async (req, res) => {
   console.log("Getting rejected reservations...");
-  if (req.user.role !== "ADMIN") {
+  if (req.user.role === "USER") {
     const reservations = await Reservation.find({
       guestEmail: req.user.email,
       status: "REJECTED",
@@ -304,7 +354,10 @@ export const getRejectedReservations = async (req, res) => {
     return res.status(200).json(reservations);
   }
   try {
-    const reservations = await Reservation.find({ status: "REJECTED" }).sort({
+    const reservations = await Reservation.find({
+      status: "REJECTED",
+      reviewers: { $in: [req.user.role] },
+    }).sort({
       createdAt: -1,
     });
     res.json(reservations);

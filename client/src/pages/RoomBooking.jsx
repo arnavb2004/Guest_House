@@ -1,29 +1,29 @@
 import React, { useState } from 'react';
 import './RoomBooking.css';
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 
 const RoomBooking = () => {
   const roomsData = [
-    { id: 1, name: 'Room 1', bookings: [{ startDate: '2024-04-01', endDate: '2024-04-06', userId: 'user1' },{startDate: '2024-04-09', endDate: '2024-04-15', userId: 'user2'}] },
-    { id: 2, name: 'Room 2', bookings: [{ startDate: '2024-04-10', endDate: '2024-05-15', userId: 'user2' }] },
-    { id: 3, name: 'Room 3', bookings: [] },
-    { id: 4, name: 'Room 4', bookings: [] },
-    { id: 5, name: 'Room 5', bookings: [{ startDate: '2024-06-20', endDate: '2024-06-25', userId: 'user3' }] },
-    { id: 6, name: 'Room 6', bookings: [] },
-    { id: 7, name: 'Room 7', bookings: [] },
-    { id: 8, name: 'Room 8', bookings: [] },
-    { id: 9, name: 'Room 9', bookings: [{ startDate: '2024-07-12', endDate: '2024-07-18', userId: 'user4' }] },
-    { id: 10, name: 'Room 10', bookings: [] },
-    { id: 11, name: 'Room 11', bookings: [] },
-    { id: 12, name: 'Room 12', bookings: [] },
-    { id: 13, name: 'Room 13', bookings: [] },
-    { id: 14, name: 'Room 14', bookings: [{ startDate: '2024-08-05', endDate: '2024-08-10', userId: 'user5' }] },
-    { id: 15, name: 'Room 15', bookings: [] },
-    { id: 16, name: 'Room 16', bookings: [{ startDate: '2024-09-15', endDate: '2024-09-20', userId: 'user6' }] },
-    { id: 17, name: 'Room 17', bookings: [{ startDate: '2024-08-15', endDate: '2024-08-25', userId: 'user7' }] },
-    { id: 18, name: 'Room 18', bookings: [{ startDate: '2024-08-25', endDate: '2024-08-29', userId: 'user8' }] },
-    { id: 19, name: 'Room 19', bookings: [{ startDate: '2024-08-05', endDate: '2024-09-02', userId: 'user9' }] },
-    { id: 20, name: 'Room 20', bookings: [] }
+    { id: 1, roomNumber:101, bookings: [{ startDate: '2024-04-01', endDate: '2024-04-06', userId: 'user1' },{startDate: '2024-04-09', endDate: '2024-04-15', userId: 'user2'}] },
+    { id: 2, roomNumber:102, bookings: [{ startDate: '2024-04-10', endDate: '2024-05-15', userId: 'user2' }] },
+    { id: 3, roomNumber:103, bookings: [] },
+    { id: 4, roomNumber:104, bookings: [] },
+    { id: 5, roomNumber:105, bookings: [{ startDate: '2024-06-20', endDate: '2024-06-25', userId: 'user3' }] },
+    { id: 6, roomNumber:106, bookings: [] },
+    { id: 7, roomNumber:107, bookings: [] },
+    { id: 8, roomNumber:108, bookings: [] },
+    { id: 9, roomNumber:109, bookings: [{ startDate: '2024-07-12', endDate: '2024-07-18', userId: 'user4' }] },
+    { id: 10, roomNumber:110, bookings: [] },
+    { id: 11, roomNumber:111, bookings: [] },
+    { id: 12, roomNumber:112, bookings: [] },
+    { id: 13, roomNumber:113, bookings: [] },
+    { id: 14, roomNumber:114, bookings: [{ startDate: '2024-08-05', endDate: '2024-08-10', userId: 'user5' }] },
+    { id: 15, roomNumber:115, bookings: [] },
+    { id: 16, roomNumber:116, bookings: [{ startDate: '2024-09-15', endDate: '2024-09-20', userId: 'user6' }] },
+    { id: 17, roomNumber:117, bookings: [{ startDate: '2024-08-15', endDate: '2024-08-25', userId: 'user7' }] },
+    { id: 18, roomNumber:118, bookings: [{ startDate: '2024-08-25', endDate: '2024-08-29', userId: 'user8' }] },
+    { id: 19, roomNumber:119, bookings: [{ startDate: '2024-08-05', endDate: '2024-09-02', userId: 'user9' }] },
+    { id: 20, roomNumber:120, bookings: [] }
   ];
 
   const [rooms, setRooms] = useState(roomsData);
@@ -59,7 +59,6 @@ const RoomBooking = () => {
 
   return (
     <div className="room-booking">
-      <ToastContainer/>
       <h2 className="room-heading">Room Booking</h2>
       <div className="filter-container">
         <label className="filter-label">Start Date:</label>

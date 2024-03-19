@@ -4,6 +4,7 @@ import { Navigate, useParams } from "react-router-dom";
 import axios from "axios"; // Assuming you use axios for API requests
 import Workflow from "../components/Workflow";
 import { privateRequest } from "../utils/useFetch";
+import { getDate, getTime } from "../utils/handleDate";
 
 export default function RecordPage() {
   const { id } = useParams();
@@ -21,9 +22,7 @@ export default function RecordPage() {
     numberOfRooms: "",
     roomType: "",
     arrivalDate: "",
-    arrivalTime: "",
     departureDate: "",
-    departureTime: "",
     purpose: "",
     category: "",
   });
@@ -44,8 +43,9 @@ export default function RecordPage() {
     fetchRecord();
   }, [id]);
 
-  if (status === "Error") return <Navigate to="/error" />;
+  if (status === "Error") return <Navigate to="/404" />;
   else if (status === "Loading") return <div>Loading...</div>;
+
 
   return (
     <div className="grid grid-cols-8 m-9 gap-4">
@@ -79,22 +79,22 @@ export default function RecordPage() {
         <hr />
         <div className="flex justify-between px-32">
           <p className="p-2 text-xl font-semibold">Arrival Date</p>
-          <p className="p-2 text-lg">{userRecord.arrivalDate}</p>
+          <p className="p-2 text-lg">{getDate(userRecord.arrivalDate)}</p>
         </div>
         <hr />
         <div className="flex justify-between px-32">
           <p className="p-2 text-xl font-semibold">Arrival Time:</p>
-          <p className="p-2 text-lg">{userRecord.arrivalTime}</p>
+          <p className="p-2 text-lg">{getTime(userRecord.arrivalDate)}</p>
         </div>
         <hr />
         <div className="flex justify-between px-32">
           <p className="p-2 text-xl font-semibold">Departure Date:</p>
-          <p className="p-2 text-lg">{userRecord.departureDate}</p>
+          <p className="p-2 text-lg">{getDate(userRecord.departureDate)}</p>
         </div>
         <hr />
         <div className="flex justify-between px-32">
           <p className="p-2 text-xl font-semibold">Departure Time:</p>
-          <p className="p-2 text-lg">{userRecord.departureTime}</p>
+          <p className="p-2 text-lg">{getTime(userRecord.departureDate)}</p>
         </div>
         <hr />
         <div className="flex justify-between px-32">

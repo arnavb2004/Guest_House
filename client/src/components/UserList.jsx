@@ -10,9 +10,14 @@ import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
 import CommentIcon from "@mui/icons-material/Comment";
 import { privateRequest } from "../utils/useFetch";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.min.css";
+
+
+
 export default function UserList() {
   const [checked, setChecked] = useState([]);
-  const [values, setValues] = useState([0, 1, 2, 3]);
+  const [values, setValues] = useState([]);
   const user= useSelector((state) => state.user);
   const [users, setUsers] = useState([]);
   const handleToggle = (value) => () => {
@@ -43,9 +48,10 @@ export default function UserList() {
     try {
       const res = await makeRequest.get("/user/all");
       console.log(res.data);
+      setValues(res.data.map((res) => res._id));
       setUsers(res.data);
     } catch (err) {
-      // toast(err.response.data);
+      toast(err.response.data);
       console.log(err.response.data);
     }
   };

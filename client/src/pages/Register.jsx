@@ -8,7 +8,7 @@ import { BASE_URL } from "../constants";
 
 import logo from "./../images/IIT_Ropar_logo.png";
 import { jwtDecode } from "jwt-decode";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
 import "./Login.css";
 import HomeIcon from "@mui/icons-material/Home";
@@ -67,7 +67,6 @@ const Register = () => {
 
   return (
     <div className="flex flex-col h-screen w-screen ">
-      <ToastContainer />
       <div className="flex  items-center justify-center gap-5 bg-[#365899] text-white p-2 h-36">
         <Link
           to="/"

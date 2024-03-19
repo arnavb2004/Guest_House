@@ -1,13 +1,3 @@
-import nodemailer from "nodemailer";
-
-export const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: "dep.test.p04@gmail.com",
-    pass: "tfpfrvmxalvwlupl",
-  },
-});
-
 export const getDate = (dateString) => {
   const date = new Date(dateString);
   const year = date.getFullYear();
@@ -34,4 +24,3 @@ export const getTime = (dateString) => {
 
   return time;
 };
-

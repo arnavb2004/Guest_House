@@ -8,7 +8,7 @@ import { BASE_URL } from "../constants";
 
 import logo from "./../images/IIT_Ropar_logo.png";
 import { jwtDecode } from "jwt-decode";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
 import "./Login.css";
 import HomeIcon from "@mui/icons-material/Home";
@@ -108,7 +108,7 @@ const Login = ({ isRegister }) => {
     if (
       credentials.email.match("[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,}$") === null
     ) {
-      toast("invalid email");
+      toast.error("Invalid Email");
       return;
     }
 
@@ -167,14 +167,13 @@ const Login = ({ isRegister }) => {
         }
       } catch (error) {
         console.log(error);
-        // toast.error(error.response.data.message);
+        toast.error(error.response.data.message);
       }
     }
   };
 
   return (
     <div className="flex flex-col h-screen w-screen ">
-      <ToastContainer />
       <div className="flex  items-center justify-center gap-5 bg-[#365899] text-white p-2 h-36">
         <Link
           to="/"

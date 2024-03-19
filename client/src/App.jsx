@@ -27,10 +27,14 @@ import NotFound from "./pages/NotFound";
 import Unauthorized from "./pages/Unauthorized";
 import Reserve from "./components/Reserve";
 import RoomBooking from "./pages/RoomBooking";
+import AdminRecordPage from "./pages/AdminRecordPage";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.min.css";
 
 function App() {
   return (
     <div className="">
+      <ToastContainer />
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor} />
         <BrowserRouter>
@@ -64,9 +68,9 @@ function App() {
                   path="approved-requests"
                   element={<AdminRecordList status="approved" />}
                 />
-                <Route path=":id" element={<RecordPage />} />
-                <Route path="rejected-requests/:id" element={<RecordPage />} />
-                <Route path="approved-requests/:id" element={<RecordPage />} />
+                <Route path=":id" element={<AdminRecordPage />} />
+                <Route path="rejected-requests/:id" element={<AdminRecordPage />} />
+                <Route path="approved-requests/:id" element={<AdminRecordPage />} />
                 <Route path="users" element={<UserList />} />
                 <Route path="rooms" element={<RoomBooking />} />
               </Route>
@@ -102,7 +106,7 @@ function App() {
             <Route path="test" element={<Reserve />} />
 
             <Route path="/iitropar-campus-map" element={<PDFViewer />} />
-            <Route path="/error" element={<NotFound />} />
+            <Route path="/404" element={<NotFound />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

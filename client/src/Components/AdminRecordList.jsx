@@ -13,6 +13,9 @@ import { useNavigate } from "react-router-dom";
 import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 import tick from "../images/tick.png";
 import cross from "../images/cross.png";
+import { getDate } from "../utils/handleDate";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.min.css";
 
 export default function AdminRecordList({ status = "pending" }) {
   const [checked, setChecked] = useState([]);
@@ -33,7 +36,7 @@ export default function AdminRecordList({ status = "pending" }) {
       setValues(reservations.map((res) => res._id));
       setRecords(reservations);
     } catch (err) {
-      // toast(err.response.data);
+      toast(err.response.data);
       console.log(err.response.data);
     }
   };
@@ -125,7 +128,7 @@ export default function AdminRecordList({ status = "pending" }) {
             />
             <ListItemText
               id="checkbox-list-label-header"
-              className=" text-wrap w-8 text-center"
+              className=" text-wrap w-8 pr-2 text-center"
               primary="Number of Guests"
             />
             <ListItemText
@@ -154,9 +157,14 @@ export default function AdminRecordList({ status = "pending" }) {
               primary="Room Type"
             />
             <ListItemText
-              id="checkbox-list-label-header"
+              id="checkbox-list-label-header "
               className="w-10"
               primary="Status"
+            />
+            <ListItemText
+              id="checkbox-list-label-header"
+              className="w-16"
+              primary="Assignee"
             />
           </ListItemButton>
         </ListItem>
@@ -174,9 +182,16 @@ export default function AdminRecordList({ status = "pending" }) {
                     <img
                       className="h-5"
                       onClick={async () => {
-                        await makeRequest.put(
-                          "/reservation/approve/" + record._id
-                        );
+                        try {
+                          await makeRequest.put(
+                            "/reservation/approve/" + record._id
+                          );
+                          toast.success("Reservation Approved");
+                          window.location.reload();
+                        } catch (error) {
+                          // console.log(error)
+                          toast.error(error.response.data);
+                        }
                       }}
                       src={tick}
                     />
@@ -243,12 +258,12 @@ export default function AdminRecordList({ status = "pending" }) {
                 <ListItemText
                   id="checkbox-list-label-header"
                   className="w-20 text-center"
-                  primary={new Date(record.arrivalDate).toLocaleDateString()}
+                  primary={getDate(record.arrivalDate)}
                 />
                 <ListItemText
                   id="checkbox-list-label-header"
                   className="w-20 text-center"
-                  primary={new Date(record.departureDate).toLocaleDateString()}
+                  primary={getDate(record.departureDate)}
                 />
                 <ListItemText
                   id="checkbox-list-label-header"
@@ -260,11 +275,17 @@ export default function AdminRecordList({ status = "pending" }) {
                   className="w-10"
                   primary={record.status}
                 />
+                <ListItemText
+                  id="checkbox-list-label-header"
+                  className="w-16"
+                  primary={record.status}
+                />
               </ListItemButton>
             </ListItem>
           );
         })}
       </List>
+      {records.length === 0 && <div className="p-2 text-center pt-5 font-semibold">No records found</div>}
     </div>
   );
 }

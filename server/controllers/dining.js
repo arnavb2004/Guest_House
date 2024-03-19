@@ -4,7 +4,7 @@ import Meal from "../models/Meal.js";
 export async function createOrder(req, res) {
   try {
 
-    const email = req.body.user.email;
+    const email = req.user.email;
     const { items } = req.body;
     let amount = 0;
     for (let i = 0; i < items.length; i++) {
@@ -25,7 +25,7 @@ export async function createOrder(req, res) {
 
 export async function getOrders(req, res) {
   try {
-    const user = req.body.user;
+    const user = req.user;
 
     if(user.role !== 'ADMIN') {
       const orders = await Meal.find({ email: user.email });
@@ -39,15 +39,12 @@ export async function getOrders(req, res) {
 }
 
 
-
-
-
 export async function getOrder(req, res) {
   try {
     const order = await Meal.findById(req.params.id);
     if (
-      req.body.user.email !== order.email &&
-      req.body.user.role !== "ADMIN"
+      req.user.email !== order.email &&
+      req.user.role !== "ADMIN"
     ) {
       return res
         .status(403)

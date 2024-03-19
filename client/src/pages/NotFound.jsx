@@ -1,22 +1,25 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-const NotFound = () => {
-  const navigate = useNavigate();
+import { Illustration } from './Illustration';
+import classes from './NotFound.module.css';
+
+export default  function NotFound() {
   return (
-    <div className="h-screen flex flex-col justify-center items-center">
-      <div className=" text-3xl">Not Found!</div>
-      <div
-        className="cursor-pointer"
-        onClick={() => {
-          navigate(-2);
-        }}
-      >
-        Go back
+    <div className={classes.root}>
+      <div className={classes.inner}>
+        <Illustration className={classes.image} />
+        <div className={classes.content}>
+          <div className={classes.title}>Nothing to see here</div>
+          <div c="dimmed" size="lg" ta="center" className={classes.description}>
+            Page you are trying to open does not exist. You may have mistyped the address, or the
+            page has been moved to another URL. If you think this is an error contact support.
+          </div>
+          <div justify="center">
+            <button size="md">Take me back to home page</button>
+          </div>
+        </div>
       </div>
-      <Link to="/">Go Home</Link>
     </div>
   );
-};
-
-export default NotFound;
+}

@@ -49,8 +49,32 @@ const reservationSchema = new mongoose.Schema(
     },
     approvals: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
+        type: String,
+        enum: [
+          "ADMIN",
+          "HOD",
+          "CHAIRMAN",
+          "DIRECTOR",
+          "DEAN",
+          "REGISTRAR",
+          "ASSOCIATE DEAN",
+        ],
+        default: [],
+      },
+    ],
+    reviewers: [
+      {
+        type: String,
+        enum: [
+          'ADMIN',
+          'HOD',
+          'CHAIRMAN',
+          'DIRECTOR',
+          'DEAN',
+          'REGISTRAR',
+          'ASSOCIATE DEAN',
+        ],
+        default: ['ADMIN'],
       },
     ],
     address: {
@@ -60,9 +84,11 @@ const reservationSchema = new mongoose.Schema(
     comments: {
       type: String,
     },
-    files:[{
-      type:String,
-    }]
+    files: [
+      {
+        type: String,
+      },
+    ],
   },
   {
     timestamps: true, // Adds createdAt and updatedAt timestamps
