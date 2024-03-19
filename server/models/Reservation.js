@@ -60,8 +60,19 @@ const reservationSchema = new mongoose.Schema(
     comments: {
       type: String,
     },
-    files:[{
+    receipt:{
       type:String,
+      required:true
+    },
+    files:[{
+        refid:{
+        type:String,
+        required:true
+        },
+        extension:{
+          type:String,
+          required:true
+        }
     }]
   },
   {

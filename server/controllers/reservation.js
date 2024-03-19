@@ -42,7 +42,14 @@ export async function createReservation(req, res) {
     const email = req.user.email;
     // console.log(req.body);
     console.log(req.files);
-    const fileids=req.files.map((f)=>f.id);
+    const receiptid=req.files['receipt'][0].id;
+    const fileids=req.files['files'].map((f)=>(
+      {
+        refid:f.id,
+        extension:f.originalname.split('.')[1]
+      }
+    ));
+    console.log(fileids)
     const reservation = await Reservation.create({
       guestEmail: email,
       guestName,
@@ -57,7 +64,8 @@ export async function createReservation(req, res) {
       departureDate,
       category,
       stepsCompleted: 0,
-      files:fileids
+      files:fileids,
+      receipt:receiptid
     });
     console.log("sending mail");
 
@@ -150,13 +158,18 @@ export async function getReservationDocuments(req, res) {
     res.attachment('files.zip');
     archive.pipe(res);
     for(const fileId of reservation.files){
-      const downloadStream=await getFileById(fileId);
-      archive.append(downloadStream, {name:fileId});
+      const downloadStream=await getFileById(fileId.refid);
+      // console.log(downloadStream)
+      archive.append(downloadStream, {name:`${req.user.email}_${fileId.refid}.${fileId.extension}`});
     }
+    const receiptStream=await getFileById(reservation.receipt);
+    // console.log(receiptStream);
+    archive.append(receiptStream,{name:`Receipt_${reservation._id}.pdf`});
     archive.finalize();
     res.on('finish',()=>{
       console.log("Download finished");
     })
+
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
