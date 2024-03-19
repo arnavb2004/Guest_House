@@ -20,6 +20,7 @@ import Button from "@mui/material/Button";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import TextField from "@mui/material/TextField";
+import DownloadIcon from "@mui/icons-material/Download";
 
 export default function AdminRecordList({ status = "pending" }) {
   const [checked, setChecked] = useState([]);
@@ -263,13 +264,8 @@ export default function AdminRecordList({ status = "pending" }) {
             />
             <ListItemText
               id="checkbox-list-label-header "
-              className="w-10"
+              className="w-10 mr-14"
               primary="Status"
-            />
-            <ListItemText
-              id="checkbox-list-label-header"
-              className="w-16"
-              primary="Assignee"
             />
           </ListItemButton>
         </ListItem>
@@ -281,7 +277,7 @@ export default function AdminRecordList({ status = "pending" }) {
               key={record._id}
               className="border-b"
               secondaryAction={
-                <div className="">
+                <div className="flex gap-2">
                   <IconButton edge="end" aria-label="comments">
                     <img
                       className="h-5"
@@ -316,6 +312,23 @@ export default function AdminRecordList({ status = "pending" }) {
                       color="black"
                       onClick={() => navigate(`${record._id}`)}
                     />
+                  </IconButton>
+                  <IconButton
+                    edge="end"
+                    onClick={async () => {
+                      try {
+                        const res = await makeRequest.get(
+                          "/reservation/documents/" + record._id,
+                          { responseType: "blob" }
+                        );
+                        var file = window.URL.createObjectURL(res.data);
+                        window.location.assign(file);
+                        console.log(res);
+                      } catch (error) {}
+                    }}
+                    aria-label="comments"
+                  >
+                    <DownloadIcon color="black" />
                   </IconButton>
                 </div>
               }
@@ -376,12 +389,7 @@ export default function AdminRecordList({ status = "pending" }) {
                 />
                 <ListItemText
                   id="checkbox-list-label-header"
-                  className="w-10"
-                  primary={record.status}
-                />
-                <ListItemText
-                  id="checkbox-list-label-header"
-                  className="w-16"
+                  className="w-10 mr-16"
                   primary={record.status}
                 />
               </ListItemButton>

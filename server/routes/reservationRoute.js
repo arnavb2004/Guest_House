@@ -1,6 +1,6 @@
 import express from "express";
 import { checkAuth } from "../middlewares/tokens.js";
-import {upload} from "../middlewares/fileStore.js";
+import { upload } from "../middlewares/fileStore.js";
 
 import {
   createReservation,
@@ -17,15 +17,17 @@ import {
   assignReservation,
 } from "../controllers/reservation.js";
 
-
 const Router = express.Router();
 
-Router.post("/", checkAuth, upload.fields([
-  { name:'files',maxCount:5},
-  {name:'receipt',maxCount:1}
-]),createReservation);
-
-
+Router.post(
+  "/",
+  checkAuth,
+  upload.fields([
+    { name: "files", maxCount: 5 },
+    { name: "receipt", maxCount: 1 },
+  ]),
+  createReservation
+);
 
 Router.get("/all", checkAuth, getAllReservationDetails);
 Router.get("/pending", checkAuth, getPendingReservations);
@@ -34,12 +36,10 @@ Router.get("/rejected", checkAuth, getRejectedReservations);
 Router.get("/documents/:id", checkAuth, getReservationDocuments);
 Router.get("/:id", checkAuth, getReservationDetails);
 
-
 Router.put("/approve/:id", checkAuth, approveReservation);
 Router.put("/reject/:id", checkAuth, rejectReservation);
 Router.put("/hold/:id", checkAuth, holdReservation);
 Router.put("/:id/assign", checkAuth, assignReservation);
 Router.put("/:id", checkAuth, updateReservation);
-
 
 export default Router;

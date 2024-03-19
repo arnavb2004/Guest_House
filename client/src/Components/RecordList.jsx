@@ -18,6 +18,7 @@ import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import TextField from "@mui/material/TextField";
 import { getDate } from "../utils/handleDate";
+import DownloadIcon from "@mui/icons-material/Download";
 
 export default function RecordList({ status = "pending" }) {
   const [checked, setChecked] = useState([]);
@@ -29,11 +30,11 @@ export default function RecordList({ status = "pending" }) {
     "Guest Name": "guestName",
     "Number of Rooms": "numberOfRooms",
     "Number of Guests": "numberOfGuests",
-    "Category": "category",
+    Category: "category",
     "Arrival Date": "arrivalDate",
     "Departure Date": "departureDate",
     "Room Type": "roomType",
-    "Status": "status",
+    Status: "status",
   };
 
   const navigate = useNavigate();
@@ -48,7 +49,7 @@ export default function RecordList({ status = "pending" }) {
       const reservations = res.data;
       setValues(reservations.map((res) => res._id));
       setRecords(reservations);
-      setNewRecords(reservations)
+      setNewRecords(reservations);
     } catch (err) {
       toast(err.response.data);
       console.log(err.response.data);
@@ -99,7 +100,7 @@ export default function RecordList({ status = "pending" }) {
           searchChoice === "Departure Date"
         ) {
           const date = new Date(record[filterMap[searchChoice]]);
-          const formattedDate = getDate(date)
+          const formattedDate = getDate(date);
 
           return formattedDate.includes(searchTerm);
         } else {
@@ -146,7 +147,6 @@ export default function RecordList({ status = "pending" }) {
     "Status",
   ];
 
-
   return (
     <div className=" flex p-5 px-0 w-full flex-col" onClick={toggleDropup}>
       <div className='text-center text-3xl font-["Dosis"] font-semibold py-4 uppercase'>
@@ -168,7 +168,6 @@ export default function RecordList({ status = "pending" }) {
             <div className="absolute top-12 z-10 mt-2 py-2 w-full bg-white border border-gray-300 rounded-md shadow-lg">
               {options.map((option) => (
                 <button
-                  // key={option.value}
                   className="block px-4 py-2 text-gray-800 hover:bg-gray-200 w-full text-left"
                   onClick={() => {
                     setSearchChoice(option);
@@ -197,8 +196,7 @@ export default function RecordList({ status = "pending" }) {
           className=" bg-[#365899] text-white"
           key="#"
           secondaryAction={
-            <IconButton edge="end" aria-label="comments">
-            </IconButton>
+            <IconButton edge="end" aria-label="comments"></IconButton>
           }
           disablePadding
         >
@@ -268,12 +266,30 @@ export default function RecordList({ status = "pending" }) {
               key={record._id}
               className="border-b"
               secondaryAction={
-                <div>
-                  <IconButton edge="end" aria-label="comments">
-                    <InsertDriveFileIcon
-                      color="black"
-                      onClick={() => navigate(`${record._id}`)}
-                    />
+                <div className="flex gap-4">
+                  <IconButton
+                    edge="end"
+                    onClick={() => navigate(`${record._id}`)}
+                    aria-label="comments"
+                  >
+                    <InsertDriveFileIcon color="black" />
+                  </IconButton>
+                  <IconButton
+                    edge="end"
+                    onClick={async () => {
+                      try {
+                        const res = await makeRequest.get(
+                          "/reservation/documents/" + record._id,
+                          { responseType: "blob" }
+                        );
+                        var file = window.URL.createObjectURL(res.data);
+                        window.location.assign(file);
+                        console.log(res);
+                      } catch (error) {}
+                    }}
+                    aria-label="comments"
+                  >
+                    <DownloadIcon color="black" />
                   </IconButton>
                 </div>
               }

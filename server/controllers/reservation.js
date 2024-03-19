@@ -40,16 +40,16 @@ export async function createReservation(req, res) {
     // console.log(arrivalTime);
 
     const email = req.user.email;
-    // console.log(req.body);
-    console.log(req.files);
-    const receiptid=req.files['receipt'][0].id;
-    const fileids=req.files['files'].map((f)=>(
-      {
-        refid:f.id,
-        extension:f.originalname.split('.')[1]
-      }
-    ));
-    console.log(fileids)
+    // console.log(req.user);
+    console.log(req);
+    console.log(req.files["files"]);
+    console.log(req.files["receipt"]);
+    const receiptid = req.files["receipt"][0].id;
+    const fileids = req.files["files"].map((f) => ({
+      refid: f.id,
+      extension: f.originalname.split(".")[1],
+    }));
+    console.log(fileids);
     const reservation = await Reservation.create({
       guestEmail: email,
       guestName,
@@ -64,7 +64,7 @@ export async function createReservation(req, res) {
       stepsCompleted: 0,
       files: fileids,
       reviewers: ["ADMIN"],
-      receipt:receiptid
+      receipt: receiptid,
     });
 
     console.log(reservation);
@@ -140,12 +140,12 @@ export async function assignReservation(req, res) {
   try {
     if (req.user.role !== "ADMIN") {
       return res
-      .status(403)
-      .json({ message: "You are not authorized to perform this action" });
+        .status(403)
+        .json({ message: "You are not authorized to perform this action" });
     }
     const reservation = await Reservation.findById(req.params.id);
-    console.log(reservation)
-    console.log(req.body)
+    console.log(reservation);
+    console.log(req.body);
     reservation.reviewers = req.body.reviewers;
     await reservation.save();
     console.log(reservation);
@@ -177,7 +177,7 @@ export async function getReservationDocuments(req, res) {
   try {
     const reservation = await Reservation.findById(req.params.id);
     if (
-      req.user.email != reservation.guestEmail &&
+      req.user.email !== reservation.guestEmail &&
       req.user.role !== "ADMIN" &&
       !reservation.reviewers.includes(req.user.role)
     ) {
@@ -185,21 +185,18 @@ export async function getReservationDocuments(req, res) {
         .status(403)
         .json({ message: "You are not authorized to view this application" });
     }
-    // res.status(200).json({ reservation });
     const archive = archiver("zip");
-    // res.setHeader('Content-Type', 'application/zip');
-    // res.setHeader('Content-Disposition', 'attachment; filename=files.zip');
-    // res.json({reservation});
     res.attachment("files.zip");
     archive.pipe(res);
-    for(const fileId of reservation.files){
-      const downloadStream=await getFileById(fileId.refid);
-      // console.log(downloadStream)
-      archive.append(downloadStream, {name:`${req.user.email}_${fileId.refid}.${fileId.extension}`});
+    for (const fileId of reservation.files) {
+      const downloadStream = await getFileById(fileId.refid);
+      archive.append(downloadStream, {
+        name: `${req.user.email}_${fileId.refid}.${fileId.extension}`,
+      });
     }
-    const receiptStream=await getFileById(reservation.receipt);
+    const receiptStream = await getFileById(reservation.receipt);
     // console.log(receiptStream);
-    archive.append(receiptStream,{name:`Receipt_${reservation._id}.pdf`});
+    archive.append(receiptStream, { name: `Receipt_${reservation._id}.pdf` });
     archive.finalize();
     res.on("finish", () => {
       console.log("Download finished");

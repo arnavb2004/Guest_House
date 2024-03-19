@@ -35,7 +35,7 @@ const reservationSchema = new mongoose.Schema(
     },
     category: {
       type: String,
-      enum: ["A", "B", "C"], // Assuming only three types for simplicity
+      enum: ["A", "B", "C", "D"], // Assuming only three types for simplicity
     },
     status: {
       type: String,
@@ -66,15 +66,15 @@ const reservationSchema = new mongoose.Schema(
       {
         type: String,
         enum: [
-          'ADMIN',
-          'HOD',
-          'CHAIRMAN',
-          'DIRECTOR',
-          'DEAN',
-          'REGISTRAR',
-          'ASSOCIATE DEAN',
+          "ADMIN",
+          "HOD",
+          "CHAIRMAN",
+          "DIRECTOR",
+          "DEAN",
+          "REGISTRAR",
+          "ASSOCIATE DEAN",
         ],
-        default: ['ADMIN'],
+        default: ["ADMIN"],
       },
     ],
     address: {
@@ -84,20 +84,22 @@ const reservationSchema = new mongoose.Schema(
     comments: {
       type: String,
     },
-    receipt:{
-      type:String,
-      required:true
+    receipt: {
+      type: String,
+      required: true,
     },
-    files:[{
-        refid:{
-        type:String,
-        required:true
+    files: [
+      {
+        refid: {
+          type: String,
+          required: true,
         },
-        extension:{
-          type:String,
-          required:true
-        }
-    }]
+        extension: {
+          type: String,
+          required: true,
+        },
+      },
+    ],
   },
   {
     timestamps: true, // Adds createdAt and updatedAt timestamps
