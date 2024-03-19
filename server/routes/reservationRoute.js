@@ -17,7 +17,10 @@ import {
 
 const Router = express.Router();
 
-Router.post("/", checkAuth, upload.array('files',10),createReservation);
+Router.post("/", checkAuth, upload.fields([
+  { name:'files',maxCount:5},
+  {name:'receipt',maxCount:1}
+]),createReservation);
 
 Router.get("/all", checkAuth, getAllReservationDetails);
 
