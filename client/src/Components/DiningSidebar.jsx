@@ -14,10 +14,23 @@ const DiningSidebar = () => {
   if (!user.email) {
     return <Navigate to="/login" />;
   }
+
   const content =
     user.role === "ADMIN"
-      ? ["Home", "Pending Requests", "Contact"]
-      : ["Home", "Book Dining", "Cart", "Services", "Contact"];
+      ? [
+          "Pending Requests",
+          "Rejected Requests",
+          "Approved Requests",
+          "Contact",
+        ]
+      : user.role === "USER"
+      ? ["Pending Requests", "Book Dining", "Cart", "Services", "Contact"]
+      : [
+          "Pending Requests",
+          "Rejected Requests",
+          "Approved Requests",
+          "Contact",
+        ]; // other roles
 
   return (
     <div className="flex flex-col">
@@ -27,7 +40,12 @@ const DiningSidebar = () => {
           styles.menuIcon
         }
       >
-        <div className="cursor-pointer" onClick={() => setIsOpen((prev) => !prev)}>☰</div>
+        <div
+          className="cursor-pointer"
+          onClick={() => setIsOpen((prev) => !prev)}
+        >
+          ☰
+        </div>
         <div className='text-xl cursor-default relative font-["Single Day"] font-["Dosis"]'>
           GUEST HOUSE
         </div>
@@ -55,7 +73,7 @@ const DiningSidebar = () => {
             <Link
               className=""
               to={
-                item === "Home"
+                item === "Pending Requests"
                   ? ""
                   : `${item.toLowerCase().replace(" ", "-")}`
               }

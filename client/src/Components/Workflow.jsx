@@ -3,7 +3,13 @@ import { useSelector } from "react-redux";
 import { privateRequest } from "../utils/useFetch";
 import StepperComponent from "./Stepper";
 
-const Workflow = ({ id, userRecord, setUserRecord }) => {
+const Workflow = ({
+  id,
+  userRecord,
+  setUserRecord,
+  reviewers,
+  setReviewers,
+}) => {
   const steps = [
     "User Details",
     "Upload Document",
@@ -11,15 +17,17 @@ const Workflow = ({ id, userRecord, setUserRecord }) => {
     "Download PDF",
   ];
 
-  const { stepsCompleted, comments } = userRecord;
+  const { stepsCompleted } = userRecord;
   const user = useSelector((state) => state.user);
   const makeRequest = privateRequest(user.accessToken, user.refreshToken);
+  const reviewer = reviewers.find((reviewer) => reviewer.role === user.role);
+  const comments = reviewer.comments;
   // const stepsCompleted = 2;
   return (
     <div className=" flex flex-col justify-center col-span-3 shadow-lg p-8 gap-10">
       <StepperComponent steps={steps} stepsCompleted={stepsCompleted || 0} />
       <div className="w-full mt-10 flex justify-around">
-        {user.role === "ADMIN" && (
+        {user.role !== "USER" && (
           <>
             <button
               onClick={() => {
@@ -49,20 +57,30 @@ const Workflow = ({ id, userRecord, setUserRecord }) => {
         )}
       </div>
       <div className="w-full">
-        <textarea
-          disabled={user.role !== "ADMIN"}
-          className="w-full p-2 bg-white border-gray-500 rounded-lg"
-          rows={5}
-          value={comments || ""}
-          onChange={(e) =>
-            setUserRecord({ ...userRecord, comments: e.target.value })
-          }
-          placeholder={
-            user.role === "ADMIN"
-              ? "Write any review or comments"
-              : "No comments"
-          }
-        ></textarea>
+        {user.role === "USER" ? (
+          comments && (
+            <div className="border shadow-lg rounded-lg">
+              <div className="p-2">Comments</div>
+              <hr className="" />
+              <div className="font-['Dosis'] p-2">{comments}</div>
+            </div>
+          )
+        ) : (
+          <textarea
+            // disabled={user.role !== "ADMIN"}
+            className="w-full p-2 bg-white border-gray-500 rounded-lg"
+            rows={5}
+            value={comments || ""}
+            onChange={(e) =>
+              setReviewers((prev) =>
+                prev.map((r) =>
+                  r.role === user.role ? { ...r, comments: e.target.value } : r
+                )
+              )
+            }
+            placeholder={"Write any review or comments"}
+          ></textarea>
+        )}
       </div>
     </div>
   );

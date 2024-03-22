@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Navigate, useParams } from "react-router-dom";
+import { Link, Navigate, useParams } from "react-router-dom";
 import axios from "axios"; // Assuming you use axios for API requests
 import Workflow from "../components/Workflow";
 import { privateRequest } from "../utils/useFetch";
@@ -17,6 +17,15 @@ export default function AdminRecordPage() {
   const makeRequest = privateRequest(user.accessToken, user.refreshToken);
 
   const [status, setStatus] = useState("Loading");
+
+  const color = {
+    PENDING: "gray-400",
+    APPROVED: "green-400",
+    REJECTED: "red-400",
+    HOLD: "yellow-400",
+  };
+
+  const [reviewers, setReviewers] = useState([]);
 
   const [userRecord, setUserRecord] = useState({
     guestName: "",
@@ -47,7 +56,12 @@ export default function AdminRecordPage() {
         console.log(response.data);
         setStatus("Success");
         setUserRecord(response.data.reservation);
-        setCheckedValues(response.data.reservation.reviewers || []);
+        setReviewers(response.data.reservation.reviewers);
+        setCheckedValues(
+          response.data.reservation.reviewers.map(
+            (reviewer) => reviewer.role
+          ) || []
+        );
       } catch (error) {
         setStatus("Error");
         console.error("Error fetching user data:", error);
@@ -78,6 +92,8 @@ export default function AdminRecordPage() {
           id={id}
           userRecord={userRecord}
           setUserRecord={setUserRecord}
+          reviewers={reviewers}
+          setReviewers={setReviewers}
         />
 
         <div className='col-span-5 shadow-lg flex flex-col justify-center gap-4 font-["Dosis"]'>
@@ -137,47 +153,76 @@ export default function AdminRecordPage() {
           </div>
         </div>
       </div>
-      {/* <div className="flex flex-col w-1/4 items-center justify-center border"> */}
-      <div className='col-span-5 shadow-lg flex flex-col p-5 justify-center gap-4 m-9 font-["Dosis"]'>
-        <div className="text-2xl font-semibold font-['Dosis'] px-5">
-          Reviewers
+      {user.role === "ADMIN" && (
+        <div className='col-span-5 shadow-lg flex justify-between  p-5 justify-center gap-4 m-9 font-["Dosis"]'>
+          <div>
+            <div className="text-2xl font-semibold font-['Dosis'] px-5">
+              Reviewers
+            </div>
+            <div className="p-5">
+              <ul>
+                {roles.map((role) => (
+                  <li>
+                    <input
+                      type="checkbox"
+                      id={role}
+                      checked={reviewers.map((r) => r.role).includes(role)}
+                      value={role}
+                      onChange={handleCheckboxChange}
+                    />
+                    <label className="px-2 text-lg" htmlFor={role}>
+                      {role}
+                    </label>
+                  </li>
+                ))}
+              </ul>
+              <button
+                onClick={() => {
+                  console.log(checkedValues);
+                  try {
+                    const res = makeRequest.put(`/reservation/${id}/assign`, {
+                      reviewers: checkedValues,
+                    });
+                    toast.success("Assigned Successfully");
+                  } catch (error) {
+                    toast.error("Error Assigning Reviewers");
+                  }
+                }}
+                className="p-3 px-4  mt-8 bg-[rgb(54,88,153)] rounded-lg text-white"
+              >
+                ASSIGN
+              </button>
+            </div>
+          </div>
+          <div>
+            <div className="text-2xl font-semibold font-['Dosis'] px-5">
+              Status
+            </div>
+            <div className="p-5 flex flex-col gap-4 ">
+              {reviewers.map((reviewer) => (
+                <div className="flex gap-4 w-max">
+                  <div className="w-20">{reviewer.role}</div>
+                  <div
+                    className={
+                      "border relative top-1 w-5 h-5 bg-" +
+                      color[reviewer.status]
+                    }
+                  ></div>
+                  <div className="w-72">{reviewer.comments}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div>
+            <Link
+              className="p-2 bg-[rgb(54,88,153)] rounded-lg text-white mr-16"
+              to="rooms"
+            >
+              Assign Rooms
+            </Link>
+          </div>
         </div>
-        <div className="px-5">
-          <ul>
-            {roles.map((role) => (
-              <li>
-                <input
-                  type="checkbox"
-                  id={role}
-                  checked={checkedValues.includes(role)}
-                  value={role}
-                  onChange={handleCheckboxChange}
-                />
-                <label className="px-2 text-lg" htmlFor={role}>
-                  {role}
-                </label>
-              </li>
-            ))}
-          </ul>
-          <button
-            onClick={() => {
-              console.log(checkedValues);
-              try {
-                const res = makeRequest.put(`/reservation/${id}/assign`, {
-                  reviewers: checkedValues,
-                });
-                toast.success("Assigned Successfully");
-              } catch (error) {
-                toast.error("Error Assigning Reviewers");
-                
-              }
-            }}
-            className="p-3 px-4  mt-8 bg-[rgb(54,88,153)] rounded-lg text-white"
-          >
-            ASSIGN
-          </button>
-        </div>
-      </div>
+      )}
     </>
   );
 }

@@ -7,7 +7,6 @@ import { GoogleLogin } from "@react-oauth/google";
 import { BASE_URL } from "../constants";
 
 import logo from "./../images/IIT_Ropar_logo.png";
-import { jwtDecode } from "jwt-decode";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
 import "./Login.css";

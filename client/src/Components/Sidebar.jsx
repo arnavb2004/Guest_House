@@ -24,8 +24,17 @@ const Sidebar = () => {
           "Users",
           "Contact",
         ]
-      : ["Pending Requests", "Reservation Form", "Services", "Contact"];
-
+      : user.role === "USER"
+      ? [
+          "Pending Requests",
+          "Rejected Requests",
+          "Approved Requests",
+          "Reservation Form",
+          "Services",
+          "Contact",
+        ]
+      : ["Pending Requests", "Rejected Requests", "Approved Requests"]; // other roles
+      
   return (
     <div className="flex flex-col">
       <div
@@ -69,9 +78,8 @@ const Sidebar = () => {
               key={index}
               to={
                 item === "Pending Requests"
-                    ? ""
-                  :
-                  `${item.toLowerCase().replace(" ", "-")}`
+                  ? ""
+                  : `${item.toLowerCase().replace(" ", "-")}`
               }
             >
               <li className={" " + styles["menu-item"]}>{item}</li>
