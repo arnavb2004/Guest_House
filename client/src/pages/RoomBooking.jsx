@@ -62,14 +62,31 @@ const RoomBooking = () => {
 
     if(startDate && endDate) {
       let tempRoomList = [...roomList];
+
+      let temp=false;
+      tempRoomList.forEach((currRoom)=>{
+        if(currRoom.startDate >= startDate && currRoom.endDate <= endDate) {
+          if(currRoom.roomNumber !== room.roomNumber) {
+            temp = false
+          } else {
+            temp = true
+          }
+        }
+      })
+
+      if(temp) {
+        setRoomList(tempRoomList)
+        return 
+      }
       
       let present = false
 
       let newRoom = { id: room.id, startDate, endDate, roomNumber: room.roomNumber}
 
       const updatedRoomList = tempRoomList.map((currRoom) => {
-        if(currRoom.name === room.name) {
+        if(currRoom.roomNumber === room.roomNumber && !present) {
           present = true;
+          console.log("in if statement")
           return newRoom
         }
         return currRoom
@@ -81,8 +98,12 @@ const RoomBooking = () => {
         setRoomList(updatedRoomList)
       }
       
+    } else if(startDate) {
+      toast.error("Please give End Date")
+    } else if(endDate) {
+      toast.error("Please give Start Date")
     } else {
-      toast.error("Select Start, End Date and Room number.")
+      toast.error("Select Start, End Date")
     }
   }
 
