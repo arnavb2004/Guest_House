@@ -63,7 +63,7 @@ export async function createReservation(req, res) {
       category,
       stepsCompleted: 0,
       files: fileids,
-      reviewers: ["ADMIN"],
+      reviewers: [{ role: "ADMIN", status: "PENDING", comments: "" }],
       receipt: receiptid,
     });
 
@@ -146,7 +146,11 @@ export async function assignReservation(req, res) {
     const reservation = await Reservation.findById(req.params.id);
     console.log(reservation);
     console.log(req.body);
-    reservation.reviewers = req.body.reviewers;
+    reservation.reviewers = req.body.reviewers.map((r) => ({
+      role: r,
+      status: "PENDING",
+      comments: "",
+    }));
     await reservation.save();
     console.log(reservation);
     res.status(200).json({ message: "Reservation Approved" });
@@ -161,7 +165,7 @@ export async function getReservationDetails(req, res) {
     if (
       req.user.email != reservation.guestEmail &&
       req.user.role !== "ADMIN" &&
-      !reservation.reviewers.includes(req.user.role)
+      !reservation.reviewers.find((r) => r.role === req.user.role)
     ) {
       return res
         .status(403)
@@ -179,7 +183,7 @@ export async function getReservationDocuments(req, res) {
     if (
       req.user.email !== reservation.guestEmail &&
       req.user.role !== "ADMIN" &&
-      !reservation.reviewers.includes(req.user.role)
+      !reservation.reviewers.find((r) => r.role === req.user.role)
     ) {
       return res
         .status(403)
@@ -208,27 +212,49 @@ export async function getReservationDocuments(req, res) {
 
 export async function approveReservation(req, res) {
   try {
-    const reservation = await Reservation.findById(req.params.id);
+    let reservation = await Reservation.findById(req.params.id);
     if (
       req.user.role !== "ADMIN" &&
-      !reservation.reviewers.includes(req.user.role)
+      !reservation.reviewers.find((r) => r.role === req.user.role)
     ) {
       return res
         .status(403)
         .json({ message: "You are not authorized to perform this action" });
     }
-    reservation.status = "APPROVED";
-    reservation.approvals.push(req.user.role);
-    if (req.body.comments) reservation.comments = req.body.comments;
-    const body =
-      "<div>Your reservation has been approved</div><br><div>Comments: " +
-      req.body.comments +
-      "</div>";
-    sendVerificationEmail(
-      reservation.guestEmail,
-      "Reservation status updated",
-      body
-    );
+    // reservation.status = "APPROVED";
+    // reservation.approvals.push(req.user.role);
+
+    reservation.reviewers = reservation.reviewers.map((reviewer) => {
+      if (reviewer.role === req.user.role) {
+        reviewer.status = "APPROVED";
+        if (req.body.comments) reviewer.comments = req.body.comments;
+      }
+      return reviewer;
+    });
+
+    console.log(reservation.reviewers);
+
+    reservation = updateReservationStatus(reservation);
+    console.log(reservation);
+    // if(adminStatus === "APPROVED") {
+    //   reservation.status = "APPROVED";
+    // } else if(isApproved) {
+    //   reservation.status = "PENDING";
+    // } else {
+    //   reservation.status = "REJECTED";
+    // }
+
+    // if (req.body.comments) reservation.comments = req.body.comments;
+
+    // const body =
+    //   "<div>Your reservation has been approved</div><br><div>Comments: " +
+    //   req.body.comments +
+    //   "</div>";
+    // sendVerificationEmail(
+    //   reservation.guestEmail,
+    //   "Reservation status updated",
+    //   body
+    // );
     await reservation.save();
     res.status(200).json({ message: "Reservation Approved" });
   } catch (error) {
@@ -238,29 +264,33 @@ export async function approveReservation(req, res) {
 
 export async function rejectReservation(req, res) {
   try {
-    const reservation = await Reservation.findById(req.params.id);
+    let reservation = await Reservation.findById(req.params.id);
     if (
       req.user.role !== "ADMIN" &&
-      !reservation.reviewers.includes(req.user.role)
+      !reservation.reviewers.find((r) => r.role === req.user.role)
     ) {
       return res
         .status(403)
         .json({ message: "You are not authorized to perform this action" });
     }
-    reservation.status = "REJECTED";
-    reservation.approvals = reservation.approvals.filter(
-      (res) => res !== req.user.role
-    );
-    if (req.body.comments) reservation.comments = req.body.comments;
-    const body =
-      "<div>Your reservation has been rejected</div><br><div>Comments: " +
-      req.body.comments +
-      "</div>";
-    sendVerificationEmail(
-      reservation.guestEmail,
-      "Reservation status updated",
-      body
-    );
+    reservation.reviewers = reservation.reviewers.map((reviewer) => {
+      if (reviewer.role === req.user.role) {
+        reviewer.status = "REJECTED";
+        if (req.body.comments) reviewer.comments = req.body.comments;
+      }
+      return reviewer;
+    });
+
+    reservation = updateReservationStatus(reservation);
+    // const body =
+    //   "<div>Your reservation has been rejected</div><br><div>Comments: " +
+    //   req.body.comments +
+    //   "</div>";
+    // sendVerificationEmail(
+    //   reservation.guestEmail,
+    //   "Reservation status updated",
+    //   body
+    // );
 
     await reservation.save();
     res.status(200).json({ message: "Reservation Rejected" });
@@ -271,33 +301,37 @@ export async function rejectReservation(req, res) {
 
 export async function holdReservation(req, res) {
   try {
-    const reservation = await Reservation.findById(req.params.id);
+    let reservation = await Reservation.findById(req.params.id);
     if (
       req.user.role !== "ADMIN" &&
-      !reservation.reviewers.includes(req.user.role)
+      !reservation.reviewers.find((r) => r.role === req.user.role)
     ) {
       return res
         .status(403)
         .json({ message: "You are not authorized to perform this action" });
     }
-    reservation.status = "HOLD";
-    reservation.approvals = reservation.approvals.filter(
-      (res) => res !== req.user.role
-    );
-    if (req.body.comments) reservation.comments = req.body.comments;
+    reservation.reviewers = reservation.reviewers.map((reviewer) => {
+      if (reviewer.role === req.user.role) {
+        reviewer.status = "HOLD";
+        if (req.body.comments) reviewer.comments = req.body.comments;
+      }
+      return reviewer;
+    });
 
-    const body =
-      "<div>Your reservation has been put on hold.</div><br><div>Comments: " +
-      req.body.comments +
-      "</div>";
-    sendVerificationEmail(
-      reservation.guestEmail,
-      "Reservation status updated",
-      body
-    );
+    reservation = updateReservationStatus(reservation);
+
+    // const body =
+    //   "<div>Your reservation has been put on hold.</div><br><div>Comments: " +
+    //   req.body.comments +
+    //   "</div>";
+    // sendVerificationEmail(
+    //   reservation.guestEmail,
+    //   "Reservation status updated",
+    //   body
+    // );
 
     await reservation.save();
-    res.status(200).json({ message: "Reservation Rejected" });
+    res.status(200).json({ message: "Reservation on hold" });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
@@ -305,24 +339,35 @@ export async function holdReservation(req, res) {
 
 export const getPendingReservations = async (req, res) => {
   console.log("Getting pending reservations...");
-  if (req.user.role === "USER") {
-    const reservations = await Reservation.find({
-      guestEmail: req.user.email,
-      status: "PENDING",
-    }).sort({
-      createdAt: -1,
-    });
-    return res.status(200).json(reservations);
-  }
-
   try {
-    const reservations = await Reservation.find({
-      status: "PENDING",
-      reviewers: { $in: [req.user.role] },
-    }).sort({
-      createdAt: -1,
-    });
-    res.status(200).json(reservations);
+    if (req.user.role === "USER") {
+      const reservations = await Reservation.find({
+        guestEmail: req.user.email,
+        status: "PENDING",
+      }).sort({
+        createdAt: -1,
+      });
+      return res.status(200).json(reservations);
+    } else if (req.user.role === "ADMIN") {
+      const reservations = await Reservation.find({
+        status: "PENDING",
+      }).sort({
+        createdAt: -1,
+      });
+      res.status(200).json(reservations);
+    } else {
+      const reservations = await Reservation.find({
+        reviewers: {
+          $elemMatch: {
+            role: req.user.role,
+            status: "PENDING",
+          },
+        },
+      }).sort({
+        createdAt: -1,
+      });
+      res.status(200).json(reservations);
+    }
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -330,23 +375,35 @@ export const getPendingReservations = async (req, res) => {
 
 export const getApprovedReservations = async (req, res) => {
   console.log("Getting approved reservations...");
-  if (req.user.role === "USER") {
-    const reservations = await Reservation.find({
-      guestEmail: req.user.email,
-      status: "APPROVED",
-    }).sort({
-      createdAt: -1,
-    });
-    return res.status(200).json(reservations);
-  }
   try {
-    const reservations = await Reservation.find({
-      status: "APPROVED",
-      reviewers: { $in: [req.user.role] },
-    }).sort({
-      createdAt: -1,
-    });
-    res.json(reservations);
+    if (req.user.role === "USER") {
+      const reservations = await Reservation.find({
+        guestEmail: req.user.email,
+        status: "APPROVED",
+      }).sort({
+        createdAt: -1,
+      });
+      return res.status(200).json(reservations);
+    } else if (req.user.role === "ADMIN") {
+      const reservations = await Reservation.find({
+        status: "APPROVED",
+      }).sort({
+        createdAt: -1,
+      });
+      res.status(200).json(reservations);
+    } else {
+      const reservations = await Reservation.find({
+        reviewers: {
+          $elemMatch: {
+            role: req.user.role,
+            status: "APPROVED",
+          },
+        },
+      }).sort({
+        createdAt: -1,
+      });
+      res.status(200).json(reservations);
+    }
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -354,24 +411,73 @@ export const getApprovedReservations = async (req, res) => {
 
 export const getRejectedReservations = async (req, res) => {
   console.log("Getting rejected reservations...");
-  if (req.user.role === "USER") {
-    const reservations = await Reservation.find({
-      guestEmail: req.user.email,
-      status: "REJECTED",
-    }).sort({
-      createdAt: -1,
-    });
-    return res.status(200).json(reservations);
-  }
   try {
-    const reservations = await Reservation.find({
-      status: "REJECTED",
-      reviewers: { $in: [req.user.role] },
-    }).sort({
-      createdAt: -1,
-    });
-    res.json(reservations);
+    if (req.user.role === "USER") {
+      const reservations = await Reservation.find({
+        guestEmail: req.user.email,
+        status: "REJECTED",
+      }).sort({
+        createdAt: -1,
+      });
+      return res.status(200).json(reservations);
+    } else if (req.user.role === "ADMIN") {
+      const reservations = await Reservation.find({
+        status: "REJECTED",
+      }).sort({
+        createdAt: -1,
+      });
+      res.status(200).json(reservations);
+    } else {
+      const reservations = await Reservation.find(
+        {
+          reviewers: {
+            $elemMatch: {
+              role: req.user.role,
+              status: "REJECTED",
+            },
+          },
+        }).sort({
+        createdAt: -1,
+      });
+      res.status(200).json(reservations);
+    }
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
+};
+
+const updateReservationStatus = (reservation) => {
+  let reviewers = reservation.reviewers;
+
+  let isApproved = true;
+  let isRejected = false;
+  let adminStatus;
+  reviewers.forEach((reviewer) => {
+    if (reviewer.status !== "APPROVED") {
+      isApproved = false;
+    }
+    if (reviewer.status === "REJECTED") {
+      isRejected = true;
+    }
+    if (reviewer.role === "ADMIN") {
+      adminStatus = reviewer.status;
+    }
+  });
+  console.log(reviewers);
+
+  if (adminStatus === "APPROVED") {
+    reservation.status = "APPROVED";
+  } else if (adminStatus === "REJECTED") {
+    reservation.status = "REJECTED";
+  } else if (isApproved) {
+    reservation.status = "APPROVED";
+  } else if (isRejected) {
+    reservation.status = "REJECTED";
+  } else {
+    reservation.status = "PENDING";
+  }
+
+  console.log(reservation);
+
+  return reservation;
 };

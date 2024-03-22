@@ -47,42 +47,34 @@ const reservationSchema = new mongoose.Schema(
       required: true,
       default: 0,
     },
-    approvals: [
-      {
-        type: String,
-        enum: [
-          "ADMIN",
-          "HOD",
-          "CHAIRMAN",
-          "DIRECTOR",
-          "DEAN",
-          "REGISTRAR",
-          "ASSOCIATE DEAN",
-        ],
-        default: [],
-      },
-    ],
     reviewers: [
       {
-        type: String,
-        enum: [
-          "ADMIN",
-          "HOD",
-          "CHAIRMAN",
-          "DIRECTOR",
-          "DEAN",
-          "REGISTRAR",
-          "ASSOCIATE DEAN",
-        ],
-        default: ["ADMIN"],
+        role: {
+          type: String,
+          enum: [
+            "ADMIN",
+            "HOD",
+            "CHAIRMAN",
+            "DIRECTOR",
+            "DEAN",
+            "REGISTRAR",
+            "ASSOCIATE DEAN",
+          ],
+          default: ["ADMIN"],
+        },
+        comments:{
+          type: String,
+        },
+        status: {
+          type: String,
+          enum: ["PENDING", "APPROVED", "REJECTED", "HOLD"],
+          default: "PENDING",
+        },
       },
     ],
     address: {
       type: String,
       required: true,
-    },
-    comments: {
-      type: String,
     },
     receipt: {
       type: String,

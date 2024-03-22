@@ -34,12 +34,13 @@ export default function AdminRecordList({ status = "pending" }) {
     "Guest Name": "guestName",
     "Number of Rooms": "numberOfRooms",
     "Number of Guests": "numberOfGuests",
-    Category: "category",
+    "Category": "category",
     "Arrival Date": "arrivalDate",
     "Departure Date": "departureDate",
     "Room Type": "roomType",
-    Status: "status",
+    "Status": "status",
   };
+
 
   const navigate = useNavigate();
 
@@ -390,7 +391,7 @@ export default function AdminRecordList({ status = "pending" }) {
                 <ListItemText
                   id="checkbox-list-label-header"
                   className="w-10 mr-16"
-                  primary={record.status}
+                  primary={status.toUpperCase()}
                 />
               </ListItemButton>
             </ListItem>

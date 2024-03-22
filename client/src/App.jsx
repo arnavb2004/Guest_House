@@ -8,7 +8,7 @@ import Contact from "./pages/Contact";
 import { Provider } from "react-redux";
 import { persistor, store } from "./redux/store";
 import Login from "./pages/Login";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { PersistGate } from "redux-persist/integration/react";
 import Register from "./pages/Register";
 import PDFViewer from "./components/PDFViewer";
@@ -69,16 +69,32 @@ function App() {
                   element={<AdminRecordList status="approved" />}
                 />
                 <Route path=":id" element={<AdminRecordPage />} />
-                <Route path="rejected-requests/:id" element={<AdminRecordPage />} />
-                <Route path="approved-requests/:id" element={<AdminRecordPage />} />
+                <Route
+                  path="rejected-requests/:id"
+                  element={<AdminRecordPage />}
+                />
+                <Route
+                  path="approved-requests/:id"
+                  element={<AdminRecordPage />}
+                />
                 <Route path="users" element={<UserList />} />
-                <Route path="rooms" element={<RoomBooking />} />
+                <Route path=":id/rooms" element={<RoomBooking />} />
               </Route>
             </Route>
 
             <Route path="user" element={<Auth allowedRoles={["USER"]} />}>
               <Route path="reservation" element={<Reservation />}>
                 <Route path="" element={<RecordList />} />
+                <Route
+                  path="approved-requests"
+                  element={<RecordList status="approved" />}
+                />
+                <Route
+                  path="rejected-requests"
+                  element={<RecordList status="rejected" />}
+                />
+                <Route path="rejected-requests/:id" element={<RecordPage />} />
+                <Route path="approved-requests/:id" element={<RecordPage />} />
                 <Route path="reservation-form" element={<ReservationForm />} />
                 <Route path=":id" element={<RecordPage />} />
               </Route>
@@ -87,6 +103,52 @@ function App() {
                 <Route path="book-dining" element={<BookDining />} />
                 <Route path="cart" element={<Cart />} />
                 <Route path=":id" element={<DiningRecordPage />} />
+              </Route>
+            </Route>
+
+            <Route
+              path=":role"
+              element={
+                <Auth
+                  allowedRoles={[
+                    "HOD",
+                    "CHAIRMAN",
+                    "DIRECTOR",
+                    "DEAN",
+                    "REGISTRAR",
+                    "ASSOCIATE DEAN",
+                  ]}
+                />
+              }
+            >
+              <Route path="dining" element={<Dining />}>
+                <Route path="" element={<DiningList />} />
+                <Route path="book-dining" element={<BookDining />} />
+                <Route path="cart" element={<Cart />} />
+                <Route path=":id" element={<DiningRecordPage />} />
+              </Route>
+
+              <Route path="reservation" element={<Reservation />}>
+                <Route path="" element={<AdminRecordList />} />
+                <Route
+                  path="rejected-requests"
+                  element={<AdminRecordList status="rejected" />}
+                />
+                <Route
+                  path="approved-requests"
+                  element={<AdminRecordList status="approved" />}
+                />
+                <Route path=":id" element={<AdminRecordPage />} />
+                <Route
+                  path="rejected-requests/:id"
+                  element={<AdminRecordPage />}
+                />
+                <Route
+                  path="approved-requests/:id"
+                  element={<AdminRecordPage />}
+                />
+                <Route path="users" element={<UserList />} />
+                <Route path=":id/rooms" element={<RoomBooking />} />
               </Route>
             </Route>
 
@@ -108,6 +170,8 @@ function App() {
             <Route path="/iitropar-campus-map" element={<PDFViewer />} />
             <Route path="/404" element={<NotFound />} />
             <Route path="*" element={<NotFound />} />
+
+            <Route path="/unknown/*" element={<Navigate to="/login" />} />
           </Routes>
         </BrowserRouter>
       </Provider>

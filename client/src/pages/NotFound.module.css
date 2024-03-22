@@ -10,7 +10,7 @@
   .image {
     position: absolute;
     inset: 0;
-    opacity: 0.75;
+    opacity: 0.45;
     color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
   }
   
