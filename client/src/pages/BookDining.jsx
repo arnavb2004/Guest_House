@@ -8,8 +8,9 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { Link } from "react-router-dom"; // Import Link for navigation
 
 export const DiningCard = ({ items }) => {
+  const cartSlice = useSelector((state) => state.cart);
+  const cart = cartSlice.cartItems;
   const dispatch = useDispatch();
-  const cart = useSelector((state) => state.cart.cartItems);
 
   return (
     <div className={styles.menuItems}>
