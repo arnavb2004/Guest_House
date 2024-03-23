@@ -154,7 +154,7 @@ export default function AdminRecordPage() {
         </div>
       </div>
       {user.role === "ADMIN" && (
-        <div className='col-span-5 shadow-lg flex justify-between  p-5 justify-center gap-4 m-9 font-["Dosis"]'>
+        <div className='col-span-5 shadow-lg flex justify-between  p-5  gap-4 m-9 font-["Dosis"]'>
           <div>
             <div className="text-2xl font-semibold font-['Dosis'] px-5">
               Reviewers
@@ -166,7 +166,7 @@ export default function AdminRecordPage() {
                     <input
                       type="checkbox"
                       id={role}
-                      checked={reviewers.map((r) => r.role).includes(role)}
+                      checked={checkedValues.includes(role)}
                       value={role}
                       onChange={handleCheckboxChange}
                     />
@@ -216,7 +216,7 @@ export default function AdminRecordPage() {
           <div>
             <Link
               className="p-2 bg-[rgb(54,88,153)] rounded-lg text-white mr-16"
-              to="rooms"
+              to={"rooms"}
             >
               Assign Rooms
             </Link>

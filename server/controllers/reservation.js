@@ -32,6 +32,8 @@ export async function createReservation(req, res) {
       purpose,
       guestName,
       arrivalDate,
+      arrivalTime,
+      departureTime,
       address,
       category,
       departureDate,
@@ -45,7 +47,7 @@ export async function createReservation(req, res) {
     console.log(req.files["files"]);
     console.log(req.files["receipt"]);
     const receiptid = req.files["receipt"][0].id;
-    const fileids = req.files["files"].map((f) => ({
+    const fileids = req.files["files"]?.map((f) => ({
       refid: f.id,
       extension: f.originalname.split(".")[1],
     }));
@@ -58,8 +60,8 @@ export async function createReservation(req, res) {
       numberOfGuests,
       numberOfRooms,
       roomType,
-      arrivalDate,
-      departureDate,
+      arrivalDate: new Date(`${arrivalDate}T${arrivalTime}`),
+      departureDate: new Date(`${departureDate}T${departureTime}`),
       category,
       stepsCompleted: 0,
       files: fileids,
@@ -428,15 +430,14 @@ export const getRejectedReservations = async (req, res) => {
       });
       res.status(200).json(reservations);
     } else {
-      const reservations = await Reservation.find(
-        {
-          reviewers: {
-            $elemMatch: {
-              role: req.user.role,
-              status: "REJECTED",
-            },
+      const reservations = await Reservation.find({
+        reviewers: {
+          $elemMatch: {
+            role: req.user.role,
+            status: "REJECTED",
           },
-        }).sort({
+        },
+      }).sort({
         createdAt: -1,
       });
       res.status(200).json(reservations);

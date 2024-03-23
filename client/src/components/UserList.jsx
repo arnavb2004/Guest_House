@@ -3,7 +3,7 @@ import React, {useEffect, useState } from "react"
 import List from "@mui/material/List"
 import ListItem from "@mui/material/ListItem"
 import ListItemButton from "@mui/material/ListItemButton"
-import { useSelector,useDispatch } from "react-redux"
+import { useSelector, useDispatch } from "react-redux"
 import ListItemIcon from "@mui/material/ListItemIcon"
 import ListItemText from "@mui/material/ListItemText"
 import Checkbox from "@mui/material/Checkbox"
@@ -55,7 +55,7 @@ export default function UserList() {
     });
     setNewUsers(tempUsers)
   }
-  
+
   useEffect(() => {
     if (searchTerm){
       filterUsers();
