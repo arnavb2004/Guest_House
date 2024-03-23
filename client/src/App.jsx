@@ -69,14 +69,7 @@ function App() {
                   element={<AdminRecordList status="approved" />}
                 />
                 <Route path=":id" element={<AdminRecordPage />} />
-                <Route
-                  path="rejected-requests/:id"
-                  element={<AdminRecordPage />}
-                />
-                <Route
-                  path="approved-requests/:id"
-                  element={<AdminRecordPage />}
-                />
+
                 <Route path="users" element={<UserList />} />
                 <Route path=":id/rooms" element={<RoomBooking />} />
               </Route>
@@ -93,8 +86,6 @@ function App() {
                   path="rejected-requests"
                   element={<RecordList status="rejected" />}
                 />
-                <Route path="rejected-requests/:id" element={<RecordPage />} />
-                <Route path="approved-requests/:id" element={<RecordPage />} />
                 <Route path="reservation-form" element={<ReservationForm />} />
                 <Route path=":id" element={<RecordPage />} />
               </Route>
@@ -139,14 +130,7 @@ function App() {
                   element={<AdminRecordList status="approved" />}
                 />
                 <Route path=":id" element={<AdminRecordPage />} />
-                <Route
-                  path="rejected-requests/:id"
-                  element={<AdminRecordPage />}
-                />
-                <Route
-                  path="approved-requests/:id"
-                  element={<AdminRecordPage />}
-                />
+
                 <Route path="users" element={<UserList />} />
                 <Route path=":id/rooms" element={<RoomBooking />} />
               </Route>

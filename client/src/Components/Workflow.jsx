@@ -6,7 +6,6 @@ import StepperComponent from "./Stepper";
 const Workflow = ({
   id,
   userRecord,
-  setUserRecord,
   reviewers,
   setReviewers,
 }) => {
@@ -21,7 +20,7 @@ const Workflow = ({
   const user = useSelector((state) => state.user);
   const makeRequest = privateRequest(user.accessToken, user.refreshToken);
   const reviewer = reviewers.find((reviewer) => reviewer.role === user.role);
-  const comments = reviewer.comments;
+  const comments = reviewer?.comments;
   // const stepsCompleted = 2;
   return (
     <div className=" flex flex-col justify-center col-span-3 shadow-lg p-8 gap-10">

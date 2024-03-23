@@ -66,11 +66,12 @@ const RoomBooking = () => {
       let temp=false;
       tempRoomList.forEach((currRoom)=>{
         if(currRoom.startDate >= startDate && currRoom.endDate <= endDate) {
-          if(currRoom.roomNumber !== room.roomNumber) {
-            temp = false
-          } else {
-            temp = true
-          }
+          // if(currRoom.roomNumber !== room.roomNumber) {
+          //   temp = true
+          // } else {
+          //   temp = true
+          // }
+          temp = true
         }
       })
 
@@ -86,7 +87,6 @@ const RoomBooking = () => {
       const updatedRoomList = tempRoomList.map((currRoom) => {
         if(currRoom.roomNumber === room.roomNumber && !present) {
           present = true;
-          console.log("in if statement")
           return newRoom
         }
         return currRoom
