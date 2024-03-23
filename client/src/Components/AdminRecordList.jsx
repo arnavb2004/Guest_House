@@ -34,17 +34,16 @@ export default function AdminRecordList({ status = "pending" }) {
     "Guest Name": "guestName",
     "Number of Rooms": "numberOfRooms",
     "Number of Guests": "numberOfGuests",
-    Category: "category",
+    "Category": "category",
     "Arrival Date": "arrivalDate",
     "Departure Date": "departureDate",
     "Room Type": "roomType",
-    Status: "status",
   };
 
   const navigate = useNavigate();
 
   const makeRequest = privateRequest(user.accessToken, user.refreshToken);
-  console.log(makeRequest);
+
 
   const fetchRecords = async () => {
     try {
@@ -152,7 +151,6 @@ export default function AdminRecordList({ status = "pending" }) {
     "Arrival Date",
     "Departure Date",
     "Room Type",
-    "Status",
   ];
 
   return (
