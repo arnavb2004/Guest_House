@@ -34,7 +34,7 @@ export default function AdminRecordList({ status = "pending" }) {
     "Guest Name": "guestName",
     "Number of Rooms": "numberOfRooms",
     "Number of Guests": "numberOfGuests",
-    "Category": "category",
+    Category: "category",
     "Arrival Date": "arrivalDate",
     "Departure Date": "departureDate",
     "Room Type": "roomType",
@@ -43,7 +43,6 @@ export default function AdminRecordList({ status = "pending" }) {
   const navigate = useNavigate();
 
   const makeRequest = privateRequest(user.accessToken, user.refreshToken);
-
 
   const fetchRecords = async () => {
     try {
@@ -268,7 +267,7 @@ export default function AdminRecordList({ status = "pending" }) {
             />
           </ListItemButton>
         </ListItem>
-        {loadingStatus === "Success" && (
+        {loadingStatus === "Success" && newRecords.length > 0 && (
           <div className="h-96 overflow-y-scroll">
             {newRecords.map((record) => {
               const labelId = `checkbox-list-label-${record._id}`;

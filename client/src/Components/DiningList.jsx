@@ -208,7 +208,7 @@ export default function DiningList({ status = "pending" }) {
             />
           </ListItemButton>
         </ListItem>
-        {loadingStatus === "Success" && (
+        {loadingStatus === "Success" && newRecords.length>0 && (
           <div className="h-96 overflow-y-scroll">
             {newRecords.map((record) => {
               const labelId = `checkbox-list-label-${record._id}`;

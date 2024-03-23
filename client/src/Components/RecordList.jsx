@@ -35,7 +35,7 @@ export default function RecordList({ status = "pending" }) {
     Category: "category",
     "Arrival Date": "arrivalDate",
     "Departure Date": "departureDate",
-    "Room Type": "roomType"
+    "Room Type": "roomType",
   };
 
   const navigate = useNavigate();
@@ -96,8 +96,6 @@ export default function RecordList({ status = "pending" }) {
     setSearchTerm(event.target.value);
   };
 
-  
-
   const filterRecords = () => {
     const tempRecords = records.filter((record) => {
       if (typeof record[filterMap[searchChoice]] === "string") {
@@ -144,8 +142,8 @@ export default function RecordList({ status = "pending" }) {
     "Category",
     "Arrival Date",
     "Departure Date",
-    "Room Type"
-  ]
+    "Room Type",
+  ];
 
   return (
     <div className=" flex p-5 px-0 w-full flex-col">
@@ -259,7 +257,7 @@ export default function RecordList({ status = "pending" }) {
             />
           </ListItemButton>
         </ListItem>
-        {loadingStatus === "Success" && (
+        {loadingStatus === "Success" && newRecords.length > 0 && (
           <div className="h-96 overflow-y-scroll">
             {newRecords.map((record) => {
               const labelId = `checkbox-list-label-${record._id}`;

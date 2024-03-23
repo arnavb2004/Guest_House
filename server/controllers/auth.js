@@ -2,7 +2,7 @@ import OTP from "./../models/Otp.js";
 import User from "../models/User.js";
 
 import jwt from "jsonwebtoken";
-import {jwtDecode} from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 
 export const sendOtp = async (req, res) => {
   const generateOtp = () => {
@@ -76,18 +76,19 @@ export const registerUser = async (req, res) => {
     expiresIn: "5m",
   });
 
+  console.log(newUser);
+
   console.log("User saved");
   return res.status(200).json({
     success: true,
     accessToken,
-    user,
+    user: newUser,
     refreshToken,
     message: "User added successfully",
   });
 };
 
 export const googleLoginUser = async (req, res) => {
-
   try {
     const { credential } = req?.body;
     const cred = jwtDecode(credential);

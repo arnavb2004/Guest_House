@@ -191,14 +191,9 @@ export default function UserList() {
               id="checkbox-list-label-header"
               primary="Pending requests"
             />
-            {/* <ListItemText
-              id="checkbox-list-label-header"
-              primary="Departure Date"
-            /> */}
-            {/* <ListItemText id="checkbox-list-label-header" primary="Room type" /> */}
           </ListItemButton>
         </ListItem>
-        {status === "Success" && (
+        {status === "Success" && newUsers.length > 0 && (
           <div className="h-96 overflow-y-scroll">
             {newUsers.map((user) => {
               const labelId = `checkbox-list-label-${user._id}`;
