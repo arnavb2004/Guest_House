@@ -1,4 +1,4 @@
-import React, {useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -13,13 +13,12 @@ import { privateRequest } from "../utils/useFetch";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
 
-
-
 export default function UserList() {
   const [checked, setChecked] = useState([]);
   const [values, setValues] = useState([]);
-  const user= useSelector((state) => state.user);
+  const user = useSelector((state) => state.user);
   const [users, setUsers] = useState([]);
+  const [status, setStatus] = useState("Loading");
   const handleToggle = (value) => () => {
     const currentIndex = checked.indexOf(value);
 
@@ -43,26 +42,35 @@ export default function UserList() {
 
     setChecked(newChecked);
   };
-  const makeRequest=privateRequest(user.accessToken,user.refreshToken)
+  const makeRequest = privateRequest(user.accessToken, user.refreshToken);
   const fetchUsers = async () => {
     try {
       const res = await makeRequest.get("/user/all");
       console.log(res.data);
       setValues(res.data.map((res) => res._id));
       setUsers(res.data);
+      setStatus("Success");
     } catch (err) {
       toast(err.response.data);
+      setStatus("Error");
       console.log(err.response.data);
     }
   };
 
   useEffect(() => {
+    setStatus("Loading");
     fetchUsers();
   }, []);
 
   return (
-    <div className=" flex p-5 px-0 w-full">
-      <List sx={{ width: "100%", padding: "0px" }} className="bg-gray-50 rounded-md overflow-hidden">
+    <div className=" flex flex-col p-5 px-0 w-full">
+      <div className='text-center text-3xl font-["Dosis"] font-semibold py-4 uppercase'>
+        Users
+      </div>
+      <List
+        sx={{ width: "100%", padding: "0px" }}
+        className="bg-gray-50 rounded-md overflow-hidden"
+      >
         <ListItem
           className=" bg-[#365899] text-white"
           key="#"
@@ -73,7 +81,12 @@ export default function UserList() {
           }
           disablePadding
         >
-          <ListItemButton role={undefined} onClick={handleToggle("#")} dense sx={{paddingY:"10px"}}>
+          <ListItemButton
+            role={undefined}
+            onClick={handleToggle("#")}
+            dense
+            sx={{ paddingY: "10px" }}
+          >
             <ListItemIcon>
               <Checkbox
                 edge="start"
@@ -84,20 +97,17 @@ export default function UserList() {
               />
             </ListItemIcon>
             <ListItemText
-                  id="checkbox-list-label-header"
-                  className=" text-wrap w-14 mr-5" 
-                  sx={{overflow: "hidden"}}
-                  primary="Name"
-                />
+              id="checkbox-list-label-header"
+              className=" text-wrap w-14 mr-5"
+              sx={{ overflow: "hidden" }}
+              primary="Name"
+            />
             <ListItemText
               id="checkbox-list-label-header"
               className="w-18 ml-10"
               primary="Email"
             />
-            <ListItemText
-              id="checkbox-list-label-header"
-              primary="Contact"
-            />
+            <ListItemText id="checkbox-list-label-header" primary="Contact" />
             {/* <ListItemText id="checkbox-list-label-header" primary="Category" /> */}
             <ListItemText
               id="checkbox-list-label-header"
@@ -110,77 +120,78 @@ export default function UserList() {
             {/* <ListItemText id="checkbox-list-label-header" primary="Room type" /> */}
           </ListItemButton>
         </ListItem>
-        {console.log("Users will be printed here!!")}
-        {console.log(users)}
-        {users.map((user) => {
-          const labelId = `checkbox-list-label-${user._id}`;
-          if (user.role === "ADMIN")
-            return;
-          return (
-            <ListItem
-              key={user._id}
-              className="border-b"
-              secondaryAction={
-                <IconButton edge="end" aria-label="comments">
-                  <CommentIcon />
-                </IconButton>
-              }
-              disablePadding
-            >
-              <ListItemButton
-                className=""
-                sx={{paddingY:"10px"}}
-                role={undefined}
-                onClick={handleToggle(user._id)}
-                dense
-              >
-                <ListItemIcon>
-                  <Checkbox
-                    edge="start"
-                    checked={checked.indexOf(user._id) !== -1}
-                    tabIndex={-1}
-                    disableRipple
-                    inputProps={{ "aria-labelledby": labelId }}
-                  />
-                </ListItemIcon>
-                {/* <ListItemText id={labelId} primary={`Line item ${value + 1}`} /> */}
-                <ListItemText
-                  id="checkbox-list-label-header"
-                  className=" text-wrap w-12 mr-5" 
-                  sx={{overflow: "hidden"}}
-                  primary={`${user.name}`}
-                />
-                <ListItemText
-                  id="checkbox-list-label-header"
-                  className="w-14"
-                  primary={`${user.email}`}
-                />
-                {/* <ListItemText
-                  id="checkbox-list-label-header"
-                  primary="Number of rooms"
-                /> */}
-                <ListItemText
-                  id="checkbox-list-label-header"
-                  className="w-10"
-                  primary={user.contact}
-                />
-                <ListItemText
-                  id="checkbox-list-label-header"
-                  className=""
-                  primary="0 requests pending"
-                />
-                {/* <ListItemText
-                  id="checkbox-list-label-header"
-                  primary="Departure Date"
-                /> */}
-                {/* <ListItemText
-                  id="checkbox-list-label-header"
-                  primary="Room type"
-                /> */}
-              </ListItemButton>
-            </ListItem>
-          );
-        })}
+        {status === "Success" && (
+          <div className="h-96 overflow-y-scroll">
+            {users.map((user) => {
+              const labelId = `checkbox-list-label-${user._id}`;
+              if (user.role === "ADMIN") return;
+              return (
+                <ListItem
+                  key={user._id}
+                  className="border-b"
+                  secondaryAction={
+                    <IconButton edge="end" aria-label="comments">
+                      <CommentIcon />
+                    </IconButton>
+                  }
+                  disablePadding
+                >
+                  <ListItemButton
+                    className=""
+                    sx={{ paddingY: "10px" }}
+                    role={undefined}
+                    onClick={handleToggle(user._id)}
+                    dense
+                  >
+                    <ListItemIcon>
+                      <Checkbox
+                        edge="start"
+                        checked={checked.indexOf(user._id) !== -1}
+                        tabIndex={-1}
+                        disableRipple
+                        inputProps={{ "aria-labelledby": labelId }}
+                      />
+                    </ListItemIcon>
+                    <ListItemText
+                      id="checkbox-list-label-header"
+                      className=" text-wrap w-12 mr-5"
+                      sx={{ overflow: "hidden" }}
+                      primary={`${user.name}`}
+                    />
+                    <ListItemText
+                      id="checkbox-list-label-header"
+                      className="w-14"
+                      primary={`${user.email}`}
+                    />
+                    <ListItemText
+                      id="checkbox-list-label-header"
+                      className="w-10"
+                      primary={user.contact}
+                    />
+                    <ListItemText
+                      id="checkbox-list-label-header"
+                      className=""
+                      primary="0 requests pending"
+                    />
+                  </ListItemButton>
+                </ListItem>
+              );
+            })}
+          </div>
+        )}
+        {status === "Loading" && (
+        <div className="p-2 text-center pt-5 font-semibold">Loading...</div>
+      )}
+      {status === "Success" && users.length === 0 && (
+        <div className="p-2 text-center pt-5 font-semibold">
+          No records found
+        </div>
+      )}
+      {status === "Error" && (
+        <div className="p-2 text-center pt-5 font-semibold">
+          Error fetching records!
+        </div>
+      )}
       </List>
     </div>
   );

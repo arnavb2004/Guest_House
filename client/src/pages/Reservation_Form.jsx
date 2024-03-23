@@ -3,12 +3,8 @@ import React, { useRef, useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
 
-import Header from "../components/Header";
-import axios from "axios";
-// import styles from "./Reservation_Form.module.css";
 import FormControl from "@mui/material/FormControl";
 import { TextField } from "@mui/material";
-// import ReservationForm from './Reservation_Form';
 import "./Reservation_Form.css";
 import { updateFilledPDF } from "../utils/generatePDF";
 import { FileUpload } from "primereact/fileupload";
@@ -16,6 +12,7 @@ import { Toast } from "primereact/toast";
 import InputFileUpload from "../components/uploadFile";
 import { useSelector } from "react-redux";
 import { privateRequest } from "../utils/useFetch";
+import { Link } from "react-router-dom";
 
 function AutoDemo() {
   const toast_temp = useRef(null);
@@ -167,7 +164,7 @@ function ReservationForm() {
     const departureDateTime = new Date(
       `${formData.departureDate}T${formData.departureTime}`
     );
-    
+
     // Check if no of rooms are Sufficient for Double occupancy
     if (formData.roomType === "Double Occupancy") {
       const numberOfGuests = parseInt(formData.numberOfGuests);
@@ -354,7 +351,7 @@ function ReservationForm() {
           </div>
 
           <div className="form-group">
-            <label>Arrival Time:</label>
+            <label>Arrival Time: (Arrival time must be after 01:00 PM)</label>
             <input
               type="time"
               name="arrivalTime"
@@ -372,7 +369,9 @@ function ReservationForm() {
             />
           </div>
           <div className="form-group">
-            <label>Departure Time:</label>
+            <label>
+              Departure Time: (Departure time must be before 11:00 AM)
+            </label>
             <input
               type="time"
               name="departureTime"
@@ -395,7 +394,13 @@ function ReservationForm() {
           />
 
           <div className="form-group">
-            <label>Category: (Refer to this page for categories)</label>
+            <label>
+              Category: (Refer to{" "}
+              <a className="underline" href="/forms/categories.pdf" target="_blank">
+                this
+              </a>{" "}
+              page for categories)
+            </label>
 
             <select
               name="category"
@@ -417,8 +422,16 @@ function ReservationForm() {
               </option>
             </select>
             <InputFileUpload className="" onFileUpload={handleFileUpload} />
+          </div>
 
-          
+          <div>
+            By clicking on Submit, you hereby agree to the{" "}
+            <a
+              href="/forms/TermsAndConditions.pdf"
+              className="underline"
+              target="_blank"
+            >Terms and Conditions
+            </a>
           </div>
           <button type="submit" onClick={handleSubmit} className="submit-btn">
             Submit
