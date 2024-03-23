@@ -4,6 +4,7 @@ import axios from "axios";
 const userSlice = createSlice({
   name: "user",
   initialState: {
+    id:"",
     name: "",
     email: "",
     contact: "",
@@ -14,6 +15,7 @@ const userSlice = createSlice({
   reducers: {
     setUserSlice: (state, action) => {
       const { user, accessToken, refreshToken } = action.payload;
+      state.id = user._id;
       state.name = user.name;
       state.role = user.role;
       state.contact = user.contact;
@@ -22,6 +24,7 @@ const userSlice = createSlice({
       state.refreshToken = refreshToken;
     },
     logout: (state) => {
+      state.id = "";
       state.name = "";
       state.contact = "";
       state.email = "";

@@ -150,8 +150,6 @@ export const updateFilledPDF = async (formData) => {
     const filledPdfBytes = await generateFilledPDF(formData);
     const blob = new Blob([filledPdfBytes], { type: "application/pdf" });
     console.log(blob);
-    const pdfUrl = URL.createObjectURL(blob);
-    window.open(pdfUrl);
     return blob;
     // saveAs(blob, 'filled_form.pdf');
   } catch (error) {

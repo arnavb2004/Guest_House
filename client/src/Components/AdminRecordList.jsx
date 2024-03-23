@@ -34,13 +34,11 @@ export default function AdminRecordList({ status = "pending" }) {
     "Guest Name": "guestName",
     "Number of Rooms": "numberOfRooms",
     "Number of Guests": "numberOfGuests",
-    "Category": "category",
+    Category: "category",
     "Arrival Date": "arrivalDate",
     "Departure Date": "departureDate",
     "Room Type": "roomType",
-    "Status": "status",
   };
-
 
   const navigate = useNavigate();
 
@@ -152,7 +150,6 @@ export default function AdminRecordList({ status = "pending" }) {
     "Arrival Date",
     "Departure Date",
     "Room Type",
-    "Status",
   ];
 
   return (
@@ -270,6 +267,8 @@ export default function AdminRecordList({ status = "pending" }) {
             />
           </ListItemButton>
         </ListItem>
+        <div className="h-96 overflow-y-scroll">
+
         {newRecords.map((record) => {
           const labelId = `checkbox-list-label-${record._id}`;
 
@@ -311,7 +310,11 @@ export default function AdminRecordList({ status = "pending" }) {
                   <IconButton edge="end" aria-label="comments">
                     <InsertDriveFileIcon
                       color="black"
-                      onClick={() => navigate(`${record._id}`)}
+                      onClick={() => {
+                        status === "pending"
+                          ? navigate(`${record._id}`)
+                          : navigate(`../${record._id}`);
+                      }}
                     />
                   </IconButton>
                   <IconButton
@@ -397,6 +400,8 @@ export default function AdminRecordList({ status = "pending" }) {
             </ListItem>
           );
         })}
+        </div>
+
       </List>
       {loadingStatus === "Loading" && (
         <div className="p-2 text-center pt-5 font-semibold">Loading...</div>
