@@ -1,9 +1,11 @@
 import React, { useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import styles from "./BookDining.module.css";
 import { menuItems1 } from "../fooddata";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart, removeFromCart, clearCart } from "../redux/cartSlice";
-import { PDFDocument, rgb} from "pdf-lib"; // Import pdf-lib
+import { PDFDocument, rgb } from "pdf-lib"; // Import pdf-lib
 import fontkit from "@pdf-lib/fontkit";
 import pdfFont from "../forms/Ubuntu-R.ttf";
 import { privateRequest } from "../utils/useFetch";
@@ -15,10 +17,15 @@ const Cart = () => {
   const totalAmount = cartSlice.totalAmount;
   const dispatch = useDispatch();
   const makeRequest = privateRequest(user.accessToken, user.refreshToken);
+  const [bookingDate, setBookingDate] = useState("");
 
   const isCartEmpty = Object.keys(cart).length === 0;
 
   const handleOrder = async () => {
+    if (!bookingDate) {
+      toast.error("Please select a booking date.");
+      return;
+    }
     console.log(cart);
     let foodItems = [];
 
@@ -180,10 +187,15 @@ const Cart = () => {
     dispatch(clearCart());
   };
 
+  const handleDateChange = (e) => {
+    setBookingDate(e.target.value);
+  };
+
   return (
     <div>
       <div className={styles.cart + ' font-["Dosis"]'}>
         <h2 className='text-3xl font-["Dosis"] text-center pb-2'>CART</h2>
+        <ToastContainer />
         {isCartEmpty ? (
           <>
             <table>
@@ -200,6 +212,18 @@ const Cart = () => {
           </>
         ) : (
           <div className="">
+            <div className="flex flex-row my-5">
+              <p className="mr-10">Date of Booking</p>
+              <input
+                className="mr-10"
+                type="date"
+                value={bookingDate}
+                onChange={handleDateChange}
+                min={(new Date(Date.now() + 2 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0]}
+                style={{ color: 'black' }} // Set the color to black
+              />
+              <p>Note : Booking has to be done 2 days prior.</p>
+            </div>
             <table>
               <thead>
                 <tr>
