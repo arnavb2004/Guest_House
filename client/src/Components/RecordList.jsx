@@ -33,8 +33,7 @@ export default function RecordList({ status = "pending" }) {
     Category: "category",
     "Arrival Date": "arrivalDate",
     "Departure Date": "departureDate",
-    "Room Type": "roomType",
-    Status: "status",
+    "Room Type": "roomType"
   };
 
   const navigate = useNavigate();
@@ -88,9 +87,7 @@ export default function RecordList({ status = "pending" }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchChoice, setSearchChoice] = useState("Filter");
 
-  const handleSearchChange = (event) => {
-    setSearchTerm(event.target.value);
-  };
+  
 
   const filterRecords = () => {
     const tempRecords = records.filter((record) => {
@@ -130,11 +127,6 @@ export default function RecordList({ status = "pending" }) {
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
-  const toggleDropup = () => {
-    if (isOpen) {
-      setIsOpen(false);
-    }
-  };
 
   const options = [
     "Guest Name",
@@ -143,12 +135,11 @@ export default function RecordList({ status = "pending" }) {
     "Category",
     "Arrival Date",
     "Departure Date",
-    "Room Type",
-    "Status",
-  ];
+    "Room Type"
+  ]
 
   return (
-    <div className=" flex p-5 px-0 w-full flex-col" onClick={toggleDropup}>
+    <div className=" flex p-5 px-0 w-full flex-col">
       <div className='text-center text-3xl font-["Dosis"] font-semibold py-4 uppercase'>
         User Records
       </div>

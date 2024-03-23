@@ -38,7 +38,6 @@ export default function AdminRecordList({ status = "pending" }) {
     "Arrival Date": "arrivalDate",
     "Departure Date": "departureDate",
     "Room Type": "roomType",
-    "Status": "status",
   };
 
 
@@ -152,7 +151,6 @@ export default function AdminRecordList({ status = "pending" }) {
     "Arrival Date",
     "Departure Date",
     "Room Type",
-    "Status",
   ];
 
   return (
