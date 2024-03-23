@@ -377,6 +377,7 @@ function ReservationForm() {
               name="arrivalDate"
               value={formData.arrivalDate}
               onChange={handleChange}
+              min={(new Date(Date.now())).toISOString().split('T')[0]}
             />
           </div>
 
@@ -396,6 +397,7 @@ function ReservationForm() {
               name="departureDate"
               value={formData.departureDate}
               onChange={handleChange}
+              min={(new Date(Date.now())).toISOString().split('T')[0]}
             />
           </div>
           <div className="form-group">

@@ -183,3 +183,70 @@
   font-size: 20px;
   font-family: 'Dosis';
 }
+
+.card {
+  background: linear-gradient(135deg, #f3f3f3, #e0e0e0); /* Gradient background */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* subtle shadow */
+  margin: 20px; /* Increased space between cards */
+  transition: transform 0.2s, box-shadow 0.2s; /* Added transition for hover effect */
+  width: 250px; /* decrease card width */
+}
+
+.card:hover {
+  transform: translateY(-5px); /* subtle hover effect */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Increased shadow on hover */
+}
+
+.cardContent {
+  padding: 16px; /* consistent padding around the content */
+  display: flex;
+  flex-direction: column;
+}
+
+.cardTitle {
+  font-size: 18px; /* smaller font size */
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.cardPrice {
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.amount {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.zero {
+  width: 100%;
+
+  margin-left: 30px;
+}
+
+.cardActions {
+  display: flex;
+  justify-content: space-between; /* Align items on both ends */
+  align-items: center; /* Center items vertically */
+  background-color: #f2f2f2; /* Set background color for the action section */
+  padding: 10px; /* Add padding */
+  border-radius: 0 0 5px 5px; /* Rounded corners at the bottom */
+}
+
+.actionButton {
+  background: #eee; /* Light background for buttons */
+  border: none;
+  padding: 8px 12px; /* padding inside buttons */
+  border-radius: 4px; /* rounded corners for buttons */
+  cursor: pointer; /* indicates the button is clickable */
+  font-weight: bold;
+  transition: background-color 0.3s ease; /* Smooth transition for background color */
+}
+
+.actionButton:hover {
+  background: #ddd; /* darker background on hover */
+}
