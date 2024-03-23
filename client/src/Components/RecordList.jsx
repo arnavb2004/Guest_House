@@ -269,7 +269,11 @@ export default function RecordList({ status = "pending" }) {
                 <div className="flex gap-4">
                   <IconButton
                     edge="end"
-                    onClick={() => navigate(`${record._id}`)}
+                    onClick={() => {
+                      status === "pending"
+                        ? navigate(`${record._id}`)
+                        : navigate(`../${record._id}`);
+                    }}
                     aria-label="comments"
                   >
                     <InsertDriveFileIcon color="black" />

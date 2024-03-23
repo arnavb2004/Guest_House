@@ -34,13 +34,12 @@ export default function AdminRecordList({ status = "pending" }) {
     "Guest Name": "guestName",
     "Number of Rooms": "numberOfRooms",
     "Number of Guests": "numberOfGuests",
-    "Category": "category",
+    Category: "category",
     "Arrival Date": "arrivalDate",
     "Departure Date": "departureDate",
     "Room Type": "roomType",
-    "Status": "status",
+    Status: "status",
   };
-
 
   const navigate = useNavigate();
 
@@ -311,7 +310,11 @@ export default function AdminRecordList({ status = "pending" }) {
                   <IconButton edge="end" aria-label="comments">
                     <InsertDriveFileIcon
                       color="black"
-                      onClick={() => navigate(`${record._id}`)}
+                      onClick={() => {
+                        status === "pending"
+                          ? navigate(`${record._id}`)
+                          : navigate(`../${record._id}`);
+                      }}
                     />
                   </IconButton>
                   <IconButton
