@@ -26,6 +26,8 @@ export default function RecordList({ status = "pending" }) {
   const user = useSelector((state) => state.user);
   const [records, setRecords] = useState([]);
   const [newRecords, setNewRecords] = useState([]);
+  const [loadingStatus, setLoadingStatus] = useState("Loading");
+
   const filterMap = {
     "Guest Name": "guestName",
     "Number of Rooms": "numberOfRooms",
@@ -49,13 +51,16 @@ export default function RecordList({ status = "pending" }) {
       setValues(reservations.map((res) => res._id));
       setRecords(reservations);
       setNewRecords(reservations);
+      setLoadingStatus("Success");
     } catch (err) {
       toast(err.response.data);
+      setLoadingStatus("Error");
       console.log(err.response.data);
     }
   };
   //console.log(records);
   useEffect(() => {
+    setLoadingStatus("Loading");
     fetchRecords();
   }, [status]);
   // console.log(records);
@@ -254,109 +259,126 @@ export default function RecordList({ status = "pending" }) {
             />
           </ListItemButton>
         </ListItem>
-        {newRecords.map((record) => {
-          const labelId = `checkbox-list-label-${record._id}`;
-          return (
-            <ListItem
-              key={record._id}
-              className="border-b"
-              secondaryAction={
-                <div className="flex gap-4">
-                  <IconButton
-                    edge="end"
-                    onClick={() => {
-                      status === "pending"
-                        ? navigate(`${record._id}`)
-                        : navigate(`../${record._id}`);
-                    }}
-                    aria-label="comments"
+        {loadingStatus === "Success" && (
+          <div className="h-96 overflow-y-scroll">
+            {newRecords.map((record) => {
+              const labelId = `checkbox-list-label-${record._id}`;
+              return (
+                <ListItem
+                  key={record._id}
+                  className="border-b"
+                  secondaryAction={
+                    <div className="flex gap-4">
+                      <IconButton
+                        edge="end"
+                        onClick={() => {
+                          status === "pending"
+                            ? navigate(`${record._id}`)
+                            : navigate(`../${record._id}`);
+                        }}
+                        aria-label="comments"
+                      >
+                        <InsertDriveFileIcon color="black" />
+                      </IconButton>
+                      <IconButton
+                        edge="end"
+                        onClick={async () => {
+                          try {
+                            const res = await makeRequest.get(
+                              "/reservation/documents/" + record._id,
+                              { responseType: "blob" }
+                            );
+                            var file = window.URL.createObjectURL(res.data);
+                            window.location.assign(file);
+                            console.log(res);
+                          } catch (error) {}
+                        }}
+                        aria-label="comments"
+                      >
+                        <DownloadIcon color="black" />
+                      </IconButton>
+                    </div>
+                  }
+                  disablePadding
+                >
+                  <ListItemButton
+                    className=""
+                    sx={{ paddingY: "10px" }}
+                    onClick={handleToggle(record._id)}
+                    role={undefined}
+                    dense
                   >
-                    <InsertDriveFileIcon color="black" />
-                  </IconButton>
-                  <IconButton
-                    edge="end"
-                    onClick={async () => {
-                      try {
-                        const res = await makeRequest.get(
-                          "/reservation/documents/" + record._id,
-                          { responseType: "blob" }
-                        );
-                        var file = window.URL.createObjectURL(res.data);
-                        window.location.assign(file);
-                        console.log(res);
-                      } catch (error) {}
-                    }}
-                    aria-label="comments"
-                  >
-                    <DownloadIcon color="black" />
-                  </IconButton>
-                </div>
-              }
-              disablePadding
-            >
-              <ListItemButton
-                className=""
-                sx={{ paddingY: "10px" }}
-                onClick={handleToggle(record._id)}
-                role={undefined}
-                dense
-              >
-                <ListItemIcon>
-                  <Checkbox
-                    edge="start"
-                    checked={checked.indexOf(record._id) !== -1}
-                    tabIndex={-1}
-                    disableRipple
-                    inputProps={{ "aria-labelledby": labelId }}
-                  />
-                </ListItemIcon>
+                    <ListItemIcon>
+                      <Checkbox
+                        edge="start"
+                        checked={checked.indexOf(record._id) !== -1}
+                        tabIndex={-1}
+                        disableRipple
+                        inputProps={{ "aria-labelledby": labelId }}
+                      />
+                    </ListItemIcon>
 
-                <ListItemText
-                  id="checkbox-list-label-header"
-                  className=" text-wrap w-12"
-                  sx={{ overflow: "hidden" }}
-                  primary={record.guestName}
-                />
-                <ListItemText
-                  id="checkbox-list-label-header"
-                  className=" text-wrap w-10 text-center"
-                  primary={record.numberOfGuests}
-                />
-                <ListItemText
-                  id="checkbox-list-label-header"
-                  className=" text-wrap w-10 text-center"
-                  primary={record.numberOfRooms}
-                />
-                <ListItemText
-                  id="checkbox-list-label-header"
-                  className=" text-wrap w-10 text-center"
-                  primary={record.category}
-                />
-                <ListItemText
-                  id="checkbox-list-label-header"
-                  className="w-20 text-center"
-                  primary={getDate(record.arrivalDate)}
-                />
-                <ListItemText
-                  id="checkbox-list-label-header"
-                  className="w-20 text-center"
-                  primary={getDate(record.departureDate)}
-                />
-                <ListItemText
-                  id="checkbox-list-label-header"
-                  className="w-20 text-center"
-                  primary={record.roomType}
-                />
-                <ListItemText
-                  id="checkbox-list-label-header"
-                  className="w-10"
-                  primary={record.status}
-                />
-              </ListItemButton>
-            </ListItem>
-          );
-        })}
+                    <ListItemText
+                      id="checkbox-list-label-header"
+                      className=" text-wrap w-12"
+                      sx={{ overflow: "hidden" }}
+                      primary={record.guestName}
+                    />
+                    <ListItemText
+                      id="checkbox-list-label-header"
+                      className=" text-wrap w-10 text-center"
+                      primary={record.numberOfGuests}
+                    />
+                    <ListItemText
+                      id="checkbox-list-label-header"
+                      className=" text-wrap w-10 text-center"
+                      primary={record.numberOfRooms}
+                    />
+                    <ListItemText
+                      id="checkbox-list-label-header"
+                      className=" text-wrap w-10 text-center"
+                      primary={record.category}
+                    />
+                    <ListItemText
+                      id="checkbox-list-label-header"
+                      className="w-20 text-center"
+                      primary={getDate(record.arrivalDate)}
+                    />
+                    <ListItemText
+                      id="checkbox-list-label-header"
+                      className="w-20 text-center"
+                      primary={getDate(record.departureDate)}
+                    />
+                    <ListItemText
+                      id="checkbox-list-label-header"
+                      className="w-20 text-center"
+                      primary={record.roomType}
+                    />
+                    <ListItemText
+                      id="checkbox-list-label-header"
+                      className="w-10"
+                      primary={record.status}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              );
+            })}
+          </div>
+        )}
       </List>
+      {loadingStatus === "Loading" && (
+        <div className="p-2 text-center pt-5 font-semibold">Loading...</div>
+      )}
+      {loadingStatus === "Success" && records.length === 0 && (
+        <div className="p-2 text-center pt-5 font-semibold">
+          No records found
+        </div>
+      )}
+      {loadingStatus === "Error" && (
+        <div className="p-2 text-center pt-5 font-semibold">
+          Error fetching records!
+        </div>
+      )}
     </div>
   );
 }

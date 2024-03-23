@@ -34,7 +34,7 @@ export default function AdminRecordList({ status = "pending" }) {
     "Guest Name": "guestName",
     "Number of Rooms": "numberOfRooms",
     "Number of Guests": "numberOfGuests",
-    Category: "category",
+    "Category": "category",
     "Arrival Date": "arrivalDate",
     "Departure Date": "departureDate",
     "Room Type": "roomType",
@@ -43,7 +43,7 @@ export default function AdminRecordList({ status = "pending" }) {
   const navigate = useNavigate();
 
   const makeRequest = privateRequest(user.accessToken, user.refreshToken);
-  console.log(makeRequest);
+
 
   const fetchRecords = async () => {
     try {
@@ -62,6 +62,7 @@ export default function AdminRecordList({ status = "pending" }) {
   };
   //console.log(records);
   useEffect(() => {
+    setLoadingStatus("Loading");
     fetchRecords();
   }, [status]);
 
@@ -267,148 +268,153 @@ export default function AdminRecordList({ status = "pending" }) {
             />
           </ListItemButton>
         </ListItem>
-        <div className="h-96 overflow-y-scroll">
+        {loadingStatus === "Success" && (
+          <div className="h-96 overflow-y-scroll">
+            {newRecords.map((record) => {
+              const labelId = `checkbox-list-label-${record._id}`;
 
-        {newRecords.map((record) => {
-          const labelId = `checkbox-list-label-${record._id}`;
-
-          return (
-            <ListItem
-              key={record._id}
-              className="border-b"
-              secondaryAction={
-                <div className="flex gap-2">
-                  <IconButton edge="end" aria-label="comments">
-                    <img
-                      className="h-5"
-                      onClick={async () => {
-                        try {
-                          await makeRequest.put(
-                            "/reservation/approve/" + record._id
-                          );
-                          toast.success("Reservation Approved");
-                          window.location.reload();
-                        } catch (error) {
-                          // console.log(error)
-                          toast.error(error.response.data);
-                        }
-                      }}
-                      src={tick}
-                    />
-                  </IconButton>
-                  <IconButton edge="end" aria-label="comments">
-                    <img
-                      className="h-5"
-                      onClick={async () => {
-                        await makeRequest.put(
-                          "/reservation/reject/" + record._id
-                        );
-                      }}
-                      src={cross}
-                    />
-                  </IconButton>
-                  <IconButton edge="end" aria-label="comments">
-                    <InsertDriveFileIcon
-                      color="black"
-                      onClick={() => {
-                        status === "pending"
-                          ? navigate(`${record._id}`)
-                          : navigate(`../${record._id}`);
-                      }}
-                    />
-                  </IconButton>
-                  <IconButton
-                    edge="end"
-                    onClick={async () => {
-                      try {
-                        const res = await makeRequest.get(
-                          "/reservation/documents/" + record._id,
-                          { responseType: "blob" }
-                        );
-                        var file = window.URL.createObjectURL(res.data);
-                        window.location.assign(file);
-                        console.log(res);
-                      } catch (error) {}
-                    }}
-                    aria-label="comments"
+              return (
+                <ListItem
+                  key={record._id}
+                  className="border-b"
+                  secondaryAction={
+                    <div className="flex gap-2">
+                      <IconButton edge="end" aria-label="comments">
+                        <img
+                          className="h-5"
+                          onClick={async () => {
+                            try {
+                              await makeRequest.put(
+                                "/reservation/approve/" + record._id
+                              );
+                              toast.success("Reservation Approved");
+                              window.location.reload();
+                            } catch (error) {
+                              // console.log(error)
+                              toast.error(error.response.data);
+                            }
+                          }}
+                          src={tick}
+                        />
+                      </IconButton>
+                      <IconButton edge="end" aria-label="comments">
+                        <img
+                          className="h-5"
+                          onClick={async () => {
+                            await makeRequest.put(
+                              "/reservation/reject/" + record._id
+                            );
+                          }}
+                          src={cross}
+                        />
+                      </IconButton>
+                      <IconButton edge="end" aria-label="comments">
+                        <InsertDriveFileIcon
+                          color="black"
+                          onClick={() => {
+                            status === "pending"
+                              ? navigate(`${record._id}`)
+                              : navigate(`../${record._id}`);
+                          }}
+                        />
+                      </IconButton>
+                      <IconButton
+                        edge="end"
+                        onClick={async () => {
+                          try {
+                            const res = await makeRequest.get(
+                              "/reservation/documents/" + record._id,
+                              { responseType: "blob" }
+                            );
+                            var file = window.URL.createObjectURL(res.data);
+                            window.location.assign(file);
+                            console.log(res);
+                          } catch (error) {}
+                        }}
+                        aria-label="comments"
+                      >
+                        <DownloadIcon color="black" />
+                      </IconButton>
+                    </div>
+                  }
+                  disablePadding
+                >
+                  <ListItemButton
+                    className=""
+                    sx={{ paddingY: "10px" }}
+                    onClick={handleToggle(record._id)}
+                    role={undefined}
+                    dense
                   >
-                    <DownloadIcon color="black" />
-                  </IconButton>
-                </div>
-              }
-              disablePadding
-            >
-              <ListItemButton
-                className=""
-                sx={{ paddingY: "10px" }}
-                onClick={handleToggle(record._id)}
-                role={undefined}
-                dense
-              >
-                <ListItemIcon>
-                  <Checkbox
-                    edge="start"
-                    checked={checked.indexOf(record._id) !== -1}
-                    tabIndex={-1}
-                    disableRipple
-                    inputProps={{ "aria-labelledby": labelId }}
-                  />
-                </ListItemIcon>
+                    <ListItemIcon>
+                      <Checkbox
+                        edge="start"
+                        checked={checked.indexOf(record._id) !== -1}
+                        tabIndex={-1}
+                        disableRipple
+                        inputProps={{ "aria-labelledby": labelId }}
+                      />
+                    </ListItemIcon>
 
-                <ListItemText
-                  id="checkbox-list-label-header"
-                  className=" text-wrap w-12"
-                  sx={{ overflow: "hidden" }}
-                  primary={record.guestName}
-                />
-                <ListItemText
-                  id="checkbox-list-label-header"
-                  className=" text-wrap w-10 text-center"
-                  primary={record.numberOfGuests}
-                />
-                <ListItemText
-                  id="checkbox-list-label-header"
-                  className=" text-wrap w-10 text-center"
-                  primary={record.numberOfRooms}
-                />
-                <ListItemText
-                  id="checkbox-list-label-header"
-                  className=" text-wrap w-10 text-center"
-                  primary={record.category}
-                />
-                <ListItemText
-                  id="checkbox-list-label-header"
-                  className="w-20 text-center"
-                  primary={getDate(record.arrivalDate)}
-                />
-                <ListItemText
-                  id="checkbox-list-label-header"
-                  className="w-20 text-center"
-                  primary={getDate(record.departureDate)}
-                />
-                <ListItemText
-                  id="checkbox-list-label-header"
-                  className="w-20 text-center"
-                  primary={record.roomType}
-                />
-                <ListItemText
-                  id="checkbox-list-label-header"
-                  className="w-10 mr-16"
-                  primary={status.toUpperCase()}
-                />
-              </ListItemButton>
-            </ListItem>
-          );
-        })}
-        </div>
-
+                    <ListItemText
+                      id="checkbox-list-label-header"
+                      className=" text-wrap w-12"
+                      sx={{ overflow: "hidden" }}
+                      primary={record.guestName}
+                    />
+                    <ListItemText
+                      id="checkbox-list-label-header"
+                      className=" text-wrap w-10 text-center"
+                      primary={record.numberOfGuests}
+                    />
+                    <ListItemText
+                      id="checkbox-list-label-header"
+                      className=" text-wrap w-10 text-center"
+                      primary={record.numberOfRooms}
+                    />
+                    <ListItemText
+                      id="checkbox-list-label-header"
+                      className=" text-wrap w-10 text-center"
+                      primary={record.category}
+                    />
+                    <ListItemText
+                      id="checkbox-list-label-header"
+                      className="w-20 text-center"
+                      primary={getDate(record.arrivalDate)}
+                    />
+                    <ListItemText
+                      id="checkbox-list-label-header"
+                      className="w-20 text-center"
+                      primary={getDate(record.departureDate)}
+                    />
+                    <ListItemText
+                      id="checkbox-list-label-header"
+                      className="w-20 text-center"
+                      primary={record.roomType}
+                    />
+                    <ListItemText
+                      id="checkbox-list-label-header"
+                      className="w-10 mr-16"
+                      primary={status.toUpperCase()}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              );
+            })}
+          </div>
+        )}
       </List>
       {loadingStatus === "Loading" && (
         <div className="p-2 text-center pt-5 font-semibold">Loading...</div>
       )}
-      {loadingStatus !== "Loading" && records.length === 0 && (
+      {loadingStatus === "Success" && records.length === 0 && (
         <div className="p-2 text-center pt-5 font-semibold">
           No records found
+        </div>
+      )}
+      {loadingStatus === "Error" && (
+        <div className="p-2 text-center pt-5 font-semibold">
+          Error fetching records!
         </div>
       )}
     </div>
