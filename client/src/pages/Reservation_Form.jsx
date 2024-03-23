@@ -50,7 +50,6 @@ function ReservationForm() {
   const makeRequest = privateRequest(user.accessToken, user.refreshToken);
 
   const [files, setFiles] = useState([]);
-  const [receipt, setReceipt] = useState(null);
   const [formData, setFormData] = useState({
     guestName: "",
     address: "",
@@ -119,30 +118,15 @@ function ReservationForm() {
     });
   };
   const handleFileUpload = (files) => {
-    // if(!Array.isArray(formData.files)) {
-    //   formData.files=[];
-    // }
-    // formData.append('files',file);
-    // formData.files.push(file);
-    // setFormData({
-    //   ...formData,
-    // })
-    console.log(files)
+    console.log(files);
     setFiles(files);
   };
-  const handleReceiptUpload = async() => {
-    const file = await updateFilledPDF(formData);
-    // formData.append('receipt',file);
-    // setFormData({
-    //   ...formData,
-    //   receipt:file
-    // })
-    setReceipt(file);
-  };
   const handleSubmit = async (e) => {
-    await handleReceiptUpload();
     e.preventDefault();
 
+    const receipt = await updateFilledPDF(formData);
+
+    console.log(receipt);
     //Handle form validation
 
     let passed = true;
@@ -183,16 +167,7 @@ function ReservationForm() {
     const departureDateTime = new Date(
       `${formData.departureDate}T${formData.departureTime}`
     );
-
-    console.log(departureDateTime);
-    console.log(arrivalDateTime);
-
-    // setFormData((prev) => ({
-    //   ...prev,
-    //   arrivalDate: arrivalDateTime,
-    //   departureDate: departureDateTime,
-    // }));
-
+    
     // Check if no of rooms are Sufficient for Double occupancy
     if (formData.roomType === "Double Occupancy") {
       const numberOfGuests = parseInt(formData.numberOfGuests);
@@ -259,16 +234,15 @@ function ReservationForm() {
     console.log("passed");
 
     // Handle form submission
-    // axios.post("http://localhost:4751/reservation", formData);
 
     try {
       const formDataToSend = new FormData();
-      console.log("here")
+      console.log("here");
       Object.entries(formData).forEach(([fieldName, fieldValue]) => {
         formDataToSend.append(fieldName, fieldValue);
       });
       // console.log(files.files)
-      for (const file of files){
+      for (const file of files) {
         formDataToSend.append("files", file);
       }
       console.log(receipt);
@@ -309,7 +283,6 @@ function ReservationForm() {
               value={formData.guestName}
               onChange={handleChange}
             />
-            {/* <FormHelperText>We'll never share your email.</FormHelperText> */}
           </div>
 
           <div>
@@ -443,30 +416,24 @@ function ReservationForm() {
                 Category D
               </option>
             </select>
-            {/* <AutoDemo/> */}
             <InputFileUpload className="" onFileUpload={handleFileUpload} />
 
-            {/* <div className="card">
-              <FileUpload
-                name="demo[]"
-                url={"/api/upload"}
-                multiple
-                accept="image/*"
-                maxFileSize={1000000}
-                emptyTemplate={
-                  <p className="m-0">Drag and drop files to here to upload.</p>
-                }
-              />
-            </div> */}
+          
           </div>
           <button type="submit" onClick={handleSubmit} className="submit-btn">
             Submit
           </button>
-          <button onClick={handleReceiptUpload} className="convert-to-pdf-btn">
+          <button
+            onClick={async () => {
+              const blob = await updateFilledPDF(formData);
+              const pdfUrl = URL.createObjectURL(blob);
+              window.open(pdfUrl);
+            }}
+            className="convert-to-pdf-btn"
+          >
             See Preview - PDF
           </button>
         </FormControl>
-        {/* <button onClick={updateFilledPDF} className="convert-to-pdf-btn">Convert to PDF</button> */}
       </div>
     </div>
   );

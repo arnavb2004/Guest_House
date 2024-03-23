@@ -269,6 +269,8 @@ export default function AdminRecordList({ status = "pending" }) {
             />
           </ListItemButton>
         </ListItem>
+        <div className="h-96 overflow-y-scroll">
+
         {newRecords.map((record) => {
           const labelId = `checkbox-list-label-${record._id}`;
 
@@ -400,6 +402,8 @@ export default function AdminRecordList({ status = "pending" }) {
             </ListItem>
           );
         })}
+        </div>
+
       </List>
       {loadingStatus === "Loading" && (
         <div className="p-2 text-center pt-5 font-semibold">Loading...</div>
