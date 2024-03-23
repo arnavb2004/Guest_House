@@ -72,6 +72,11 @@ const Header = () => {
               </IconButton>
             </div>
           )}
+          <div className="cursor-pointer">
+              <IconButton>
+                <NotificationsIcon />
+              </IconButton>
+            </div>
           {user.email ? (
             <div className="cursor-pointer" onClick={handleLogout}>
               LOGOUT
