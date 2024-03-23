@@ -92,6 +92,10 @@ export default function RecordList({ status = "pending" }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchChoice, setSearchChoice] = useState("Filter");
 
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
   
 
   const filterRecords = () => {

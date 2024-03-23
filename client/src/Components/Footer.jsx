@@ -7,7 +7,7 @@ import LinkedInIcon from '@mui/icons-material/LinkedIn';
 
 const Footer = () => {
   return (
-    <footer className="flex flex-col pt-[2rem] w-full  bg-slate-700 bg-[#2c2b36] text-gray-200 bottom-0 font-sans">
+    <footer className="flex flex-col pt-[2rem] w-full  bg-slate-700  text-gray-200 bottom-0 font-sans">
       <div className="flex justify-around px-32">
         <div className=" flex flex-col gap-4 items-center text-md">
           {/* <h4>About Us</h4> */}
