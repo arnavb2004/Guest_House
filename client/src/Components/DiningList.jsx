@@ -79,7 +79,8 @@ export default function DiningList({ status = "pending" }) {
   const fetchRecords = async () => {
     try {
       const res = await makeRequest.get("/dining/all");
-      const orders = res.data;
+      let orders = res.data;
+      orders = orders.filter((order) => order.status.toLowerCase() == status);
       setValues(orders.map((res) => res._id));
       setRecords(orders);
       setNewRecords(orders);
@@ -208,7 +209,7 @@ export default function DiningList({ status = "pending" }) {
             />
           </ListItemButton>
         </ListItem>
-        {loadingStatus === "Success" && newRecords.length>0 && (
+        {loadingStatus === "Success" && newRecords.length > 0 && (
           <div className="h-96 overflow-y-scroll">
             {newRecords.map((record) => {
               const labelId = `checkbox-list-label-${record._id}`;

@@ -257,12 +257,12 @@ export default function AdminRecordList({ status = "pending" }) {
             />
             <ListItemText
               id="checkbox-list-label-header"
-              className="w-20 text-center"
+              className="w-20 text-center pr-5 mr-5"
               primary="Room Type"
             />
             <ListItemText
               id="checkbox-list-label-header "
-              className="w-10 mr-14"
+              className="w-10 mr-20"
               primary="Status"
             />
           </ListItemButton>
@@ -388,12 +388,12 @@ export default function AdminRecordList({ status = "pending" }) {
                     />
                     <ListItemText
                       id="checkbox-list-label-header"
-                      className="w-20 text-center"
+                      className="w-20 mr-4 text-center"
                       primary={record.roomType}
                     />
                     <ListItemText
                       id="checkbox-list-label-header"
-                      className="w-10 mr-16"
+                      className="w-10 mr-20"
                       primary={status.toUpperCase()}
                     />
                   </ListItemButton>

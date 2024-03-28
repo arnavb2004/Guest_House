@@ -53,6 +53,14 @@ function App() {
             <Route path="admin" element={<Auth allowedRoles={["ADMIN"]} />}>
               <Route path="dining" element={<Dining />}>
                 <Route path="" element={<DiningList />} />
+                <Route
+                  path="rejected-requests"
+                  element={<DiningList status="rejected" />}
+                />
+                <Route
+                  path="approved-requests"
+                  element={<DiningList status="approved" />}
+                />
                 <Route path="book-dining" element={<BookDining />} />
                 <Route path="cart" element={<Cart />} />
                 <Route path=":id" element={<DiningRecordPage />} />
@@ -91,6 +99,14 @@ function App() {
               </Route>
               <Route path="dining" element={<Dining />}>
                 <Route path="" element={<DiningList />} />
+                <Route
+                  path="rejected-requests"
+                  element={<DiningList status="rejected" />}
+                />
+                <Route
+                  path="approved-requests"
+                  element={<DiningList status="approved" />}
+                />
                 <Route path="book-dining" element={<BookDining />} />
                 <Route path="cart" element={<Cart />} />
                 <Route path=":id" element={<DiningRecordPage />} />

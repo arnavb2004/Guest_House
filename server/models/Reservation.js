@@ -92,6 +92,22 @@ const reservationSchema = new mongoose.Schema(
         },
       },
     ],
+    bookings: [
+      {
+        startDate: {
+          type: Date,
+          required: true,
+        },
+        endDate: {
+          type: Date,
+          required: true,
+        },
+        roomNumber:{
+          type: Number,
+          required: true,
+        }
+      },
+    ],
   },
   {
     timestamps: true, // Adds createdAt and updatedAt timestamps

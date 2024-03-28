@@ -1,7 +1,10 @@
 import Reservation from "../models/Reservation.js";
+import Room from "../models/Room.js";
+
 import { getDate, getTime, transporter } from "../utils.js";
 import archiver from "archiver";
 import { getFileById } from "../middlewares/fileStore.js";
+
 async function sendVerificationEmail(to, subject, body) {
   try {
     const info = await transporter.sendMail({
@@ -18,8 +21,6 @@ async function sendVerificationEmail(to, subject, body) {
 }
 
 export async function createReservation(req, res) {
-  console.log("body", req.body);
-  console.log("user", req.user);
   try {
     //user details are contained in req.user
 
@@ -42,16 +43,11 @@ export async function createReservation(req, res) {
     // console.log(arrivalTime);
 
     const email = req.user.email;
-    // console.log(req.user);
-    console.log(req);
-    console.log(req.files["files"]);
-    console.log(req.files["receipt"]);
     const receiptid = req.files["receipt"][0].id;
     const fileids = req.files["files"]?.map((f) => ({
       refid: f.id,
       extension: f.originalname.split(".")[1],
     }));
-    console.log(fileids);
     const reservation = await Reservation.create({
       guestEmail: email,
       guestName,
@@ -69,7 +65,6 @@ export async function createReservation(req, res) {
       receipt: receiptid,
     });
 
-    console.log(reservation);
     console.log("sending mail");
 
     sendVerificationEmail(
@@ -146,15 +141,12 @@ export async function assignReservation(req, res) {
         .json({ message: "You are not authorized to perform this action" });
     }
     const reservation = await Reservation.findById(req.params.id);
-    console.log(reservation);
-    console.log(req.body);
     reservation.reviewers = req.body.reviewers.map((r) => ({
       role: r,
       status: "PENDING",
       comments: "",
     }));
     await reservation.save();
-    console.log(reservation);
     res.status(200).json({ message: "Reservation Approved" });
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -201,7 +193,6 @@ export async function getReservationDocuments(req, res) {
       });
     }
     const receiptStream = await getFileById(reservation.receipt);
-    // console.log(receiptStream);
     archive.append(receiptStream, { name: `Receipt_${reservation._id}.pdf` });
     archive.finalize();
     res.on("finish", () => {
@@ -234,10 +225,7 @@ export async function approveReservation(req, res) {
       return reviewer;
     });
 
-    console.log(reservation.reviewers);
-
     reservation = updateReservationStatus(reservation);
-    console.log(reservation);
     // if(adminStatus === "APPROVED") {
     //   reservation.status = "APPROVED";
     // } else if(isApproved) {
@@ -464,7 +452,6 @@ const updateReservationStatus = (reservation) => {
       adminStatus = reviewer.status;
     }
   });
-  console.log(reviewers);
 
   if (adminStatus === "APPROVED") {
     reservation.status = "APPROVED";
@@ -478,7 +465,62 @@ const updateReservationStatus = (reservation) => {
     reservation.status = "PENDING";
   }
 
-  console.log(reservation);
-
   return reservation;
+};
+
+export const getRooms = async (req, res) => {
+  if (req.user?.role !== "ADMIN")
+    return res
+      .status(403)
+      .json({ message: "You are not authorized to perform this action" });
+  try {
+    const rooms = await Room.find().sort({ roomNumber: 1 });
+    console.log("Rooms", rooms);
+    res.status(200).json(rooms);
+  } catch (err) {
+    res.status(400).json({ success: false, message: err.message });
+  }
+};
+
+export const addRooms = async (req, res) => {
+  if (req.user?.role !== "ADMIN")
+    return res
+      .status(403)
+      .json({ message: "You are not authorized to perform this action" });
+
+  console.log("room list", req.body);
+  try {
+    const roomList = req.body;
+    roomList.forEach(async (room) => {
+      await Room.create(room);
+    });
+    res.status(200).json({ message: "Rooms added" });
+  } catch (err) {
+    res.status(400).json({ success: false, message: err.message });
+  }
+};
+
+export const updateRooms = async (req, res) => {
+  if (req.user?.role !== "ADMIN")
+    return res
+      .status(403)
+      .json({ message: "You are not authorized to perform this action" });
+  try {
+    const roomList = req.body;
+    roomList.forEach(async (room) => {
+      const { startDate, endDate, roomNumber } = room;
+      const res = await Room.findOneAndUpdate(
+        { roomNumber },
+        { $push: { bookings: { startDate: startDate, endDate: endDate } } }
+      );
+      console.log(res);
+    });
+
+    await Reservation.findByIdAndUpdate(req.params.id, {
+      $set: { bookings: roomList },
+    });
+    res.status(200).json({ message: "Rooms updated" });
+  } catch (err) {
+    res.status(400).json({ success: false, message: err.message });
+  }
 };
