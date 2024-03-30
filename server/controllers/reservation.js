@@ -4,6 +4,7 @@ import Room from "../models/Room.js";
 import { getDate, getTime, transporter } from "../utils.js";
 import archiver from "archiver";
 import { getFileById } from "../middlewares/fileStore.js";
+import mongoose from "mongoose";
 
 async function sendVerificationEmail(to, subject, body) {
   try {
@@ -214,8 +215,6 @@ export async function approveReservation(req, res) {
         .status(403)
         .json({ message: "You are not authorized to perform this action" });
     }
-    // reservation.status = "APPROVED";
-    // reservation.approvals.push(req.user.role);
 
     reservation.reviewers = reservation.reviewers.map((reviewer) => {
       if (reviewer.role === req.user.role) {
@@ -500,27 +499,82 @@ export const addRooms = async (req, res) => {
   }
 };
 
+async function isDateRangeAvailable(room, startDate, endDate) {
+  for (const booking of room.bookings) {
+    const bookingStartDate = new Date(booking.startDate).toISOString();
+    const bookingEndDate = new Date(booking.endDate).toISOString();
+
+    if (room.roomNumber == 108) {
+      console.log(bookingStartDate, bookingEndDate, startDate, endDate);
+    }
+    // Check for intersection
+    if (bookingStartDate < endDate && bookingEndDate > startDate) {
+      if (room.roomNumber == 108) console.log("Intersection");
+      return false; // Date range intersects with existing booking
+    }
+  }
+
+  if (room.roomNumber == 108) console.log("No intersection");
+
+  return true; // Date range is available
+}
+
+// Function to update rooms and reservation
 export const updateRooms = async (req, res) => {
-  if (req.user?.role !== "ADMIN")
+  if (req.user?.role !== "ADMIN") {
     return res
       .status(403)
       .json({ message: "You are not authorized to perform this action" });
-  try {
-    const roomList = req.body;
-    roomList.forEach(async (room) => {
-      const { startDate, endDate, roomNumber } = room;
-      const res = await Room.findOneAndUpdate(
-        { roomNumber },
-        { $push: { bookings: { startDate: startDate, endDate: endDate } } }
-      );
-      console.log(res);
-    });
+  }
+  const session = await mongoose.startSession();
+  session.startTransaction();
 
-    await Reservation.findByIdAndUpdate(req.params.id, {
-      $set: { bookings: roomList },
-    });
-    res.status(200).json({ message: "Rooms updated" });
-  } catch (err) {
-    res.status(400).json({ success: false, message: err.message });
+  try {
+    const allottedRooms = req.body;
+    const id = req.params.id;
+    for (const allottedRoom of allottedRooms) {
+      const { roomNumber, startDate, endDate } = allottedRoom;
+
+      const room = await Room.findOne({ roomNumber });
+      if (!room) {
+        throw new Error(`Room with number ${roomNumber} not found`);
+      }
+
+      const isAvailable = await isDateRangeAvailable(room, startDate, endDate);
+
+      if (isAvailable) {
+        // Update the room bookings to mark the specified period as booked
+        room.bookings.push({
+          startDate: allottedRoom.startDate,
+          endDate: allottedRoom.endDate,
+          user: allottedRoom.user
+        });
+      }
+
+      await room.save();
+
+      // Update the reservation document to reflect the assigned rooms for the user
+    }
+
+    const reservation = await Reservation.findByIdAndUpdate(
+      id, // Assuming user has an _id property
+      { $set: { bookings: allottedRooms } },
+      { session }
+    );
+
+    if (!reservation) {
+      throw new Error("Failed to update reservation");
+    }
+
+    await session.commitTransaction();
+    session.endSession();
+    res
+      .status(200)
+      .json({ message: "Rooms and reservation updated successfully" });
+  } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
+    console.error("Error updating rooms and reservation:", error);
+    res.status(400).json({ success: false, message: error.message });
   }
 };

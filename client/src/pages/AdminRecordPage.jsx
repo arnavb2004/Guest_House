@@ -215,6 +215,7 @@ export default function AdminRecordPage() {
           </div>
           <div>
             <Link
+              state={{ guestName: userRecord.guestName }}
               className="p-2 bg-[rgb(54,88,153)] rounded-lg text-white mr-16"
               to={"rooms"}
             >

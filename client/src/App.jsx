@@ -5,11 +5,9 @@ import People from "./pages/People";
 import Location from "./pages/Location";
 import Reservation from "./pages/Reservation";
 import Contact from "./pages/Contact";
-import { Provider } from "react-redux";
-import { persistor, store } from "./redux/store";
+
 import Login from "./pages/Login";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import { PersistGate } from "redux-persist/integration/react";
 import Register from "./pages/Register";
 import PDFViewer from "./components/PDFViewer";
 import ReservationForm from "./pages/Reservation_Form";
@@ -35,129 +33,98 @@ function App() {
   return (
     <div className="">
       <ToastContainer />
-      <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor} />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/unauthorized" element={<Unauthorized />} />
 
-            <Route path="/" element={<HomePage />}>
-              <Route path="/" element={<Home />} />
-              <Route path="/people" element={<People />} />
-              <Route path="/location" element={<Location />} />
-              <Route path="/contact" element={<Contact />} />
-            </Route>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/unauthorized" element={<Unauthorized />} />
 
-            <Route path="admin" element={<Auth allowedRoles={["ADMIN"]} />}>
-              <Route path="dining" element={<Dining />}>
-                <Route path="" element={<DiningList />} />
-                <Route
-                  path="rejected-requests"
-                  element={<DiningList status="rejected" />}
-                />
-                <Route
-                  path="approved-requests"
-                  element={<DiningList status="approved" />}
-                />
-                <Route path="book-dining" element={<BookDining />} />
-                <Route path="cart" element={<Cart />} />
-                <Route path=":id" element={<DiningRecordPage />} />
-              </Route>
+          <Route path="/" element={<HomePage />}>
+            <Route path="/" element={<Home />} />
+            <Route path="/people" element={<People />} />
+            <Route path="/location" element={<Location />} />
+            <Route path="/contact" element={<Contact />} />
+          </Route>
 
-              <Route path="reservation" element={<Reservation />}>
-                <Route path="" element={<AdminRecordList />} />
-                <Route
-                  path="rejected-requests"
-                  element={<AdminRecordList status="rejected" />}
-                />
-                <Route
-                  path="approved-requests"
-                  element={<AdminRecordList status="approved" />}
-                />
-                <Route path=":id" element={<AdminRecordPage />} />
-
-                <Route path="users" element={<UserList />} />
-                <Route path=":id/rooms" element={<RoomBooking />} />
-              </Route>
-            </Route>
-
-            <Route path="user" element={<Auth allowedRoles={["USER"]} />}>
-              <Route path="reservation" element={<Reservation />}>
-                <Route path="" element={<RecordList />} />
-                <Route
-                  path="approved-requests"
-                  element={<RecordList status="approved" />}
-                />
-                <Route
-                  path="rejected-requests"
-                  element={<RecordList status="rejected" />}
-                />
-                <Route path="reservation-form" element={<ReservationForm />} />
-                <Route path=":id" element={<RecordPage />} />
-              </Route>
-              <Route path="dining" element={<Dining />}>
-                <Route path="" element={<DiningList />} />
-                <Route
-                  path="rejected-requests"
-                  element={<DiningList status="rejected" />}
-                />
-                <Route
-                  path="approved-requests"
-                  element={<DiningList status="approved" />}
-                />
-                <Route path="book-dining" element={<BookDining />} />
-                <Route path="cart" element={<Cart />} />
-                <Route path=":id" element={<DiningRecordPage />} />
-              </Route>
-            </Route>
-
-            <Route
-              path=":role"
-              element={
-                <Auth
-                  allowedRoles={[
-                    "HOD",
-                    "CHAIRMAN",
-                    "DIRECTOR",
-                    "DEAN",
-                    "REGISTRAR",
-                    "ASSOCIATE DEAN",
-                  ]}
-                />
-              }
-            >
-              <Route path="dining" element={<Dining />}>
-                <Route path="" element={<DiningList />} />
-                <Route path="book-dining" element={<BookDining />} />
-                <Route path="cart" element={<Cart />} />
-                <Route path=":id" element={<DiningRecordPage />} />
-              </Route>
-
-              <Route path="reservation" element={<Reservation />}>
-                <Route path="" element={<AdminRecordList />} />
-                <Route
-                  path="rejected-requests"
-                  element={<AdminRecordList status="rejected" />}
-                />
-                <Route
-                  path="approved-requests"
-                  element={<AdminRecordList status="approved" />}
-                />
-                <Route path=":id" element={<AdminRecordPage />} />
-
-                <Route path="users" element={<UserList />} />
-                <Route path=":id/rooms" element={<RoomBooking />} />
-              </Route>
+          <Route path="admin" element={<Auth allowedRoles={["ADMIN"]} />}>
+            <Route path="dining" element={<Dining />}>
+              <Route path="" element={<DiningList />} />
+              <Route
+                path="rejected-requests"
+                element={<DiningList status="rejected" />}
+              />
+              <Route
+                path="approved-requests"
+                element={<DiningList status="approved" />}
+              />
+              <Route path="book-dining" element={<BookDining />} />
+              <Route path="cart" element={<Cart />} />
+              <Route path=":id" element={<DiningRecordPage />} />
             </Route>
 
             <Route path="reservation" element={<Reservation />}>
+              <Route path="" element={<AdminRecordList />} />
+              <Route
+                path="rejected-requests"
+                element={<AdminRecordList status="rejected" />}
+              />
+              <Route
+                path="approved-requests"
+                element={<AdminRecordList status="approved" />}
+              />
+              <Route path=":id" element={<AdminRecordPage />} />
+
+              <Route path="users" element={<UserList />} />
+              <Route path=":id/rooms" element={<RoomBooking />} />
+            </Route>
+          </Route>
+
+          <Route path="user" element={<Auth allowedRoles={["USER"]} />}>
+            <Route path="reservation" element={<Reservation />}>
               <Route path="" element={<RecordList />} />
+              <Route
+                path="approved-requests"
+                element={<RecordList status="approved" />}
+              />
+              <Route
+                path="rejected-requests"
+                element={<RecordList status="rejected" />}
+              />
               <Route path="reservation-form" element={<ReservationForm />} />
               <Route path=":id" element={<RecordPage />} />
             </Route>
+            <Route path="dining" element={<Dining />}>
+              <Route path="" element={<DiningList />} />
+              <Route
+                path="rejected-requests"
+                element={<DiningList status="rejected" />}
+              />
+              <Route
+                path="approved-requests"
+                element={<DiningList status="approved" />}
+              />
+              <Route path="book-dining" element={<BookDining />} />
+              <Route path="cart" element={<Cart />} />
+              <Route path=":id" element={<DiningRecordPage />} />
+            </Route>
+          </Route>
 
+          <Route
+            path=":role"
+            element={
+              <Auth
+                allowedRoles={[
+                  "HOD",
+                  "CHAIRMAN",
+                  "DIRECTOR",
+                  "DEAN",
+                  "REGISTRAR",
+                  "ASSOCIATE DEAN",
+                ]}
+              />
+            }
+          >
             <Route path="dining" element={<Dining />}>
               <Route path="" element={<DiningList />} />
               <Route path="book-dining" element={<BookDining />} />
@@ -165,16 +132,45 @@ function App() {
               <Route path=":id" element={<DiningRecordPage />} />
             </Route>
 
-            <Route path="test" element={<Reserve />} />
+            <Route path="reservation" element={<Reservation />}>
+              <Route path="" element={<AdminRecordList />} />
+              <Route
+                path="rejected-requests"
+                element={<AdminRecordList status="rejected" />}
+              />
+              <Route
+                path="approved-requests"
+                element={<AdminRecordList status="approved" />}
+              />
+              <Route path=":id" element={<AdminRecordPage />} />
 
-            <Route path="/iitropar-campus-map" element={<PDFViewer />} />
-            <Route path="/404" element={<NotFound />} />
-            <Route path="*" element={<NotFound />} />
+              <Route path="users" element={<UserList />} />
+              <Route path=":id/rooms" element={<RoomBooking />} />
+            </Route>
+          </Route>
 
-            <Route path="/unknown/*" element={<Navigate to="/login" />} />
-          </Routes>
-        </BrowserRouter>
-      </Provider>
+          <Route path="reservation" element={<Reservation />}>
+            <Route path="" element={<RecordList />} />
+            <Route path="reservation-form" element={<ReservationForm />} />
+            <Route path=":id" element={<RecordPage />} />
+          </Route>
+
+          <Route path="dining" element={<Dining />}>
+            <Route path="" element={<DiningList />} />
+            <Route path="book-dining" element={<BookDining />} />
+            <Route path="cart" element={<Cart />} />
+            <Route path=":id" element={<DiningRecordPage />} />
+          </Route>
+
+          <Route path="test" element={<Reserve />} />
+
+          <Route path="/iitropar-campus-map" element={<PDFViewer />} />
+          <Route path="/404" element={<NotFound />} />
+          <Route path="*" element={<NotFound />} />
+
+          <Route path="/unknown/*" element={<Navigate to="/login" />} />
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }

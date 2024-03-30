@@ -5,40 +5,59 @@ import { privateRequest } from "../utils/useFetch";
 import { useSelector } from "react-redux";
 import { getDate } from "../utils/handleDate";
 import { useLocation, useParams } from "react-router-dom";
+import Switch from "@mui/material/Switch";
 
 const RoomBooking = () => {
-
-  const params = useParams()
+  const params = useParams();
 
   const id = params.id;
+  const guestName = useLocation().state.guestName;
   const user = useSelector((state) => state.user);
   const makeRequest = privateRequest(user.accessToken, user.refreshToken);
 
   const fetchRooms = async () => {
     try {
       const res = await makeRequest.get("/reservation/rooms");
-      const reservation = await makeRequest.get("/reservation/"+id);
+      const reservation = await makeRequest.get("/reservation/" + id);
       setRoomsData(res.data);
-      setRooms(res.data);
-      setRoomList(reservation.data.reservation.bookings)
+      setRoomList(reservation.data.reservation.bookings);
       console.log(res.data);
     } catch (error) {
       console.log(error);
     }
   };
 
+  const convertToDate = (date) => {
+    return new Date(new Date(date).toISOString());
+  };
+
   useEffect(() => {
     fetchRooms();
   }, []);
 
+  const today = new Date();
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+
   const [roomsData, setRoomsData] = useState([]);
   const [rooms, setRooms] = useState([]);
-  const [startDate, setStartDate] = useState(new Date().toISOString());
-  const [endDate, setEndDate] = useState(new Date().toISOString());
+  const [startDate, setStartDate] = useState(
+    today.toISOString().substring(0, 10)
+  );
+  const [endDate, setEndDate] = useState(
+    tomorrow.toISOString().substring(0, 10)
+  );
   const [roomList, setRoomList] = useState([]);
+  const [occupancySwitch, setOccupancySwitch] = useState(false);
 
-  console.log(startDate)
+  console.log(startDate);
   console.log(roomList);
+
+  console.log(roomsData);
+
+  useEffect(() => {
+    handleFilter();
+  }, [startDate, endDate, occupancySwitch, roomsData]);
 
   const handleFilter = () => {
     try {
@@ -50,18 +69,25 @@ const RoomBooking = () => {
       // Filter the rooms based on the date range
       const updatedRooms = roomsData.map((room) => {
         const filteredBookings = room.bookings.filter((booking) => {
-          console.log(booking);
-          console.log(new Date(booking.startDate))
-          console.log(startDate)
-          return booking.startDate <= endDate && booking.endDate >= startDate;
+          return (
+            convertToDate(booking.startDate) < convertToDate(endDate) &&
+            convertToDate(booking.endDate) > convertToDate(startDate)
+          );
         });
         console.log(filteredBookings);
         return { ...room, bookings: filteredBookings };
       });
 
       // Set the rooms state to the filtered rooms
-      setRooms(updatedRooms);
-      toast.success("Filtered!!");
+      setRooms(
+        updatedRooms.filter(
+          (room) =>
+            room.type ===
+            (occupancySwitch ? "Double Occupancy" : "Single Occupancy")
+        )
+      );
+
+      // toast.success("Filtered!!");
     } catch (error) {
       console.error("Filter failed:", error);
       toast.error("Filter failed: Please try again later.");
@@ -74,20 +100,22 @@ const RoomBooking = () => {
 
       let temp = false;
       tempRoomList.forEach((currRoom) => {
-        if (currRoom.startDate >= startDate && currRoom.endDate <= endDate) {
+        if (
+          convertToDate(currRoom.startDate) < convertToDate(endDate) &&
+          convertToDate(currRoom.endDate) > convertToDate(startDate)
+        ) {
           temp = true;
         }
       });
 
       if (temp) {
-        setRoomList(tempRoomList);
         return;
       }
 
       let present = false;
 
       let newRoom = {
-        id: room.id,
+        user: guestName,
         startDate,
         endDate,
         roomNumber: room.roomNumber,
@@ -115,29 +143,41 @@ const RoomBooking = () => {
     }
   };
 
-  console.log(rooms);
-
   return (
     <div className="room-booking">
       <h2 className="room-heading text-4xl font-bold">Room Booking</h2>
       <div className="filter-container">
-        <label className="filter-label">Start Date:</label>
-        <input
-          type="date"
-          value={startDate.substring(0,10)}
-          onChange={(e) => setStartDate(new Date(e.target.value).toISOString())}
-          className="filter-input"
-        />
-        <label className="filter-label">End Date:</label>
-        <input
-          type="date"
-          value={endDate.substring(0,10)}
-          onChange={(e) => setEndDate(new Date(e.target.value).toISOString())}
-          className="filter-input"
-        />
-        <button onClick={handleFilter} className="filter-button">
-          Filter
-        </button>
+        <div className="px-4">
+          Single Occupancy
+          <Switch
+            checked={occupancySwitch}
+            onChange={(e) => setOccupancySwitch(e.target.checked)}
+          />
+          Double Occupancy
+        </div>
+        <div>
+          <label className="filter-label">Start Date:</label>
+          <input
+            type="date"
+            value={startDate.substring(0, 10)}
+            max={endDate.substring(0, 10)}
+            onChange={(e) =>
+              setStartDate(new Date(e.target.value).toISOString())
+            }
+            className="filter-input"
+          />
+          <label className="filter-label">End Date:</label>
+          <input
+            type="date"
+            value={endDate.substring(0, 10)}
+            min={startDate.substring(0, 10)}
+            onChange={(e) => setEndDate(new Date(e.target.value).toISOString())}
+            className="filter-input"
+          />
+          {/* <button onClick={handleFilter} className="filter-button">
+            Filter
+          </button> */}
+        </div>
       </div>
       <div className="room-grid">
         {rooms.map((room) => (
@@ -147,7 +187,7 @@ const RoomBooking = () => {
               room.bookings.length > 0
                 ? "booked-during-range cursor-not-allowed rounded-lg bg-[rgb(191,190,190)] text-white"
                 : "available cursor-pointer border-[3px] hover:bg-green-500 border-green-500 rounded-lg"
-            }`}
+            } ${room.type === "Single Occupancy" ? "" : ""}`}
           >
             <div
               className="room-info"
@@ -159,12 +199,12 @@ const RoomBooking = () => {
               {room.bookings.length > 0 && (
                 <div className="booking-info">
                   {room.bookings.map((booking) => (
-                    <div key={room.roomNumber} className="py-1">
+                    <div key={"info-" + room.roomNumber} className="py-1">
                       <p>
                         Booked from: {getDate(booking.startDate)} to{" "}
                         {getDate(booking.endDate)}
                       </p>
-                      {/* <p>User: {booking.user}</p> */}
+                      <p>User: {booking.user}</p>
                     </div>
                   ))}
                 </div>
@@ -198,8 +238,12 @@ const RoomBooking = () => {
             <button
               className="p-2 w-fit bg-[rgb(54,88,153)]  rounded-lg text-white mr-16"
               onClick={async () => {
-                await makeRequest.put("/reservation/rooms/"+id, roomList);
-                window.location.reload()
+                try {
+                  await makeRequest.put("/reservation/rooms/" + id, roomList);
+                  window.location.reload();
+                } catch (err) {
+                  console.log(err.response.data.message);
+                }
               }}
             >
               Assign Rooms
