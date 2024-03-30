@@ -10,7 +10,7 @@ function Reservation() {
         <Menu />
         <div className="w-full flex h-screen overflow-hidden">
           <Sidebar />
-          <div className="w-full px-9 overflow-y-scroll">
+          <div className="w-full px-9 overflow-y-auto">
             <Outlet />
           </div>
         </div>

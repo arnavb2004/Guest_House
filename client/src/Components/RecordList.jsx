@@ -19,7 +19,7 @@ import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import TextField from "@mui/material/TextField";
 import { getDate } from "../utils/handleDate";
 import DownloadIcon from "@mui/icons-material/Download";
-import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteIcon from "@mui/icons-material/Delete";
 
 export default function RecordList({ status = "pending" }) {
   const [checked, setChecked] = useState([]);
@@ -148,67 +148,65 @@ export default function RecordList({ status = "pending" }) {
   ];
 
   const handleSortToggle = (event) => {
-    const type = event.target.outerText
-    setSortType(type)
-    setSortToggle(!sortToggle)
-  }
+    const type = event.target.outerText;
+    setSortType(type);
+    setSortToggle(!sortToggle);
+  };
 
   useEffect(() => {
     const handleSort = () => {
-      const tempRecords = [...newRecords]
-      if(sortToggle) {
-        if(sortType === "Number of Guests"){
+      const tempRecords = [...newRecords];
+      if (sortToggle) {
+        if (sortType === "Number of Guests") {
           tempRecords.sort((a, b) => {
-            return a.numberOfGuests - b.numberOfGuests
-          })
-        } else if(sortType === "Number of Rooms") {
+            return a.numberOfGuests - b.numberOfGuests;
+          });
+        } else if (sortType === "Number of Rooms") {
           tempRecords.sort((a, b) => {
-            return a.numberOfRooms - b.numberOfRooms
-          })
-        } else if(sortType === "Category") {
+            return a.numberOfRooms - b.numberOfRooms;
+          });
+        } else if (sortType === "Category") {
           tempRecords.sort((a, b) => {
-            if(a.category > b.category) return 1
-            else  return -1
-          })
-        } else if(sortType === "Arrival Date") {
+            if (a.category > b.category) return 1;
+            else return -1;
+          });
+        } else if (sortType === "Arrival Date") {
           tempRecords.sort((a, b) => {
-            return new Date(a.arrivalDate) - new Date(b.arrivalDate)
-          })
-        } else if(sortType === "Departure Date") {
+            return new Date(a.arrivalDate) - new Date(b.arrivalDate);
+          });
+        } else if (sortType === "Departure Date") {
           tempRecords.sort((a, b) => {
-            return new Date(a.arrivalDate) - new Date(b.arrivalDate)
-          })
+            return new Date(a.arrivalDate) - new Date(b.arrivalDate);
+          });
         }
       } else {
-        if(sortType === "Number of Guests"){
+        if (sortType === "Number of Guests") {
           tempRecords.sort((a, b) => {
-            return b.numberOfGuests - a.numberOfGuests
-          })
-        } else if(sortType === "Number of Rooms") {
+            return b.numberOfGuests - a.numberOfGuests;
+          });
+        } else if (sortType === "Number of Rooms") {
           tempRecords.sort((a, b) => {
-            return b.numberOfRooms - a.numberOfRooms
-          })
-        } else if(sortType === "Category") {
+            return b.numberOfRooms - a.numberOfRooms;
+          });
+        } else if (sortType === "Category") {
           tempRecords.sort((a, b) => {
-            if(b.category > a.category) return 1
-            else  return -1
-          })
-        } else if(sortType === "Arrival Date") {
+            if (b.category > a.category) return 1;
+            else return -1;
+          });
+        } else if (sortType === "Arrival Date") {
           tempRecords.sort((a, b) => {
-            return new Date(b.arrivalDate) - new Date(a.arrivalDate)
-          })
-        } else if(sortType === "Departure Date") {
+            return new Date(b.arrivalDate) - new Date(a.arrivalDate);
+          });
+        } else if (sortType === "Departure Date") {
           tempRecords.sort((a, b) => {
-            return new Date(b.arrivalDate) - new Date(a.arrivalDate)
-          })
+            return new Date(b.arrivalDate) - new Date(a.arrivalDate);
+          });
         }
       }
-      setNewRecords(tempRecords)
-
-    }
-    handleSort()
-  }, [sortToggle, sortType])
-
+      setNewRecords(tempRecords);
+    };
+    handleSort();
+  }, [sortToggle, sortType]);
 
   return (
     <div className=" flex p-5 px-0 w-full flex-col">
@@ -259,19 +257,17 @@ export default function RecordList({ status = "pending" }) {
           className=" bg-[#365899] text-white"
           key="#"
           secondaryAction={
-            checked.length > 0 && <div className="flex gap-2">
-              <IconButton edge="end" aria-label="comments">
-                <DeleteIcon
-                  className="text-gray-300"
-                />
-              </IconButton>
-            </div>
+            checked.length > 0 && (
+              <div className="flex gap-2">
+                <IconButton edge="end" aria-label="comments">
+                  <DeleteIcon className="text-gray-300" />
+                </IconButton>
+              </div>
+            )
           }
           disablePadding
         >
-          <div
-            className="p-2.5 px-4 flex w-full items-center"
-          >
+          <div className="p-2.5 px-4 flex w-full items-center">
             <ListItemIcon>
               <Checkbox
                 edge="start"
@@ -332,7 +328,7 @@ export default function RecordList({ status = "pending" }) {
           </div>
         </ListItem>
         {loadingStatus === "Success" && newRecords.length > 0 && (
-          <div className="h-96 overflow-y-scroll">
+          <div className="h-96 overflow-y-auto">
             {newRecords.map((record) => {
               const labelId = `checkbox-list-label-${record._id}`;
               return (

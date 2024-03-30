@@ -11,8 +11,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { privateRequest } from "../utils/useFetch";
 import { useNavigate } from "react-router-dom";
 import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
-import tick from "../images/tick.png";
-import cross from "../images/cross.png";
+
 import { getDate } from "../utils/handleDate";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
@@ -21,8 +20,8 @@ import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import TextField from "@mui/material/TextField";
 import DownloadIcon from "@mui/icons-material/Download";
-import DoneIcon from '@mui/icons-material/Done';
-import CloseIcon from '@mui/icons-material/Close';
+import DoneIcon from "@mui/icons-material/Done";
+import CloseIcon from "@mui/icons-material/Close";
 
 export default function AdminRecordList({ status = "pending" }) {
   const [checked, setChecked] = useState([]);
@@ -38,7 +37,7 @@ export default function AdminRecordList({ status = "pending" }) {
     "Guest Name": "guestName",
     "Number of Rooms": "numberOfRooms",
     "Number of Guests": "numberOfGuests",
-    "Category": "category",
+    Category: "category",
     "Arrival Date": "arrivalDate",
     "Departure Date": "departureDate",
     "Room Type": "roomType",
@@ -143,71 +142,69 @@ export default function AdminRecordList({ status = "pending" }) {
     "Category",
     "Arrival Date",
     "Departure Date",
-    "Room Type"
+    "Room Type",
   ];
 
   const handleSortToggle = (event) => {
-    const type = event.target.outerText
-    setSortType(type)
-    setSortToggle(!sortToggle)
-  }
+    const type = event.target.outerText;
+    setSortType(type);
+    setSortToggle(!sortToggle);
+  };
 
   useEffect(() => {
     const handleSort = () => {
-      const tempRecords = [...newRecords]
-      if(sortToggle) {
-        if(sortType === "Number of Guests"){
+      const tempRecords = [...newRecords];
+      if (sortToggle) {
+        if (sortType === "Number of Guests") {
           tempRecords.sort((a, b) => {
-            return a.numberOfGuests - b.numberOfGuests
-          })
-        } else if(sortType === "Number of Rooms") {
+            return a.numberOfGuests - b.numberOfGuests;
+          });
+        } else if (sortType === "Number of Rooms") {
           tempRecords.sort((a, b) => {
-            return a.numberOfRooms - b.numberOfRooms
-          })
-        } else if(sortType === "Category") {
+            return a.numberOfRooms - b.numberOfRooms;
+          });
+        } else if (sortType === "Category") {
           tempRecords.sort((a, b) => {
-            if(a.category > b.category) return 1
-            else  return -1
-          })
-        } else if(sortType === "Arrival Date") {
+            if (a.category > b.category) return 1;
+            else return -1;
+          });
+        } else if (sortType === "Arrival Date") {
           tempRecords.sort((a, b) => {
-            return new Date(a.arrivalDate) - new Date(b.arrivalDate)
-          })
-        } else if(sortType === "Departure Date") {
+            return new Date(a.arrivalDate) - new Date(b.arrivalDate);
+          });
+        } else if (sortType === "Departure Date") {
           tempRecords.sort((a, b) => {
-            return new Date(a.arrivalDate) - new Date(b.arrivalDate)
-          })
+            return new Date(a.arrivalDate) - new Date(b.arrivalDate);
+          });
         }
       } else {
-        if(sortType === "Number of Guests"){
+        if (sortType === "Number of Guests") {
           tempRecords.sort((a, b) => {
-            return b.numberOfGuests - a.numberOfGuests
-          })
-        } else if(sortType === "Number of Rooms") {
+            return b.numberOfGuests - a.numberOfGuests;
+          });
+        } else if (sortType === "Number of Rooms") {
           tempRecords.sort((a, b) => {
-            return b.numberOfRooms - a.numberOfRooms
-          })
-        } else if(sortType === "Category") {
+            return b.numberOfRooms - a.numberOfRooms;
+          });
+        } else if (sortType === "Category") {
           tempRecords.sort((a, b) => {
-            if(b.category > a.category) return 1
-            else  return -1
-          })
-        } else if(sortType === "Arrival Date") {
+            if (b.category > a.category) return 1;
+            else return -1;
+          });
+        } else if (sortType === "Arrival Date") {
           tempRecords.sort((a, b) => {
-            return new Date(b.arrivalDate) - new Date(a.arrivalDate)
-          })
-        } else if(sortType === "Departure Date") {
+            return new Date(b.arrivalDate) - new Date(a.arrivalDate);
+          });
+        } else if (sortType === "Departure Date") {
           tempRecords.sort((a, b) => {
-            return new Date(b.arrivalDate) - new Date(a.arrivalDate)
-          })
+            return new Date(b.arrivalDate) - new Date(a.arrivalDate);
+          });
         }
       }
-      setNewRecords(tempRecords)
-
-    }
-    handleSort()
-  }, [sortToggle, sortType])
-
+      setNewRecords(tempRecords);
+    };
+    handleSort();
+  }, [sortToggle, sortType]);
 
   return (
     <div className="flex p-5 px-0 w-full flex-col">
@@ -259,43 +256,43 @@ export default function AdminRecordList({ status = "pending" }) {
           className=" bg-[#365899] text-white"
           key="#"
           secondaryAction={
-            checked.length > 0 && <div className="flex gap-2">
-              <IconButton edge="end" aria-label="comments">
-                <DoneIcon 
-                  className="text-green-400 h-5"
-                  // onClick={async () => {
-                  //   try {
-                  //     await makeRequest.put(
-                  //       "/reservation/approve/" + record._id
-                  //     );
-                  //     toast.success("Reservation Approved");
-                  //     window.location.reload();
-                  //   } catch (error) {
-                  //     // console.log(error)
-                  //     toast.error(error.response.data);
-                  //   }
-                  // }}
-                />
-              </IconButton>
-              <IconButton edge="end" aria-label="comments">
-                <CloseIcon 
-                  className="text-red-400 h-5"
-                  // onClick={async () => {
-                  //   await makeRequest.put(
-                  //     "/reservation/reject/" + record._id
-                  //   );
-                  // }}
-                />
-              </IconButton>
-              <IconButton />
-              <IconButton />
-            </div>
+            checked.length > 0 && (
+              <div className="flex gap-2">
+                <IconButton edge="end" aria-label="comments">
+                  <DoneIcon
+                    className="text-green-400 h-5"
+                    // onClick={async () => {
+                    //   try {
+                    //     await makeRequest.put(
+                    //       "/reservation/approve/" + record._id
+                    //     );
+                    //     toast.success("Reservation Approved");
+                    //     window.location.reload();
+                    //   } catch (error) {
+                    //     // console.log(error)
+                    //     toast.error(error.response.data);
+                    //   }
+                    // }}
+                  />
+                </IconButton>
+                <IconButton edge="end" aria-label="comments">
+                  <CloseIcon
+                    className="text-red-400 h-5"
+                    // onClick={async () => {
+                    //   await makeRequest.put(
+                    //     "/reservation/reject/" + record._id
+                    //   );
+                    // }}
+                  />
+                </IconButton>
+                <IconButton />
+                <IconButton />
+              </div>
+            )
           }
           disablePadding
         >
-          <div
-            className="p-2.5 px-4 flex w-full items-center"
-          >
+          <div className="p-2.5 px-4 flex w-full items-center">
             <ListItemIcon>
               <Checkbox
                 edge="start"
@@ -327,13 +324,13 @@ export default function AdminRecordList({ status = "pending" }) {
             />
             <ListItemText
               id="checkbox-list-label-header"
-              className=" text-wrap w-10 text-center cursor-pointer"
+              className=" text-wrap w-4 text-center cursor-pointer"
               onClick={handleSortToggle}
               primary="Category"
             />
             <ListItemText
               id="checkbox-list-label-header"
-              className="w-20 text-center cursor-pointer"
+              className="w-16 text-center cursor-pointer"
               onClick={handleSortToggle}
               primary="Arrival Date"
             />
@@ -350,13 +347,13 @@ export default function AdminRecordList({ status = "pending" }) {
             />
             <ListItemText
               id="checkbox-list-label-header "
-              className="w-10 mr-20"
+              className="w-10 mr-24"
               primary="Status"
             />
           </div>
         </ListItem>
         {loadingStatus === "Success" && newRecords.length > 0 && (
-          <div className="h-96 overflow-y-scroll">
+          <div className="h-96 overflow-y-auto">
             {newRecords.map((record) => {
               const labelId = `checkbox-list-label-${record._id}`;
 
@@ -367,7 +364,7 @@ export default function AdminRecordList({ status = "pending" }) {
                   secondaryAction={
                     <div className="flex gap-2">
                       <IconButton edge="end" aria-label="comments">
-                        <DoneIcon 
+                        <DoneIcon
                           className="text-green-500 h-5"
                           onClick={async () => {
                             try {
@@ -384,7 +381,7 @@ export default function AdminRecordList({ status = "pending" }) {
                         />
                       </IconButton>
                       <IconButton edge="end" aria-label="comments">
-                        <CloseIcon 
+                        <CloseIcon
                           className="text-red-500 h-5"
                           onClick={async () => {
                             await makeRequest.put(
@@ -449,17 +446,17 @@ export default function AdminRecordList({ status = "pending" }) {
                     />
                     <ListItemText
                       id="checkbox-list-label-header"
-                      className=" text-wrap w-10 text-center"
+                      className=" text-wrap w-16 text-center"
                       primary={record.numberOfGuests}
                     />
                     <ListItemText
                       id="checkbox-list-label-header"
-                      className=" text-wrap w-10 text-center"
+                      className=" text-wrap w-14 text-center"
                       primary={record.numberOfRooms}
                     />
                     <ListItemText
                       id="checkbox-list-label-header"
-                      className=" text-wrap w-10 text-center"
+                      className=" text-wrap w-4 text-center"
                       primary={record.category}
                     />
                     <ListItemText

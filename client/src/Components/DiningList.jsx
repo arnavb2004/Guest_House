@@ -16,20 +16,20 @@ import Button from "@mui/material/Button";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import TextField from "@mui/material/TextField";
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import tick from "../images/tick.png";
 import cross from "../images/cross.png";
 import { useEventCallback } from "@mui/material";
-import DeleteIcon from '@mui/icons-material/Delete';
-import Slider from '@mui/material/Slider';
+import DeleteIcon from "@mui/icons-material/Delete";
+import Slider from "@mui/material/Slider";
 
 function valuetext(value) {
   return `${value}`;
 }
 
 export default function DiningList({ status = "pending" }) {
-  const low = 0
-  const high = 500
+  const low = 0;
+  const high = 500;
   const [checked, setChecked] = useState([]);
   const [values, setValues] = useState([]);
   const user = useSelector((state) => state.user);
@@ -55,9 +55,9 @@ export default function DiningList({ status = "pending" }) {
   };
   const filterRecords = () => {
     const tempRecords = records.filter((record) => {
-      if (searchChoice === 'Total Amount') {
+      if (searchChoice === "Total Amount") {
         const num = record[filterMap[searchChoice]];
-        if(amount[1] < 500) {
+        if (amount[1] < 500) {
           return amount[0] <= num && num <= amount[1];
         } else {
           return num >= amount[0];
@@ -71,27 +71,27 @@ export default function DiningList({ status = "pending" }) {
   };
 
   const handleSortToggle = () => {
-    setSortToggle(!sortToggle)
-  }
+    setSortToggle(!sortToggle);
+  };
   useEffect(() => {
     const handleSort = () => {
-      if(sortToggle) {
-        const tempRecords = [...newRecords]
+      if (sortToggle) {
+        const tempRecords = [...newRecords];
         tempRecords.sort((a, b) => {
-          return a.amount - b.amount
+          return a.amount - b.amount;
         });
-        setNewRecords(tempRecords)
+        setNewRecords(tempRecords);
       } else {
-        const tempRecords = [...newRecords]
+        const tempRecords = [...newRecords];
         tempRecords.sort((a, b) => {
-          return b.amount - a.amount
+          return b.amount - a.amount;
         });
-        setNewRecords(tempRecords)
+        setNewRecords(tempRecords);
       }
     };
 
-    handleSort()
-  }, [sortToggle])
+    handleSort();
+  }, [sortToggle]);
 
   useEffect(() => {
     if (searchTerm || amount) filterRecords();
@@ -192,26 +192,31 @@ export default function DiningList({ status = "pending" }) {
             </div>
           )}
         </div>
-        {searchChoice == "Email" && <TextField
-          label="Search items"
-          variant="outlined"
-          className="col-span-10 w-full p-2.5 h-full"
-          value={searchTerm}
-          onChange={handleSearchChange}
-        />}
-        {searchChoice == "Total Amount" && 
-          <div className="flex gap-5 items-center w-[600px]">{low}
+        {searchChoice == "Email" && (
+          <TextField
+            label="Search items"
+            variant="outlined"
+            className="col-span-10 w-full p-2.5 h-full"
+            value={searchTerm}
+            onChange={handleSearchChange}
+          />
+        )}
+        {searchChoice == "Total Amount" && (
+          <div className="flex gap-5 items-center w-[600px]">
+            {low}
             <Slider
-              getAriaLabel={() => 'Temperature range'}
-              sx={{ width: '300px' }}
+              getAriaLabel={() => "Temperature range"}
+              sx={{ width: "300px" }}
               value={amount}
               onChange={handleChange}
               valueLabelDisplay="auto"
               getAriaValueText={valuetext}
               min={low}
               max={high}
-            />{high}+
-        </div>}
+            />
+            {high}+
+          </div>
+        )}
       </div>
       <List
         sx={{ width: "100%", padding: "0px" }}
@@ -221,19 +226,17 @@ export default function DiningList({ status = "pending" }) {
           className=" bg-[#365899] text-white"
           key="#"
           secondaryAction={
-            checked.length > 0 && <div className="flex gap-2">
-              <IconButton edge="end" aria-label="comments">
-                <DeleteIcon
-                  className="text-gray-300"
-                />
-              </IconButton>
-            </div>
+            checked.length > 0 && (
+              <div className="flex gap-2">
+                <IconButton edge="end" aria-label="comments">
+                  <DeleteIcon className="text-gray-300" />
+                </IconButton>
+              </div>
+            )
           }
           disablePadding
         >
-          <div
-            className="p-2.5 px-4 flex w-full items-center"
-          >
+          <div className="p-2.5 px-4 flex w-full items-center">
             <ListItemIcon>
               <Checkbox
                 edge="start"
@@ -267,7 +270,7 @@ export default function DiningList({ status = "pending" }) {
           </div>
         </ListItem>
         {loadingStatus === "Success" && newRecords.length > 0 && (
-          <div className="h-96 overflow-y-scroll">
+          <div className="h-96 overflow-y-auto">
             {newRecords.map((record) => {
               const labelId = `checkbox-list-label-${record._id}`;
 

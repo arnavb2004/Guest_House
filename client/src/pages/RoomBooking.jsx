@@ -101,6 +101,7 @@ const RoomBooking = () => {
       let temp = false;
       tempRoomList.forEach((currRoom) => {
         if (
+          room.roomNumber === currRoom.roomNumber &&
           convertToDate(currRoom.startDate) < convertToDate(endDate) &&
           convertToDate(currRoom.endDate) > convertToDate(startDate)
         ) {
@@ -109,6 +110,7 @@ const RoomBooking = () => {
       });
 
       if (temp) {
+        toast.error("Room already added for this period");
         return;
       }
 
