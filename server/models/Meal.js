@@ -33,7 +33,14 @@ const mealSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-
+  comments: {
+    type: String,
+  },
+  status: {
+    type: String,
+    enum: ["PENDING", "APPROVED", "REJECTED", "HOLD"],
+    default: "PENDING",
+  },
 });
 
 const Meal = mongoose.model("Meal", mealSchema);

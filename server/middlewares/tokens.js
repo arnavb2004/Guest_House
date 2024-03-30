@@ -5,6 +5,7 @@ export const checkAuth = async (req, res, next) => {
   try {
     console.log("Checking the access token");
     console.log(req.headers)
+    console.log(req.body)
     const accessToken = req.headers.accesstoken.split(" ")[0];
     const refreshToken = req.headers.refreshtoken.split(" ")[0];
     console.log(accessToken);

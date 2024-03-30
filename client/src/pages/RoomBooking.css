@@ -10,7 +10,8 @@
 .filter-container {
   display: flex;
   align-items: center;
-  justify-content: center;
+  /* justify-content: center; */
+  gap: 4rem;
   margin-bottom: 20px;
 }
 
@@ -43,25 +44,16 @@
 }
 
 .room .room-info {
-  background-color: #f0f0f0;
-  border: 1px solid #ccc;
   padding: 20px; /* Increased padding for room */
-  cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
-.room.available:hover .room-info {
-  background-color: #e0e0e0;
-}
 
-.room.booked-during-range .room-info {
-  background-color: #333;
-  color: white;
-}
 
 .room .booking-info {
   display: none;
   background-color: rgba(0, 0, 0, 0.8);
+  /* background-color: #800000; */
   color: white;
   padding: 10px;
   border-radius: 5px;

@@ -15,19 +15,17 @@ const RoomSchema = new mongoose.Schema({
     {
       startDate: {
         type: Date,
-        required:true
+        required: true,
       },
       endDate: {
         type: Date,
-        required:true
+        required: true,
       },
       user: {
         type: String,
-        required:true
       },
-
-    }
-  ]
+    },
+  ],
 });
 
 export default mongoose.model("Room", RoomSchema);

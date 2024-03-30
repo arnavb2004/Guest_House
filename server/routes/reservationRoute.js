@@ -15,6 +15,9 @@ import {
   getReservationDocuments,
   updateReservation,
   assignReservation,
+  getRooms,
+  addRooms,
+  updateRooms,
 } from "../controllers/reservation.js";
 
 const Router = express.Router();
@@ -34,6 +37,11 @@ Router.get("/pending", checkAuth, getPendingReservations);
 Router.get("/approved", checkAuth, getApprovedReservations);
 Router.get("/rejected", checkAuth, getRejectedReservations);
 Router.get("/documents/:id", checkAuth, getReservationDocuments);
+Router.get("/rooms", checkAuth, getRooms);
+Router.post("/rooms", checkAuth, addRooms);
+Router.put("/rooms/:id", checkAuth, updateRooms);
+
+
 Router.get("/:id", checkAuth, getReservationDetails);
 
 Router.put("/approve/:id", checkAuth, approveReservation);
