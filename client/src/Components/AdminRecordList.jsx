@@ -21,6 +21,8 @@ import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import TextField from "@mui/material/TextField";
 import DownloadIcon from "@mui/icons-material/Download";
+import DoneIcon from '@mui/icons-material/Done';
+import CloseIcon from '@mui/icons-material/Close';
 
 export default function AdminRecordList({ status = "pending" }) {
   const [checked, setChecked] = useState([]);
@@ -29,12 +31,14 @@ export default function AdminRecordList({ status = "pending" }) {
   const user = useSelector((state) => state.user);
   const [records, setRecords] = useState([]);
   const [newRecords, setNewRecords] = useState([]);
+  const [sortType, setSortType] = useState("");
+  const [sortToggle, setSortToggle] = useState(false);
 
   const filterMap = {
     "Guest Name": "guestName",
     "Number of Rooms": "numberOfRooms",
     "Number of Guests": "numberOfGuests",
-    Category: "category",
+    "Category": "category",
     "Arrival Date": "arrivalDate",
     "Departure Date": "departureDate",
     "Room Type": "roomType",
@@ -65,11 +69,8 @@ export default function AdminRecordList({ status = "pending" }) {
     fetchRecords();
   }, [status]);
 
-  console.log(records);
-  const dispatch = useDispatch();
   const handleToggle = (value) => () => {
     const currentIndex = checked.indexOf(value);
-
     if (value === "#") {
       if (currentIndex === -1) {
         setChecked([...values, "#"]);
@@ -122,8 +123,6 @@ export default function AdminRecordList({ status = "pending" }) {
     });
 
     setNewRecords(tempRecords);
-
-    console.log(tempRecords);
   };
 
   useEffect(() => {
@@ -136,11 +135,6 @@ export default function AdminRecordList({ status = "pending" }) {
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
-  const toggleDropup = () => {
-    if (isOpen) {
-      setIsOpen(false);
-    }
-  };
 
   const options = [
     "Guest Name",
@@ -149,11 +143,74 @@ export default function AdminRecordList({ status = "pending" }) {
     "Category",
     "Arrival Date",
     "Departure Date",
-    "Room Type",
+    "Room Type"
   ];
 
+  const handleSortToggle = (event) => {
+    const type = event.target.outerText
+    setSortType(type)
+    setSortToggle(!sortToggle)
+  }
+
+  useEffect(() => {
+    const handleSort = () => {
+      const tempRecords = [...newRecords]
+      if(sortToggle) {
+        if(sortType === "Number of Guests"){
+          tempRecords.sort((a, b) => {
+            return a.numberOfGuests - b.numberOfGuests
+          })
+        } else if(sortType === "Number of Rooms") {
+          tempRecords.sort((a, b) => {
+            return a.numberOfRooms - b.numberOfRooms
+          })
+        } else if(sortType === "Category") {
+          tempRecords.sort((a, b) => {
+            if(a.category > b.category) return 1
+            else  return -1
+          })
+        } else if(sortType === "Arrival Date") {
+          tempRecords.sort((a, b) => {
+            return new Date(a.arrivalDate) - new Date(b.arrivalDate)
+          })
+        } else if(sortType === "Departure Date") {
+          tempRecords.sort((a, b) => {
+            return new Date(a.arrivalDate) - new Date(b.arrivalDate)
+          })
+        }
+      } else {
+        if(sortType === "Number of Guests"){
+          tempRecords.sort((a, b) => {
+            return b.numberOfGuests - a.numberOfGuests
+          })
+        } else if(sortType === "Number of Rooms") {
+          tempRecords.sort((a, b) => {
+            return b.numberOfRooms - a.numberOfRooms
+          })
+        } else if(sortType === "Category") {
+          tempRecords.sort((a, b) => {
+            if(b.category > a.category) return 1
+            else  return -1
+          })
+        } else if(sortType === "Arrival Date") {
+          tempRecords.sort((a, b) => {
+            return new Date(b.arrivalDate) - new Date(a.arrivalDate)
+          })
+        } else if(sortType === "Departure Date") {
+          tempRecords.sort((a, b) => {
+            return new Date(b.arrivalDate) - new Date(a.arrivalDate)
+          })
+        }
+      }
+      setNewRecords(tempRecords)
+
+    }
+    handleSort()
+  }, [sortToggle, sortType])
+
+
   return (
-    <div className=" flex p-5 px-0 w-full flex-col">
+    <div className="flex p-5 px-0 w-full flex-col">
       <div className='text-center text-3xl font-["Dosis"] font-semibold py-4 uppercase'>
         User Records
       </div>
@@ -202,17 +259,42 @@ export default function AdminRecordList({ status = "pending" }) {
           className=" bg-[#365899] text-white"
           key="#"
           secondaryAction={
-            <IconButton edge="end" aria-label="comments">
-              {/* <CommentIcon /> */}
-            </IconButton>
+            checked.length > 0 && <div className="flex gap-2">
+              <IconButton edge="end" aria-label="comments">
+                <DoneIcon 
+                  className="text-green-400 h-5"
+                  // onClick={async () => {
+                  //   try {
+                  //     await makeRequest.put(
+                  //       "/reservation/approve/" + record._id
+                  //     );
+                  //     toast.success("Reservation Approved");
+                  //     window.location.reload();
+                  //   } catch (error) {
+                  //     // console.log(error)
+                  //     toast.error(error.response.data);
+                  //   }
+                  // }}
+                />
+              </IconButton>
+              <IconButton edge="end" aria-label="comments">
+                <CloseIcon 
+                  className="text-red-400 h-5"
+                  // onClick={async () => {
+                  //   await makeRequest.put(
+                  //     "/reservation/reject/" + record._id
+                  //   );
+                  // }}
+                />
+              </IconButton>
+              <IconButton />
+              <IconButton />
+            </div>
           }
           disablePadding
         >
-          <ListItemButton
-            role={undefined}
-            dense
-            onClick={handleToggle("#")}
-            sx={{ paddingY: "10px" }}
+          <div
+            className="p-2.5 px-4 flex w-full items-center"
           >
             <ListItemIcon>
               <Checkbox
@@ -220,6 +302,7 @@ export default function AdminRecordList({ status = "pending" }) {
                 color="secondary"
                 checked={checked.indexOf("#") !== -1}
                 tabIndex={-1}
+                onClick={handleToggle("#")}
                 disableRipple
                 inputProps={{ "aria-labelledby": "checkbox-list-label-header" }}
               />
@@ -232,27 +315,32 @@ export default function AdminRecordList({ status = "pending" }) {
             />
             <ListItemText
               id="checkbox-list-label-header"
-              className=" text-wrap w-8 pr-2 text-center"
+              className=" text-wrap w-8 pr-2 text-center cursor-pointer"
+              onClick={handleSortToggle}
               primary="Number of Guests"
             />
             <ListItemText
               id="checkbox-list-label-header"
-              className=" text-wrap w-8 text-center"
+              className=" text-wrap w-8 text-center cursor-pointer"
+              onClick={handleSortToggle}
               primary="Number of Rooms"
             />
             <ListItemText
               id="checkbox-list-label-header"
-              className=" text-wrap w-10 text-center"
+              className=" text-wrap w-10 text-center cursor-pointer"
+              onClick={handleSortToggle}
               primary="Category"
             />
             <ListItemText
               id="checkbox-list-label-header"
-              className="w-20 text-center"
+              className="w-20 text-center cursor-pointer"
+              onClick={handleSortToggle}
               primary="Arrival Date"
             />
             <ListItemText
               id="checkbox-list-label-header"
-              className="w-20 text-center"
+              className="w-20 text-center cursor-pointer"
+              onClick={handleSortToggle}
               primary="Departure Date"
             />
             <ListItemText
@@ -265,7 +353,7 @@ export default function AdminRecordList({ status = "pending" }) {
               className="w-10 mr-14"
               primary="Status"
             />
-          </ListItemButton>
+          </div>
         </ListItem>
         {loadingStatus === "Success" && newRecords.length > 0 && (
           <div className="h-96 overflow-y-scroll">
@@ -279,8 +367,8 @@ export default function AdminRecordList({ status = "pending" }) {
                   secondaryAction={
                     <div className="flex gap-2">
                       <IconButton edge="end" aria-label="comments">
-                        <img
-                          className="h-5"
+                        <DoneIcon 
+                          className="text-green-500 h-5"
                           onClick={async () => {
                             try {
                               await makeRequest.put(
@@ -293,18 +381,16 @@ export default function AdminRecordList({ status = "pending" }) {
                               toast.error(error.response.data);
                             }
                           }}
-                          src={tick}
                         />
                       </IconButton>
                       <IconButton edge="end" aria-label="comments">
-                        <img
-                          className="h-5"
+                        <CloseIcon 
+                          className="text-red-500 h-5"
                           onClick={async () => {
                             await makeRequest.put(
                               "/reservation/reject/" + record._id
                             );
                           }}
-                          src={cross}
                         />
                       </IconButton>
                       <IconButton edge="end" aria-label="comments">
