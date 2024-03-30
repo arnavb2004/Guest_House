@@ -11,7 +11,8 @@ const RoomBooking = () => {
   const params = useParams();
 
   const id = params.id;
-  const guestName = useLocation().state.guestName;
+  const userRecord = useLocation().state.userRecord;
+  const guestName = userRecord.guestName
   const user = useSelector((state) => state.user);
   const makeRequest = privateRequest(user.accessToken, user.refreshToken);
 
@@ -42,10 +43,10 @@ const RoomBooking = () => {
   const [roomsData, setRoomsData] = useState([]);
   const [rooms, setRooms] = useState([]);
   const [startDate, setStartDate] = useState(
-    today.toISOString().substring(0, 10)
+    new Date(userRecord.arrivalDate).toISOString().substring(0, 10)
   );
   const [endDate, setEndDate] = useState(
-    tomorrow.toISOString().substring(0, 10)
+    new Date(userRecord.departureDate).toISOString().substring(0, 10)
   );
   const [roomList, setRoomList] = useState([]);
   const [occupancySwitch, setOccupancySwitch] = useState(false);

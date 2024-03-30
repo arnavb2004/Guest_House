@@ -144,7 +144,7 @@ export default function RecordPage() {
         </div>
         {userRecord.bookings?.length > 0 && (
           <div>
-            <div className="text-2xl font-semibold font-['Dosis'] px-5">
+            <div className="text-2xl text-center font-semibold font-['Dosis'] px-5">
               Rooms Assigned
             </div>
             <div className="p-5 flex flex-col gap-4 ">
