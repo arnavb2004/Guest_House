@@ -18,6 +18,8 @@ import {
   getRooms,
   addRooms,
   updateRooms,
+  sendNotification,
+  updatePaymentStatus
 } from "../controllers/reservation.js";
 
 const Router = express.Router();
@@ -47,6 +49,7 @@ Router.get("/:id", checkAuth, getReservationDetails);
 Router.put("/approve/:id", checkAuth, approveReservation);
 Router.put("/reject/:id", checkAuth, rejectReservation);
 Router.put("/hold/:id", checkAuth, holdReservation);
+Router.put("/payment/:id",checkAuth,updatePaymentStatus);
 Router.put("/:id/assign", checkAuth, assignReservation);
 Router.put("/:id", checkAuth, updateReservation);
 
