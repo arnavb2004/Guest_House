@@ -19,7 +19,6 @@ export default function RecordPage() {
     HOLD: "yellow-400",
   };
 
-
   const makeRequest = privateRequest(user.accessToken, user.refreshToken);
 
   const [status, setStatus] = useState("Loading");
@@ -124,8 +123,7 @@ export default function RecordPage() {
           </div>
         </div>
       </div>
-      <div className='col-span-5 shadow-lg flex justify-between  p-5  gap-4 m-9 font-["Dosis"]'>
-        
+      <div className='col-span-5 shadow-lg flex  p-5  gap-4 m-9 font-["Dosis"]'>
         <div>
           <div className="text-2xl font-semibold font-['Dosis'] px-5">
             Status
@@ -144,6 +142,29 @@ export default function RecordPage() {
             ))}
           </div>
         </div>
+        {userRecord.bookings?.length > 0 && (
+          <div>
+            <div className="text-2xl text-center font-semibold font-['Dosis'] px-5">
+              Rooms Assigned
+            </div>
+            <div className="p-5 flex flex-col gap-4 ">
+              <div className="flex gap-4 font-semibold text-center">
+                <div className="w-24">Start Date</div>
+                <div className="w-24">End Date</div>
+                <div className="w-24">Room Number</div>
+              </div>
+              <div className="flex flex-col gap-2 overflow-y-auto max-h-28">
+                {userRecord.bookings.map((booking) => (
+                  <div className="flex gap-4 text-center">
+                    <div className="w-24">{getDate(booking.startDate)}</div>
+                    <div className="w-24">{getDate(booking.endDate)}</div>
+                    <div className="w-20">{booking.roomNumber}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </>
   );

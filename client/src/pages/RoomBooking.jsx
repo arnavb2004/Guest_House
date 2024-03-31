@@ -13,7 +13,8 @@ const RoomBooking = () => {
   const params = useParams();
 
   const id = params.id;
-  const guestName = useLocation().state.guestName;
+  const userRecord = useLocation().state.userRecord;
+  const guestName = userRecord.guestName
   const user = useSelector((state) => state.user);
   const makeRequest = privateRequest(user.accessToken, user.refreshToken);
 
@@ -44,10 +45,10 @@ const RoomBooking = () => {
   const [roomsData, setRoomsData] = useState([]);
   const [rooms, setRooms] = useState([]);
   const [startDate, setStartDate] = useState(
-    today.toISOString().substring(0, 10)
+    new Date(userRecord.arrivalDate).toISOString().substring(0, 10)
   );
   const [endDate, setEndDate] = useState(
-    tomorrow.toISOString().substring(0, 10)
+    new Date(userRecord.departureDate).toISOString().substring(0, 10)
   );
   const [roomList, setRoomList] = useState([]);
   const [occupancySwitch, setOccupancySwitch] = useState(false);
@@ -103,6 +104,7 @@ const RoomBooking = () => {
       let temp = false;
       tempRoomList.forEach((currRoom) => {
         if (
+          room.roomNumber === currRoom.roomNumber &&
           convertToDate(currRoom.startDate) < convertToDate(endDate) &&
           convertToDate(currRoom.endDate) > convertToDate(startDate)
         ) {
@@ -111,6 +113,7 @@ const RoomBooking = () => {
       });
 
       if (temp) {
+        toast.error("Room already added for this period");
         return;
       }
 

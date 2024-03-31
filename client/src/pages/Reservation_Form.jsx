@@ -12,6 +12,7 @@ import { Toast } from "primereact/toast";
 import InputFileUpload from "../components/uploadFile";
 import { useSelector } from "react-redux";
 import { privateRequest } from "../utils/useFetch";
+import { FileIcon, defaultStyles } from "react-file-icon";
 import { Link } from "react-router-dom";
 
 function AutoDemo() {
@@ -46,6 +47,8 @@ function ReservationForm() {
   const user = useSelector((state) => state.user);
   const makeRequest = privateRequest(user.accessToken, user.refreshToken);
 
+  const [loading, setLoading] = useState(false);
+
   const [files, setFiles] = useState([]);
   const [formData, setFormData] = useState({
     guestName: "",
@@ -60,8 +63,6 @@ function ReservationForm() {
     purpose: "",
     category: "A",
   });
-
-  console.log(formData);
 
   const [errorText, setErrorText] = useState({
     guestName: "",
@@ -105,7 +106,7 @@ function ReservationForm() {
     category: /[\s\S]*/,
   };
 
-  console.log(formData);
+  console.log(loading);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -129,15 +130,10 @@ function ReservationForm() {
     let passed = true;
 
     for (let [key, value] of Object.entries(formData)) {
-      console.log(key, value);
-      console.log(typeof value);
-      // console.log(key, value);
       if (key === "files" || key === "receipt") {
         continue;
       }
       if (requiredFields[key] && value === "") {
-        console.log("here");
-
         setErrorText((prev) => ({
           ...prev,
           [key]: "This field is required",
@@ -228,10 +224,21 @@ function ReservationForm() {
       return;
     }
 
+    if (
+      (formData.category === "A" || formData.category === "B") &&
+      Array.from(files).length === 0
+    ) {
+      toast.error("Uploading files is mandatory for category A and B");
+      return;
+    }
+
     console.log("passed");
 
 
     // Handle form submission
+    setLoading(true);
+
+    const toast_id = toast.loading("Submitting form...");
 
     try {
       const formDataToSend = new FormData();
@@ -244,7 +251,6 @@ function ReservationForm() {
       }
       console.log(receipt);
       formDataToSend.append("receipt", receipt);
-      console.log(formDataToSend);
       await makeRequest.post(
         "http://localhost:4751/reservation/",
         formDataToSend,
@@ -254,15 +260,32 @@ function ReservationForm() {
           },
         }
       );
-      await makeRequest.put(
-        "http://localhost:4751/reservation/",
-      );
-      console.log("Form submitted");
-      toast.success("Form submitted successfully!");
+      // toast.success("Form submitted successfully!");
+      toast.update(toast_id, {
+        render: "Form submitted successfully!",
+        type: "success",
+        isLoading: false,
+        autoClose: 3000,
+      });
+      setLoading(false);
     } catch (error) {
       console.error("Form submission failed:", error);
-      // Show error toast notification
-      toast.error("Form submission failed. Please try again later.");
+      setLoading(false);
+      if (error.response?.data?.message) {
+        toast.update(toast_id, {
+          render: error.response.data.message,
+          type: "success",
+          isLoading: false,
+          autoClose: 5000,
+        });
+      } else {
+        toast.update(toast_id, {
+          render: "Form submission failed.",
+          type: "success",
+          isLoading: false,
+          autoClose: 5000,
+        });
+      }
     }
   };
 
@@ -350,7 +373,7 @@ function ReservationForm() {
               name="arrivalDate"
               value={formData.arrivalDate}
               onChange={handleChange}
-              min={(new Date(Date.now())).toISOString().split('T')[0]}
+              min={new Date(Date.now()).toISOString().split("T")[0]}
             />
           </div>
 
@@ -370,7 +393,7 @@ function ReservationForm() {
               name="departureDate"
               value={formData.departureDate}
               onChange={handleChange}
-              min={(new Date(Date.now())).toISOString().split('T')[0]}
+              min={new Date(Date.now()).toISOString().split("T")[0]}
             />
           </div>
           <div className="form-group">
@@ -401,10 +424,14 @@ function ReservationForm() {
           <div className="form-group">
             <label>
               Category: (Refer to{" "}
-              <a className="underline" href="/forms/categories.pdf" target="_blank">
+              <a
+                className="underline"
+                href="/forms/categories.pdf"
+                target="_blank"
+              >
                 this
               </a>{" "}
-              page for categories)
+              page for details of categories and tariff)
             </label>
 
             <select
@@ -426,7 +453,45 @@ function ReservationForm() {
                 Category D
               </option>
             </select>
-            <InputFileUpload className="" onFileUpload={handleFileUpload} />
+            <div className="flex gap-10">
+              <div>
+                <InputFileUpload className="" onFileUpload={handleFileUpload} />
+              </div>
+              {Array.from(files).length > 0 ? (
+                <div className="flex flex-col  overflow-y-auto max-w-[30rem] h-16 gap-2 pr-2">
+                  {Array.from(files).map((file, index) => {
+                    console.log(index, file);
+                    const arr = file.name.split(".");
+                    const ext = arr[arr.length - 1];
+                    return (
+                      <div className="flex gap-4 items-center">
+                        <div className="w-7">
+                          <FileIcon
+                            className=""
+                            extension={ext}
+                            {...defaultStyles}
+                          />
+                        </div>
+                        <div
+                          onClick={() => {
+                            window.open(window.URL.createObjectURL(file));
+                          }}
+                          className="text-sm text-gray-500 hover:text-blue-500 cursor-pointer"
+                        >
+                          {file.name}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                (formData.category === "A" || formData.category === "B") && (
+                  <div className="flex items-center text-gray-500">
+                    *Uploading files is mandatory for category A and B
+                  </div>
+                )
+              )}
+            </div>
           </div>
 
           <div>
@@ -435,10 +500,16 @@ function ReservationForm() {
               href="/forms/TermsAndConditions.pdf"
               className="underline"
               target="_blank"
-            >Terms and Conditions
+            >
+              Terms and Conditions
             </a>
           </div>
-          <button type="submit" onClick={handleSubmit} className="submit-btn">
+          <button
+            type="submit"
+            onClick={handleSubmit}
+            disabled={loading}
+            className="submit-btn"
+          >
             Submit
           </button>
           <button

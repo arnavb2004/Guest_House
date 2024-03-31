@@ -16,7 +16,7 @@ import { Button } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import TextField from "@mui/material/TextField";
-import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteIcon from "@mui/icons-material/Delete";
 
 export default function UserList() {
   const [checked, setChecked] = useState([]);
@@ -107,7 +107,7 @@ export default function UserList() {
     fetchUsers();
   }, []);
 
-  console.log(checked)
+  console.log(checked);
 
   return (
     <div className="flex flex-col p-5 px-0 w-full">
@@ -158,13 +158,13 @@ export default function UserList() {
           className=" bg-[#365899] text-white"
           key="#"
           secondaryAction={
-            checked.length > 0 && <div className="flex gap-2">
-              <IconButton edge="end" aria-label="comments">
-                <DeleteIcon
-                  className="text-gray-300"
-                />
-              </IconButton>
-            </div>
+            checked.length > 0 && (
+              <div className="flex gap-2">
+                <IconButton edge="end" aria-label="comments">
+                  <DeleteIcon className="text-gray-300" />
+                </IconButton>
+              </div>
+            )
           }
           disablePadding
         >
@@ -202,7 +202,7 @@ export default function UserList() {
           </ListItemButton>
         </ListItem>
         {status === "Success" && newUsers.length > 0 && (
-          <div className="h-96 overflow-y-scroll">
+          <div className="h-96 overflow-y-auto">
             {newUsers.map((user) => {
               const labelId = `checkbox-list-label-${user._id}`;
               if (user.role === "ADMIN") return;

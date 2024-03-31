@@ -147,298 +147,306 @@ export default function RecordList({ status = "pending" }) {
 		"Room Type",
 	];
 
-	const handleSortToggle = (event) => {
-		const type = event.target.outerText;
-		setSortType(type);
-		setSortToggle(!sortToggle);
-	};
+  const handleSortToggle = (event) => {
+    const type = event.target.outerText;
+    setSortType(type);
+    setSortToggle(!sortToggle);
+  };
 
-	useEffect(() => {
-		const handleSort = () => {
-			const tempRecords = [...newRecords];
-			if (sortToggle) {
-				if (sortType === "Number of Guests") {
-					tempRecords.sort((a, b) => {
-						return a.numberOfGuests - b.numberOfGuests;
-					});
-				} else if (sortType === "Number of Rooms") {
-					tempRecords.sort((a, b) => {
-						return a.numberOfRooms - b.numberOfRooms;
-					});
-				} else if (sortType === "Category") {
-					tempRecords.sort((a, b) => {
-						if (a.category > b.category) return 1;
-						else return -1;
-					});
-				} else if (sortType === "Arrival Date") {
-					tempRecords.sort((a, b) => {
-						return new Date(a.arrivalDate) - new Date(b.arrivalDate);
-					});
-				} else if (sortType === "Departure Date") {
-					tempRecords.sort((a, b) => {
-						return new Date(a.arrivalDate) - new Date(b.arrivalDate);
-					});
-				}
-			} else {
-				if (sortType === "Number of Guests") {
-					tempRecords.sort((a, b) => {
-						return b.numberOfGuests - a.numberOfGuests;
-					});
-				} else if (sortType === "Number of Rooms") {
-					tempRecords.sort((a, b) => {
-						return b.numberOfRooms - a.numberOfRooms;
-					});
-				} else if (sortType === "Category") {
-					tempRecords.sort((a, b) => {
-						if (b.category > a.category) return 1;
-						else return -1;
-					});
-				} else if (sortType === "Arrival Date") {
-					tempRecords.sort((a, b) => {
-						return new Date(b.arrivalDate) - new Date(a.arrivalDate);
-					});
-				} else if (sortType === "Departure Date") {
-					tempRecords.sort((a, b) => {
-						return new Date(b.arrivalDate) - new Date(a.arrivalDate);
-					});
-				}
-			}
-			setNewRecords(tempRecords);
-		};
-		handleSort();
-	}, [sortToggle, sortType]);
+  useEffect(() => {
+    const handleSort = () => {
+      const tempRecords = [...newRecords];
+      if (sortToggle) {
+        if (sortType === "Number of Guests") {
+          tempRecords.sort((a, b) => {
+            return a.numberOfGuests - b.numberOfGuests;
+          });
+        } else if (sortType === "Number of Rooms") {
+          tempRecords.sort((a, b) => {
+            return a.numberOfRooms - b.numberOfRooms;
+          });
+        } else if (sortType === "Category") {
+          tempRecords.sort((a, b) => {
+            if (a.category > b.category) return 1;
+            else return -1;
+          });
+        } else if (sortType === "Arrival Date") {
+          tempRecords.sort((a, b) => {
+            return new Date(a.arrivalDate) - new Date(b.arrivalDate);
+          });
+        } else if (sortType === "Departure Date") {
+          tempRecords.sort((a, b) => {
+            return new Date(a.arrivalDate) - new Date(b.arrivalDate);
+          });
+        }
+      } else {
+        if (sortType === "Number of Guests") {
+          tempRecords.sort((a, b) => {
+            return b.numberOfGuests - a.numberOfGuests;
+          });
+        } else if (sortType === "Number of Rooms") {
+          tempRecords.sort((a, b) => {
+            return b.numberOfRooms - a.numberOfRooms;
+          });
+        } else if (sortType === "Category") {
+          tempRecords.sort((a, b) => {
+            if (b.category > a.category) return 1;
+            else return -1;
+          });
+        } else if (sortType === "Arrival Date") {
+          tempRecords.sort((a, b) => {
+            return new Date(b.arrivalDate) - new Date(a.arrivalDate);
+          });
+        } else if (sortType === "Departure Date") {
+          tempRecords.sort((a, b) => {
+            return new Date(b.arrivalDate) - new Date(a.arrivalDate);
+          });
+        }
+      }
+      setNewRecords(tempRecords);
+    };
+    handleSort();
+  }, [sortToggle, sortType]);
 
-	return (
-		<div className=" flex p-5 px-0 w-full flex-col">
-			<div className='text-center text-3xl font-["Dosis"] font-semibold py-4 uppercase'>
-				User Records
-			</div>
-			<div className="grid grid-cols-12 gap-8 mb-4">
-				<div className="col-span-2 flex flex-col justify-center relative h-full">
-					<Button
-						variant="contained"
-						size="large"
-						onClick={toggleDropdown}
-						endIcon={isOpen ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
-						style={{ backgroundColor: "#DFDFDF", color: "#606060" }}
-						className="h-full">
-						{searchChoice}
-					</Button>
-					{isOpen && (
-						<div className="absolute top-12 z-10 mt-2 py-2 w-full bg-white border border-gray-300 rounded-md shadow-lg">
-							{options.map((option) => (
-								<button
-									className="block px-4 py-2 text-gray-800 hover:bg-gray-200 w-full text-left"
-									onClick={() => {
-										setSearchChoice(option);
-										setIsOpen(!isOpen);
-									}}>
-									{option}
-								</button>
-							))}
-						</div>
-					)}
-				</div>
-				<TextField
-					label="Search items"
-					variant="outlined"
-					className="col-span-10 w-full p-2.5 h-full"
-					value={searchTerm}
-					onChange={handleSearchChange}
-				/>
-			</div>
-			<List
-				sx={{ width: "100%", padding: "0px" }}
-				className="bg-gray-50 rounded-md overflow-hidden">
-				<ListItem
-					className=" bg-[#365899] text-white"
-					key="#"
-					secondaryAction={
-						checked.length > 0 && (
-							<div className="flex gap-2">
-								<IconButton edge="end" aria-label="comments">
-									<DeleteIcon className="text-gray-300" />
-								</IconButton>
-							</div>
-						)
-					}
-					disablePadding>
-					<div className="p-2.5 px-4 flex w-full items-center">
-						<ListItemIcon>
-							<Checkbox
-								edge="start"
-								color="secondary"
-								checked={checked.indexOf("#") !== -1}
-								tabIndex={-1}
-								onClick={handleToggle("#")}
-								disableRipple
-								inputProps={{ "aria-labelledby": "checkbox-list-label-header" }}
-							/>
-						</ListItemIcon>
-						<ListItemText
-							id="checkbox-list-label-header"
-							className=" text-wrap w-12"
-							sx={{ overflow: "hidden" }}
-							primary="Name"
-						/>
-						<ListItemText
-							id="checkbox-list-label-header"
-							className=" text-wrap w-8 pr-2 text-center cursor-pointer"
-							onClick={handleSortToggle}
-							primary="Number of Guests"
-						/>
-						<ListItemText
-							id="checkbox-list-label-header"
-							className=" text-wrap w-8 text-center cursor-pointer"
-							onClick={handleSortToggle}
-							primary="Number of Rooms"
-						/>
-						<ListItemText
-							id="checkbox-list-label-header"
-							className=" text-wrap w-10 text-center cursor-pointer"
-							onClick={handleSortToggle}
-							primary="Category"
-						/>
-						<ListItemText
-							id="checkbox-list-label-header"
-							className="w-20 text-center cursor-pointer"
-							onClick={handleSortToggle}
-							primary="Arrival Date"
-						/>
-						<ListItemText
-							id="checkbox-list-label-header"
-							className="w-20 text-center cursor-pointer"
-							onClick={handleSortToggle}
-							primary="Departure Date"
-						/>
-						<ListItemText
-							id="checkbox-list-label-header"
-							className="w-20 text-center"
-							primary="Room Type"
-						/>
-						<ListItemText
-							id="checkbox-list-label-header "
-							className="w-10 mr-14"
-							primary="Status"
-						/>
-					</div>
-				</ListItem>
-				{loadingStatus === "Success" && newRecords.length > 0 && (
-					<div className="h-96 overflow-y-scroll">
-						{newRecords.map((record) => {
-							const labelId = `checkbox-list-label-${record._id}`;
-							return (
-								<ListItem
-									key={record._id}
-									className="border-b"
-									secondaryAction={
-										<div className="flex gap-4">
-											<IconButton
-												edge="end"
-												onClick={() => {
-													status === "pending"
-														? navigate(`${record._id}`)
-														: navigate(`../${record._id}`);
-												}}
-												aria-label="comments">
-												<InsertDriveFileIcon color="black" />
-											</IconButton>
-											<IconButton
-												edge="end"
-												onClick={async () => {
-													try {
-														const res = await makeRequest.get(
-															"/reservation/documents/" + record._id,
-															{ responseType: "blob" }
-														);
-														var file = window.URL.createObjectURL(res.data);
-														window.location.assign(file);
-														console.log(res);
-													} catch (error) {}
-												}}
-												aria-label="comments">
-												<DownloadIcon color="black" />
-											</IconButton>
-										</div>
-									}
-									disablePadding>
-									<ListItemButton
-										className=""
-										sx={{ paddingY: "10px" }}
-										onClick={handleToggle(record._id)}
-										role={undefined}
-										dense>
-										<ListItemIcon>
-											<Checkbox
-												edge="start"
-												checked={checked.indexOf(record._id) !== -1}
-												tabIndex={-1}
-												disableRipple
-												inputProps={{ "aria-labelledby": labelId }}
-											/>
-										</ListItemIcon>
+  return (
+    <div className=" flex p-5 px-0 w-full flex-col">
+      <div className='text-center text-3xl font-["Dosis"] font-semibold py-4 uppercase'>
+        User Records
+      </div>
+      <div className="grid grid-cols-12 gap-8 mb-4">
+        <div className="col-span-2 flex flex-col justify-center relative h-full">
+          <Button
+            variant="contained"
+            size="large"
+            onClick={toggleDropdown}
+            endIcon={isOpen ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
+            style={{ backgroundColor: "#DFDFDF", color: "#606060" }}
+            className="h-full"
+          >
+            {searchChoice}
+          </Button>
+          {isOpen && (
+            <div className="absolute top-12 z-10 mt-2 py-2 w-full bg-white border border-gray-300 rounded-md shadow-lg">
+              {options.map((option) => (
+                <button
+                  className="block px-4 py-2 text-gray-800 hover:bg-gray-200 w-full text-left"
+                  onClick={() => {
+                    setSearchChoice(option);
+                    setIsOpen(!isOpen);
+                  }}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+        <TextField
+          label="Search items"
+          variant="outlined"
+          className="col-span-10 w-full p-2.5 h-full"
+          value={searchTerm}
+          onChange={handleSearchChange}
+        />
+      </div>
+      <List
+        sx={{ width: "100%", padding: "0px" }}
+        className="bg-gray-50 rounded-md overflow-hidden"
+      >
+        <ListItem
+          className=" bg-[#365899] text-white"
+          key="#"
+          secondaryAction={
+            checked.length > 0 && (
+              <div className="flex gap-2">
+                <IconButton edge="end" aria-label="comments">
+                  <DeleteIcon className="text-gray-300" />
+                </IconButton>
+              </div>
+            )
+          }
+          disablePadding
+        >
+          <div className="p-2.5 px-4 flex w-full items-center">
+            <ListItemIcon>
+              <Checkbox
+                edge="start"
+                color="secondary"
+                checked={checked.indexOf("#") !== -1}
+                tabIndex={-1}
+                onClick={handleToggle("#")}
+                disableRipple
+                inputProps={{ "aria-labelledby": "checkbox-list-label-header" }}
+              />
+            </ListItemIcon>
+            <ListItemText
+              id="checkbox-list-label-header"
+              className=" text-wrap w-12"
+              sx={{ overflow: "hidden" }}
+              primary="Name"
+            />
+            <ListItemText
+              id="checkbox-list-label-header"
+              className=" text-wrap w-8 pr-2 text-center cursor-pointer"
+              onClick={handleSortToggle}
+              primary="Number of Guests"
+            />
+            <ListItemText
+              id="checkbox-list-label-header"
+              className=" text-wrap w-8 text-center cursor-pointer"
+              onClick={handleSortToggle}
+              primary="Number of Rooms"
+            />
+            <ListItemText
+              id="checkbox-list-label-header"
+              className=" text-wrap w-10 text-center cursor-pointer"
+              onClick={handleSortToggle}
+              primary="Category"
+            />
+            <ListItemText
+              id="checkbox-list-label-header"
+              className="w-20 text-center cursor-pointer"
+              onClick={handleSortToggle}
+              primary="Arrival Date"
+            />
+            <ListItemText
+              id="checkbox-list-label-header"
+              className="w-20 text-center cursor-pointer"
+              onClick={handleSortToggle}
+              primary="Departure Date"
+            />
+            <ListItemText
+              id="checkbox-list-label-header"
+              className="w-20 text-center"
+              primary="Room Type"
+            />
+            <ListItemText
+              id="checkbox-list-label-header "
+              className="w-10 mr-14"
+              primary="Status"
+            />
+          </div>
+        </ListItem>
+        {loadingStatus === "Success" && newRecords.length > 0 && (
+          <div className="h-96 overflow-y-auto">
+            {newRecords.map((record) => {
+              const labelId = `checkbox-list-label-${record._id}`;
+              return (
+                <ListItem
+                  key={record._id}
+                  className="border-b"
+                  secondaryAction={
+                    <div className="flex gap-4">
+                      <IconButton
+                        edge="end"
+                        onClick={() => {
+                          status === "pending"
+                            ? navigate(`${record._id}`)
+                            : navigate(`../${record._id}`);
+                        }}
+                        aria-label="comments"
+                      >
+                        <InsertDriveFileIcon color="black" />
+                      </IconButton>
+                      <IconButton
+                        edge="end"
+                        onClick={async () => {
+                          try {
+                            const res = await makeRequest.get(
+                              "/reservation/documents/" + record._id,
+                              { responseType: "blob" }
+                            );
+                            var file = window.URL.createObjectURL(res.data);
+                            window.location.assign(file);
+                            console.log(res);
+                          } catch (error) {}
+                        }}
+                        aria-label="comments"
+                      >
+                        <DownloadIcon color="black" />
+                      </IconButton>
+                    </div>
+                  }
+                  disablePadding
+                >
+                  <ListItemButton
+                    className=""
+                    sx={{ paddingY: "10px" }}
+                    onClick={handleToggle(record._id)}
+                    role={undefined}
+                    dense
+                  >
+                    <ListItemIcon>
+                      <Checkbox
+                        edge="start"
+                        checked={checked.indexOf(record._id) !== -1}
+                        tabIndex={-1}
+                        disableRipple
+                        inputProps={{ "aria-labelledby": labelId }}
+                      />
+                    </ListItemIcon>
 
-										<ListItemText
-											id="checkbox-list-label-header"
-											className=" text-wrap w-12"
-											sx={{ overflow: "hidden" }}
-											primary={record.guestName}
-										/>
-										<ListItemText
-											id="checkbox-list-label-header"
-											className=" text-wrap w-10 text-center"
-											primary={record.numberOfGuests}
-										/>
-										<ListItemText
-											id="checkbox-list-label-header"
-											className=" text-wrap w-10 text-center"
-											primary={record.numberOfRooms}
-										/>
-										<ListItemText
-											id="checkbox-list-label-header"
-											className=" text-wrap w-10 text-center"
-											primary={record.category}
-										/>
-										<ListItemText
-											id="checkbox-list-label-header"
-											className="w-20 text-center"
-											primary={getDate(record.arrivalDate)}
-										/>
-										<ListItemText
-											id="checkbox-list-label-header"
-											className="w-20 text-center"
-											primary={getDate(record.departureDate)}
-										/>
-										<ListItemText
-											id="checkbox-list-label-header"
-											className="w-20 text-center"
-											primary={record.roomType}
-										/>
-										<ListItemText
-											id="checkbox-list-label-header"
-											className="w-10"
-											primary={record.status}
-										/>
-									</ListItemButton>
-								</ListItem>
-							);
-						})}
-					</div>
-				)}
-			</List>
-			{loadingStatus === "Loading" && (
-				<div className="p-2 text-center pt-5 font-semibold">Loading...</div>
-			)}
-			{loadingStatus === "Success" && records.length === 0 && (
-				<div className="p-2 text-center pt-5 font-semibold">
-					No records found
-				</div>
-			)}
-			{loadingStatus === "Error" && (
-				<div className="p-2 text-center pt-5 font-semibold">
-					Error fetching records!
-				</div>
-			)}
-		</div>
-	);
+                    <ListItemText
+                      id="checkbox-list-label-header"
+                      className=" text-wrap w-12"
+                      sx={{ overflow: "hidden" }}
+                      primary={record.guestName}
+                    />
+                    <ListItemText
+                      id="checkbox-list-label-header"
+                      className=" text-wrap w-10 text-center"
+                      primary={record.numberOfGuests}
+                    />
+                    <ListItemText
+                      id="checkbox-list-label-header"
+                      className=" text-wrap w-10 text-center"
+                      primary={record.numberOfRooms}
+                    />
+                    <ListItemText
+                      id="checkbox-list-label-header"
+                      className=" text-wrap w-10 text-center"
+                      primary={record.category}
+                    />
+                    <ListItemText
+                      id="checkbox-list-label-header"
+                      className="w-20 text-center"
+                      primary={getDate(record.arrivalDate)}
+                    />
+                    <ListItemText
+                      id="checkbox-list-label-header"
+                      className="w-20 text-center"
+                      primary={getDate(record.departureDate)}
+                    />
+                    <ListItemText
+                      id="checkbox-list-label-header"
+                      className="w-20 text-center"
+                      primary={record.roomType}
+                    />
+                    <ListItemText
+                      id="checkbox-list-label-header"
+                      className="w-10"
+                      primary={record.status}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              );
+            })}
+          </div>
+        )}
+      </List>
+      {loadingStatus === "Loading" && (
+        <div className="p-2 text-center pt-5 font-semibold">Loading...</div>
+      )}
+      {loadingStatus === "Success" && records.length === 0 && (
+        <div className="p-2 text-center pt-5 font-semibold">
+          No records found
+        </div>
+      )}
+      {loadingStatus === "Error" && (
+        <div className="p-2 text-center pt-5 font-semibold">
+          Error fetching records!
+        </div>
+      )}
+    </div>
+  );
 }

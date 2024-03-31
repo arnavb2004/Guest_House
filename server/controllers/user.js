@@ -45,3 +45,25 @@ export const updateUser = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+export const getNotifications = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    return res.status(200).json(req.user.notifications);
+  }
+  catch{
+    return res.status(500).json({ message: err.message });
+  }
+}
+
+export const deleteNotification = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    user.notifications = user.notifications.filter((notification) => notification._id.toString() !== req.params.id);
+    await user.save();
+    return res.status(200).json(user.notifications);
+  }
+  catch{
+    return res.status(500).json({ message: err.message });
+  }
+}
