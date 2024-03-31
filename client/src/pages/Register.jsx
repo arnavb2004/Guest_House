@@ -28,7 +28,7 @@ const Register = () => {
   const dispatch = useDispatch();
 
   const user = useSelector((state) => state.user);
-  if(user.email) {
+  if (user.email) {
     return <Navigate to="/" />;
   }
 
@@ -37,7 +37,6 @@ const Register = () => {
     return <Navigate to="/login" />;
   }
 
-
   const handleChange = (e) => {
     setCredentials((user) => ({ ...user, [e.target.name]: e.target.value }));
   };
@@ -45,23 +44,21 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log(credentials);
     try {
       const res = await axios.post(BASE_URL + "/auth/register", {
         ...credentials,
       });
-      console.log(res);
 
       if (res.data.user) {
         dispatch(setUserSlice(res.data));
-        navigate('/',{replace:true})
+        navigate("/", { replace: true });
       } else {
-        console.log("here");
         toast.error("Something went wrong");
       }
     } catch (error) {
-      console.log(error);
-      toast.error(error.response.data.message);
+      if (error.response?.data?.message)
+        toast.error(error.response.data.message);
+      else toast.error("Something went wrong");
     }
   };
 

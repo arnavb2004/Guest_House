@@ -53,7 +53,6 @@ export default function AdminRecordPage() {
     const fetchRecord = async () => {
       try {
         const response = await makeRequest.get(`/reservation/${id}`);
-        console.log(response.data);
         setStatus("Success");
         setUserRecord(response.data.reservation);
         setReviewers(response.data.reservation.reviewers);
@@ -178,7 +177,6 @@ export default function AdminRecordPage() {
               </ul>
               <button
                 onClick={() => {
-                  console.log(checkedValues);
                   try {
                     const res = makeRequest.put(`/reservation/${id}/assign`, {
                       reviewers: checkedValues,

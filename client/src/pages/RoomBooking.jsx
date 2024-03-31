@@ -12,7 +12,7 @@ const RoomBooking = () => {
 
   const id = params.id;
   const userRecord = useLocation().state.userRecord;
-  const guestName = userRecord.guestName
+  const guestName = userRecord.guestName;
   const user = useSelector((state) => state.user);
   const makeRequest = privateRequest(user.accessToken, user.refreshToken);
 
@@ -22,9 +22,10 @@ const RoomBooking = () => {
       const reservation = await makeRequest.get("/reservation/" + id);
       setRoomsData(res.data);
       setRoomList(reservation.data.reservation.bookings);
-      console.log(res.data);
     } catch (error) {
-      console.log(error);
+      if (error.response?.data?.message)
+        toast.error(error.response.data.message);
+      else toast.error("Failed to fetch rooms");
     }
   };
 
@@ -51,11 +52,6 @@ const RoomBooking = () => {
   const [roomList, setRoomList] = useState([]);
   const [occupancySwitch, setOccupancySwitch] = useState(false);
 
-  console.log(startDate);
-  console.log(roomList);
-
-  console.log(roomsData);
-
   useEffect(() => {
     handleFilter();
   }, [startDate, endDate, occupancySwitch, roomsData]);
@@ -75,7 +71,6 @@ const RoomBooking = () => {
             convertToDate(booking.endDate) > convertToDate(startDate)
           );
         });
-        console.log(filteredBookings);
         return { ...room, bookings: filteredBookings };
       });
 
@@ -245,7 +240,13 @@ const RoomBooking = () => {
                   await makeRequest.put("/reservation/rooms/" + id, roomList);
                   window.location.reload();
                 } catch (err) {
-                  console.log(err.response.data.message);
+                  if (err.response?.data?.message)
+                    toast.error(err.response.data.message);
+                  else {
+                    toast.error(
+                      "Something went wrong. Please try again later."
+                    );
+                  }
                 }
               }}
             >

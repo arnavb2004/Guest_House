@@ -144,12 +144,10 @@ export const generateFilledPDF = async (formData) => {
 };
 
 export const updateFilledPDF = async (formData) => {
-  console.log("herer");
   try {
     // Load existing PDF bytes
     const filledPdfBytes = await generateFilledPDF(formData);
     const blob = new Blob([filledPdfBytes], { type: "application/pdf" });
-    console.log(blob);
     return blob;
     // saveAs(blob, 'filled_form.pdf');
   } catch (error) {

@@ -125,10 +125,8 @@ export default function DiningList({ status = "pending" }) {
       setLoadingStatus("Success");
     } catch (err) {
       setLoadingStatus("Error");
-      console.log(err.response.data);
     }
   };
-  //console.log(records);
   useEffect(() => {
     setLoadingStatus("Loading");
     fetchRecords();

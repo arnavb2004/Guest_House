@@ -106,7 +106,6 @@ function ReservationForm() {
     category: /[\s\S]*/,
   };
 
-  console.log(loading);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -116,7 +115,6 @@ function ReservationForm() {
     });
   };
   const handleFileUpload = (files) => {
-    console.log(files);
     setFiles(files);
   };
   const handleSubmit = async (e) => {
@@ -124,7 +122,6 @@ function ReservationForm() {
 
     const receipt = await updateFilledPDF(formData);
 
-    console.log(receipt);
     //Handle form validation
 
     let passed = true;
@@ -152,7 +149,6 @@ function ReservationForm() {
         }));
       }
     }
-    console.log(errorText);
 
     const arrivalDateTime = new Date(
       `${formData.arrivalDate}T${formData.arrivalTime}`
@@ -232,7 +228,6 @@ function ReservationForm() {
       return;
     }
 
-    console.log("passed");
 
     // Handle form submission
     setLoading(true);
@@ -241,15 +236,12 @@ function ReservationForm() {
 
     try {
       const formDataToSend = new FormData();
-      console.log("here");
       Object.entries(formData).forEach(([fieldName, fieldValue]) => {
         formDataToSend.append(fieldName, fieldValue);
       });
-      // console.log(files.files)
       for (const file of files) {
         formDataToSend.append("files", file);
       }
-      console.log(receipt);
       formDataToSend.append("receipt", receipt);
       await makeRequest.post(
         "http://localhost:4751/reservation/",
@@ -460,7 +452,6 @@ function ReservationForm() {
               {Array.from(files).length > 0 ? (
                 <div className="flex flex-col  overflow-y-auto max-w-[30rem] h-16 gap-2 pr-2">
                   {Array.from(files).map((file, index) => {
-                    console.log(index, file);
                     const arr = file.name.split(".");
                     const ext = arr[arr.length - 1];
                     return (

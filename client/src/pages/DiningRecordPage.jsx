@@ -25,7 +25,6 @@ export default function DiningRecordPage() {
     const fetchRecord = async () => {
       try {
         const response = await makeRequest.get(`/dining/${id}`);
-        console.log(response.data);
         setStatus("Success");
         setUserRecord(response.data.order);
       } catch (error) {
@@ -36,9 +35,6 @@ export default function DiningRecordPage() {
 
     fetchRecord();
   }, [id]);
-
-  console.log(id);
-  console.log(userRecord);
 
   if (status === "Error") return <Navigate to="/404" />;
   else if (status === "Loading") return <div>Loading...</div>;

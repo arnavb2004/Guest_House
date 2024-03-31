@@ -90,15 +90,13 @@ export default function UserList() {
   const fetchUsers = async () => {
     try {
       const res = await makeRequest.get("/user/all");
-      // console.log(res.data)
       setValues(res.data.map((res) => res._id));
       setUsers(res.data);
       setNewUsers(res.data);
       setStatus("Success");
     } catch (err) {
-      toast(err.response.data);
+      if (err.response?.data?.message) toast(err.response.data.message);
       setStatus("Error");
-      console.log(err.response.data);
     }
   };
 
@@ -107,7 +105,6 @@ export default function UserList() {
     fetchUsers();
   }, []);
 
-  console.log(checked);
 
   return (
     <div className="flex flex-col p-5 px-0 w-full">

@@ -50,7 +50,6 @@ export default function AdminRecordList({ status = "pending" }) {
   const fetchRecords = async () => {
     try {
       const res = await makeRequest.get("/reservation/" + status);
-      console.log(res.data);
       const reservations = res.data;
       setLoadingStatus("Success");
       setValues(reservations.map((res) => res._id));
@@ -59,10 +58,8 @@ export default function AdminRecordList({ status = "pending" }) {
     } catch (err) {
       toast(err.response.data);
       setLoadingStatus("Error");
-      console.log(err.response.data);
     }
   };
-  //console.log(records);
   useEffect(() => {
     setLoadingStatus("Loading");
     fetchRecords();
@@ -269,7 +266,6 @@ export default function AdminRecordList({ status = "pending" }) {
                     //     toast.success("Reservation Approved");
                     //     window.location.reload();
                     //   } catch (error) {
-                    //     // console.log(error)
                     //     toast.error(error.response.data);
                     //   }
                     // }}
@@ -374,8 +370,12 @@ export default function AdminRecordList({ status = "pending" }) {
                               toast.success("Reservation Approved");
                               window.location.reload();
                             } catch (error) {
-                              // console.log(error)
-                              toast.error(error.response.data);
+                              if (error.response?.data?.message) {
+                                toast.error(error.response.data);
+                              }
+                              else {
+                                toast.error("An error occurred");
+                              }
                             }
                           }}
                         />
@@ -410,8 +410,9 @@ export default function AdminRecordList({ status = "pending" }) {
                             );
                             var file = window.URL.createObjectURL(res.data);
                             window.location.assign(file);
-                            console.log(res);
-                          } catch (error) {}
+                          } catch (error) {
+                            toast.error("Something went wrong");
+                          }
                         }}
                         aria-label="comments"
                       >
