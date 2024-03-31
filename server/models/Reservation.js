@@ -60,7 +60,7 @@ const reservationSchema = new mongoose.Schema(
             "REGISTRAR",
             "ASSOCIATE DEAN",
           ],
-          default: ["ADMIN"],
+          default: "ADMIN",
         },
         comments:{
           type: String,
@@ -108,6 +108,26 @@ const reservationSchema = new mongoose.Schema(
         }
       },
     ],
+    payment:{
+      status:{
+        type:String,
+        enum:["PENDING","PAID"],
+        default:"PENDING"
+      },
+      amount:{
+        type:Number,
+        // required:true,
+      },
+      payment_method:{
+        type:String,
+        // enum:["CASH","CARD","CHEQUE","UPI","DEPT"],
+        // required:true,
+      },
+      transaction_id:{
+        type:String,
+        // required:true,
+      }
+    }
   },
   {
     timestamps: true, // Adds createdAt and updatedAt timestamps
