@@ -47,6 +47,8 @@ function ReservationForm() {
   const user = useSelector((state) => state.user);
   const makeRequest = privateRequest(user.accessToken, user.refreshToken);
 
+  const [loading, setLoading] = useState(false);
+
   const [files, setFiles] = useState([]);
   const [formData, setFormData] = useState({
     guestName: "",
@@ -61,8 +63,6 @@ function ReservationForm() {
     purpose: "",
     category: "A",
   });
-
-  console.log(formData);
 
   const [errorText, setErrorText] = useState({
     guestName: "",
@@ -106,7 +106,7 @@ function ReservationForm() {
     category: /[\s\S]*/,
   };
 
-  console.log(formData);
+  console.log(loading);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -130,15 +130,10 @@ function ReservationForm() {
     let passed = true;
 
     for (let [key, value] of Object.entries(formData)) {
-      console.log(key, value);
-      console.log(typeof value);
-      // console.log(key, value);
       if (key === "files" || key === "receipt") {
         continue;
       }
       if (requiredFields[key] && value === "") {
-        console.log("here");
-
         setErrorText((prev) => ({
           ...prev,
           [key]: "This field is required",
@@ -229,9 +224,20 @@ function ReservationForm() {
       return;
     }
 
+    if (
+      (formData.category === "A" || formData.category === "B") &&
+      Array.from(files).length === 0
+    ) {
+      toast.error("Uploading files is mandatory for category A and B");
+      return;
+    }
+
     console.log("passed");
 
     // Handle form submission
+    setLoading(true);
+
+    const toast_id = toast.loading("Submitting form...");
 
     try {
       const formDataToSend = new FormData();
@@ -245,7 +251,6 @@ function ReservationForm() {
       }
       console.log(receipt);
       formDataToSend.append("receipt", receipt);
-      console.log(formDataToSend);
       await makeRequest.post(
         "http://localhost:4751/reservation/",
         formDataToSend,
@@ -255,12 +260,32 @@ function ReservationForm() {
           },
         }
       );
-      console.log("Form submitted");
-      toast.success("Form submitted successfully!");
+      // toast.success("Form submitted successfully!");
+      toast.update(toast_id, {
+        render: "Form submitted successfully!",
+        type: "success",
+        isLoading: false,
+        autoClose: 3000,
+      });
+      setLoading(false);
     } catch (error) {
       console.error("Form submission failed:", error);
-      // Show error toast notification
-      toast.error("Form submission failed. Please try again later.");
+      setLoading(false);
+      if (error.response?.data?.message) {
+        toast.update(toast_id, {
+          render: error.response.data.message,
+          type: "success",
+          isLoading: false,
+          autoClose: 5000,
+        });
+      } else {
+        toast.update(toast_id, {
+          render: "Form submission failed.",
+          type: "success",
+          isLoading: false,
+          autoClose: 5000,
+        });
+      }
     }
   };
 
@@ -460,7 +485,11 @@ function ReservationForm() {
                   })}
                 </div>
               ) : (
-                <div></div>
+                (formData.category === "A" || formData.category === "B") && (
+                  <div className="flex items-center text-gray-500">
+                    *Uploading files is mandatory for category A and B
+                  </div>
+                )
               )}
             </div>
           </div>
@@ -475,7 +504,12 @@ function ReservationForm() {
               Terms and Conditions
             </a>
           </div>
-          <button type="submit" onClick={handleSubmit} className="submit-btn">
+          <button
+            type="submit"
+            onClick={handleSubmit}
+            disabled={loading}
+            className="submit-btn"
+          >
             Submit
           </button>
           <button
