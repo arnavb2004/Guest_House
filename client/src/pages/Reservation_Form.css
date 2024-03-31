@@ -34,6 +34,10 @@
   border-radius: 5px;
   cursor: pointer;
 }
+.submit-btn:disabled {
+  background-color: #3694f9;
+  cursor: not-allowed;
+}
 
 .submit-btn:hover,
 .convert-to-pdf-btn:hover {

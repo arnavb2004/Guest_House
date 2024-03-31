@@ -86,11 +86,11 @@ export async function createReservation(req, res) {
         "</div><br><div>Arrival Date: " +
         getDate(arrivalDate) +
         "</div><br><div>Arrival Time: " +
-        getTime(arrivalDate) +
+        arrivalTime +
         "</div><br><div>Departure Date: " +
         getDate(departureDate) +
         "</div><br><div>Departure Time: " +
-        getTime(departureDate) +
+        departureTime +
         "</div><br><div>Address: " +
         address +
         "</div><br><div>Category: " +
