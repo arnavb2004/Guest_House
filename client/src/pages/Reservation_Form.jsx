@@ -230,11 +230,11 @@ function ReservationForm() {
 
     console.log("passed");
 
+
     // Handle form submission
 
     try {
       const formDataToSend = new FormData();
-      console.log("here");
       Object.entries(formData).forEach(([fieldName, fieldValue]) => {
         formDataToSend.append(fieldName, fieldValue);
       });
@@ -253,6 +253,9 @@ function ReservationForm() {
             "Content-Type": "multipart/form-data",
           },
         }
+      );
+      await makeRequest.put(
+        "http://localhost:4751/reservation/",
       );
       console.log("Form submitted");
       toast.success("Form submitted successfully!");

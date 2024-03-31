@@ -366,7 +366,7 @@ export default function AdminRecordList({ status = "pending" }) {
                   className="border-b"
                   secondaryAction={
                     <div className="flex gap-2">
-                      <IconButton edge="end" aria-label="comments">
+                      {record.status !== "APPROVED" && <IconButton edge="end" aria-label="comments">
                         <DoneIcon 
                           className="text-green-500 h-5"
                           onClick={async () => {
@@ -382,8 +382,8 @@ export default function AdminRecordList({ status = "pending" }) {
                             }
                           }}
                         />
-                      </IconButton>
-                      <IconButton edge="end" aria-label="comments">
+                      </IconButton>}
+                      {record.status !== "REJECTED" && <IconButton edge="end" aria-label="comments">
                         <CloseIcon 
                           className="text-red-500 h-5"
                           onClick={async () => {
@@ -392,7 +392,7 @@ export default function AdminRecordList({ status = "pending" }) {
                             );
                           }}
                         />
-                      </IconButton>
+                      </IconButton>}
                       <IconButton edge="end" aria-label="comments">
                         <InsertDriveFileIcon
                           color="black"

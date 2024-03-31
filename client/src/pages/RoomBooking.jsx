@@ -6,6 +6,8 @@ import { useSelector } from "react-redux";
 import { getDate } from "../utils/handleDate";
 import { useLocation, useParams } from "react-router-dom";
 import Switch from "@mui/material/Switch";
+import DeleteIcon from '@mui/icons-material/Delete';
+import RoomList from "../components/RoomList";
 
 const RoomBooking = () => {
   const params = useParams();
@@ -143,8 +145,13 @@ const RoomBooking = () => {
     }
   };
 
+  const deleteRoom = (room) => {
+    const updatedRoomList = roomList.filter(currRoom => currRoom !== room)
+    setRoomList(updatedRoomList)
+  }
+
   return (
-    <div className="room-booking">
+    <div className="room-booking h-fit ">
       <h2 className="room-heading text-4xl font-bold">Room Booking</h2>
       <div className="filter-container">
         <div className="px-4">
@@ -213,8 +220,8 @@ const RoomBooking = () => {
           </div>
         ))}
       </div>
-      {roomList.length > 0 && (
-        <div className="room-list  flex flex-col gap-4 m-4 p-2">
+      {/* {roomList.length > 0 && (
+        <div className="room-list  flex flex-col gap-4 m-4 p-2 h-1/8 overflow-y-scroll">
           <div className="flex justify-center text-3xl font-bold">
             Room List
           </div>
@@ -223,14 +230,17 @@ const RoomBooking = () => {
             <div className="col-span-3 font-semibold text-xl">
               Departure Date
             </div>
-            <div className="col-span-6 font-semibold text-xl">Room Number</div>
+            <div className="col-span-5 font-semibold text-xl">Room Number</div>
           </div>
           {roomList.map((room) => {
             return (
               <div className="grid grid-cols-12">
                 <div className="col-span-3">{getDate(room.startDate)}</div>
                 <div className="col-span-3">{getDate(room.endDate)}</div>
-                <div className="col-span-6">{room.roomNumber}</div>
+                <div className="col-span-5">{room.roomNumber}</div>
+                <div className="col-span-1">
+                  <DeleteIcon className="text-gray-700 cursor-pointer" onClick={() => {deleteRoom(room)}}/>
+                </div>
               </div>
             );
           })}
@@ -250,7 +260,8 @@ const RoomBooking = () => {
             </button>
           </div>
         </div>
-      )}
+      )} */}
+      <RoomList roomList={ roomList } setRoomList={setRoomList} id={id}/>
     </div>
   );
 };
