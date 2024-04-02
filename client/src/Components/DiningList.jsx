@@ -65,7 +65,7 @@ export default function DiningList({ status = "pending" }) {
       } else
         return record[filterMap[searchChoice]]
           .toLowerCase()
-          .includes(searchTerm.toLowerCase());
+          .includes(searchTerm?.toLowerCase());
     });
     setNewRecords(tempRecords);
   };
@@ -118,7 +118,7 @@ export default function DiningList({ status = "pending" }) {
     try {
       const res = await makeRequest.get("/dining/" + status);
       let orders = res.data;
-      orders = orders.filter((order) => order.status.toLowerCase() == status);
+      orders = orders.filter((order) => order.status?.toLowerCase() == status);
       setValues(orders.map((res) => res._id));
       setRecords(orders);
       setNewRecords(orders);
@@ -324,7 +324,7 @@ export default function DiningList({ status = "pending" }) {
                     <ListItemText
                       id="checkbox-list-label-header"
                       className=" text-wrap w-10 text-center"
-                      primary={"PENDING"}
+                      primary={status.toUpperCase()}
                     />
                   </ListItemButton>
                 </ListItem>
