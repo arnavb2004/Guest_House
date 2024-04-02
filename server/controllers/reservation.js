@@ -16,7 +16,7 @@ const auth = new google.auth.JWT(
   ['https://www.googleapis.com/auth/spreadsheets']
 );
 
-const spreadsheetId = '1_sJJXxe49nSpc-zq7bo2qrzgJZKniz0h1lIiwMG5_wA'; // Replace with your Google Sheet's ID
+const spreadsheetId = `${process.env.GOOGLE_SHEET_ID}`; // Replace with your Google Sheet's ID
 
 async function appendReservationToSheet(reservation) {
   console.log("Entred Logic");
