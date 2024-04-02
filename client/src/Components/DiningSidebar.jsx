@@ -24,7 +24,7 @@ const DiningSidebar = () => {
           "Contact",
         ]
       : user.role === "USER"
-      ? ["Pending Requests", "Book Dining", "Cart", "Services", "Contact"]
+      ? ["Pending Requests", "Rejected Requests", "Approved Requests","Book Dining", "Cart", "Services", "Contact"]
       : [
           "Pending Requests",
           "Rejected Requests",
@@ -36,7 +36,7 @@ const DiningSidebar = () => {
     <div className="flex flex-col">
       <div
         className={
-          "absolute top-3 text-white left-4 z-20 text-xl flex gap-2 items-baseline" +
+          "absolute top-28 text-white left-4 z-20 text-xl flex gap-2 items-baseline" +
           styles.menuIcon
         }
       >
