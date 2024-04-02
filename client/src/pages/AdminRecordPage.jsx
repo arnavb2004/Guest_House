@@ -19,11 +19,12 @@ export default function AdminRecordPage() {
   const [status, setStatus] = useState("Loading");
 
   const color = {
-    PENDING: "gray-400",
-    APPROVED: "green-400",
-    REJECTED: "red-400",
-    HOLD: "yellow-400",
+    PENDING: "bg-gray-400",
+    APPROVED: "bg-green-400",
+    REJECTED: "bg-red-400",
+    HOLD: "bg-yellow-400",
   };
+
 
   const [reviewers, setReviewers] = useState([]);
 
@@ -202,7 +203,7 @@ export default function AdminRecordPage() {
                   <div className="w-20">{reviewer.role}</div>
                   <div
                     className={
-                      "border relative top-1 w-5 h-5 bg-" +
+                      "border relative top-1 w-5 h-5 " +
                       color[reviewer.status]
                     }
                   ></div>

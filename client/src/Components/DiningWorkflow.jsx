@@ -3,7 +3,12 @@ import { useSelector } from "react-redux";
 import { privateRequest } from "../utils/useFetch";
 import StepperComponent from "./Stepper";
 
-const DiningWorkflow = ({ id, userRecord }) => {
+const Workflow = ({
+  id,
+  userRecord,
+  reviewers,
+  setReviewers
+}) => {
   const steps = [
     "User Details",
     "Upload Document",
@@ -11,11 +16,13 @@ const DiningWorkflow = ({ id, userRecord }) => {
     "Download PDF",
   ];
 
-  const { stepsCompleted } = userRecord;
+  // const { stepsCompleted } = userRecord;
+  const stepsCompleted = 1;
   const user = useSelector((state) => state.user);
   const makeRequest = privateRequest(user.accessToken, user.refreshToken);
-  const comments = userRecord.comments || "";
-
+  const reviewer = reviewers.find((reviewer) => reviewer.role === user.role);
+  const comments = reviewer?.comments;
+  // const stepsCompleted = 2;
   return (
     <div className=" flex flex-col justify-center col-span-3 shadow-lg p-8 gap-10">
       <StepperComponent steps={steps} stepsCompleted={stepsCompleted || 0} />
@@ -24,7 +31,7 @@ const DiningWorkflow = ({ id, userRecord }) => {
           <>
             <button
               onClick={() => {
-                makeRequest.put("/reservation/approve/" + id, { comments });
+                makeRequest.put("/dining/approve/" + id, { comments });
               }}
               className="border rounded-lg p-3 px-4 bg-green-400 hover:bg-green-500"
             >
@@ -32,7 +39,7 @@ const DiningWorkflow = ({ id, userRecord }) => {
             </button>
             <button
               onClick={() => {
-                makeRequest.put("/reservation/reject/" + id, { comments });
+                makeRequest.put("/dining/reject/" + id, { comments });
               }}
               className="border rounded-lg p-3 px-4 bg-red-400 hover:bg-red-500"
             >
@@ -40,7 +47,7 @@ const DiningWorkflow = ({ id, userRecord }) => {
             </button>
             <button
               onClick={() => {
-                makeRequest.put("/reservation/hold/" + id, { comments });
+                makeRequest.put("/dining/hold/" + id, { comments });
               }}
               className="border rounded-lg p-3 px-4 bg-yellow-400 hover:bg-yellow-500"
             >
@@ -60,10 +67,18 @@ const DiningWorkflow = ({ id, userRecord }) => {
           )
         ) : (
           <textarea
+            // disabled={user.role !== "ADMIN"}
             className="w-full p-2 bg-white border-gray-500 rounded-lg"
             rows={5}
             value={comments || ""}
-            onChange={(e) => {}}
+            onChange={
+              (e) =>
+              setReviewers((prev) =>
+                prev.map((r) =>
+                  r.role === user.role ? { ...r, comments: e.target.value } : r
+                )
+              )
+            }
             placeholder={"Write any review or comments"}
           ></textarea>
         )}
@@ -72,4 +87,4 @@ const DiningWorkflow = ({ id, userRecord }) => {
   );
 };
 
-export default DiningWorkflow;
+export default Workflow;

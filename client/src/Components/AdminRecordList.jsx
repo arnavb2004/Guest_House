@@ -65,6 +65,8 @@ export default function AdminRecordList({ status = "pending" }) {
     fetchRecords();
   }, [status]);
 
+  console.log(checked);
+
   const handleToggle = (value) => () => {
     const currentIndex = checked.indexOf(value);
     if (value === "#") {
@@ -258,27 +260,49 @@ export default function AdminRecordList({ status = "pending" }) {
                 <IconButton edge="end" aria-label="comments">
                   <DoneIcon
                     className="text-green-400 h-5"
-                    // onClick={async () => {
-                    //   try {
-                    //     await makeRequest.put(
-                    //       "/reservation/approve/" + record._id
-                    //     );
-                    //     toast.success("Reservation Approved");
-                    //     window.location.reload();
-                    //   } catch (error) {
-                    //     toast.error(error.response.data);
-                    //   }
-                    // }}
+                    onClick={async () => {
+                      try {
+                        checked.forEach(async (record) => {
+                          if (record !== "#") {
+                            await makeRequest.put(
+                              "/reservation/approve/" + record
+                            );
+                          }
+                        });
+                        toast.success("Requests Approved");
+                        window.location.reload();
+                      } catch (error) {
+                        if (error.response?.data?.message) {
+                          toast.error(error.response.data);
+                        } else {
+                          toast.error("An error occurred");
+                        }
+                      }
+                    }}
                   />
                 </IconButton>
                 <IconButton edge="end" aria-label="comments">
                   <CloseIcon
                     className="text-red-400 h-5"
-                    // onClick={async () => {
-                    //   await makeRequest.put(
-                    //     "/reservation/reject/" + record._id
-                    //   );
-                    // }}
+                    onClick={async () => {
+                      try {
+                        checked.forEach(async (record) => {
+                          if (record !== "#") {
+                            await makeRequest.put(
+                              "/reservation/reject/" + record
+                            );
+                          }
+                        });
+                        toast.success("Requests Rejected");
+                        window.location.reload();
+                      } catch (error) {
+                        if (error.response?.data?.message) {
+                          toast.error(error.response.data);
+                        } else {
+                          toast.error("An error occurred");
+                        }
+                      }
+                    }}
                   />
                 </IconButton>
                 <IconButton />
@@ -372,8 +396,7 @@ export default function AdminRecordList({ status = "pending" }) {
                             } catch (error) {
                               if (error.response?.data?.message) {
                                 toast.error(error.response.data);
-                              }
-                              else {
+                              } else {
                                 toast.error("An error occurred");
                               }
                             }

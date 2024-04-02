@@ -15,9 +15,9 @@ const port = process.env.PORT || 4751;
 dotenv.config();
 const app = express();
 
-// if (process.env.NODE_ENV === "production") {
-// }
-console.log = () => {};
+if (process.env.NODE_ENV === "production") {
+  console.log = () => {};
+}
 
 // var storage,upload;
 const connection = mongoose

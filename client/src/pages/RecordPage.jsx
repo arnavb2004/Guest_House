@@ -13,11 +13,12 @@ export default function RecordPage() {
   const [reviewers, setReviewers] = useState([]);
 
   const color = {
-    PENDING: "gray-400",
-    APPROVED: "green-400",
-    REJECTED: "red-400",
-    HOLD: "yellow-400",
+    PENDING: "bg-gray-400",
+    APPROVED: "bg-green-400",
+    REJECTED: "bg-red-400",
+    HOLD: "bg-yellow-400",
   };
+
 
   const makeRequest = privateRequest(user.accessToken, user.refreshToken);
 
@@ -133,7 +134,7 @@ export default function RecordPage() {
                 <div className="w-20">{reviewer.role}</div>
                 <div
                   className={
-                    "border relative top-1 w-5 h-5 bg-" + color[reviewer.status]
+                    "border relative top-1 w-5 h-5 " + color[reviewer.status]
                   }
                 ></div>
                 <div className="w-72">{reviewer.comments}</div>
