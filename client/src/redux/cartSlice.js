@@ -23,8 +23,7 @@ const cartSlice = createSlice({
     removeFromCart: (state, action) => {
       const cart = {...state.cartItems};
       const itemId = action.payload;
-      console.log(cart)
-      console.log(itemId)
+    
       if (cart[itemId] > 0) {
         const updatedCart = { ...cart };
         updatedCart[itemId] -= 1;

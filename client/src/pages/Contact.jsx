@@ -12,7 +12,6 @@ const Contact = () => {
     console.log("Captcha value:", value);
   };
 
-  // console.log(process.env);
 
   return (
     <>

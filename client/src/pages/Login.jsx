@@ -64,7 +64,6 @@ const Login = ({ isRegister }) => {
   }
 
   const handleOtp = (e) => {
-    console.log(e.target.value);
     let val = e.target.value;
     val = val.replace(/\D/g, "");
     if (val.length > 6) val = val.substring(0, 6);
@@ -72,7 +71,6 @@ const Login = ({ isRegister }) => {
   };
 
   const handleChange = (e) => {
-    // console.log(e.target.validity);
     setCredentials((user) => ({ ...user, [e.target.name]: e.target.value }));
   };
 
@@ -96,8 +94,9 @@ const Login = ({ isRegister }) => {
       setIsDisabled(false);
     } catch (error) {
       setIsDisabled(false);
-
-      console.log(error.response.data.message);
+      if (error.response?.data?.message)
+        toast.error(error.response.data.message);
+      else toast.error("Something went wrong");
     }
   };
 
@@ -134,22 +133,16 @@ const Login = ({ isRegister }) => {
         setIsDisabled(false);
 
         setSeconds(OTP_RESEND_TIME);
-
-        console.log(res);
       } catch (error) {
         setIsDisabled(false);
-
-        console.log(error);
       }
     } else {
-      console.log(credentials);
       try {
         const res = await axios.post(BASE_URL + "/auth/login", {
           ...credentials,
         });
 
         if (res.data.user) {
-          console.log(res.data);
           dispatch(
             setUserSlice({
               user: res.data.user,
@@ -160,13 +153,13 @@ const Login = ({ isRegister }) => {
           navigate(-1);
         } else {
           dispatch(setCredentialSlice(credentials));
-          console.log("here");
           // setIsLogin(false);
           navigate("/register");
         }
       } catch (error) {
-        console.log(error);
-        toast.error(error.response.data.message);
+        if (error.response?.data?.message)
+          toast.error(error.response.data.message);
+        else toast.error("Something went wrong");
       }
     }
   };
@@ -269,11 +262,14 @@ const Login = ({ isRegister }) => {
                       navigate("/register");
                     }
                   } catch (error) {
-                    toast.error(error.response.data.message);
+                    if (error.response?.data?.message) {
+                      toast.error(error.response.data);
+                    } else {
+                      toast.error("An error occurred");
+                    }
                   }
                 }}
                 onError={() => {
-                  console.log("Failed");
                   toast.error("Login failed");
                 }}
               />

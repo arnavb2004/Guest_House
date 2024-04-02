@@ -12,7 +12,6 @@ const People = () => {
     { key: 6, name: "Prof6", post: "incharge6", email: "prof6@gmail.com", contact: "0123456786"}
   ];
 
-  console.log(users)
 
   return (
     <div className='people w-5/6 grid grid-cols-3 my-10 gap-24'>

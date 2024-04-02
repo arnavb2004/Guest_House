@@ -178,7 +178,7 @@ export async function updateReservation(req, res) {
         .json({ message: "You are not authorized to perform this action" });
     }
     await Reservation.findByIdAndUpdate(req.params.id, req.body);
-    res.status(200).json({ message: "Reservation Approved" });
+    res.status(200).json({ message: "Reservation Updated" });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
@@ -275,20 +275,26 @@ export async function approveReservation(req, res) {
       }
       return reviewer;
     });
-    let initStatus=reservation.status;
+    let initStatus = reservation.status;
     reservation = updateReservationStatus(reservation);
-    console.log(reservation)
+    console.log(reservation);
     //add the message to the user model of who made the reservation
-    if(initStatus!==reservation.status){
-      console.log(reservation.guestEmail)
-      const resUser=await User.findOne({email:reservation.guestEmail});
-      console.log(resUser)
-      if(resUser.notifications==null){
+    if (initStatus !== reservation.status) {
+      console.log(reservation.guestEmail);
+      const resUser = await User.findOne({ email: reservation.guestEmail });
+      console.log(resUser);
+      if (resUser.notifications == null) {
         // console.log()
-        resUser.notifications=[];
+        resUser.notifications = [];
       }
       // console.log(resUser.notifications)
-      resUser.notifications.push({message:`Reservation Status changed to ${reservation.status} - ${req.body.comments||''}`,sender:req.user.role,res_id:reservation._id});
+      resUser.notifications.push({
+        message: `Reservation Status changed to ${reservation.status} - ${
+          req.body.comments || "No comments"
+        }`,
+        sender: req.user.role,
+        res_id: reservation._id,
+      });
       await resUser.save();
     }
     //
@@ -336,15 +342,21 @@ export async function rejectReservation(req, res) {
       }
       return reviewer;
     });
-    let initStatus=reservation.status;
+    let initStatus = reservation.status;
     reservation = updateReservationStatus(reservation);
-    if(initStatus!==reservation.status){
-      const resUser=await User.findOne({email:reservation.guestEmail});
-      if(resUser.notifications==null){
+    if (initStatus !== reservation.status) {
+      const resUser = await User.findOne({ email: reservation.guestEmail });
+      if (resUser.notifications == null) {
         // console.log()
-        resUser.notifications=[];
+        resUser.notifications = [];
       }
-      resUser.notifications.push({message:`Reservation Status changed to ${reservation.status} - ${req.body.comments||''}`,sender:req.user.role,res_id:reservation._id});
+      resUser.notifications.push({
+        message: `Reservation Status changed to ${reservation.status} - ${
+          req.body.comments || "No comments"
+        }`,
+        sender: req.user.role,
+        res_id: reservation._id,
+      });
       await resUser.save();
     }
 
@@ -384,18 +396,23 @@ export async function holdReservation(req, res) {
       }
       return reviewer;
     });
-    let initStatus=reservation.status;
+    let initStatus = reservation.status;
     reservation = updateReservationStatus(reservation);
-    if(initStatus!==reservation.status){
-      const resUser=await User.findOne({email:reservation.guestEmail});
-      if(resUser.notifications==null){
+    if (initStatus !== reservation.status) {
+      const resUser = await User.findOne({ email: reservation.guestEmail });
+      if (resUser.notifications == null) {
         // console.log()
-        resUser.notifications=[];
+        resUser.notifications = [];
       }
-      resUser.notifications.push({message:`Reservation Status changed to ${reservation.status} - ${req.body.comments||''}`,sender:req.user.role,res_id:reservation._id});
+      resUser.notifications.push({
+        message: `Reservation Status changed to ${reservation.status} - ${
+          req.body.comments || "No comments"
+        }`,
+        sender: req.user.role,
+        res_id: reservation._id,
+      });
       await resUser.save();
     }
-    
 
     // const body =
     //   "<div>Your reservation has been put on hold.</div><br><div>Comments: " +
@@ -522,7 +539,7 @@ export const getRejectedReservations = async (req, res) => {
   }
 };
 
-export const updatePaymentStatus = async (req,res) => {
+export const updatePaymentStatus = async (req, res) => {
   try {
     const reservation = await Reservation.findById(req.params.id);
     if (req.user.role !== "ADMIN") {
@@ -530,12 +547,12 @@ export const updatePaymentStatus = async (req,res) => {
         .status(403)
         .json({ message: "You are not authorized to perform this action" });
     }
-    reservation.payment.status=req.body.status;
-    reservation.payment.amount=req.body.amount;
-    reservation.payment.payment_method=req.body.payment_method;
-    reservation.payment.transaction_id=req.body.transaction_id;
-    console.log(reservation)
-    console.log("Updated the payment status")
+    reservation.payment.status = req.body.status;
+    reservation.payment.amount = req.body.amount;
+    reservation.payment.payment_method = req.body.payment_method;
+    reservation.payment.transaction_id = req.body.transaction_id;
+    console.log(reservation);
+    console.log("Updated the payment status");
     await reservation.save();
     res.status(200).json({ message: "Payment status updated" });
   } catch (error) {
@@ -544,7 +561,7 @@ export const updatePaymentStatus = async (req,res) => {
 };
 
 const updateReservationStatus = (reservation) => {
-  let initStatus=reservation.status;
+  let initStatus = reservation.status;
   let reviewers = reservation.reviewers;
 
   let isApproved = true;
@@ -662,7 +679,7 @@ export const updateRooms = async (req, res) => {
         room.bookings.push({
           startDate: allottedRoom.startDate,
           endDate: allottedRoom.endDate,
-          user: allottedRoom.user
+          user: allottedRoom.user,
         });
       }
 
@@ -697,11 +714,13 @@ export const updateRooms = async (req, res) => {
 
 export const sendNotification = async (req, res) => {
   try {
-    if(req.user.role==="USER"){
-      return res.status(403).json({ message: "You are not authorized to perform this action" });
+    if (req.user.role === "USER") {
+      return res
+        .status(403)
+        .json({ message: "You are not authorized to perform this action" });
     }
     const { message, sender, res_id } = req.body;
-    sender=req.user.role;
+    sender = req.user.role;
     const user = await User.findById(req.params.id);
     user.notifications.push({ message, sender, res_id });
     await user.save();

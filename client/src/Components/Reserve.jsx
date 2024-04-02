@@ -44,7 +44,6 @@ const Reserve = ({ setOpen, hotelId }) => {
     { startDate: "2022-03-05", endDate: "2022-03-06" },
   ];
 
-  console.log(dates);
 
   const getDatesInRange = (startDate, endDate) => {
     const start = new Date(startDate);
