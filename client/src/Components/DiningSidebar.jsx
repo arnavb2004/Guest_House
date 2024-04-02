@@ -32,6 +32,7 @@ const DiningSidebar = () => {
           "Contact",
         ]; // other roles
 
+  
   return (
     <div className="flex flex-col">
       <div
