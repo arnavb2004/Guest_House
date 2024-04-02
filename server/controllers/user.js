@@ -56,8 +56,10 @@ export const getNotifications = async (req, res) => {
   }
 }
 
+
 export const deleteNotification = async (req, res) => {
   try {
+    console.log("Notification delete requested");
     const user = await User.findById(req.user.id);
     user.notifications = user.notifications.filter((notification) => notification._id.toString() !== req.params.id);
     await user.save();
