@@ -1,2 +1,4 @@
+server/secrets.json
+server/secrets
 node_modules
 .env
