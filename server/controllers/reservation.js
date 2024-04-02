@@ -5,6 +5,53 @@ import { getDate, getTime, transporter } from "../utils.js";
 import archiver from "archiver";
 import { getFileById } from "../middlewares/fileStore.js";
 import mongoose from "mongoose";
+import { google } from 'googleapis'
+import keys from '../secrets.json' assert { type: 'json' };
+
+const googleSheets = google.sheets('v4');
+const auth = new google.auth.JWT(
+  keys.client_email, 
+  null, 
+  keys.private_key, 
+  ['https://www.googleapis.com/auth/spreadsheets']
+);
+
+const spreadsheetId = '1_sJJXxe49nSpc-zq7bo2qrzgJZKniz0h1lIiwMG5_wA'; // Replace with your Google Sheet's ID
+
+async function appendReservationToSheet(reservation) {
+  console.log("Entred Logic");
+  await auth.authorize();
+  console.log("Entred Logic2");
+  const response = await googleSheets.spreadsheets.values.append({
+    auth,
+    spreadsheetId,
+    range: 'Sheet1', // Assuming you are using the first sheet; change if necessary
+    valueInputOption: 'RAW',
+    resource: {
+      values: [
+        [
+          reservation.guestName,
+          reservation.guestEmail,
+          reservation.numberOfGuests,
+          reservation.numberOfRooms,
+          reservation.roomType,
+          reservation.arrivalDate,
+          reservation.departureDate,
+          reservation.purpose,
+          reservation.category
+          // Add more fields as necessary
+        ],
+      ],
+    },
+  });
+  console.log("Exit Logic");
+  return response;
+}
+
+// Use this function where you handle the reservation creation
+// For example, in your createReservation function:
+// await appendReservationToSheet(reservation);
+
 
 async function sendVerificationEmail(to, subject, body) {
   try {
@@ -65,6 +112,8 @@ export async function createReservation(req, res) {
       reviewers: [{ role: "ADMIN", status: "PENDING", comments: "" }],
       receipt: receiptid,
     });
+
+    await appendReservationToSheet(reservation);
 
     console.log("sending mail");
 
