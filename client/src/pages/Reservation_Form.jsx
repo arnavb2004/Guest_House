@@ -234,6 +234,7 @@ function ReservationForm() {
 
     console.log("passed");
 
+
     // Handle form submission
     setLoading(true);
 
@@ -241,7 +242,6 @@ function ReservationForm() {
 
     try {
       const formDataToSend = new FormData();
-      console.log("here");
       Object.entries(formData).forEach(([fieldName, fieldValue]) => {
         formDataToSend.append(fieldName, fieldValue);
       });
