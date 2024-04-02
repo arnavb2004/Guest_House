@@ -62,14 +62,15 @@ const updateOrderStatus = (order) => {
   let isRejected = false;
   let adminStatus;
   reviewers.forEach((reviewer) => {
-    if (reviewer.status !== "APPROVED") {
-      isApproved = false;
-    }
-    if (reviewer.status === "REJECTED") {
-      isRejected = true;
-    }
     if (reviewer.role === "ADMIN") {
       adminStatus = reviewer.status;
+    } else {
+      if (reviewer.status !== "APPROVED") {
+        isApproved = false;
+      }
+      if (reviewer.status === "REJECTED") {
+        isRejected = true;
+      }
     }
   });
 

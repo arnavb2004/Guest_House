@@ -259,7 +259,7 @@ export default function AdminRecordList({ status = "pending" }) {
               <div className="flex gap-2">
                 <IconButton edge="end" aria-label="comments">
                   <DoneIcon
-                    className="text-green-400 h-5"
+                    className="text-green-500 h-5"
                     onClick={async () => {
                       try {
                         checked.forEach(async (record) => {
@@ -383,36 +383,40 @@ export default function AdminRecordList({ status = "pending" }) {
                   className="border-b"
                   secondaryAction={
                     <div className="flex gap-2">
-                      {record.status !== "APPROVED" && <IconButton edge="end" aria-label="comments">
-                        <DoneIcon 
-                          className="text-green-500 h-5"
-                          onClick={async () => {
-                            try {
-                              await makeRequest.put(
-                                "/reservation/approve/" + record._id
-                              );
-                              toast.success("Reservation Approved");
-                              window.location.reload();
-                            } catch (error) {
-                              if (error.response?.data?.message) {
-                                toast.error(error.response.data);
-                              } else {
-                                toast.error("An error occurred");
+                      {record.status !== "APPROVED" && (
+                        <IconButton edge="end" aria-label="comments">
+                          <DoneIcon
+                            className="text-green-500 h-5"
+                            onClick={async () => {
+                              try {
+                                await makeRequest.put(
+                                  "/reservation/approve/" + record._id
+                                );
+                                toast.success("Reservation Approved");
+                                window.location.reload();
+                              } catch (error) {
+                                if (error.response?.data?.message) {
+                                  toast.error(error.response.data);
+                                } else {
+                                  toast.error("An error occurred");
+                                }
                               }
-                            }
-                          }}
-                        />
-                      </IconButton>}
-                      {record.status !== "REJECTED" && <IconButton edge="end" aria-label="comments">
-                        <CloseIcon 
-                          className="text-red-500 h-5"
-                          onClick={async () => {
-                            await makeRequest.put(
-                              "/reservation/reject/" + record._id
-                            );
-                          }}
-                        />
-                      </IconButton>}
+                            }}
+                          />
+                        </IconButton>
+                      )}
+                      {record.status !== "REJECTED" && (
+                        <IconButton edge="end" aria-label="comments">
+                          <CloseIcon
+                            className="text-red-500 h-5"
+                            onClick={async () => {
+                              await makeRequest.put(
+                                "/reservation/reject/" + record._id
+                              );
+                            }}
+                          />
+                        </IconButton>
+                      )}
                       <IconButton edge="end" aria-label="comments">
                         <InsertDriveFileIcon
                           color="black"
