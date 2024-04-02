@@ -10,10 +10,9 @@ const Workflow = ({
   setReviewers
 }) => {
   const steps = [
-    "User Details",
-    "Upload Document",
-    "Acceptance",
-    "Download PDF",
+    "Place Order",
+    "Approval",
+    "Payment"
   ];
 
   // const { stepsCompleted } = userRecord;

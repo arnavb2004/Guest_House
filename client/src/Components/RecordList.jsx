@@ -22,28 +22,28 @@ import DownloadIcon from "@mui/icons-material/Download";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 export default function RecordList({ status = "pending" }) {
-  const [checked, setChecked] = useState([]);
-  const [values, setValues] = useState([]);
-  const user = useSelector((state) => state.user);
-  const [records, setRecords] = useState([]);
-  const [newRecords, setNewRecords] = useState([]);
-  const [loadingStatus, setLoadingStatus] = useState("Loading");
-  const [sortType, setSortType] = useState("");
-  const [sortToggle, setSortToggle] = useState(false);
+	const [checked, setChecked] = useState([]);
+	const [values, setValues] = useState([]);
+	const user = useSelector((state) => state.user);
+	const [records, setRecords] = useState([]);
+	const [newRecords, setNewRecords] = useState([]);
+	const [loadingStatus, setLoadingStatus] = useState("Loading");
+	const [sortType, setSortType] = useState("");
+	const [sortToggle, setSortToggle] = useState(false);
 
-  const filterMap = {
-    "Guest Name": "guestName",
-    "Number of Rooms": "numberOfRooms",
-    "Number of Guests": "numberOfGuests",
-    Category: "category",
-    "Arrival Date": "arrivalDate",
-    "Departure Date": "departureDate",
-    "Room Type": "roomType",
-  };
+	const filterMap = {
+		"Guest Name": "guestName",
+		"Number of Rooms": "numberOfRooms",
+		"Number of Guests": "numberOfGuests",
+		Category: "category",
+		"Arrival Date": "arrivalDate",
+		"Departure Date": "departureDate",
+		"Room Type": "roomType",
+	};
 
-  const navigate = useNavigate();
+	const navigate = useNavigate();
 
-  const makeRequest = privateRequest(user.accessToken, user.refreshToken);
+	const makeRequest = privateRequest(user.accessToken, user.refreshToken);
 
   const fetchRecords = async () => {
     try {
@@ -66,81 +66,81 @@ export default function RecordList({ status = "pending" }) {
   const handleToggle = (value) => () => {
     const currentIndex = checked.indexOf(value);
 
-    if (value === "#") {
-      if (currentIndex === -1) {
-        setChecked([...values, "#"]);
-      } else {
-        setChecked([]);
-      }
+		if (value === "#") {
+			if (currentIndex === -1) {
+				setChecked([...values, "#"]);
+			} else {
+				setChecked([]);
+			}
 
-      return;
-    }
+			return;
+		}
 
-    const newChecked = [...checked];
+		const newChecked = [...checked];
 
-    if (currentIndex === -1) {
-      newChecked.push(value);
-    } else {
-      newChecked.splice(currentIndex, 1);
-    }
+		if (currentIndex === -1) {
+			newChecked.push(value);
+		} else {
+			newChecked.splice(currentIndex, 1);
+		}
 
-    setChecked(newChecked);
+		setChecked(newChecked);
+	};
+
+	const [searchTerm, setSearchTerm] = useState("");
+	const [searchChoice, setSearchChoice] = useState("Filter");
+
+	const handleSearchChange = (event) => {
+		setSearchTerm(event.target.value);
+	};
+
+	const filterRecords = () => {
+		const tempRecords = records.filter((record) => {
+			if (typeof record[filterMap[searchChoice]] === "string") {
+				if (
+					searchChoice === "Arrival Date" ||
+					searchChoice === "Departure Date"
+				) {
+					const date = new Date(record[filterMap[searchChoice]]);
+					const formattedDate = getDate(date);
+
+					return formattedDate.includes(searchTerm);
+				} else {
+					return record[filterMap[searchChoice]]
+						.toLowerCase()
+						.includes(searchTerm.toLowerCase());
+				}
+			} else {
+				const inputNum = parseInt(searchTerm);
+				const num = record[filterMap[searchChoice]];
+				return num === inputNum;
+			}
+		});
+
+		setNewRecords(tempRecords);
+
   };
 
-  const [searchTerm, setSearchTerm] = useState("");
-  const [searchChoice, setSearchChoice] = useState("Filter");
+	useEffect(() => {
+		if (searchTerm) filterRecords();
+		else setNewRecords(records);
+	}, [searchTerm, searchChoice]);
 
-  const handleSearchChange = (event) => {
-    setSearchTerm(event.target.value);
-  };
+	const [isOpen, setIsOpen] = useState(false);
 
-  const filterRecords = () => {
-    const tempRecords = records.filter((record) => {
-      if (typeof record[filterMap[searchChoice]] === "string") {
-        if (
-          searchChoice === "Arrival Date" ||
-          searchChoice === "Departure Date"
-        ) {
-          const date = new Date(record[filterMap[searchChoice]]);
-          const formattedDate = getDate(date);
+	const toggleDropdown = () => {
+		setIsOpen(!isOpen);
+	};
 
-          return formattedDate.includes(searchTerm);
-        } else {
-          return record[filterMap[searchChoice]]
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase());
-        }
-      } else {
-        const inputNum = parseInt(searchTerm);
-        const num = record[filterMap[searchChoice]];
-        return num === inputNum;
-      }
-    });
-
-    setNewRecords(tempRecords);
-
-  };
-
-  useEffect(() => {
-    if (searchTerm) filterRecords();
-    else setNewRecords(records);
-  }, [searchTerm, searchChoice]);
-
-  const [isOpen, setIsOpen] = useState(false);
-
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen);
-  };
-
-  const options = [
-    "Guest Name",
-    "Number of Rooms",
-    "Number of Guests",
-    "Category",
-    "Arrival Date",
-    "Departure Date",
-    "Room Type",
-  ];
+	const options = [
+		"Guest Name",
+		"Number of Rooms",
+		"Number of Guests",
+		"Category",
+		"Arrival Date",
+		"Departure Date",
+		"Room Type",
+	];
 
   const handleSortToggle = (event) => {
     const type = event.target.outerText;

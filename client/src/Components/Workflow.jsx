@@ -6,11 +6,13 @@ import StepperComponent from "./Stepper";
 const Workflow = ({ id, userRecord, reviewers, setReviewers }) => {
   
   const steps = [
-    "User Details",
-    "Upload Document",
-    "Acceptance",
-    "Download PDF",
+    "Reservation Form",
+    "Approval",
+    "Room allocation",
+    "Payment",
   ];
+
+  console.log(userRecord)
 
   const { stepsCompleted } = userRecord;
   const user = useSelector((state) => state.user);

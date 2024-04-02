@@ -60,7 +60,7 @@ export async function createReservation(req, res) {
       arrivalDate: new Date(`${arrivalDate}T${arrivalTime}`),
       departureDate: new Date(`${departureDate}T${departureTime}`),
       category,
-      stepsCompleted: 0,
+      stepsCompleted: 1,
       files: fileids,
       reviewers: [{ role: "ADMIN", status: "PENDING", comments: "" }],
       receipt: receiptid,
@@ -209,7 +209,10 @@ export async function approveReservation(req, res) {
     let reservation = await Reservation.findById(req.params.id);
     if (
       req.user.role !== "ADMIN" &&
-      !reservation.reviewers.find((r) => r.role === req.user.role)
+      !reservation.reviewers.find((r) => {
+        r.role === req.user.role
+
+      })
     ) {
       return res
         .status(403)
@@ -327,6 +330,7 @@ export async function rejectReservation(req, res) {
 
 export async function holdReservation(req, res) {
   try {
+    
     let reservation = await Reservation.findById(req.params.id);
     if (
       req.user.role !== "ADMIN" &&
@@ -537,6 +541,11 @@ const updateReservationStatus = (reservation) => {
   } else {
     reservation.status = "PENDING";
   }
+  if(reservation.status === "APPROVED" ) {
+    reservation.stepsCompleted = 2;
+  } else {
+    reservation.stepsCompleted = 1;
+  }
   return reservation;
 };
 
@@ -594,6 +603,7 @@ async function isDateRangeAvailable(room, startDate, endDate) {
 
 // Function to update rooms and reservation
 export const updateRooms = async (req, res) => {
+
   if (req.user?.role !== "ADMIN") {
     return res
       .status(403)
@@ -626,19 +636,20 @@ export const updateRooms = async (req, res) => {
 
       await room.save();
 
+      
+
       // Update the reservation document to reflect the assigned rooms for the user
     }
 
     const reservation = await Reservation.findByIdAndUpdate(
       id, // Assuming user has an _id property
-      { $set: { bookings: allottedRooms } },
+      { $set: { bookings: allottedRooms, stepsCompleted: 3 }},
       { session }
     );
 
     if (!reservation) {
       throw new Error("Failed to update reservation");
     }
-
     await session.commitTransaction();
     session.endSession();
     res

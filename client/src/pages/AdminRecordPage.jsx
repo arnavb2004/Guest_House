@@ -162,7 +162,7 @@ export default function AdminRecordPage() {
             <div className="p-5">
               <ul>
                 {roles.map((role) => (
-                  <li>
+                  <li key={role}>
                     <input
                       type="checkbox"
                       id={role}
