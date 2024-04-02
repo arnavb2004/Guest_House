@@ -33,6 +33,31 @@ const mealSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  reviewers: [
+    {
+      role: {
+        type: String,
+        enum: [
+          "ADMIN",
+          "HOD",
+          "CHAIRMAN",
+          "DIRECTOR",
+          "DEAN",
+          "REGISTRAR",
+          "ASSOCIATE DEAN",
+        ],
+        default: "ADMIN",
+      },
+      comments: {
+        type: String,
+      },
+      status: {
+        type: String,
+        enum: ["PENDING", "APPROVED", "REJECTED", "HOLD"],
+        default: "PENDING",
+      },
+    },
+  ],
   comments: {
     type: String,
   },

@@ -50,7 +50,6 @@ export default function AdminRecordList({ status = "pending" }) {
   const fetchRecords = async () => {
     try {
       const res = await makeRequest.get("/reservation/" + status);
-      console.log(res.data);
       const reservations = res.data;
       setLoadingStatus("Success");
       setValues(reservations.map((res) => res._id));
@@ -59,14 +58,14 @@ export default function AdminRecordList({ status = "pending" }) {
     } catch (err) {
       toast(err.response.data);
       setLoadingStatus("Error");
-      console.log(err.response.data);
     }
   };
-  //console.log(records);
   useEffect(() => {
     setLoadingStatus("Loading");
     fetchRecords();
   }, [status]);
+
+  console.log(checked);
 
   const handleToggle = (value) => () => {
     const currentIndex = checked.indexOf(value);
@@ -261,28 +260,49 @@ export default function AdminRecordList({ status = "pending" }) {
                 <IconButton edge="end" aria-label="comments">
                   <DoneIcon
                     className="text-green-400 h-5"
-                    // onClick={async () => {
-                    //   try {
-                    //     await makeRequest.put(
-                    //       "/reservation/approve/" + record._id
-                    //     );
-                    //     toast.success("Reservation Approved");
-                    //     window.location.reload();
-                    //   } catch (error) {
-                    //     // console.log(error)
-                    //     toast.error(error.response.data);
-                    //   }
-                    // }}
+                    onClick={async () => {
+                      try {
+                        checked.forEach(async (record) => {
+                          if (record !== "#") {
+                            await makeRequest.put(
+                              "/reservation/approve/" + record
+                            );
+                          }
+                        });
+                        toast.success("Requests Approved");
+                        window.location.reload();
+                      } catch (error) {
+                        if (error.response?.data?.message) {
+                          toast.error(error.response.data);
+                        } else {
+                          toast.error("An error occurred");
+                        }
+                      }
+                    }}
                   />
                 </IconButton>
                 <IconButton edge="end" aria-label="comments">
                   <CloseIcon
                     className="text-red-400 h-5"
-                    // onClick={async () => {
-                    //   await makeRequest.put(
-                    //     "/reservation/reject/" + record._id
-                    //   );
-                    // }}
+                    onClick={async () => {
+                      try {
+                        checked.forEach(async (record) => {
+                          if (record !== "#") {
+                            await makeRequest.put(
+                              "/reservation/reject/" + record
+                            );
+                          }
+                        });
+                        toast.success("Requests Rejected");
+                        window.location.reload();
+                      } catch (error) {
+                        if (error.response?.data?.message) {
+                          toast.error(error.response.data);
+                        } else {
+                          toast.error("An error occurred");
+                        }
+                      }
+                    }}
                   />
                 </IconButton>
                 <IconButton />
@@ -374,8 +394,11 @@ export default function AdminRecordList({ status = "pending" }) {
                               toast.success("Reservation Approved");
                               window.location.reload();
                             } catch (error) {
-                              // console.log(error)
-                              toast.error(error.response.data);
+                              if (error.response?.data?.message) {
+                                toast.error(error.response.data);
+                              } else {
+                                toast.error("An error occurred");
+                              }
                             }
                           }}
                         />
@@ -410,8 +433,9 @@ export default function AdminRecordList({ status = "pending" }) {
                             );
                             var file = window.URL.createObjectURL(res.data);
                             window.location.assign(file);
-                            console.log(res);
-                          } catch (error) {}
+                          } catch (error) {
+                            toast.error("Something went wrong");
+                          }
                         }}
                         aria-label="comments"
                       >

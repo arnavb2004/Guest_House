@@ -52,7 +52,6 @@ const BookDining = () => {
   const cartSlice = useSelector((state) => state.cart);
   const cart = cartSlice.cartItems;
   const totalAmount = cartSlice.totalAmount;
-  console.log(cart);
 
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -69,12 +68,6 @@ const BookDining = () => {
   const tabItems = tabs.map((tab) =>
     filteredMenuItems.filter((item) => item.category === tab)
   );
-
-  // const tabItems = [
-  //   <DiningCard items={filteredMenuItems} />,
-
-  // ]
-  // console.log(tabItems);
 
   return (
     <div className={styles.container}>

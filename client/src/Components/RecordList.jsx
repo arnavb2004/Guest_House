@@ -45,30 +45,26 @@ export default function RecordList({ status = "pending" }) {
 
 	const makeRequest = privateRequest(user.accessToken, user.refreshToken);
 
-	const fetchRecords = async () => {
-		try {
-			const res = await makeRequest.get("/reservation/" + status);
-			console.log(res.data);
-			const reservations = res.data;
-			setValues(reservations.map((res) => res._id));
-			setRecords(reservations);
-			setNewRecords(reservations);
-			setLoadingStatus("Success");
-		} catch (err) {
-			toast(err.response.data);
-			setLoadingStatus("Error");
-			console.log(err.response.data);
-		}
-	};
-	//console.log(records);
-	useEffect(() => {
-		setLoadingStatus("Loading");
-		fetchRecords();
-	}, [status]);
-	// console.log(records);
-	const dispatch = useDispatch();
-	const handleToggle = (value) => () => {
-		const currentIndex = checked.indexOf(value);
+  const fetchRecords = async () => {
+    try {
+      const res = await makeRequest.get("/reservation/" + status);
+      const reservations = res.data;
+      setValues(reservations.map((res) => res._id));
+      setRecords(reservations);
+      setNewRecords(reservations);
+      setLoadingStatus("Success");
+    } catch (err) {
+      if (err.response?.data?.message) toast(err.response.data.message);
+      setLoadingStatus("Error");
+    }
+  };
+  useEffect(() => {
+    setLoadingStatus("Loading");
+    fetchRecords();
+  }, [status]);
+  const dispatch = useDispatch();
+  const handleToggle = (value) => () => {
+    const currentIndex = checked.indexOf(value);
 
 		if (value === "#") {
 			if (currentIndex === -1) {
@@ -123,8 +119,7 @@ export default function RecordList({ status = "pending" }) {
 
 		setNewRecords(tempRecords);
 
-		console.log(tempRecords);
-	};
+  };
 
 	useEffect(() => {
 		if (searchTerm) filterRecords();
@@ -358,8 +353,9 @@ export default function RecordList({ status = "pending" }) {
                             );
                             var file = window.URL.createObjectURL(res.data);
                             window.location.assign(file);
-                            console.log(res);
-                          } catch (error) {}
+                          } catch (error) {
+                            toast.error("Something went wrong")
+                          }
                         }}
                         aria-label="comments"
                       >

@@ -116,7 +116,7 @@ export default function DiningList({ status = "pending" }) {
 
   const fetchRecords = async () => {
     try {
-      const res = await makeRequest.get("/dining/all");
+      const res = await makeRequest.get("/dining/" + status);
       let orders = res.data;
       orders = orders.filter((order) => order.status.toLowerCase() == status);
       setValues(orders.map((res) => res._id));
@@ -125,10 +125,8 @@ export default function DiningList({ status = "pending" }) {
       setLoadingStatus("Success");
     } catch (err) {
       setLoadingStatus("Error");
-      console.log(err.response.data);
     }
   };
-  //console.log(records);
   useEffect(() => {
     setLoadingStatus("Loading");
     fetchRecords();
@@ -283,7 +281,11 @@ export default function DiningList({ status = "pending" }) {
                       <IconButton
                         edge="end"
                         aria-label="comments"
-                        onClick={() => navigate(`${record._id}`)}
+                        onClick={() => {
+                          status === "pending"
+                            ? navigate(`${record._id}`)
+                            : navigate(`../${record._id}`);
+                        }}
                       >
                         <InsertDriveFileIcon color="black" />
                       </IconButton>

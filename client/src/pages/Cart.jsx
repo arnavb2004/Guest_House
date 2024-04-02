@@ -26,7 +26,6 @@ const Cart = () => {
       toast.error("Please select a booking date.");
       return;
     }
-    console.log(cart);
     let foodItems = [];
 
     for (let [key, value] of Object.entries(cart)) {

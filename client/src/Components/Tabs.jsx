@@ -60,7 +60,6 @@ export default function BasicTabs({ tabs, tabItems }) {
         </Tabs>
       </Box>
       {tabItems.map((items, index) => {
-        console.log(items);
         return (
           <CustomTabPanel value={value} index={index} key={index}>
             <DiningCard items={items} />

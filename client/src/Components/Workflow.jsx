@@ -3,12 +3,8 @@ import { useSelector } from "react-redux";
 import { privateRequest } from "../utils/useFetch";
 import StepperComponent from "./Stepper";
 
-const Workflow = ({
-  id,
-  userRecord,
-  reviewers,
-  setReviewers,
-}) => {
+const Workflow = ({ id, userRecord, reviewers, setReviewers }) => {
+  
   const steps = [
     "Reservation Form",
     "Approval",

@@ -4,8 +4,8 @@ import User from "../models/User.js";
 export const checkAuth = async (req, res, next) => {
   try {
     console.log("Checking the access token");
-    console.log(req.headers)
-    console.log(req.body)
+    console.log(req.headers);
+    console.log(req.body);
     const accessToken = req.headers.accesstoken.split(" ")[0];
     const refreshToken = req.headers.refreshtoken.split(" ")[0];
     console.log(accessToken);
@@ -19,7 +19,7 @@ export const checkAuth = async (req, res, next) => {
       console.log(decodedToken);
       console.log(Date.now() / 1000);
       if (decodedToken.exp <= Date.now() / 1000) {
-        console.log("Access Token has expired!!,Checking the refresh token!!");
+        console.log("Access Token has expired!!,`Checking the refresh token!!");
         var decodedToken;
         try {
           decodedToken = jwt.verify(
@@ -27,6 +27,7 @@ export const checkAuth = async (req, res, next) => {
             process.env.REFRESH_TOKEN_SECRET
           );
         } catch (err) {
+          console.log(err.message);
           if (err.message === "jwt expired") {
             throw new Error("Refresh Token has expired! Please login again");
             //decodedToken=jwt.decode(refreshToken);

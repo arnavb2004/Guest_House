@@ -43,8 +43,12 @@ const UserProfileDialog = ({ openDialog, setOpenDialog }) => {
         contact: editableContact,
       });
     } catch (error) {
-        console.error(error);
-        toast.error(error.response.data);
+        if (error.response?.data?.message) {
+          toast.error(error.response.data);
+        }
+        else {
+          toast.error("An error occurred");
+        }
     }
 
     setIsEditing(false); // Exit editing mode after updating

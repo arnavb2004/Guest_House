@@ -6,7 +6,6 @@ let store
 export const injectStore = _store => {
   store = _store
 }
-// console.log(store.get)
 
 // axiosInstance.interceptors.request.use(config => {
 //   config.headers.accessToken = store.getState().user.accessToken
@@ -21,8 +20,7 @@ axios.interceptors.response.use(null, error => {
     error.response < 500;
 
     if(expectedError){
-        //console.log('Logging the error', error);
-        toast.error(error.response.data.message);
+        toast.error(error.response?.data?.message);
     }
     else{
         toast.error("An unexpected error occured!")
