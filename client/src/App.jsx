@@ -110,8 +110,6 @@ function App() {
             </Route>
           </Route>
 
-
-
           <Route
             path=":role"
             element={
@@ -130,6 +128,14 @@ function App() {
             <Route path="dining" element={<Dining />}>
               <Route path="" element={<DiningList />} />
               <Route path="book-dining" element={<BookDining />} />
+              <Route
+                path="rejected-requests"
+                element={<DiningList status="rejected" />}
+              />
+              <Route
+                path="approved-requests"
+                element={<DiningList status="approved" />}
+              />
               <Route path="cart" element={<Cart />} />
               <Route path=":id" element={<DiningRecordPage />} />
             </Route>
