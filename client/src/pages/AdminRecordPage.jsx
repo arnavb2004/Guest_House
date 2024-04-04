@@ -25,7 +25,6 @@ export default function AdminRecordPage() {
     HOLD: "bg-yellow-400",
   };
 
-
   const [reviewers, setReviewers] = useState([]);
 
   const [userRecord, setUserRecord] = useState({
@@ -153,8 +152,8 @@ export default function AdminRecordPage() {
           </div>
         </div>
       </div>
-      {user.role === "ADMIN" && (
-        <div className='col-span-5 shadow-lg flex justify-between  p-5  gap-4 m-9 font-["Dosis"]'>
+      <div className='col-span-5 shadow-lg flex justify-between  p-5  gap-4 m-9 font-["Dosis"]'>
+        {user.role === "ADMIN" && (
           <div>
             <div className="text-2xl font-semibold font-['Dosis'] px-5">
               Reviewers
@@ -193,6 +192,8 @@ export default function AdminRecordPage() {
               </button>
             </div>
           </div>
+        )}
+        {user.role !== "USER" && (
           <div>
             <div className="text-2xl font-semibold font-['Dosis'] px-5">
               Status
@@ -203,8 +204,7 @@ export default function AdminRecordPage() {
                   <div className="w-20">{reviewer.role}</div>
                   <div
                     className={
-                      "border relative top-1 w-5 h-5 " +
-                      color[reviewer.status]
+                      "border relative top-1 w-5 h-5 " + color[reviewer.status]
                     }
                   ></div>
                   <div className="w-72">{reviewer.comments}</div>
@@ -212,6 +212,8 @@ export default function AdminRecordPage() {
               ))}
             </div>
           </div>
+        )}
+        {user.role === "ADMIN" && (
           <div>
             <Link
               state={{ userRecord: userRecord }}
@@ -221,8 +223,8 @@ export default function AdminRecordPage() {
               Assign Rooms
             </Link>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </>
   );
 }

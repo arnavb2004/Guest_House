@@ -109,8 +109,9 @@ export default function DiningRecordPage() {
           </div>
         </div>
       </div>
-      {user.role === "ADMIN" && (
-        <div className='col-span-5 shadow-lg flex p-5 gap-24 m-9 font-["Dosis"]'>
+      (
+      <div className='col-span-5 shadow-lg flex p-5 gap-24 m-9 font-["Dosis"]'>
+        {user.role === "ADMIN" && (
           <div>
             <div className="text-2xl font-semibold font-['Dosis'] px-5">
               Reviewers
@@ -149,6 +150,9 @@ export default function DiningRecordPage() {
               </button>
             </div>
           </div>
+        )}
+
+        {user.role !== "ADMIN" && (
           <div>
             <div className="text-2xl font-semibold font-['Dosis'] px-5">
               Status
@@ -171,8 +175,8 @@ export default function DiningRecordPage() {
               })}
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </>
   );
 }
