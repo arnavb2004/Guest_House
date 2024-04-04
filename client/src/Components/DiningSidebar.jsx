@@ -20,16 +20,20 @@ const DiningSidebar = () => {
       ? [
           "Pending Requests",
           "Rejected Requests",
-          "Approved Requests",
-          "Contact",
+          "Approved Requests"
         ]
       : user.role === "USER"
-      ? ["Pending Requests", "Rejected Requests", "Approved Requests","Book Dining", "Cart", "Services", "Contact"]
-      : [
+      ? [
           "Pending Requests",
           "Rejected Requests",
           "Approved Requests",
-          "Contact",
+          "Book Dining",
+          "Cart"
+        ]
+      : [
+          "Pending Requests",
+          "Rejected Requests",
+          "Approved Requests"
         ]; // other roles
 
   

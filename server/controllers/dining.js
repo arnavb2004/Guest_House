@@ -41,7 +41,7 @@ export async function getOrder(req, res) {
   try {
     const order = await Meal.findById(req.params.id);
     if (
-      req.user.email != order.guestEmail &&
+      req.user.email != order.email &&
       req.user.role !== "ADMIN" &&
       !order.reviewers.find((r) => r.role === req.user.role)
     ) {
