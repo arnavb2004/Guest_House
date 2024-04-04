@@ -24,7 +24,7 @@ const Menu = () => {
     {
       key: 5,
       name: "reservation",
-      label: "RESERVATION",
+      label: "ROOM RESERVATION",
       link: "/" + (user.role?.toLowerCase() || "unknown") + "/reservation",
     },
     { key: 3, name: "people", label: "PEOPLE", link: "/people" },
@@ -36,7 +36,7 @@ const Menu = () => {
     <div className="col-span-2 menu w-full h-15 flex justify-center ">
       <div className="menu-container w-full h-12 pr-3 flex justify-center align-center gap-44 text-white bg-[#365899]">
         <ul className="tabs h-full">
-          <div className="flex justify-between h-full items-center">
+          <div className="flex justify-between h-full items-center text-lg">
             {menuItems.map((item) => (
               <Link
                 exact="true"

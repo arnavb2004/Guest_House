@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../redux/userSlice";
-import { fetchNotifications } from "../redux/notificationSlice";
 import IconButton from "@mui/material/IconButton";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import NotificationsIcon from "@mui/icons-material/Notifications";
@@ -25,10 +24,6 @@ const NewHeader = () => {
       }, 3000);
       return () => clearInterval(interval);
     }, []);
-
-    useEffect(() => {
-      dispatch(fetchNotifications());
-    }, [dispatch]);
 
     const handleLogout = () => {
       dispatch(logout());
@@ -72,7 +67,7 @@ const NewHeader = () => {
                         <IconButton onClick={handleOpenDialog} size="large">
                             <AccountCircleIcon />
                         </IconButton>
-                        <span>{user.name || user.email}</span> {/* Display the user's name or email */}
+                        <span>{user.name || user.email}</span> 
                     </>
                 )}
                 <div className="relative">
