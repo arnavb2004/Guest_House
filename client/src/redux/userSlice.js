@@ -20,7 +20,7 @@ const userSlice = createSlice({
       state.id = user._id;
       state.name = user.name;
       state.role = user.role;
-      // state.notifications = user.notifications;
+      state.notifications = user.notifications;
       state.contact = user.contact;
       state.email = user.email;
       state.accessToken = accessToken;
@@ -34,7 +34,7 @@ const userSlice = createSlice({
       state.role = "";
       state.accessToken = "";
       state.refreshToken = "";
-      // state.notifications = [];
+      state.notifications = [];
     },
     updateUserDetails: (state, action) => {
       const { name, contact } = action.payload;

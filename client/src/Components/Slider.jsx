@@ -20,15 +20,13 @@ const Slider = (sliderItems) => {
     ref.current.style.transform = `translateX(${-slideIndex * 80}vw)`;
   }, [slideIndex]);
 
-  useEffect(() =>{
-
+  useEffect(() => {
     const interval = setInterval(() => {
       handleClick("right");
     }, 5000);
 
     return () => clearInterval(interval);
-  
-  },[])
+  }, []);
 
   const handleClick = (direction) => {
     setDirect(direction);
@@ -50,7 +48,7 @@ const Slider = (sliderItems) => {
       </div>
       <div className="slide-wrapper " ref={ref}>
         {sliderItems.items.map((slide, i) => (
-          <div className="slide" key={slide.key}>
+          <div className="slide" key={"slide-" + slide.key}>
             <div className="imgContainer">
               <img
                 loading={i === 0 ? "eager" : "lazy"}
@@ -59,7 +57,6 @@ const Slider = (sliderItems) => {
                 alt=""
               />
             </div>
-            
           </div>
         ))}
       </div>

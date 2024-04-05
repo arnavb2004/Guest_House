@@ -8,10 +8,13 @@ import { toast } from "react-toastify";
 import { getDate } from "../utils/handleDate";
 
 const NotificationMenu = () => {
-  const [notifications, setNotifications] = useState([]);
   const user = useSelector((state) => state.user);
-  const [status, setStatus] = useState("Loading");
+  const [notifications, setNotifications] = useState(user?.notifications);
+  const [status, setStatus] = useState("Success");
   const makeRequest = privateRequest(user.accessToken, user.refreshToken);
+  if (!(user?.notifications)) {
+    fetchNotifications();
+  }
   const fetchNotifications = async () => {
     try {
       const res = await makeRequest.get("/user/notifications");
@@ -24,10 +27,10 @@ const NotificationMenu = () => {
       console.log(err.response.data);
     }
   };
-  useEffect(() => {
-    setStatus("Loading");
-    fetchNotifications();
-  }, []);
+  // useEffect(() => {
+  //   setStatus("Loading");
+  //   fetchNotifications();
+  // }, []);
   const navigate = useNavigate();
 
   const handleReservationRedirect = async (res_id, not_id) => {
@@ -36,21 +39,22 @@ const NotificationMenu = () => {
     navigate(`/${user.role.toLowerCase()}/reservation/${res_id}`);
     console.log(res_id);
   };
+  console.log(notifications)
 
   return (
     <div className="absolute z-[999] font-['Dosis'] flex flex-col items-start uppercase right-0 mt-4 w-64 bg-white border border-gray-300 rounded shadow-lg">
       <div className="p-4">
-        <h2 className="text-lg font-bold text-left mb-2">
-          Notifications
-        </h2>
-        {status === "Loading" && <p className="text-sm text-left">Loading...</p>}
+        <h2 className="text-lg font-bold text-left mb-2">Notifications</h2>
+        {status === "Loading" && (
+          <p className="text-sm text-left">Loading...</p>
+        )}
         {status === "Success" && notifications.length === 0 && (
           <p className="text-sm text-left">No notifications</p>
         )}
         {notifications.length > 0 && (
           <ul className="h-96 overflow-y-scroll pr-2">
             {notifications.map((notification) => (
-              <li key={notification.res_id} className="mb-2">
+              <li key={"notification-" + notification._id} className="mb-2">
                 <div
                   className="bg-gray-100 p-2 rounded cursor-pointer"
                   onClick={() =>

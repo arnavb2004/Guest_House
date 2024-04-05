@@ -34,7 +34,7 @@ const Sidebar = () => {
           "Contact",
         ]
       : ["Pending Requests", "Rejected Requests", "Approved Requests"]; // other roles
-      
+
   return (
     <div className="flex flex-col">
       <div
@@ -75,7 +75,7 @@ const Sidebar = () => {
           {content.map((item, index) => (
             <Link
               className=""
-              key={index}
+              key={"sidebar-" + index}
               to={
                 item === "Pending Requests"
                   ? ""

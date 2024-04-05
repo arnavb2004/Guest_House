@@ -3,16 +3,13 @@ import React, { useEffect, useRef, useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import axios from "axios";
 
-import { GoogleLogin } from "@react-oauth/google";
 import { BASE_URL } from "../constants";
 
 import logo from "./../images/IIT_Ropar_logo.png";
-import { jwtDecode } from "jwt-decode";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
 import "./Login.css";
 import HomeIcon from "@mui/icons-material/Home";
-import bg from "./../images/Guesthouse2.jpeg";
 import { useDispatch, useSelector } from "react-redux";
 import { setUserSlice } from "../redux/userSlice";
 

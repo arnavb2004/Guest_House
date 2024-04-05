@@ -23,7 +23,6 @@ import Auth from "./utils/Auth";
 import Dining from "./pages/Dining";
 import NotFound from "./pages/NotFound";
 import Unauthorized from "./pages/Unauthorized";
-import Reserve from "./components/Reserve";
 import RoomBooking from "./pages/RoomBooking";
 import AdminRecordPage from "./pages/AdminRecordPage";
 import { ToastContainer } from "react-toastify";
@@ -170,7 +169,6 @@ function App() {
             <Route path=":id" element={<DiningRecordPage />} />
           </Route>
 
-          <Route path="test" element={<Reserve />} />
 
           <Route path="/iitropar-campus-map" element={<PDFViewer />} />
           <Route path="/404" element={<NotFound />} />

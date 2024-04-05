@@ -218,8 +218,12 @@ const Cart = () => {
                 type="date"
                 value={bookingDate}
                 onChange={handleDateChange}
-                min={(new Date(Date.now() + 2 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0]}
-                style={{ color: 'black' }} // Set the color to black
+                min={
+                  new Date(Date.now() + 2 * 24 * 60 * 60 * 1000)
+                    .toISOString()
+                    .split("T")[0]
+                }
+                style={{ color: "black" }} // Set the color to black
               />
               <p>Note : Booking has to be done 2 days prior.</p>
             </div>
@@ -238,7 +242,7 @@ const Cart = () => {
                     (item) => item.id === parseInt(itemId)
                   );
                   return (
-                    <tr key={index}>
+                    <tr key={"item-" + index}>
                       <td>{item.name}</td>
                       <td>₹{(item.price * cart[item.id]).toFixed(2)}</td>
                       <td className="">{cart[item.id]}</td>

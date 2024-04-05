@@ -41,7 +41,7 @@ const Menu = () => {
               <Link
                 exact="true"
                 to={item.link}
-                key={item.key}
+                key={'menu-'+item.key}
                 onClick={() => setSelectedItem(`${item.name}`)}
                 className={`flex justify-center items-center px-8 h-full ${
                   (selectedItem === item.name || hovered === item.name) &&

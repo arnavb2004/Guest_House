@@ -9,24 +9,18 @@ import Menu from "./Menu";
 import Logo from "../images/IIT-logo.png";
 import UserProfileDialog from "./UserProfileDialog";
 import NotificationMenu from "./NotificationMenu";
+import Badge from "@mui/material/Badge";
+import Text from "./Text";
 
 const Header = () => {
   const user = useSelector((state) => state.user);
-  const notifications = useSelector((state) => state.notifications.notifications); // Assuming your notifications are stored in the Redux state
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [showHindi, setShowHindi] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
   const [notificationMenuOpen, setNotificationMenuOpen] = useState(false);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setShowHindi((prev) => !prev);
-    }, 3000);
-    return () => clearInterval(interval);
-  }, []);
-
+  
 
   const handleLogout = () => {
     dispatch(logout());
@@ -51,46 +45,50 @@ const Header = () => {
           <img src={Logo} alt="IIT Ropar logo" />
         </div>
         <div className="col-span-6 flex flex-col pl-5 justify-end pb-2">
-          <a className='font-["Dosis"] text-5xl text-justify  font-bold' href="/">
+          <a
+            className='font-["Dosis"] text-5xl text-justify  font-bold'
+            href="/"
+          >
             GUEST HOUSE
           </a>
-          <a className='text-3xl text-justify min-w-max font-medium font-["Dosis"]' href="/">
-            <div className="flex flex-col h-9 py-1 ">
-              <div className={!showHindi && "h-0 overflow-hidden"}>
-                भारतीय प्रौद्योगिकी संस्थान रोपड़
-              </div>
-              <div className={showHindi && "h-0 overflow-hidden"}>
-                INDIAN INSTITUTE OF TECHNOLOGY ROPAR
-              </div>
-            </div>
-          </a>
+          <Text/>
         </div>
-        <div className='font-["Dosis"] col-span-5 right-1 top-16 gap-4 absolute uppercase flex p-3 pr-12 w-full justify-end mb-4 text-2xl text-right font-medium items-center'>
+        <div className='font-["Dosis"] col-span-5 right-1 top-16 text-md gap-4 absolute uppercase flex p-3 pr-12 w-full justify-end mb-4 text-right font-medium items-center'>
           {user.email && (
-            <div className="cursor-default">
-              <IconButton onClick={handleOpenDialog} size="large">
-                <AccountCircleIcon />
-              </IconButton>
-            </div>
-          )}
-          <div className="relative">
-            <IconButton onClick={handleNotificationClick}>
-              <NotificationsIcon />
-            </IconButton>
-            {notificationMenuOpen && (
-              <div className="absolute top-full right-0 mt-2">
-                <NotificationMenu/>
+            <>
+              <div className="cursor-default">
+                <IconButton onClick={handleOpenDialog} size="large">
+                  <AccountCircleIcon />
+                </IconButton>
               </div>
-            )}
-          </div>
+              <div className="relative">
+                <IconButton onClick={handleNotificationClick}>
+                  <Badge badgeContent={4} color="warning">
+                    <NotificationsIcon />
+                  </Badge>
+                </IconButton>
+                {notificationMenuOpen && (
+                  <div className="absolute top-full right-0 mt-2">
+                    <NotificationMenu />
+                  </div>
+                )}
+              </div>
+            </>
+          )}
           {user.email ? (
-            <div className="cursor-pointer" onClick={handleLogout}>
+            <button
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              onClick={handleLogout}
+            >
               LOGOUT
-            </div>
+            </button>
           ) : (
-            <div className="cursor-pointer" onClick={goToLoginPage}>
+            <button
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              onClick={goToLoginPage}
+            >
               LOGIN
-            </div>
+            </button>
           )}
           <UserProfileDialog
             openDialog={openDialog}
