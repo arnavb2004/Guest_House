@@ -1,18 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
-
 const userSlice = createSlice({
   name: "user",
   initialState: {
-    id:"",
+    id: "",
     name: "",
     email: "",
     contact: "",
     role: "",
     accessToken: "",
     refreshToken: "",
-    notifications: []
+    notifications: [],
   },
   reducers: {
     setUserSlice: (state, action) => {
@@ -37,17 +36,19 @@ const userSlice = createSlice({
       state.notifications = [];
     },
     updateUserDetails: (state, action) => {
-      const { name, contact } = action.payload;
+      const { name, contact, notifications } = action.payload;
       if (name !== undefined) {
         state.name = name;
       }
       if (contact !== undefined) {
         state.contact = contact;
       }
+      if (notifications !== undefined) {
+        state.notifications = notifications;
+      }
     },
   },
 });
 
-
-export const { setUserSlice, logout, updateUserDetails} = userSlice.actions;
+export const { setUserSlice, logout, updateUserDetails } = userSlice.actions;
 export default userSlice.reducer;

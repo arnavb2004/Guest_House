@@ -66,7 +66,7 @@ export default function RecordPage() {
           setReviewers={setReviewers}
         />
 
-        <div className='col-span-5 shadow-lg flex flex-col justify-center gap-4 font-["Dosis"]'>
+        <div className='col-span-5 shadow-lg flex flex-col justify-center gap-4 font-["Dosis"] bg-[rgba(255,255,255,0.5)] rounded-lg pt-4'>
           <div className="flex justify-between px-32">
             <p className="p-2 text-xl font-semibold">Guest Name:</p>
             <p className="p-2 text-lg">{userRecord.guestName}</p>
@@ -123,7 +123,7 @@ export default function RecordPage() {
           </div>
         </div>
       </div>
-      <div className='col-span-5 shadow-lg flex  p-5  gap-4 m-9 font-["Dosis"]'>
+      <div className='col-span-5 shadow-lg flex p-5 gap-2 m-9 font-["Dosis"] bg-[rgba(255,255,255,0.5)] rounded-lg'>
         <div>
           <div className="text-2xl font-semibold font-['Dosis'] px-5">
             Status

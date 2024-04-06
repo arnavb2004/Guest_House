@@ -49,12 +49,12 @@ const Sidebar = () => {
         >
           ☰
         </div>
-        <div className='cursor-default text-xl relative font-["Single Day"] font-["Dosis"]'>
+        {/* <div className='cursor-default text-xl relative font-["Single Day"] font-["Dosis"]'>
           GUEST HOUSE
         </div>
         <div className="bottom-[2px] relative ">
           <HomeOutlinedIcon className="h-20 w-20" fontSize="medium" />
-        </div>
+        </div> */}
       </div>
       <hr></hr>
       <div

@@ -85,7 +85,7 @@ export default function DiningRecordPage() {
           setReviewers={setReviewers}
         />
 
-        <div className='col-span-5 shadow-lg flex flex-col gap-4 font-["Dosis"]'>
+        <div className='col-span-5 shadow-lg flex flex-col gap-4 font-["Dosis"] bg-[rgba(255,255,255,0.5)] rounded-lg'>
           <div className="flex justify-between px-32  ">
             <p className="p-2 text-xl font-semibold">Guest Email:</p>
             <p className="p-2 text-lg">{userRecord.email}</p>
@@ -109,8 +109,7 @@ export default function DiningRecordPage() {
           </div>
         </div>
       </div>
-      (
-      <div className='col-span-5 shadow-lg flex p-5 gap-24 m-9 font-["Dosis"]'>
+      <div className='col-span-5 shadow-lg flex p-5 gap-24 m-9 font-["Dosis"] bg-[rgba(255,255,255,0.5)] rounded-lg'>
         {user.role === "ADMIN" && (
           <div>
             <div className="text-2xl font-semibold font-['Dosis'] px-5">
@@ -154,7 +153,7 @@ export default function DiningRecordPage() {
 
         {user.role !== "ADMIN" && (
           <div>
-            <div className="text-2xl font-semibold font-['Dosis'] px-5">
+            <div className="text-2xl font-semibold font-['Dosis'] px-5 ">
               Status
             </div>
             <div className="p-5 flex flex-col gap-4 ">

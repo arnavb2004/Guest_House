@@ -21,7 +21,7 @@ const Workflow = ({ id, userRecord, reviewers, setReviewers }) => {
   const comments = reviewer?.comments;
   // const stepsCompleted = 2;
   return (
-    <div className=" flex flex-col justify-center col-span-3 shadow-lg p-8 gap-10">
+    <div className=" flex flex-col bg-[rgba(255,255,255,0.5)] rounded-lg justify-center col-span-3 shadow-lg p-8 gap-10">
       <StepperComponent steps={steps} stepsCompleted={stepsCompleted || 0} />
       <div className="w-full mt-10 flex justify-around">
         {user.role !== "USER" && (

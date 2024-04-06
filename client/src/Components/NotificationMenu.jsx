@@ -27,10 +27,6 @@ const NotificationMenu = () => {
       console.log(err.response.data);
     }
   };
-  // useEffect(() => {
-  //   setStatus("Loading");
-  //   fetchNotifications();
-  // }, []);
   const navigate = useNavigate();
 
   const handleReservationRedirect = async (res_id, not_id) => {
