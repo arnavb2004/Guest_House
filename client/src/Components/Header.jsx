@@ -51,7 +51,7 @@ const Header = () => {
   return (
     <div className="header flex flex-col items-center bg-gray-50">
       <div className="header-container w-5/6 px-10 h-40 grid grid-cols-12 py-2 pb-5">
-        <div className="flex gap-4 w-28 h-32 pt-4">
+        <div className="col-span-1 flex gap-4 w-28 h-32 pt-4 mr-4">
           <img src={Logo} alt="IIT Ropar logo" />
         </div>
         <div className="col-span-6 flex flex-col pl-5 justify-end pb-2">
@@ -69,7 +69,7 @@ const Header = () => {
             </div>
           </a>
         </div>
-        <div className='font-["Dosis"] col-span-5 right-1 top-16 gap-4 absolute uppercase flex p-3 pr-12 w-full justify-end mb-4 text-2xl text-right font-medium items-center'>
+        <div className='font-["Dosis"] col-span-5 right-1 top-16 gap-4 absolute uppercase flex p-3 pr-12 justify-end mb-4 text-2xl text-right font-medium items-center'>
           {user.email && (
             <div className="cursor-default">
               <IconButton onClick={handleOpenDialog} size="large">

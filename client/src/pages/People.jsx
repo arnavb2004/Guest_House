@@ -14,7 +14,7 @@ const People = () => {
 
 
   return (
-    <div className='people w-5/6 grid grid-cols-3 my-10 gap-24'>
+    <div className='people w-5/6 flex flex-wrap justify-around gap-24 my-10'>
       {users.map((item, index) => {
         return <UserProfileBox key={index} user={item}/>
       })}

@@ -5,7 +5,6 @@ import People from "./pages/People";
 import Location from "./pages/Location";
 import Reservation from "./pages/Reservation";
 import Contact from "./pages/Contact";
-
 import Login from "./pages/Login";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import Register from "./pages/Register";
