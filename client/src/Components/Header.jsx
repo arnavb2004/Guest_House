@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../redux/userSlice";
-import { fetchNotifications } from "../redux/notificationSlice"; // Import the fetchNotifications action
 import IconButton from "@mui/material/IconButton";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import NotificationsIcon from "@mui/icons-material/Notifications";
@@ -28,9 +27,6 @@ const Header = () => {
     return () => clearInterval(interval);
   }, []);
 
-  useEffect(() => {
-    dispatch(fetchNotifications()); // Fetch notifications when component mounts
-  }, [dispatch]);
 
   const handleLogout = () => {
     dispatch(logout());

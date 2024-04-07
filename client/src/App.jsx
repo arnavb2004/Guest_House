@@ -30,7 +30,7 @@ import "react-toastify/dist/ReactToastify.min.css";
 
 function App() {
   return (
-    <div className="">
+    <div className="font-['Dosis']">
       <ToastContainer />
 
       <BrowserRouter>

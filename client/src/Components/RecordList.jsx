@@ -249,7 +249,7 @@ export default function RecordList({ status = "pending" }) {
         className="bg-gray-50 rounded-md overflow-hidden"
       >
         <ListItem
-          className=" bg-[#365899] text-white"
+          className=" bg-[#365899] text-white "
           key="#"
           secondaryAction={
             checked.length > 0 && (
