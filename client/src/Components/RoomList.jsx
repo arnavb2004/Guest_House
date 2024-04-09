@@ -28,7 +28,7 @@ export default function RoomList({ roomList, setRoomList, id }) {
   return (
     <>
       {roomList.length > 0 && (
-        <div className="room-list flex flex-col gap-4 m-4 p-2 h-1/8 overflow-y-scroll">
+        <div className="room-list flex flex-col gap-4 m-4 p-2 h-1/8 overflow-y-auto">
           <div className="flex justify-center text-3xl font-bold">
             Room List
           </div>

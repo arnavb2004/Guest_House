@@ -1,19 +1,29 @@
-import { Navigate, Outlet } from "react-router-dom";
-
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 
 import React from "react";
 import { useSelector } from "react-redux";
 
 const Auth = ({ allowedRoles }) => {
-
-    const user = useSelector((state)=>state.user);
+  const user = useSelector((state) => state.user);
+  const location = useLocation();
+  let role = location.pathname.split("/");
+  let redirect;
+  if (role[1]) {
+    role[1] = user.role.toLowerCase();
+    redirect = role.join("/");
+    console.log(redirect);
+  }
 
   return allowedRoles.find((role) => user.role.includes(role)) ? (
     <Outlet />
   ) : user?.email ? (
-    <Navigate to="/unauthorized" />
+    redirect ? (
+      <Navigate to={redirect} />
+    ) : (
+      <Navigate to="/unauthorized" />
+    )
   ) : (
-    <Navigate to="/login"/>
+    <Navigate to="/login" />
   );
 };
 

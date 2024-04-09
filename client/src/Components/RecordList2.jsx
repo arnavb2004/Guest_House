@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from "react";
 
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
 import Checkbox from "@mui/material/Checkbox";
+import IconButton from "@mui/material/IconButton";
 import { useSelector, useDispatch } from "react-redux";
 import { privateRequest } from "../utils/useFetch";
 import { useNavigate } from "react-router-dom";
@@ -14,7 +20,6 @@ import TextField from "@mui/material/TextField";
 import { getDate } from "../utils/handleDate";
 import DownloadIcon from "@mui/icons-material/Download";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { IconButton } from "@mui/material";
 
 export default function RecordList({ status = "pending" }) {
   const [checked, setChecked] = useState([]);
@@ -238,94 +243,110 @@ export default function RecordList({ status = "pending" }) {
           onChange={handleSearchChange}
         />
       </div>
-      <div
+      <List
         sx={{ width: "100%", padding: "0px" }}
         className="bg-gray-50 rounded-md overflow-hidden"
       >
-        <div className=" bg-[#365899] text-white text-[1.13vw]  w-full" key="#">
-          <div className="p-2.5 px-4 flex gap-4 w-full items-center justify-around text-center">
-            <div className="flex items-center gap-2 w-[15%] overflow-hidden">
+        <ListItem
+          className=" bg-[#365899] text-white "
+          key="#"
+          secondaryAction={
+            checked.length > 0 && (
+              <div className="flex gap-2">
+                <IconButton edge="end" aria-label="comments">
+                  <DeleteIcon className="text-gray-300" />
+                </IconButton>
+              </div>
+            )
+          }
+          disablePadding
+        >
+          <div className="p-2.5 px-4 flex w-full items-center">
+            <ListItemIcon>
               <Checkbox
                 edge="start"
                 color="secondary"
                 checked={checked.indexOf("#") !== -1}
                 tabIndex={-1}
-                className=" "
                 onClick={handleToggle("#")}
                 disableRipple
+                inputProps={{ "aria-labelledby": "checkbox-list-label-header" }}
               />
-              <div onClick={handleSortToggle} className="w-full">
-                Name
-              </div>
-            </div>
-            <div onClick={handleSortToggle} className="w-[10%] ">
-              Number of Guests
-            </div>
-            <div onClick={handleSortToggle} className="w-[10%] ">
-              Number of Rooms
-            </div>
-            <div onClick={handleSortToggle} className="w-[10%] ">
-              Category
-            </div>
-            <div onClick={handleSortToggle} className="w-[10%] ">
-              Arrival Date
-            </div>
-            <div onClick={handleSortToggle} className="w-[10%] ">
-              Departure Date
-            </div>
-            <div onClick={handleSortToggle} className="w-[10%] ">
-              Room Type
-            </div>
-            <div className="flex justify-evenly gap-2 w-[10%]">
-              {checked.length > 0 && (
-                <IconButton>
-                  <DeleteIcon className="text-gray-300" />{" "}
-                </IconButton>
-              )}
-            </div>
-
-            <div />
+            </ListItemIcon>
+            <ListItemText
+              id="checkbox-list-label-header"
+              className=" text-wrap w-[0.75vw] "
+              primaryTypographyProps={{ fontSize: "1.05vw" }}
+              sx={{ overflow: "hidden" }}
+              primary="Name"
+            />
+            <ListItemText
+              id="checkbox-list-label-header"
+              className=" text-wrap w-[0.5vw]  pr-2 text-center cursor-pointer"
+              primaryTypographyProps={{ fontSize: "1.05vw" }}
+              onClick={handleSortToggle}
+              primary="Number of Guests"
+            />
+            <ListItemText
+              id="checkbox-list-label-header"
+              className=" text-wrap w-[0.5vw]  text-center cursor-pointer"
+              primaryTypographyProps={{ fontSize: "1.05vw" }}
+              onClick={handleSortToggle}
+              primary="Number of Rooms"
+            />
+            <ListItemText
+              id="checkbox-list-label-header"
+              className=" text-wrap w-[0.5vw]  text-center cursor-pointer"
+              primaryTypographyProps={{ fontSize: "1.05vw" }}
+              onClick={handleSortToggle}
+              primary="Category"
+            />
+            <ListItemText
+              id="checkbox-list-label-header"
+              className="w-[0.75vw]  text-center cursor-pointer"
+              primaryTypographyProps={{ fontSize: "1.05vw" }}
+              onClick={handleSortToggle}
+              primary="Arrival Date"
+            />
+            <ListItemText
+              id="checkbox-list-label-header"
+              className="w-[0.75vw]  text-center cursor-pointer"
+              primaryTypographyProps={{ fontSize: "1.05vw" }}
+              onClick={handleSortToggle}
+              primary="Departure Date"
+            />
+            <ListItemText
+              id="checkbox-list-label-header"
+              className="w-[0.75vw]  text-center"
+              primaryTypographyProps={{ fontSize: "1.05vw" }}
+              primary="Room Type"
+            />
+            <ListItemText />
           </div>
-        </div>
+        </ListItem>
         {loadingStatus === "Success" && newRecords.length > 0 && (
           <div className="h-96 overflow-y-auto">
             {newRecords.map((record) => {
               const labelId = `checkbox-list-label-${record._id}`;
               return (
-                <div
+                <ListItem
                   key={record._id}
-                  className="border-b items-center flex gap-4 text-center justify-around px-4 p-2.5 text-[1vw]"
-                >
-                  <div className="flex items-center gap-2 w-[15%] overflow-hidden">
-                    <Checkbox
-                      edge="start"
-                      checked={checked.indexOf(record._id) !== -1}
-                      onClick={handleToggle(record._id)}
-                      tabIndex={-1}
-                      disableRipple
-                      inputProps={{ "aria-labelledby": labelId }}
-                    />
-                    <div className="w-full">{record.guestName}</div>
-                  </div>
-                  <div className="w-[10%]">{record.numberOfGuests}</div>
-                  <div className="w-[10%]">{record.numberOfRooms}</div>
-                  <div className="w-[10%]">{record.category}</div>
-                  <div className="w-[10%]">{getDate(record.arrivalDate)}</div>
-                  <div className="w-[10%]">{getDate(record.departureDate)}</div>
-                  <div className="w-[10%]">{record.roomType}</div>
-                  <div className="flex justify-evenly gap-4 w-[10%]">
-                    <IconButton>
-                      <InsertDriveFileIcon
+                  className="border-b"
+                  secondaryAction={
+                    <div className="flex gap-4">
+                      <IconButton
+                        edge="end"
                         onClick={() => {
                           status === "pending"
                             ? navigate(`${record._id}`)
                             : navigate(`../${record._id}`);
                         }}
-                        color="black"
-                      />
-                    </IconButton>
-                    <IconButton>
-                      <DownloadIcon
+                        aria-label="comments"
+                      >
+                        <InsertDriveFileIcon color="black" />
+                      </IconButton>
+                      <IconButton
+                        edge="end"
                         onClick={async () => {
                           try {
                             const res = await makeRequest.get(
@@ -338,18 +359,82 @@ export default function RecordList({ status = "pending" }) {
                             toast.error("Something went wrong");
                           }
                         }}
-                        color="black"
+                        aria-label="comments"
+                      >
+                        <DownloadIcon color="black" />
+                      </IconButton>
+                    </div>
+                  }
+                  disablePadding
+                >
+                  <ListItemButton
+                    className=""
+                    sx={{ paddingY: "10px" }}
+                    onClick={handleToggle(record._id)}
+                    role={undefined}
+                    dense
+                  >
+                    <ListItemIcon>
+                      <Checkbox
+                        edge="start"
+                        checked={checked.indexOf(record._id) !== -1}
+                        tabIndex={-1}
+                        disableRipple
+                        inputProps={{ "aria-labelledby": labelId }}
                       />
-                    </IconButton>
-                  </div>
+                    </ListItemIcon>
 
-                  <div />
-                </div>
+                    <ListItemText
+                      id="checkbox-list-label-header"
+                      className=" text-wrap w-[3vw]"
+                      primaryTypographyProps={{ fontSize: "0.95vw" }}
+                      sx={{ overflow: "hidden" }}
+                      primary={record.guestName}
+                    />
+                    <ListItemText
+                      id="checkbox-list-label-header"
+                      className=" text-wrap w-[3vw] text-center"
+                      primaryTypographyProps={{ fontSize: "0.95vw" }}
+                      primary={record.numberOfGuests}
+                    />
+                    <ListItemText
+                      id="checkbox-list-label-header"
+                      className=" text-wrap w-[3vw] text-center"
+                      primaryTypographyProps={{ fontSize: "0.95vw" }}
+                      primary={record.numberOfRooms}
+                    />
+                    <ListItemText
+                      id="checkbox-list-label-header"
+                      className=" text-wrap w-[3vw] text-center"
+                      primaryTypographyProps={{ fontSize: "0.95vw" }}
+                      primary={record.category}
+                    />
+                    <ListItemText
+                      id="checkbox-list-label-header"
+                      className="w-[3vw] text-center"
+                      primaryTypographyProps={{ fontSize: "0.95vw" }}
+                      primary={getDate(record.arrivalDate)}
+                    />
+                    <ListItemText
+                      id="checkbox-list-label-header"
+                      className="w-20  text-center"
+                      primaryTypographyProps={{ fontSize: "0.95vw" }}
+                      primary={getDate(record.departureDate)}
+                    />
+                    <ListItemText
+                      id="checkbox-list-label-header"
+                      className="w-min text-center"
+                      primaryTypographyProps={{ fontSize: "0.95vw" }}
+                      primary={record.roomType}
+                    />
+                    <ListItemText />
+                  </ListItemButton>
+                </ListItem>
               );
             })}
           </div>
         )}
-      </div>
+      </List>
       {loadingStatus === "Loading" && (
         <div className="p-2 text-center pt-5 font-semibold">Loading...</div>
       )}

@@ -13,40 +13,13 @@ import InputFileUpload from "../components/uploadFile";
 import { useSelector } from "react-redux";
 import { privateRequest } from "../utils/useFetch";
 import { FileIcon, defaultStyles } from "react-file-icon";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-function AutoDemo() {
-  const toast_temp = useRef(null);
-
-  const onUpload = () => {
-    toast_temp.current.show({
-      severity: "info",
-      summary: "Success",
-      detail: "File Uploaded",
-    });
-  };
-
-  return (
-    <div className="card flex justify-content-center">
-      <Toast ref={toast_temp}></Toast>
-      <FileUpload
-        mode="basic"
-        name="demo[]"
-        url="/api/upload"
-        accept="image/*"
-        maxFileSize={1000000}
-        onUpload={onUpload}
-        auto
-        chooseLabel="Browse"
-      />
-    </div>
-  );
-}
 
 function ReservationForm() {
   const user = useSelector((state) => state.user);
   const makeRequest = privateRequest(user.accessToken, user.refreshToken);
-
+  const navigate = useNavigate()
   const [loading, setLoading] = useState(false);
 
   const [files, setFiles] = useState([]);
@@ -105,7 +78,6 @@ function ReservationForm() {
     purpose: /[\s\S]*/,
     category: /[\s\S]*/,
   };
-
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -228,8 +200,6 @@ function ReservationForm() {
       return;
     }
 
-
-
     // Handle form submission
     setLoading(true);
 
@@ -261,6 +231,7 @@ function ReservationForm() {
         autoClose: 3000,
       });
       setLoading(false);
+      navigate("..");
     } catch (error) {
       console.error("Form submission failed:", error);
       setLoading(false);

@@ -211,15 +211,19 @@ const Cart = () => {
           </>
         ) : (
           <div className="">
-            <div className="flex flex-row my-5">
+            <div className="flex flex-row my-5 items-baseline">
               <p className="mr-10">Date of Booking</p>
               <input
-                className="mr-10"
+                className="mr-10 p-1"
                 type="date"
                 value={bookingDate}
                 onChange={handleDateChange}
-                min={(new Date(Date.now() + 2 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0]}
-                style={{ color: 'black' }} // Set the color to black
+                min={
+                  new Date(Date.now() + 2 * 24 * 60 * 60 * 1000)
+                    .toISOString()
+                    .split("T")[0]
+                }
+                style={{ color: "black" }} // Set the color to black
               />
               <p>Note : Booking has to be done 2 days prior.</p>
             </div>
@@ -227,7 +231,7 @@ const Cart = () => {
               <thead>
                 <tr>
                   <th>Item</th>
-                  <th>Price</th>
+                  <th>Price</th>  
                   <th>Quantity</th>
                   <th></th>
                 </tr>
@@ -238,7 +242,7 @@ const Cart = () => {
                     (item) => item.id === parseInt(itemId)
                   );
                   return (
-                    <tr key={index}>
+                    <tr key={"item-" + index}>
                       <td>{item.name}</td>
                       <td>₹{(item.price * cart[item.id]).toFixed(2)}</td>
                       <td className="">{cart[item.id]}</td>

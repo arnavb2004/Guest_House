@@ -11,7 +11,7 @@ function Dining() {
       <div className="w-full flex flex-col h-screen">
         <NewHeader/> 
         <Menu />
-        <div className="w-full flex h-screen overflow-hidden">
+        <div className="w-full flex h-screen overflow-hidden ">
           <DiningSidebar />
           <div className="w-full px-9 overflow-y-auto">
             <Outlet />

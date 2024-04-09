@@ -95,7 +95,7 @@ export default function AdminRecordPage() {
           setReviewers={setReviewers}
         />
 
-        <div className='col-span-5 shadow-lg flex flex-col justify-center gap-4 font-["Dosis"]'>
+        <div className='col-span-5 shadow-lg flex flex-col overflow-auto justify-center gap-4 font-["Dosis"] bg-[rgba(255,255,255,0.5)] rounded-lg pt-4'>
           <div className="flex justify-between px-32">
             <p className="p-2 text-xl font-semibold">Guest Name:</p>
             <p className="p-2 text-lg">{userRecord.guestName}</p>
@@ -152,16 +152,16 @@ export default function AdminRecordPage() {
           </div>
         </div>
       </div>
-      <div className='col-span-5 shadow-lg flex justify-between  p-5  gap-4 m-9 font-["Dosis"]'>
+      <div className='col-span-5 md:flex-col overflow-auto shadow-lg flex justify-between  p-5  gap-4 m-9 font-["Dosis"] bg-[rgba(255,255,255,0.5)] rounded-lg'>
         {user.role === "ADMIN" && (
-          <div>
+          <div className="w-max ">
             <div className="text-2xl font-semibold font-['Dosis'] px-5">
               Reviewers
             </div>
-            <div className="p-5">
+            <div className="p-5 w-max">
               <ul>
                 {roles.map((role) => (
-                  <li key={role}>
+                  <li key={"role-" + role}>
                     <input
                       type="checkbox"
                       id={role}
@@ -211,17 +211,19 @@ export default function AdminRecordPage() {
                 </div>
               ))}
             </div>
-          </div>
-        )}
-        {user.role === "ADMIN" && (
-          <div>
-            <Link
-              state={{ userRecord: userRecord }}
-              className="p-2 bg-[rgb(54,88,153)] rounded-lg text-white mr-16"
-              to={"rooms"}
-            >
-              Assign Rooms
-            </Link>
+            <div>
+              {user.role === "ADMIN" && (
+                <div className="ml-5 m-2 w-fit">
+                  <Link
+                    state={{ userRecord: userRecord }}
+                    className="p-2 bg-[rgb(54,88,153)] rounded-lg text-white"
+                    to={"rooms"}
+                  >
+                    Room Booking
+                  </Link>
+                </div>
+              )}
+            </div>
           </div>
         )}
       </div>

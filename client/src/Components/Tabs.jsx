@@ -61,7 +61,7 @@ export default function BasicTabs({ tabs, tabItems }) {
       </Box>
       {tabItems.map((items, index) => {
         return (
-          <CustomTabPanel value={value} index={index} key={index}>
+          <CustomTabPanel value={value} index={index} key={"tab-" + index}>
             <DiningCard items={items} />
           </CustomTabPanel>
         );
