@@ -60,7 +60,6 @@ const reservationSchema = new mongoose.Schema(
             "REGISTRAR",
             "ASSOCIATE DEAN",
           ],
-          default: "ADMIN",
         },
         comments:{
           type: String,
