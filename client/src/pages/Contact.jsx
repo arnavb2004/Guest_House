@@ -1,17 +1,32 @@
-import React from 'react';
+import React from "react";
 import ReCAPTCHA from "react-google-recaptcha";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEnvelope, faUser, faPen } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEnvelope, faUser, faPen } from "@fortawesome/free-solid-svg-icons";
 import styles from "./Contact.module.css";
 
-const center = [31.1048, 76.5259]; // Latitude and Longitude of IIT Ropar
+const Icons = () => {
+	return (
+		<div className="flex justify-center mt-8 space-x-4">
+			<a href="#" className="text-gray-600 hover:text-blue-500">
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					className="h-6 w-6"
+					fill="none"
+					viewBox="0 0 24 24"
+					stroke="currentColor">
+					{/* Social media icon (e.g., Facebook, Twitter, etc.) */}
+				</svg>
+			</a>
+			{/* Add more social media icons here */}
+		</div>
+	);
+};
 
 const Contact = () => {
 
   const onCaptchaChange = (value) => {
     console.log("Captcha value:", value);
   };
-
 
   return (
     <>
@@ -21,27 +36,24 @@ const Contact = () => {
           </div>
           <div className={styles.contentLayout}>
             <ContactForm />
-            <div className={styles.mapIframeContainer} style={{ width: "50%" }}>
-              <iframe
-                width="100%"
-                height="600"
-                src="https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=en&amp;q=IIT%20Ropar,%20Main%20Campus+(IIT%20Ropar%20Guest%20House)&amp;t=&amp;z=15&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"
-                title="IIT Ropar Location">
-              </iframe>
-            </div>
+            <Map />
           </div>
-          {/* <div className={styles.captchaContainer}>
-            <ReCAPTCHA
-              sitekey={process.env.REACT_APP_SITE_KEY}
-              onChange={onCaptchaChange}
-              className={styles.recaptcha}
-            />
-          </div> */}
         </main>
       </div>
     </>
   );
 };
+
+const Map = () => (
+  <div className={styles.mapIframeContainer} style={{ width: "50%" }}>
+    <iframe
+      width="100%"
+      height="600"
+      src="https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=en&amp;q=IIT%20Ropar,%20Main%20Campus+(IIT%20Ropar%20Guest%20House)&amp;t=&amp;z=15&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"
+      title="IIT Ropar Location">
+    </iframe>
+  </div>
+)
 
 const ContactForm = () => (
   <section className={styles.contact}>

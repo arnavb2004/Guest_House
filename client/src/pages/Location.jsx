@@ -4,8 +4,8 @@ import { Link } from "react-router-dom";
 
 const Location = () => {
 	return (
-		<div className="location w-5/6 grid grid-cols-11 my-10">
-			<div className="content col-span-7 p-4">
+		<div className="location w-5/6 flex flex-wrap justify-around my-10">
+			<div className="basis-full p-4">
 				<div className="pb-3">
 					<h2 className="text-2xl font-semibold">
 						Directions to IIT Ropar Guest House
@@ -78,25 +78,21 @@ const Location = () => {
 					</p>
 				</div>
 			</div>
-
-			<div className="content col-span-4 p-4">
-        <Link to='/iitropar-campus-map' target="_blank">
-				  <img src={campusMap} alt="campus-map" />
-        </Link>
-			</div>
-
-			<div className="col-span-11 my-4">
-				<div style={{ width: "100%" }}>
-						<iframe
-							width="100%"
-							height="600"
-							frameBorder="0"
-							scrolling="no"
-							marginHeight="0"
-							marginWidth="0"
-							src="https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=en&amp;q=IIT%20Ropar,%20Main%20Campus+(IIT%20Ropar%20Guest%20House)&amp;t=&amp;z=15&amp;ie=UTF8&amp;iwloc=B&amp;output=embed">
-							<a href="https://www.gps.ie/">gps tracker</a>
-						</iframe>
+			<div className="basis-full flex flex-wrap">
+				<Link className="p-4 w-1/2 lg:w-full" to='/iitropar-campus-map' target="_blank">
+					<img className="w-full h-[395px]" src={campusMap} alt="campus-map" />
+				</Link>
+				<div className="p-4 w-1/2 lg:w-full h-[427px]">
+					<iframe
+						width="100%"
+						height="100%"
+						frameBorder="0"
+						scrolling="no"
+						marginHeight="0"
+						marginWidth="0"
+						src="https://maps.google.com/maps?width=698&amp;height=374&amp;hl=en&amp;q=IIT%20Ropar,%20Main%20Campus+(IIT%20Ropar%20Guest%20House)&amp;t=&amp;z=15&amp;ie=UTF8&amp;iwloc=B&amp;output=embed">
+						<a href="https://www.gps.ie/">gps tracker</a>
+					</iframe>
 				</div>
 			</div>
 		</div>

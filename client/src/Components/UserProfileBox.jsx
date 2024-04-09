@@ -3,7 +3,7 @@ import profilePhoto from "../images/profile-photo.png";
 
 const UserProfileBox = ({user}) => {
   return (
-    <div className="bg-white border rounded-md p-4 shadow-md flex flex-col justify-center">
+    <div className="bg-white border rounded-md p-4 shadow-md flex flex-col h-96 w-96 justify-center">
       <div className="mb-4">
         <img src={profilePhoto} alt="User Profile" className="rounded-full w-16 h-16 mx-auto" />
       </div>
