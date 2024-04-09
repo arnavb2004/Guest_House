@@ -52,7 +52,8 @@ export default function StepperComponent({ steps, stepsCompleted }) {
                 variant="solid"
                 color={
                   (index < stepsCompleted && "success") ||
-                  (index === stepsCompleted && "primary")
+                  (index === stepsCompleted && "primary") ||
+                  ""
                 }
               >
                 {index < stepsCompleted && <CheckRoundedIcon />}

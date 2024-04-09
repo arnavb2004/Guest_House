@@ -17,29 +17,21 @@ const Sidebar = () => {
 
   const content =
     user.role === "ADMIN"
-      ? [
-          "Pending Requests",
-          "Rejected Requests",
-          "Approved Requests",
-          "Users",
-          "Contact",
-        ]
+      ? ["Pending Requests", "Rejected Requests", "Approved Requests", "Users"]
       : user.role === "USER"
       ? [
           "Pending Requests",
           "Rejected Requests",
           "Approved Requests",
           "Reservation Form",
-          "Services",
-          "Contact",
         ]
       : ["Pending Requests", "Rejected Requests", "Approved Requests"]; // other roles
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col lg:absolute lg:z-100 h-full">
       <div
         className={
-          "absolute top-28 text-white  left-4 z-20 text-xl flex gap-2 items-baseline" +
+          "absolute top-28 lg:top-[-38px] text-white left-4 z-20 text-xl flex gap-2 items-baseline" +
           styles.menuIcon
         }
       >

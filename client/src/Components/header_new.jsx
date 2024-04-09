@@ -58,7 +58,7 @@ const NewHeader = () => {
     <div className="flex justify-between items-center bg-gray-100 px-6 py-4 shadow-lg">
       <div className="flex items-center">
         <img src={Logo} alt="IIT Ropar Logo" className="mr-4 h-16" />
-        <div>
+        <div className="">
           <a
             href="/"
             className="block text-xl font-bold font-['Dosis'] text-gray-800"

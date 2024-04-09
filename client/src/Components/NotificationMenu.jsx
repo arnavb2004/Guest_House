@@ -48,7 +48,7 @@ const NotificationMenu = () => {
           <p className="text-sm text-left">No notifications</p>
         )}
         {notifications.length > 0 && (
-          <ul className="h-96 overflow-y-scroll pr-2">
+          <ul className="h-96 overflow-y-auto pr-2">
             {notifications.map((notification) => (
               <li key={"notification-" + notification._id} className="mb-2">
                 <div

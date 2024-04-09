@@ -1,10 +1,6 @@
 import React, { useEffect, useState } from "react";
 
 import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
 import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
 import { useSelector, useDispatch } from "react-redux";
@@ -208,7 +204,7 @@ export default function AdminRecordList({ status = "pending" }) {
   return (
     <div className="flex p-5 px-0 w-full flex-col">
       <div className='text-center text-3xl font-["Dosis"] font-semibold py-4 uppercase'>
-        User Records
+        {status + " requests"}
       </div>
       <div className="grid grid-cols-12 gap-8 mb-4">
         <div className="col-span-2 flex flex-col justify-center relative h-full">
@@ -251,184 +247,172 @@ export default function AdminRecordList({ status = "pending" }) {
         sx={{ width: "100%", padding: "0px" }}
         className="bg-gray-50 rounded-md overflow-hidden"
       >
-        <ListItem
-          className=" bg-[#365899] text-white"
-          key="#"
-          secondaryAction={
-            checked.length > 0 && (
-              <div className="flex gap-2">
-                <IconButton edge="end" aria-label="comments">
-                  <DoneIcon
-                    className="text-green-500 h-5"
-                    onClick={async () => {
-                      try {
-                        checked.forEach(async (record) => {
-                          if (record !== "#") {
-                            await makeRequest.put(
-                              "/reservation/approve/" + record
-                            );
-                          }
-                        });
-                        toast.success("Requests Approved");
-                        window.location.reload();
-                      } catch (error) {
-                        if (error.response?.data?.message) {
-                          toast.error(error.response.data);
-                        } else {
-                          toast.error("An error occurred");
-                        }
-                      }
-                    }}
-                  />
-                </IconButton>
-                <IconButton edge="end" aria-label="comments">
-                  <CloseIcon
-                    className="text-red-400 h-5"
-                    onClick={async () => {
-                      try {
-                        checked.forEach(async (record) => {
-                          if (record !== "#") {
-                            await makeRequest.put(
-                              "/reservation/reject/" + record
-                            );
-                          }
-                        });
-                        toast.success("Requests Rejected");
-                        window.location.reload();
-                      } catch (error) {
-                        if (error.response?.data?.message) {
-                          toast.error(error.response.data);
-                        } else {
-                          toast.error("An error occurred");
-                        }
-                      }
-                    }}
-                  />
-                </IconButton>
-                <IconButton />
-                <IconButton />
-              </div>
-            )
-          }
-          disablePadding
-        >
-          <div className="p-2.5 px-4 flex w-full items-center">
-            <ListItemIcon>
+        <div className=" bg-[#365899] text-white text-[1.13vw] w-full" key="#">
+          <div className="p-2.5 px-4 flex gap-4 w-full items-center text-center">
+            <div className="flex items-center gap-2 w-[15%]">
               <Checkbox
                 edge="start"
                 color="secondary"
                 checked={checked.indexOf("#") !== -1}
                 tabIndex={-1}
+                className=" "
                 onClick={handleToggle("#")}
                 disableRipple
-                inputProps={{ "aria-labelledby": "checkbox-list-label-header" }}
               />
-            </ListItemIcon>
-            <ListItemText
-              id="checkbox-list-label-header"
-              className=" text-wrap w-12"
-              sx={{ overflow: "hidden" }}
-              primary="Name"
-            />
-            <ListItemText
-              id="checkbox-list-label-header"
-              className=" text-wrap w-8 pr-2 text-center cursor-pointer"
-              onClick={handleSortToggle}
-              primary="Number of Guests"
-            />
-            <ListItemText
-              id="checkbox-list-label-header"
-              className=" text-wrap w-8 text-center cursor-pointer"
-              onClick={handleSortToggle}
-              primary="Number of Rooms"
-            />
-            <ListItemText
-              id="checkbox-list-label-header"
-              className=" text-wrap w-4 text-center cursor-pointer"
-              onClick={handleSortToggle}
-              primary="Category"
-            />
-            <ListItemText
-              id="checkbox-list-label-header"
-              className="w-16 text-center cursor-pointer"
-              onClick={handleSortToggle}
-              primary="Arrival Date"
-            />
-            <ListItemText
-              id="checkbox-list-label-header"
-              className="w-20 text-center cursor-pointer"
-              onClick={handleSortToggle}
-              primary="Departure Date"
-            />
-            <ListItemText
-              id="checkbox-list-label-header"
-              className="w-20 text-center pr-5 mr-5"
-              primary="Room Type"
-            />
-            <ListItemText
-              id="checkbox-list-label-header "
-              className="w-10 mr-24"
-              primary="Status"
-            />
+              <div onClick={handleSortToggle} className="w-full">
+                Name
+              </div>
+            </div>
+            <div onClick={handleSortToggle} className="w-[10%]">
+              Number of Guests
+            </div>
+            <div onClick={handleSortToggle} className="w-[10%]">
+              Number of Rooms
+            </div>
+            <div onClick={handleSortToggle} className="w-[10%]">
+              Category
+            </div>
+            <div onClick={handleSortToggle} className="w-[10%] ">
+              Arrival Date
+            </div>
+            <div onClick={handleSortToggle} className="w-[10%] ">
+              Departure Date
+            </div>
+            <div onClick={handleSortToggle} className="w-[10%] ">
+              Room Type
+            </div>
+            <div className="flex justify-evenly gap-2 w-[10%]">
+              {checked.length > 0 && (
+                <div className="flex">
+                  <IconButton edge="end" aria-label="comments">
+                    <DoneIcon
+                      className="text-green-500 h-5"
+                      onClick={async () => {
+                        try {
+                          checked.forEach(async (record) => {
+                            if (record !== "#") {
+                              await makeRequest.put(
+                                "/reservation/approve/" + record
+                              );
+                            }
+                          });
+                          toast.success("Requests Approved");
+                          window.location.reload();
+                        } catch (error) {
+                          if (error.response?.data?.message) {
+                            toast.error(error.response.data);
+                          } else {
+                            toast.error("An error occurred");
+                          }
+                        }
+                      }}
+                    />
+                  </IconButton>
+                  <IconButton edge="end" aria-label="comments">
+                    <CloseIcon
+                      className="text-red-400 h-5"
+                      onClick={async () => {
+                        try {
+                          checked.forEach(async (record) => {
+                            if (record !== "#") {
+                              await makeRequest.put(
+                                "/reservation/reject/" + record
+                              );
+                            }
+                          });
+                          toast.success("Requests Rejected");
+                          window.location.reload();
+                        } catch (error) {
+                          if (error.response?.data?.message) {
+                            toast.error(error.response.data);
+                          } else {
+                            toast.error("An error occurred");
+                          }
+                        }
+                      }}
+                    />
+                  </IconButton>
+                </div>
+              )}
+            </div>
+
+            <div />
           </div>
-        </ListItem>
+        </div>
+
         {loadingStatus === "Success" && newRecords.length > 0 && (
           <div className="h-96 overflow-y-auto">
             {newRecords.map((record) => {
               const labelId = `checkbox-list-label-${record._id}`;
-
               return (
-                <ListItem
+                <div
                   key={record._id}
-                  className="border-b"
-                  secondaryAction={
-                    <div className="flex gap-2">
-                      {record.status !== "APPROVED" && (
-                        <IconButton edge="end" aria-label="comments">
-                          <DoneIcon
-                            className="text-green-500 h-5"
-                            onClick={async () => {
-                              try {
-                                await makeRequest.put(
-                                  "/reservation/approve/" + record._id
-                                );
-                                toast.success("Reservation Approved");
-                                window.location.reload();
-                              } catch (error) {
-                                if (error.response?.data?.message) {
-                                  toast.error(error.response.data);
-                                } else {
-                                  toast.error("An error occurred");
-                                }
-                              }
-                            }}
-                          />
-                        </IconButton>
-                      )}
-                      {record.status !== "REJECTED" && (
-                        <IconButton edge="end" aria-label="comments">
-                          <CloseIcon
-                            className="text-red-500 h-5"
-                            onClick={async () => {
-                              await makeRequest.put(
-                                "/reservation/reject/" + record._id
-                              );
-                            }}
-                          />
-                        </IconButton>
-                      )}
+                  className="border-b items-center flex gap-4 text-center px-4 p-2.5 text-[1vw]"
+                >
+                  <div className="flex items-center gap-2 w-[15%] overflow-hidden">
+                    <Checkbox
+                      edge="start"
+                      checked={checked.indexOf(record._id) !== -1}
+                      onClick={handleToggle(record._id)}
+                      tabIndex={-1}
+                      disableRipple
+                      inputProps={{ "aria-labelledby": labelId }}
+                    />
+                    <div className="w-full">{record.guestName}</div>
+                  </div>
+                  <div className="w-[10%]">{record.numberOfGuests}</div>
+                  <div className="w-[10%]">{record.numberOfRooms}</div>
+                  <div className="w-[10%]">{record.category}</div>
+                  <div className="w-[10%]">{getDate(record.arrivalDate)}</div>
+                  <div className="w-[10%]">{getDate(record.departureDate)}</div>
+                  <div className="w-[10%]">{record.roomType}</div>
+                  <div className="flex justify-evenly gap-2 w-[10%]">
+                    {record.status !== "APPROVED" && (
                       <IconButton edge="end" aria-label="comments">
-                        <InsertDriveFileIcon
-                          color="black"
-                          onClick={() => {
-                            status === "pending"
-                              ? navigate(`${record._id}`)
-                              : navigate(`../${record._id}`);
+                        <DoneIcon
+                          className="text-green-500 h-5"
+                          onClick={async () => {
+                            try {
+                              await makeRequest.put(
+                                "/reservation/approve/" + record._id
+                              );
+                              toast.success("Reservation Approved");
+                              window.location.reload();
+                            } catch (error) {
+                              if (error.response?.data?.message) {
+                                toast.error(error.response.data);
+                              } else {
+                                toast.error("An error occurred");
+                              }
+                            }
                           }}
                         />
                       </IconButton>
-                      <IconButton
-                        edge="end"
+                    )}
+                    {record.status !== "REJECTED" && (
+                      <IconButton edge="end" aria-label="comments">
+                        <CloseIcon
+                          className="text-red-500 h-5"
+                          onClick={async () => {
+                            await makeRequest.put(
+                              "/reservation/reject/" + record._id
+                            );
+                          }}
+                        />
+                      </IconButton>
+                    )}
+                    <IconButton edge="end" aria-label="insert">
+                      <InsertDriveFileIcon
+                        onClick={() => {
+                          status === "pending"
+                            ? navigate(`${record._id}`)
+                            : navigate(`../${record._id}`);
+                        }}
+                        color="black"
+                      />
+                    </IconButton>
+                    <IconButton edge="end" aria-label="download">
+                      <DownloadIcon
                         onClick={async () => {
                           try {
                             const res = await makeRequest.get(
@@ -441,74 +425,13 @@ export default function AdminRecordList({ status = "pending" }) {
                             toast.error("Something went wrong");
                           }
                         }}
-                        aria-label="comments"
-                      >
-                        <DownloadIcon color="black" />
-                      </IconButton>
-                    </div>
-                  }
-                  disablePadding
-                >
-                  <ListItemButton
-                    className=""
-                    sx={{ paddingY: "10px" }}
-                    onClick={handleToggle(record._id)}
-                    role={undefined}
-                    dense
-                  >
-                    <ListItemIcon>
-                      <Checkbox
-                        edge="start"
-                        checked={checked.indexOf(record._id) !== -1}
-                        tabIndex={-1}
-                        disableRipple
-                        inputProps={{ "aria-labelledby": labelId }}
+                        color="black"
                       />
-                    </ListItemIcon>
+                    </IconButton>
+                  </div>
 
-                    <ListItemText
-                      id="checkbox-list-label-header"
-                      className=" text-wrap w-12"
-                      sx={{ overflow: "hidden" }}
-                      primary={record.guestName}
-                    />
-                    <ListItemText
-                      id="checkbox-list-label-header"
-                      className=" text-wrap w-16 text-center"
-                      primary={record.numberOfGuests}
-                    />
-                    <ListItemText
-                      id="checkbox-list-label-header"
-                      className=" text-wrap w-14 text-center"
-                      primary={record.numberOfRooms}
-                    />
-                    <ListItemText
-                      id="checkbox-list-label-header"
-                      className=" text-wrap w-4 text-center"
-                      primary={record.category}
-                    />
-                    <ListItemText
-                      id="checkbox-list-label-header"
-                      className="w-20 text-center"
-                      primary={getDate(record.arrivalDate)}
-                    />
-                    <ListItemText
-                      id="checkbox-list-label-header"
-                      className="w-20 text-center"
-                      primary={getDate(record.departureDate)}
-                    />
-                    <ListItemText
-                      id="checkbox-list-label-header"
-                      className="w-20 mr-4 text-center"
-                      primary={record.roomType}
-                    />
-                    <ListItemText
-                      id="checkbox-list-label-header"
-                      className="w-10 mr-20"
-                      primary={status.toUpperCase()}
-                    />
-                  </ListItemButton>
-                </ListItem>
+                  <div />
+                </div>
               );
             })}
           </div>

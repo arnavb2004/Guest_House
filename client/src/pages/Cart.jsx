@@ -211,10 +211,10 @@ const Cart = () => {
           </>
         ) : (
           <div className="">
-            <div className="flex flex-row my-5">
+            <div className="flex flex-row my-5 items-baseline">
               <p className="mr-10">Date of Booking</p>
               <input
-                className="mr-10"
+                className="mr-10 p-1"
                 type="date"
                 value={bookingDate}
                 onChange={handleDateChange}
@@ -231,7 +231,7 @@ const Cart = () => {
               <thead>
                 <tr>
                   <th>Item</th>
-                  <th>Price</th>
+                  <th>Price</th>  
                   <th>Quantity</th>
                   <th></th>
                 </tr>
