@@ -62,7 +62,7 @@ const reservationSchema = new mongoose.Schema(
           ],
           default: "ADMIN",
         },
-        comments:{
+        comments: {
           type: String,
         },
         status: {
@@ -102,32 +102,59 @@ const reservationSchema = new mongoose.Schema(
           type: Date,
           required: true,
         },
-        roomNumber:{
+        roomNumber: {
           type: Number,
           required: true,
-        }
+        },
       },
     ],
-    payment:{
-      status:{
-        type:String,
-        enum:["PENDING","PAID"],
-        default:"PENDING"
+    payment: {
+      source: {
+        type: String,
+        enum: ["GUEST", "DEPARTMENT", "OTHERS"],
+        required: true,
+        default: "GUEST",
       },
-      amount:{
-        type:Number,
+      status: {
+        type: String,
+        enum: ["PENDING", "PAID"],
+        default: "PENDING",
+      },
+      billRaised: {
+        type: Boolean,
+        default: true,
+      },
+      amount: {
+        type: Number,
         // required:true,
       },
-      payment_method:{
-        type:String,
-        // enum:["CASH","CARD","CHEQUE","UPI","DEPT"],
-        // required:true,
+    },
+    applicant: {
+      name: {
+        type: String,
+        required: true,
       },
-      transaction_id:{
-        type:String,
-        // required:true,
-      }
-    }
+      designation: {
+        type: String,
+        required: true,
+      },
+      department: {
+        type: String,
+        required: true,
+      },
+      code: {
+        type: String,
+        required: true,
+      },
+      mobile: {
+        type: String,
+        required: true,
+      },
+      email: {
+        type: String,
+        required: true,
+      },
+    },
   },
   {
     timestamps: true, // Adds createdAt and updatedAt timestamps

@@ -5,16 +5,15 @@ import { getDate, getTime, transporter } from "../utils.js";
 import archiver from "archiver";
 import { getFileById } from "../middlewares/fileStore.js";
 import mongoose from "mongoose";
-import { google } from 'googleapis'
-import keys from '../secrets.json' assert { type: 'json' };
+import { google } from "googleapis";
+import keys from "../secrets.json" assert { type: "json" };
 
-const googleSheets = google.sheets('v4');
-const auth = new google.auth.JWT(
-  keys.client_email, 
-  null, 
-  keys.private_key, 
-  ['https://www.googleapis.com/auth/spreadsheets']
-);
+import util from "util";
+
+const googleSheets = google.sheets("v4");
+const auth = new google.auth.JWT(keys.client_email, null, keys.private_key, [
+  "https://www.googleapis.com/auth/spreadsheets",
+]);
 
 const spreadsheetId = `${process.env.GOOGLE_SHEET_ID}`; // Replace with your Google Sheet's ID
 
@@ -25,8 +24,8 @@ async function appendReservationToSheet(reservation) {
   const response = await googleSheets.spreadsheets.values.append({
     auth,
     spreadsheetId,
-    range: 'Sheet1', // Assuming you are using the first sheet; change if necessary
-    valueInputOption: 'RAW',
+    range: "Sheet1", // Assuming you are using the first sheet; change if necessary
+    valueInputOption: "RAW",
     resource: {
       values: [
         [
@@ -38,7 +37,7 @@ async function appendReservationToSheet(reservation) {
           reservation.arrivalDate,
           reservation.departureDate,
           reservation.purpose,
-          reservation.category
+          reservation.category,
           // Add more fields as necessary
         ],
       ],
@@ -51,7 +50,6 @@ async function appendReservationToSheet(reservation) {
 // Use this function where you handle the reservation creation
 // For example, in your createReservation function:
 // await appendReservationToSheet(reservation);
-
 
 async function sendVerificationEmail(to, subject, body) {
   try {
@@ -86,9 +84,14 @@ export async function createReservation(req, res) {
       address,
       category,
       departureDate,
+      applicant,
+      source,
     } = req.body;
+    console.log(source);
+    console.log(applicant[0]);
+    const applicantData = JSON.parse(applicant[0]);
+    console.log(applicantData)
 
-    // console.log(arrivalTime);
 
     const email = req.user.email;
     const receiptid = req.files["receipt"][0].id;
@@ -109,6 +112,8 @@ export async function createReservation(req, res) {
       category,
       stepsCompleted: 1,
       files: fileids,
+      payment: { source: source },
+      applicant:applicantData,
       reviewers: [{ role: "ADMIN", status: "PENDING", comments: "" }],
       receipt: receiptid,
     });
@@ -564,7 +569,6 @@ const updateReservationStatus = (reservation) => {
   let isRejected = false;
   let adminStatus;
   reviewers.forEach((reviewer) => {
-    
     if (reviewer.role === "ADMIN") {
       adminStatus = reviewer.status;
     } else {

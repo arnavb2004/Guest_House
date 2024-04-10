@@ -12,6 +12,7 @@ import NotificationMenu from "./NotificationMenu";
 import Badge from "@mui/material/Badge";
 import Text from "./Text";
 import { privateRequest } from "../utils/useFetch";
+import { toast } from "react-toastify";
 
 const Header = () => {
   const user = useSelector((state) => state.user);
@@ -29,8 +30,8 @@ const Header = () => {
       const res = await makeRequest.get("/user/notifications");
       dispatch(updateUserDetails({ notifications: res.data }));
     } catch (err) {
-      // if (err.response?.data?.message) toast(err.response.data.message);
-      // else toast("Error fetching notifications");
+      if (err.response?.data?.message) toast.error(err.response.data.message);
+      else toast.error("Error fetching notifications");
       console.log(err.response.data);
     }
   };

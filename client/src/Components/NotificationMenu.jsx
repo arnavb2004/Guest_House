@@ -21,8 +21,8 @@ const NotificationMenu = () => {
       setNotifications(res.data);
       setStatus("Success");
     } catch (err) {
-      if (err.response?.data?.message) toast(err.response.data.message);
-      else toast("Error fetching notifications");
+      if (err.response?.data?.message) toast.error(err.response.data.message);
+      else toast.error("Error fetching notifications");
       setStatus("Error");
       console.log(err.response.data);
     }

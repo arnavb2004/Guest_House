@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useState } from "react";
 
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
@@ -7,19 +7,17 @@ import FormControl from "@mui/material/FormControl";
 import { TextField } from "@mui/material";
 import "./Reservation_Form.css";
 import { updateFilledPDF } from "../utils/generatePDF";
-import { FileUpload } from "primereact/fileupload";
-import { Toast } from "primereact/toast";
 import InputFileUpload from "../components/uploadFile";
 import { useSelector } from "react-redux";
 import { privateRequest } from "../utils/useFetch";
 import { FileIcon, defaultStyles } from "react-file-icon";
 import { Link, useNavigate } from "react-router-dom";
-
+import ApplicantTable from "../components/ApplicantTable";
 
 function ReservationForm() {
   const user = useSelector((state) => state.user);
   const makeRequest = privateRequest(user.accessToken, user.refreshToken);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
   const [files, setFiles] = useState([]);
@@ -35,6 +33,15 @@ function ReservationForm() {
     departureTime: "",
     purpose: "",
     category: "A",
+    source: "GUEST",
+    applicant: {
+      name: "",
+      designation: "",
+      department: "",
+      code: "",
+      mobile: "",
+      email: "",
+    },
   });
 
   const [errorText, setErrorText] = useState({
@@ -63,7 +70,10 @@ function ReservationForm() {
     departureTime: true,
     purpose: true,
     category: true,
+    source: true,
+    applicant: true,
   };
+
 
   const patterns = {
     guestName: /[a-zA-Z]+/,
@@ -108,7 +118,7 @@ function ReservationForm() {
           [key]: "This field is required",
         }));
         passed = false;
-      } else if (!value.match(patterns[key])) {
+      } else if (patterns[key] && !value.match(patterns[key])) {
         setErrorText((prev) => ({
           ...prev,
           [key]: "Invalid input",
@@ -187,6 +197,12 @@ function ReservationForm() {
       return;
     }
 
+    for (let [key, value] of Object.entries(formData.applicant)) {
+      if (value === "") {
+        passed = false;
+      }
+    }
+
     if (!passed) {
       toast.error("Please Fill All Necessary Fields Correctly.");
       return;
@@ -208,6 +224,8 @@ function ReservationForm() {
     try {
       const formDataToSend = new FormData();
       Object.entries(formData).forEach(([fieldName, fieldValue]) => {
+        console.log(fieldName, fieldValue);
+        if(fieldName==='applicant') formDataToSend.append(fieldName, JSON.stringify(fieldValue));
         formDataToSend.append(fieldName, fieldValue);
       });
       for (const file of files) {
@@ -252,6 +270,8 @@ function ReservationForm() {
       }
     }
   };
+
+  console.log(formData)
 
   return (
     <div className="w-full">
@@ -313,7 +333,7 @@ function ReservationForm() {
           />
 
           <div className="form-group">
-            <label>Room Type</label>
+            <label>Room Type*</label>
 
             <select
               name="roomType"
@@ -331,7 +351,7 @@ function ReservationForm() {
           </div>
 
           <div className="form-group">
-            <label>Arrival Date:</label>
+            <label>Arrival Date*:</label>
             <input
               type="date"
               name="arrivalDate"
@@ -342,7 +362,7 @@ function ReservationForm() {
           </div>
 
           <div className="form-group">
-            <label>Arrival Time: (Arrival time must be after 01:00 PM)</label>
+            <label>Arrival Time*: (Arrival time must be after 01:00 PM)</label>
             <input
               type="time"
               name="arrivalTime"
@@ -351,7 +371,7 @@ function ReservationForm() {
             />
           </div>
           <div className="form-group">
-            <label>Departure Date:</label>
+            <label>Departure Date*:</label>
             <input
               type="date"
               name="departureDate"
@@ -362,7 +382,7 @@ function ReservationForm() {
           </div>
           <div className="form-group">
             <label>
-              Departure Time: (Departure time must be before 11:00 AM)
+              Departure Time*: (Departure time must be before 11:00 AM)
             </label>
             <input
               type="time"
@@ -387,7 +407,7 @@ function ReservationForm() {
 
           <div className="form-group">
             <label>
-              Category: (Refer to{" "}
+              Category*: (Refer to{" "}
               <a
                 className="underline"
                 href="/forms/categories.pdf"
@@ -417,6 +437,25 @@ function ReservationForm() {
                 Category D
               </option>
             </select>
+            {(formData.category === "B" || formData.category === "C") && (
+              <>
+                <label>Payment*:</label>
+
+                <select
+                  name="source"
+                  className="w-full h-12 border rounded-md border-gray-300 p-2 mb-5 whitespace-pre"
+                  onChange={handleChange}
+                  value={formData.paymentType}
+                >
+                  <option value="GUEST">Paid by guest</option>
+                  <option value="DEPARTMENT">Paid by department</option>
+                  {formData.category === "B" && (
+                    <option value="OTHERS">Paid by other sources</option>
+                  )}
+                </select>
+              </>
+            )}
+
             <div className="flex gap-10">
               <div>
                 <InputFileUpload className="" onFileUpload={handleFileUpload} />
@@ -454,6 +493,15 @@ function ReservationForm() {
                   </div>
                 )
               )}
+            </div>
+            <div className="mt-5 flex flex-col gap-2">
+              <div>Applicant Details:</div>
+              <div>
+                <ApplicantTable
+                  entry={formData.applicant}
+                  setEntry={(entry) => setFormData((prev)=>({ ...prev, applicant: entry }))}
+                />
+              </div>
             </div>
           </div>
 

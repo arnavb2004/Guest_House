@@ -49,7 +49,8 @@ export default function RecordList({ status = "pending" }) {
       setNewRecords(reservations);
       setLoadingStatus("Success");
     } catch (err) {
-      if (err.response?.data?.message) toast(err.response.data.message);
+      if (err.response?.data?.message) toast.error(err.response.data.message);
+      else toast.error("Error fetching records");
       setLoadingStatus("Error");
     }
   };

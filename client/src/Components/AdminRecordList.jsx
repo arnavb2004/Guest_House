@@ -52,7 +52,7 @@ export default function AdminRecordList({ status = "pending" }) {
       setRecords(reservations);
       setNewRecords(reservations);
     } catch (err) {
-      toast(err.response.data);
+      toast.error(err.response.data);
       setLoadingStatus("Error");
     }
   };
