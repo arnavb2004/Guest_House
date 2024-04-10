@@ -1,6 +1,7 @@
 import React from "react";
-import Header from "../components/Header";
+import Header from "../components/header_new";
 import Footer from "../components/Footer";
+import Menu from "../components/Menu";
 import { Outlet } from "react-router-dom";
 import backgroundImage from "../images/backgroundImage.jpeg";
 
@@ -15,6 +16,7 @@ const HomePage = () => {
     >
       <div className="">
         <Header />
+        <Menu />
       </div>
       <div className="flex justify-center min-h-screen overflow-hidden">
         <Outlet />
