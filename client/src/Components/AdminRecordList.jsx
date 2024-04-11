@@ -213,7 +213,7 @@ export default function AdminRecordList({ status = "pending" }) {
             size="large"
             onClick={toggleDropdown}
             endIcon={isOpen ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
-            style={{ backgroundColor: "#DFDFDF", color: "#606060" }}
+            style={{ backgroundColor: "#365899", color: "#FFF" }}
             className="h-full"
           >
             {searchChoice}

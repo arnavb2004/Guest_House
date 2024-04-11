@@ -55,55 +55,57 @@ const NewHeader = () => {
   };
 
   return (
-    <div className="flex justify-between items-center bg-gray-100 px-6 py-4 shadow-lg">
-      <div className="flex items-center">
-        <img src={Logo} alt="IIT Ropar Logo" className="mr-4 h-16" />
-        <div className="">
-          <a
-            href="/"
-            className="block text-xl font-bold font-['Dosis'] text-gray-800"
-          >
-            GUEST HOUSE
-          </a>
-          <Text />
+    <div className="flex justify-center bg-gray-100 py-3 w-full">
+      <div className="flex justify-between items-center w-[80%]">
+        <div className="flex items-center">
+          <img src={Logo} alt="IIT Ropar Logo" className="mr-4 h-16" />
+          <div className="">
+            <a
+              href="/"
+              className="block text-xl font-bold font-['Dosis'] text-gray-800"
+            >
+              GUEST HOUSE
+            </a>
+            <Text />
+          </div>
         </div>
-      </div>
-      <div className="flex items-center gap-4">
-        {user.email && (
-          <>
-            <IconButton onClick={handleOpenDialog} size="large">
-              <AccountCircleIcon />
+        <div className="flex items-center gap-4">
+          {user.email && (
+            <>
+              <IconButton onClick={handleOpenDialog} size="large">
+                <AccountCircleIcon />
+              </IconButton>
+              <span>{user.name || user.email}</span>
+            </>
+          )}
+          <div className="relative">
+            <IconButton onClick={handleNotificationClick}>
+              <Badge badgeContent={notifications?.length} color="warning">
+                <NotificationsIcon />
+              </Badge>
             </IconButton>
-            <span>{user.name || user.email}</span>
-          </>
-        )}
-        <div className="relative">
-          <IconButton onClick={handleNotificationClick}>
-            <Badge badgeContent={notifications?.length} color="warning">
-              <NotificationsIcon />
-            </Badge>
-          </IconButton>
-          {notificationMenuOpen && <NotificationMenu />}
+            {notificationMenuOpen && <NotificationMenu />}
+          </div>
+          {user.email ? (
+            <button
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              onClick={handleLogout}
+            >
+              LOGOUT
+            </button>
+          ) : (
+            <button
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              onClick={goToLoginPage}
+            >
+              LOGIN
+            </button>
+          )}
+          <UserProfileDialog
+            openDialog={openDialog}
+            setOpenDialog={setOpenDialog}
+          />
         </div>
-        {user.email ? (
-          <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            onClick={handleLogout}
-          >
-            LOGOUT
-          </button>
-        ) : (
-          <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            onClick={goToLoginPage}
-          >
-            LOGIN
-          </button>
-        )}
-        <UserProfileDialog
-          openDialog={openDialog}
-          setOpenDialog={setOpenDialog}
-        />
       </div>
     </div>
   );

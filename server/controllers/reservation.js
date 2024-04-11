@@ -7,6 +7,7 @@ import { getFileById } from "../middlewares/fileStore.js";
 import mongoose from "mongoose";
 import { google } from 'googleapis'
 import keys from '../secrets.json' assert { type: 'json' };
+import { reseller } from "googleapis/build/src/apis/reseller/index.js";
 
 const googleSheets = google.sheets('v4');
 const auth = new google.auth.JWT(
@@ -86,6 +87,7 @@ export async function createReservation(req, res) {
       address,
       category,
       departureDate,
+      reviewers
     } = req.body;
 
     // console.log(arrivalTime);
@@ -96,6 +98,12 @@ export async function createReservation(req, res) {
       refid: f.id,
       extension: f.originalname.split(".")[1],
     }));
+    console.log(reviewers);
+    const reviewersArray = reviewers.split(",").map(role => ({
+      role,
+      comments: "",
+      status: "PENDING",
+    }))
     const reservation = await Reservation.create({
       guestEmail: email,
       guestName,
@@ -109,13 +117,17 @@ export async function createReservation(req, res) {
       category,
       stepsCompleted: 1,
       files: fileids,
-      reviewers: [{ role: "ADMIN", status: "PENDING", comments: "" }],
+      reviewers: reviewersArray,
       receipt: receiptid,
     });
 
     await appendReservationToSheet(reservation);
 
     console.log("sending mail");
+
+    const users = await User.find({ "reviewers.role": { $in: reviewersArray } });
+
+    console.log("\n\n\n\n\n", users, "\n\n\n\n\n");
 
     sendVerificationEmail(
       "hardik32904@gmail.com",
@@ -438,14 +450,7 @@ export const getPendingReservations = async (req, res) => {
         createdAt: -1,
       });
       return res.status(200).json(reservations);
-    } else if (req.user.role === "ADMIN") {
-      const reservations = await Reservation.find({
-        status: "PENDING",
-      }).sort({
-        createdAt: -1,
-      });
-      res.status(200).json(reservations);
-    } else {
+    } else if (req.user.role !== "ADMIN") {
       const reservations = await Reservation.find({
         reviewers: {
           $elemMatch: {
@@ -457,6 +462,8 @@ export const getPendingReservations = async (req, res) => {
         createdAt: -1,
       });
       res.status(200).json(reservations);
+    } else {
+      res.status(200).json([]);
     }
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -560,7 +567,7 @@ const updateReservationStatus = (reservation) => {
   let initStatus = reservation.status;
   let reviewers = reservation.reviewers;
 
-  let isApproved = true;
+  let isApproved = false;
   let isRejected = false;
   let adminStatus;
   reviewers.forEach((reviewer) => {
@@ -569,7 +576,7 @@ const updateReservationStatus = (reservation) => {
       adminStatus = reviewer.status;
     } else {
       if (reviewer.status !== "APPROVED") {
-        isApproved = false;
+        isApproved = true;
       }
       if (reviewer.status === "REJECTED") {
         isRejected = true;
@@ -577,14 +584,10 @@ const updateReservationStatus = (reservation) => {
     }
   });
 
-  if (adminStatus === "APPROVED") {
-    reservation.status = "APPROVED";
-  } else if (adminStatus === "REJECTED") {
+  if (isRejected) {
     reservation.status = "REJECTED";
   } else if (isApproved) {
     reservation.status = "APPROVED";
-  } else if (isRejected) {
-    reservation.status = "REJECTED";
   } else {
     reservation.status = "PENDING";
   }
