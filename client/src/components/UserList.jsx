@@ -41,7 +41,7 @@ export default function UserList() {
   const makeRequest = privateRequest(user.accessToken, user.refreshToken);
   
   const options = ["Name", "Email", "Contact", "Role"];
-  const roles = ['USER', 'ADMIN','HOD','CHAIRMAN','DIRECTOR','DEAN','REGISTRAR','ASSOCIATE DEAN']
+  const roles = ['USER', 'ADMIN','HOD','CHAIRMAN','DIRECTOR','DEAN','CASHIER','REGISTRAR','ASSOCIATE DEAN']
   const filterMap = {
     Name: "name",
     Email: "email",
