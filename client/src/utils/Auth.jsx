@@ -11,7 +11,6 @@ const Auth = ({ allowedRoles }) => {
   if (role[1]) {
     role[1] = user.role.toLowerCase();
     redirect = role.join("/");
-    console.log(redirect);
   }
 
   return allowedRoles.find((role) => user.role.includes(role)) ? (

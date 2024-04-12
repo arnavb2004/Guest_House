@@ -12,11 +12,12 @@ import CommentIcon from "@mui/icons-material/Comment";
 import { privateRequest } from "../utils/useFetch";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
-import { Button } from "@mui/material";
+import { Button, Menu, MenuItem, Paper, Tooltip } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import TextField from "@mui/material/TextField";
 import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from '@mui/icons-material/Edit';
 
 export default function UserList() {
   const [checked, setChecked] = useState([]);
@@ -30,16 +31,22 @@ export default function UserList() {
   const [searchChoice, setSearchChoice] = useState("Filter");
   const [isOpen, setIsOpen] = useState(false);
   const [showRemove, setShowRemove] = useState(false);
-
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [selectedUserId, setSelectedUserId] = useState(null);
+  
+  
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
   };
-
-  const options = ["Name", "Email", "Contact"];
+  const makeRequest = privateRequest(user.accessToken, user.refreshToken);
+  
+  const options = ["Name", "Email", "Contact", "Role"];
+  const roles = ['USER', 'ADMIN','HOD','CHAIRMAN','DIRECTOR','DEAN','REGISTRAR','ASSOCIATE DEAN']
   const filterMap = {
     Name: "name",
     Email: "email",
     Contact: "contact",
+    Role: "Role"
   };
 
   const toggleDropdown = () => {
@@ -86,7 +93,36 @@ export default function UserList() {
 
     setChecked(newChecked);
   };
-  const makeRequest = privateRequest(user.accessToken, user.refreshToken);
+
+  const handleEdit = (userId) => (event) => {
+    setAnchorEl(event.currentTarget);
+    setSelectedUserId(userId);
+  };
+  const updateRole = async (role) => {
+    try {
+      const res = await makeRequest.put("/user/updateRole", { userId: selectedUserId, role });
+      if (res.status === 200) {
+        console.log(res.data.message);
+        // Optionally, you can update the local state with the new user data
+        // setUsers(users.map((user) => (user._id === selectedUserId ? res.data.user : user)));
+      } else {
+        toast(res.data.message);
+      }
+      handleClose();
+    } catch (err) {
+      if (err.response?.data?.message) {
+        toast(err.response.data.message);
+      } else {
+        toast("An error occurred while updating the role.");
+      }
+    }
+  };
+  
+  const handleClose = () => {
+    setAnchorEl(null);
+    setSelectedUserId(null);
+  };
+
   const fetchUsers = async () => {
     try {
       const res = await makeRequest.get("/user/all");
@@ -196,6 +232,10 @@ export default function UserList() {
               id="checkbox-list-label-header"
               primary="Pending requests"
             />
+             <ListItemText
+              id="checkbox-list-label-header"
+              primary="Role"
+            />
           </ListItemButton>
         </ListItem>
         {status === "Success" && newUsers.length > 0 && (
@@ -208,9 +248,11 @@ export default function UserList() {
                   key={user._id}
                   className="border-b"
                   secondaryAction={
-                    <IconButton edge="end" aria-label="comments">
-                      <CommentIcon />
-                    </IconButton>
+                    <Tooltip title="Edit Role" placement="bottom">
+                      <IconButton edge="end" aria-label="comments" onClick={handleEdit(user._id)}>
+                        <EditIcon/>
+                      </IconButton>
+                    </Tooltip>
                   }
                   disablePadding
                 >
@@ -251,6 +293,36 @@ export default function UserList() {
                       className=""
                       primary="0 requests pending"
                     />
+                     <ListItemText
+                      id="checkbox-list-label-header"
+                      primary={user.role}
+                    />
+                    <Menu
+                      anchorEl={anchorEl}
+                      open={Boolean(anchorEl)}
+                      onClose={handleClose}
+                      PaperProps={{
+                        style: {
+                          maxHeight: 150,
+                          width: 200,
+                          boxShadow: '0 2px 3px rgba(0, 0, 0, 0.5)',
+                        },
+                      }}
+                      MenuListProps={{
+                        style: {
+                          maxHeight: 150,
+                          overflow: 'auto',
+                        },
+                      }}
+                    >
+                      {roles.map((role) => {
+                        return (
+                          <MenuItem onClick={() => updateRole(role)}>
+                            {role}
+                          </MenuItem>
+                        )
+                      })}
+                    </Menu>
                   </ListItemButton>
                 </ListItem>
               );
