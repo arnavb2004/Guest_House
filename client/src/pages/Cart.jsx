@@ -1,14 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import styles from "./BookDining.module.css";
-import { menuItems1 } from "../fooddata";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart, removeFromCart, clearCart } from "../redux/cartSlice";
 import { PDFDocument, rgb } from "pdf-lib"; // Import pdf-lib
 import fontkit from "@pdf-lib/fontkit";
 import pdfFont from "../forms/Ubuntu-R.ttf";
 import { privateRequest } from "../utils/useFetch";
+import { menuItems1 } from "../fooddata";
+import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
   const cartSlice = useSelector((state) => state.cart);
@@ -18,8 +19,46 @@ const Cart = () => {
   const dispatch = useDispatch();
   const makeRequest = privateRequest(user.accessToken, user.refreshToken);
   const [bookingDate, setBookingDate] = useState("");
+  const [selectedReservationId, setSelectedReservationId] = useState("");
+  const [acceptedRequests, setAcceptedRequests] = useState([]);
+  const [filteredRequests, setFilteredRequests] = useState([]);
 
   const isCartEmpty = Object.keys(cart).length === 0;
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchAcceptedRequests = async () => {
+      try {
+        const res = await makeRequest.get("/reservation/APPROVED");
+        // console.log(res)
+        setAcceptedRequests(res.data);
+      } catch (error) {
+        console.error("Error fetching accepted requests:", error);
+        // Handle error
+      }
+    };
+    fetchAcceptedRequests();
+  }, []);
+
+  useEffect(() => {
+    // Filter accepted requests based on booking date
+    const filtered = acceptedRequests.filter((request) => {
+      const arrivalDate = new Date(request.arrivalDate);
+      const departureDate = new Date(request.departureDate);
+      const bookingDateTime = new Date(bookingDate);
+      // console.log("Before appending current time:", bookingDateTime);
+
+      // // Append current time to booking date
+      // bookingDateTime.setHours(new Date().getHours());
+      // bookingDateTime.setMinutes(new Date().getMinutes());
+      // bookingDateTime.setSeconds(new Date().getSeconds());
+
+      // console.log("After appending current time:", bookingDateTime);
+      return (arrivalDate <= bookingDateTime && bookingDateTime <= departureDate);
+    });
+    setFilteredRequests(filtered);
+  }, [bookingDate, acceptedRequests]);
 
   const handleOrder = async () => {
     if (!bookingDate) {
@@ -34,13 +73,13 @@ const Cart = () => {
       foodItems.push({ name, price, id, category, quantity: value });
     }
 
-    await makeRequest.post("/dining", { items: foodItems });
+    await makeRequest.post("/dining", { items: foodItems , reservationId: selectedReservationId, dateofbooking: bookingDate});
 
     alert(`Total Amount: ₹${totalAmount.toFixed(2)}`);
 
     // Further actions like sending the order to a server or resetting the cart can be performed here.
   };
-
+  
   const handleGetReceipt = async () => {
     try {
       const pdfDoc = await PDFDocument.create();
@@ -190,6 +229,10 @@ const Cart = () => {
     setBookingDate(e.target.value);
   };
 
+  const handleReservationChange = (e) => {
+    setSelectedReservationId(e.target.value);
+  };
+
   return (
     <div>
       <div className={styles.cart + ' font-["Dosis"]'}>
@@ -226,6 +269,30 @@ const Cart = () => {
                 style={{ color: "black" }} // Set the color to black
               />
               <p>Note : Booking has to be done 2 days prior.</p>
+            </div>
+            <div className="flex flex-row my-5 items-baseline text-black">
+              <p className="mr-10 text-white">Select Reservation</p>
+              <select
+                name="ReservationConnected"
+                className="mr-10 p-1"
+                onChange={handleReservationChange}
+                value={selectedReservationId}
+              >
+                <option className="" value="default">
+                  Choose reservation
+                </option>
+                <option className="" value="not_in_reservation">
+                  Not in any reservation
+                </option>
+                {filteredRequests.map((request) => (
+                  <option className="" key={request._id} value={request._id}>
+                    {request.guestName}'s reservation
+                  </option>
+                ))}
+              </select>
+              {selectedReservationId !== "default" && selectedReservationId !== "" && selectedReservationId !== "not_in_reservation" && (
+                <button  className = "text-white" onClick={() => navigate(`../../reservation/${selectedReservationId}`)}>View Details</button>
+              )}
             </div>
             <table>
               <thead>
