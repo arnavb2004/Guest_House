@@ -4,17 +4,15 @@ import User from "../models/User.js";
 export const checkAuth = async (req, res, next) => {
   try {
     console.log("Checking the access token");
-    console.log(req.headers);
-    console.log(req.body);
-    const accessToken = req.headers.accesstoken.split(" ")[0];
-    const refreshToken = req.headers.refreshtoken.split(" ")[0];
+    const accessToken = req.headers.accesstoken.split(" ")[1];
+    const refreshToken = req.headers.refreshtoken.split(" ")[1];
     console.log(accessToken);
     if (accessToken && refreshToken) {
       var decodedToken;
       try {
         decodedToken = jwt.decode(accessToken);
       } catch (err) {
-        throw new Error("Invalid access token");
+        res.status(401).json({ message: "Invalid access token" });
       }
       console.log(decodedToken);
       console.log(Date.now() / 1000);
@@ -29,14 +27,20 @@ export const checkAuth = async (req, res, next) => {
         } catch (err) {
           console.log(err.message);
           if (err.message === "jwt expired") {
-            throw new Error("Refresh Token has expired! Please login again");
+            res
+              .status(401)
+              .json({
+                message: "Refresh Token has expired. Please login again",
+              });
             //decodedToken=jwt.decode(refreshToken);
           } else {
-            throw new Error("Invalid refresh token");
+            res.status(401).json({ message: "Invalid refresh token" });
           }
         }
         if (decodedToken.exp <= Date.now() / 1000) {
-          throw new Error("Refresh Token has expired! Please login again");
+          res
+            .status(401)
+            .json({ message: "Refresh Token has expired! Please login again" });
         }
         const user = await User.findOne({ email: decodedToken.email });
         console.log("User found!! adding to the req body");

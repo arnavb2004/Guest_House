@@ -8,6 +8,8 @@ const Auth = ({ allowedRoles }) => {
   const location = useLocation();
   let role = location.pathname.split("/");
   let redirect;
+  if(role.length>3) role = role.slice(0,3)
+  console.log(role)
   if (role[1]) {
     role[1] = user.role.toLowerCase();
     redirect = role.join("/");

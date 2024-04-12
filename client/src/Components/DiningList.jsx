@@ -7,21 +7,18 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
-import CommentIcon from "@mui/icons-material/Comment";
-import { useSelector, useDispatch } from "react-redux";
-import { privateRequest } from "../utils/useFetch";
 import { useNavigate } from "react-router-dom";
 import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 import Button from "@mui/material/Button";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import TextField from "@mui/material/TextField";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import tick from "../images/tick.png";
-import cross from "../images/cross.png";
-import { useEventCallback } from "@mui/material";
+import {useSelector, useDispatch} from "react-redux";
+
 import DeleteIcon from "@mui/icons-material/Delete";
 import Slider from "@mui/material/Slider";
+
+import http from "../utils/httpService";
 
 function valuetext(value) {
   return `${value}`;
@@ -112,20 +109,16 @@ export default function DiningList({ status = "pending" }) {
 
   const navigate = useNavigate();
 
-  const makeRequest = privateRequest(user.accessToken, user.refreshToken);
 
   const fetchRecords = async () => {
-    try {
-      const res = await makeRequest.get("/dining/" + status);
-      let orders = res.data;
-      orders = orders.filter((order) => order.status?.toLowerCase() == status);
-      setValues(orders.map((res) => res._id));
-      setRecords(orders);
-      setNewRecords(orders);
-      setLoadingStatus("Success");
-    } catch (err) {
-      setLoadingStatus("Error");
-    }
+    const res = await http.get("/dining/" + status);
+    let orders = res?.data || [];
+    orders = orders.filter((order) => order.status?.toLowerCase() == status);
+    setValues(orders.map((res) => res._id));
+    setRecords(orders);
+    setNewRecords(orders);
+    setLoadingStatus("Success");
+  
   };
   useEffect(() => {
     setLoadingStatus("Loading");
@@ -169,7 +162,7 @@ export default function DiningList({ status = "pending" }) {
             size="large"
             onClick={toggleDropdown}
             endIcon={isOpen ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
-            style={{ backgroundColor: "#DFDFDF", color: "#606060" }}
+            style={{ backgroundColor: "#365899", color: "#FFF" }}
             className="h-full"
           >
             {searchChoice}

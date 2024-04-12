@@ -20,7 +20,7 @@ const userSchema = new Schema({
   },
   role: {
     type: String,
-    enum: ['USER', 'ADMIN','HOD','CHAIRMAN','DIRECTOR','DEAN','REGISTRAR','ASSOCIATE DEAN'],
+    enum: ['USER', 'ADMIN','HOD','CHAIRMAN','DIRECTOR','DEAN','REGISTRAR','ASSOCIATE DEAN', 'CASHIER'],
     default: 'USER',
   },
   notifications: [

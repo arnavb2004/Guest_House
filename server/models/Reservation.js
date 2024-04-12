@@ -60,7 +60,6 @@ const reservationSchema = new mongoose.Schema(
             "REGISTRAR",
             "ASSOCIATE DEAN",
           ],
-          default: "ADMIN",
         },
         comments: {
           type: String,
@@ -128,6 +127,10 @@ const reservationSchema = new mongoose.Schema(
         type: Number,
         // required:true,
       },
+    },
+    checkOut: {
+      type: Boolean,
+      default: false,
     },
     applicant: {
       name: {

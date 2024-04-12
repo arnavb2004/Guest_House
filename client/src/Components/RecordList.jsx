@@ -16,7 +16,12 @@ import DownloadIcon from "@mui/icons-material/Download";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { IconButton } from "@mui/material";
 
-export default function RecordList({ status = "pending" }) {
+export default function RecordList({
+  status = "pending",
+  current,
+  payment,
+  checkout,
+}) {
   const [checked, setChecked] = useState([]);
   const [values, setValues] = useState([]);
   const user = useSelector((state) => state.user);
@@ -38,12 +43,27 @@ export default function RecordList({ status = "pending" }) {
 
   const navigate = useNavigate();
 
-  const makeRequest = privateRequest(user.accessToken, user.refreshToken);
+  const http = privateRequest(user.accessToken, user.refreshToken);
 
   const fetchRecords = async () => {
     try {
-      const res = await makeRequest.get("/reservation/" + status);
+      let res;
+      if (current === true) {
+        res = await http.get("/reservation/current");
+      } else if (payment === true) {
+        res = await http.get("/reservation/payment/done");
+      } else if (checkout === "late") {
+        res = await http.get("/reservation/late");
+      } else if (checkout === "done") {
+        res = await http.get("/reservation/checkedout");
+      } else if (checkout === "today") {
+        res = await http.get("/reservation/checkout/today");
+      } else {
+        res = await http.get("/reservation/" + status);
+      }
+
       const reservations = res.data;
+      console.log(reservations)
       setValues(reservations.map((res) => res._id));
       setRecords(reservations);
       setNewRecords(reservations);
@@ -57,7 +77,7 @@ export default function RecordList({ status = "pending" }) {
   useEffect(() => {
     setLoadingStatus("Loading");
     fetchRecords();
-  }, [status]);
+  }, [status, current, payment, checkout]);
   const dispatch = useDispatch();
   const handleToggle = (value) => () => {
     const currentIndex = checked.indexOf(value);
@@ -210,7 +230,7 @@ export default function RecordList({ status = "pending" }) {
             size="large"
             onClick={toggleDropdown}
             endIcon={isOpen ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
-            style={{ backgroundColor: "#DFDFDF", color: "#606060" }}
+            style={{ backgroundColor: "#365899", color: "#FFF" }}
             className="h-full"
           >
             {searchChoice}
@@ -329,7 +349,7 @@ export default function RecordList({ status = "pending" }) {
                       <DownloadIcon
                         onClick={async () => {
                           try {
-                            const res = await makeRequest.get(
+                            const res = await http.get(
                               "/reservation/documents/" + record._id,
                               { responseType: "blob" }
                             );

@@ -34,6 +34,7 @@ root.render(
           pauseOnFocusLoss
           draggable
           pauseOnHover
+          limit={1}
         />
       </PersistGate>
     </Provider>

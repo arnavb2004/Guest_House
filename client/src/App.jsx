@@ -24,14 +24,10 @@ import NotFound from "./pages/NotFound";
 import Unauthorized from "./pages/Unauthorized";
 import RoomBooking from "./pages/RoomBooking";
 import AdminRecordPage from "./pages/AdminRecordPage";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.min.css";
 
 function App() {
   return (
     <div className="font-['Dosis']">
-      <ToastContainer />
-
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<Login />} />
@@ -76,6 +72,32 @@ function App() {
               <Route path="users" element={<UserList />} />
               <Route path=":id/rooms" element={<RoomBooking />} />
             </Route>
+          </Route>
+
+          <Route path="cashier" element={<Auth allowedRoles={["CASHIER"]} />}>
+            <Route path="reservation" element={<Reservation />}>
+              <Route
+                path="current-requests"
+                element={<RecordList current={true} />}
+              />
+              <Route
+                path="payment-pending"
+                element={<RecordList payment={false} />}
+              />
+              <Route
+                path="late-checkout"
+                element={<RecordList checkout="late" />}
+              />
+              <Route
+                path="checked-out"
+                element={<RecordList checkout="done" />}
+              />
+              <Route
+                path="checkout-today"
+                element={<RecordList checkout="today" />}
+              />
+            </Route>
+            <Route path="dining" element={<Dining />}></Route>
           </Route>
 
           <Route path="user" element={<Auth allowedRoles={["USER"]} />}>
@@ -167,7 +189,6 @@ function App() {
             <Route path="cart" element={<Cart />} />
             <Route path=":id" element={<DiningRecordPage />} />
           </Route>
-
 
           <Route path="/iitropar-campus-map" element={<PDFViewer />} />
           <Route path="/404" element={<NotFound />} />

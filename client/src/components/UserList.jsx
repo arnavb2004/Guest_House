@@ -86,10 +86,10 @@ export default function UserList() {
 
     setChecked(newChecked);
   };
-  const makeRequest = privateRequest(user.accessToken, user.refreshToken);
+  const http = privateRequest(user.accessToken, user.refreshToken);
   const fetchUsers = async () => {
     try {
-      const res = await makeRequest.get("/user/all");
+      const res = await http.get("/user/all");
       setValues(res.data.map((res) => res._id));
       setUsers(res.data);
       setNewUsers(res.data);
@@ -106,7 +106,6 @@ export default function UserList() {
     fetchUsers();
   }, []);
 
-
   return (
     <div className="flex flex-col p-5 px-0 w-full">
       <div className='text-center text-3xl font-["Dosis"] font-semibold py-4 uppercase'>
@@ -119,7 +118,7 @@ export default function UserList() {
             size="large"
             onClick={toggleDropdown}
             endIcon={isOpen ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
-            style={{ backgroundColor: "#DFDFDF", color: "#606060" }}
+            style={{ backgroundColor: "#365899", color: "#FFF" }}
             className="h-full"
           >
             {searchChoice}

@@ -6,21 +6,19 @@ import archiver from "archiver";
 import { getFileById } from "../middlewares/fileStore.js";
 import mongoose from "mongoose";
 import { google } from "googleapis";
-import keys from "../secrets.json" assert { type: "json" };
-
-import util from "util";
 
 const googleSheets = google.sheets("v4");
-const auth = new google.auth.JWT(keys.client_email, null, keys.private_key, [
-  "https://www.googleapis.com/auth/spreadsheets",
-]);
+const auth = new google.auth.JWT(
+  process.env.client_email,
+  null,
+  process.env.private_key,
+  ["https://www.googleapis.com/auth/spreadsheets"]
+);
 
 const spreadsheetId = `${process.env.GOOGLE_SHEET_ID}`; // Replace with your Google Sheet's ID
 
 async function appendReservationToSheet(reservation) {
-  console.log("Entred Logic");
   await auth.authorize();
-  console.log("Entred Logic2");
   const response = await googleSheets.spreadsheets.values.append({
     auth,
     spreadsheetId,
@@ -43,13 +41,8 @@ async function appendReservationToSheet(reservation) {
       ],
     },
   });
-  console.log("Exit Logic");
   return response;
 }
-
-// Use this function where you handle the reservation creation
-// For example, in your createReservation function:
-// await appendReservationToSheet(reservation);
 
 async function sendVerificationEmail(to, subject, body) {
   try {
@@ -70,8 +63,6 @@ export async function createReservation(req, res) {
   try {
     //user details are contained in req.user
 
-    // console.log(req.body);
-
     const {
       numberOfGuests,
       numberOfRooms,
@@ -84,20 +75,26 @@ export async function createReservation(req, res) {
       address,
       category,
       departureDate,
+      reviewers,
       applicant,
       source,
     } = req.body;
     console.log(source);
     console.log(applicant[0]);
     const applicantData = JSON.parse(applicant[0]);
-    console.log(applicantData)
-
+    console.log(applicantData);
 
     const email = req.user.email;
     const receiptid = req.files["receipt"][0].id;
     const fileids = req.files["files"]?.map((f) => ({
       refid: f.id,
       extension: f.originalname.split(".")[1],
+    }));
+    console.log(reviewers);
+    const reviewersArray = reviewers.split(",").map((role) => ({
+      role,
+      comments: "",
+      status: "PENDING",
     }));
     const reservation = await Reservation.create({
       guestEmail: email,
@@ -113,14 +110,20 @@ export async function createReservation(req, res) {
       stepsCompleted: 1,
       files: fileids,
       payment: { source: source },
-      applicant:applicantData,
-      reviewers: [{ role: "ADMIN", status: "PENDING", comments: "" }],
+      applicant: applicantData,
+      reviewers: reviewersArray,
       receipt: receiptid,
     });
 
     await appendReservationToSheet(reservation);
 
     console.log("sending mail");
+
+    const users = await User.find({
+      "reviewers.role": { $in: reviewersArray },
+    });
+
+    console.log("\n\n\n\n\n", users, "\n\n\n\n\n");
 
     sendVerificationEmail(
       "hardik32904@gmail.com",
@@ -299,17 +302,6 @@ export async function approveReservation(req, res) {
       });
       await resUser.save();
     }
-    //
-    // if(adminStatus === "APPROVED") {
-    //   reservation.status = "APPROVED";
-    // } else if(isApproved) {
-    //   reservation.status = "PENDING";
-    // } else {
-    //   reservation.status = "REJECTED";
-    // }
-
-    // if (req.body.comments) reservation.comments = req.body.comments;
-
     // const body =
     //   "<div>Your reservation has been approved</div><br><div>Comments: " +
     //   req.body.comments +
@@ -443,14 +435,7 @@ export const getPendingReservations = async (req, res) => {
         createdAt: -1,
       });
       return res.status(200).json(reservations);
-    } else if (req.user.role === "ADMIN") {
-      const reservations = await Reservation.find({
-        status: "PENDING",
-      }).sort({
-        createdAt: -1,
-      });
-      res.status(200).json(reservations);
-    } else {
+    } else if (req.user.role !== "ADMIN") {
       const reservations = await Reservation.find({
         reviewers: {
           $elemMatch: {
@@ -462,6 +447,8 @@ export const getPendingReservations = async (req, res) => {
         createdAt: -1,
       });
       res.status(200).json(reservations);
+    } else {
+      res.status(200).json([]);
     }
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -565,15 +552,15 @@ const updateReservationStatus = (reservation) => {
   let initStatus = reservation.status;
   let reviewers = reservation.reviewers;
 
-  let isApproved = true;
+  let isApproved = false;
   let isRejected = false;
   let adminStatus;
   reviewers.forEach((reviewer) => {
     if (reviewer.role === "ADMIN") {
       adminStatus = reviewer.status;
     } else {
-      if (reviewer.status !== "APPROVED") {
-        isApproved = false;
+      if (reviewer.status === "APPROVED") {
+        isApproved = true;
       }
       if (reviewer.status === "REJECTED") {
         isRejected = true;
@@ -581,14 +568,10 @@ const updateReservationStatus = (reservation) => {
     }
   });
 
-  if (adminStatus === "APPROVED") {
-    reservation.status = "APPROVED";
-  } else if (adminStatus === "REJECTED") {
+  if (isRejected) {
     reservation.status = "REJECTED";
   } else if (isApproved) {
     reservation.status = "APPROVED";
-  } else if (isRejected) {
-    reservation.status = "REJECTED";
   } else {
     reservation.status = "PENDING";
   }
@@ -724,6 +707,108 @@ export const sendNotification = async (req, res) => {
     user.notifications.push({ message, sender, res_id });
     await user.save();
     res.status(200).json({ message: "Notification sent" });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+export const getCurrentReservations = async (req, res) => {
+  try {
+    if (req.user.role !== "CASHIER")
+      return res
+        .status(403)
+        .json({ message: "You are not authorized to perform this action" });
+    const reservations = await Reservation.find({
+      departureDate: { $gte: new Date() },
+      status: "APPROVED",
+    });
+    res.status(200).json(reservations);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+export const getPaymentPendingReservations = async (req, res) => {
+  try {
+    if (req.user.role !== "CASHIER")
+      return res
+        .status(403)
+        .json({ message: "You are not authorized to perform this action" });
+    const reservations = await Reservation.find({
+      departureDate: { $gte: new Date() },
+      "payment.status": "PENDING",
+      status: "APPROVED",
+    });
+    res.status(200).json(reservations);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+export const getCheckedOutReservations = async (req, res) => {
+  try {
+    if (req.user.role !== "CASHIER")
+      return res
+        .status(403)
+        .json({ message: "You are not authorized to perform this action" });
+    const reservations = await Reservation.find({
+      checkout: true,
+    });
+    res.status(200).json(reservations);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+export const getLateCheckoutReservations = async (req, res) => {
+  try {
+    if (req.user.role !== "CASHIER")
+      return res
+        .status(403)
+        .json({ message: "You are not authorized to perform this action" });
+    const reservations = await Reservation.find({
+      departureDate: { $lt: new Date() },
+      status: "APPROVED",
+      checkout: false,
+    });
+    res.status(200).json(reservations);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+export const checkoutReservation = async (req, res) => {
+  try {
+    if (req.user.role !== "CASHIER")
+      return res
+        .status(403)
+        .json({ message: "You are not authorized to perform this action" });
+
+    const { id } = req.params;
+    const reservation = await Reservation.findById(id);
+    if (reservation.payment.status !== "PAID") {
+      return res.status(400).json({ message: "Payment not completed" });
+    }
+
+    reservation.checkout = true;
+    await reservation.save();
+    res.status(200).json({ message: "Checkout successful" });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+export const checkoutToday = async (req, res) => {
+  try {
+    const todayStart = new Date();
+    todayStart.setHours(0, 0, 0, 0); // Set hours, minutes, seconds, and milliseconds to 0 for the start of today
+
+    const todayEnd = new Date();
+    todayEnd.setHours(23, 59, 59, 999); // Set hours, minutes, seconds, and milliseconds to the end of today
+
+    const reservations = await Reservation.find({
+      departureDate: { $gt: new Date(), $lte: todayEnd },
+      status: "APPROVED",
+      checkout: false,
+    });
+    res.status(200).json(reservations);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }

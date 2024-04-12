@@ -16,7 +16,7 @@ const Cart = () => {
   const cart = cartSlice.cartItems;
   const totalAmount = cartSlice.totalAmount;
   const dispatch = useDispatch();
-  const makeRequest = privateRequest(user.accessToken, user.refreshToken);
+  const http = privateRequest(user.accessToken, user.refreshToken);
   const [bookingDate, setBookingDate] = useState("");
 
   const isCartEmpty = Object.keys(cart).length === 0;
@@ -34,7 +34,7 @@ const Cart = () => {
       foodItems.push({ name, price, id, category, quantity: value });
     }
 
-    await makeRequest.post("/dining", { items: foodItems });
+    await http.post("/dining", { items: foodItems });
 
     alert(`Total Amount: ₹${totalAmount.toFixed(2)}`);
 
@@ -194,7 +194,6 @@ const Cart = () => {
     <div>
       <div className={styles.cart + ' font-["Dosis"]'}>
         <h2 className='text-3xl font-["Dosis"] text-center pb-2'>CART</h2>
-        <ToastContainer />
         {isCartEmpty ? (
           <>
             <table>
@@ -231,7 +230,7 @@ const Cart = () => {
               <thead>
                 <tr>
                   <th>Item</th>
-                  <th>Price</th>  
+                  <th>Price</th>
                   <th>Quantity</th>
                   <th></th>
                 </tr>

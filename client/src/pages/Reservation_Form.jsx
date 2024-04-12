@@ -16,7 +16,7 @@ import ApplicantTable from "../components/ApplicantTable";
 
 function ReservationForm() {
   const user = useSelector((state) => state.user);
-  const makeRequest = privateRequest(user.accessToken, user.refreshToken);
+  const http = privateRequest(user.accessToken, user.refreshToken);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
@@ -74,7 +74,6 @@ function ReservationForm() {
     applicant: true,
   };
 
-
   const patterns = {
     guestName: /[a-zA-Z]+/,
     address: /[\s\S]*/,
@@ -89,6 +88,14 @@ function ReservationForm() {
     category: /[\s\S]*/,
   };
 
+  const catAReviewers = ["DIRECTOR", "REGISTRAR", "ASSOCIATE DEAN", "DEAN"];
+
+  const catBReviewers = ["HOD", "DEAN", "ASSOCIATE DEAN", "REGISTRAR"];
+
+  const catCReviewers = ["CHAIRMAN"];
+  const catDReviewers = ["CHAIRMAN"];
+  const [checkedValues, setCheckedValues] = useState([]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -96,6 +103,17 @@ function ReservationForm() {
       [name]: value,
     });
   };
+  const handleCheckboxChange = (event) => {
+    const { value, checked } = event.target;
+    if (checked) {
+      setCheckedValues((prevCheckedValues) => [...prevCheckedValues, value]);
+    } else {
+      setCheckedValues((prevCheckedValues) =>
+        prevCheckedValues.filter((item) => item !== value)
+      );
+    }
+  };
+
   const handleFileUpload = (files) => {
     setFiles(files);
   };
@@ -216,6 +234,11 @@ function ReservationForm() {
       return;
     }
 
+    if (checkedValues.length < 0) {
+      toast.error("Please add a reviewer/reviewers");
+      return;
+    }
+
     // Handle form submission
     setLoading(true);
 
@@ -224,23 +247,20 @@ function ReservationForm() {
     try {
       const formDataToSend = new FormData();
       Object.entries(formData).forEach(([fieldName, fieldValue]) => {
-        console.log(fieldName, fieldValue);
-        if(fieldName==='applicant') formDataToSend.append(fieldName, JSON.stringify(fieldValue));
+        if (fieldName === "applicant")
+          formDataToSend.append(fieldName, JSON.stringify(fieldValue));
         formDataToSend.append(fieldName, fieldValue);
       });
       for (const file of files) {
         formDataToSend.append("files", file);
       }
+      formDataToSend.append("reviewers", checkedValues);
       formDataToSend.append("receipt", receipt);
-      await makeRequest.post(
-        "http://localhost:4751/reservation/",
-        formDataToSend,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      await http.post("http://localhost:4751/reservation/", formDataToSend, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
       // toast.success("Form submitted successfully!");
       toast.update(toast_id, {
         render: "Form submitted successfully!",
@@ -270,8 +290,6 @@ function ReservationForm() {
       }
     }
   };
-
-  console.log(formData)
 
   return (
     <div className="w-full">
@@ -437,6 +455,87 @@ function ReservationForm() {
                 Category D
               </option>
             </select>
+
+            <div className="w-full p-2 mb-5">
+              <ul className="flex flex-col justify-center">
+                {formData.category === "A" &&
+                  catAReviewers.map((reviewer) => (
+                    <li
+                      key={reviewer}
+                      className="flex justify-start gap-4 items-center w-full"
+                    >
+                      <input
+                        name="reviewers"
+                        type="checkbox"
+                        id={reviewer}
+                        value={reviewer}
+                        onChange={handleCheckboxChange}
+                        style={{ width: "20px" }}
+                      />
+                      <label className="w-32" htmlFor={reviewer}>
+                        {reviewer}
+                      </label>
+                    </li>
+                  ))}
+                {formData.category === "B" &&
+                  catBReviewers.map((reviewer) => (
+                    <li
+                      key={reviewer}
+                      className="flex justify-start gap-4 items-center w-full"
+                    >
+                      <input
+                        name="reviewers"
+                        type="checkbox"
+                        id={reviewer}
+                        value={reviewer}
+                        onChange={handleCheckboxChange}
+                        style={{ width: "20px" }}
+                      />
+                      <label className="w-32" htmlFor={reviewer}>
+                        {reviewer}
+                      </label>
+                    </li>
+                  ))}
+                {formData.category === "C" &&
+                  catCReviewers.map((reviewer) => (
+                    <li
+                      key={reviewer}
+                      className="flex justify-start gap-4 items-center w-full"
+                    >
+                      <input
+                        name="reviewers"
+                        type="checkbox"
+                        id={reviewer}
+                        value={reviewer}
+                        onChange={handleCheckboxChange}
+                        style={{ width: "20px" }}
+                      />
+                      <label className="w-32" htmlFor={reviewer}>
+                        {reviewer}
+                      </label>
+                    </li>
+                  ))}
+                {formData.category === "D" &&
+                  catDReviewers.map((reviewer) => (
+                    <li
+                      key={reviewer}
+                      className="flex justify-start gap-4 items-center w-full"
+                    >
+                      <input
+                        name="reviewers"
+                        type="checkbox"
+                        id={reviewer}
+                        value={reviewer}
+                        onChange={handleCheckboxChange}
+                        style={{ width: "20px" }}
+                      />
+                      <label className="w-32" htmlFor={reviewer}>
+                        {reviewer}
+                      </label>
+                    </li>
+                  ))}
+              </ul>
+            </div>
             {(formData.category === "B" || formData.category === "C") && (
               <>
                 <label>Payment*:</label>
@@ -499,7 +598,9 @@ function ReservationForm() {
               <div>
                 <ApplicantTable
                   entry={formData.applicant}
-                  setEntry={(entry) => setFormData((prev)=>({ ...prev, applicant: entry }))}
+                  setEntry={(entry) =>
+                    setFormData((prev) => ({ ...prev, applicant: entry }))
+                  }
                 />
               </div>
             </div>

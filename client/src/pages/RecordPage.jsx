@@ -19,7 +19,7 @@ export default function RecordPage() {
     HOLD: "bg-yellow-400",
   };
 
-  const makeRequest = privateRequest(user.accessToken, user.refreshToken);
+  const http = privateRequest(user.accessToken, user.refreshToken);
 
   const [status, setStatus] = useState("Loading");
 
@@ -38,7 +38,7 @@ export default function RecordPage() {
   useEffect(() => {
     const fetchRecord = async () => {
       try {
-        const response = await makeRequest.get(`/reservation/${id}`);
+        const response = await http.get(`/reservation/${id}`);
         setStatus("Success");
         setUserRecord(response.data.reservation);
         setReviewers(response.data.reservation.reviewers);

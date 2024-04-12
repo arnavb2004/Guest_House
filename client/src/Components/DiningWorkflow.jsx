@@ -1,27 +1,15 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { privateRequest } from "../utils/useFetch";
 import StepperComponent from "./Stepper";
+import http from "../utils/httpService";
 
-const Workflow = ({
-  id,
-  userRecord,
-  reviewers,
-  setReviewers
-}) => {
-  const steps = [
-    "Place Order",
-    "Approval",
-    "Payment"
-  ];
+const Workflow = ({ id, userRecord, reviewers, setReviewers }) => {
+  const steps = ["Place Order", "Approval", "Payment"];
 
-  // const { stepsCompleted } = userRecord;
   const stepsCompleted = 1;
   const user = useSelector((state) => state.user);
-  const makeRequest = privateRequest(user.accessToken, user.refreshToken);
   const reviewer = reviewers.find((reviewer) => reviewer.role === user.role);
   const comments = reviewer?.comments;
-  // const stepsCompleted = 2;
   return (
     <div className=" flex flex-col justify-center col-span-3 bg-[rgba(255,255,255,0.5)] rounded-lg shadow-lg p-8 gap-10">
       <StepperComponent steps={steps} stepsCompleted={stepsCompleted || 0} />
@@ -30,7 +18,7 @@ const Workflow = ({
           <>
             <button
               onClick={() => {
-                makeRequest.put("/dining/approve/" + id, { comments });
+                http.put("/dining/approve/" + id, { comments });
               }}
               className="border rounded-lg p-3 px-4 bg-green-400 hover:bg-green-500"
             >
@@ -38,7 +26,7 @@ const Workflow = ({
             </button>
             <button
               onClick={() => {
-                makeRequest.put("/dining/reject/" + id, { comments });
+                http.put("/dining/reject/" + id, { comments });
               }}
               className="border rounded-lg p-3 px-4 bg-red-400 hover:bg-red-500"
             >
@@ -46,7 +34,7 @@ const Workflow = ({
             </button>
             <button
               onClick={() => {
-                makeRequest.put("/dining/hold/" + id, { comments });
+                http.put("/dining/hold/" + id, { comments });
               }}
               className="border rounded-lg p-3 px-4 bg-yellow-400 hover:bg-yellow-500"
             >
@@ -70,8 +58,7 @@ const Workflow = ({
             className="w-full p-2 bg-white border-gray-500 rounded-lg"
             rows={5}
             value={comments || ""}
-            onChange={
-              (e) =>
+            onChange={(e) =>
               setReviewers((prev) =>
                 prev.map((r) =>
                   r.role === user.role ? { ...r, comments: e.target.value } : r

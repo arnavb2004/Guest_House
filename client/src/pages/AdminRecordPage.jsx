@@ -14,7 +14,7 @@ export default function AdminRecordPage() {
 
   const user = useSelector((state) => state.user);
 
-  const makeRequest = privateRequest(user.accessToken, user.refreshToken);
+  const http = privateRequest(user.accessToken, user.refreshToken);
 
   const [status, setStatus] = useState("Loading");
 
@@ -52,7 +52,7 @@ export default function AdminRecordPage() {
   useEffect(() => {
     const fetchRecord = async () => {
       try {
-        const response = await makeRequest.get(`/reservation/${id}`);
+        const response = await http.get(`/reservation/${id}`);
         setStatus("Success");
         setUserRecord(response.data.reservation);
         setReviewers(response.data.reservation.reviewers);
@@ -178,7 +178,7 @@ export default function AdminRecordPage() {
               <button
                 onClick={() => {
                   try {
-                    const res = makeRequest.put(`/reservation/${id}/assign`, {
+                    const res = http.put(`/reservation/${id}/assign`, {
                       reviewers: checkedValues,
                     });
                     toast.success("Assigned Successfully");

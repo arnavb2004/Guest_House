@@ -4,10 +4,20 @@ import Slider from "../components/Slider";
 import { sliderItems } from "../data";
 
 const Home = () => {
+  const otherLinks = [
+    {
+      link: "https://www.iitrpr.ac.in/guest-house/",
+      text: "More details about Guest House",
+    },
+    {
+      link: "https://www.iitrpr.ac.in/",
+      text: "Explore other things in IIT Ropar",
+    },
+  ];
   return (
     <div className="flex flex-col items-center w-screen">
       <div className="mt-10">
-        <Slider items = {sliderItems}/>
+        <Slider items={sliderItems} />
       </div>
       <div className="home w-5/6 grid grid-cols-4 my-10 text-justify">
         <div className="content col-span-3 p-4">
@@ -52,13 +62,19 @@ const Home = () => {
 
         <div className="links col-span-1 p-4 rounded-xl">
           <p className="text-2xl font-semibold">Other links</p>
-          <a className="my-1" href="https://www.iitrpr.ac.in/guest-house/" target="_blank" rel="noreferrer">
-            More details about Guest House
-          </a>
-          <hr className="border-dotted border-t-2 border-gray-400 my-1" />
-          <a className="my-1" href="https://www.iitrpr.ac.in/" target="_blank" rel="noreferrer">
-            Explore other things in IIT Ropar
-          </a>
+          <div className="py-3">
+            {otherLinks.map((item) => (
+              <>
+                <a
+                  className="my-1"
+                  href={item.link}
+                  target="_blank"
+                  rel="noreferrer"
+                >{item.text}</a>
+                <hr className="border-dotted border-t-2 border-gray-400 my-1" />
+              </>
+            ))}
+          </div>
         </div>
       </div>
     </div>

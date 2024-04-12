@@ -19,7 +19,13 @@ import {
   addRooms,
   updateRooms,
   sendNotification,
-  updatePaymentStatus
+  updatePaymentStatus,
+  getCurrentReservations,
+  getPaymentPendingReservations,
+  getCheckedOutReservations,
+  getLateCheckoutReservations,
+  checkoutReservation,
+  checkoutToday,
 } from "../controllers/reservation.js";
 
 const Router = express.Router();
@@ -33,23 +39,28 @@ Router.post(
   ]),
   createReservation
 );
+Router.post("/rooms", checkAuth, addRooms);
 
 Router.get("/all", checkAuth, getAllReservationDetails);
+Router.get("/current", checkAuth, getCurrentReservations);
+Router.get("/late", checkAuth, getLateCheckoutReservations);
+Router.get("/checkedout", checkAuth, getCheckedOutReservations);
 Router.get("/pending", checkAuth, getPendingReservations);
 Router.get("/approved", checkAuth, getApprovedReservations);
 Router.get("/rejected", checkAuth, getRejectedReservations);
 Router.get("/documents/:id", checkAuth, getReservationDocuments);
 Router.get("/rooms", checkAuth, getRooms);
-Router.post("/rooms", checkAuth, addRooms);
-Router.put("/rooms/:id", checkAuth, updateRooms);
-
+Router.get("/payment/pending", checkAuth, getPaymentPendingReservations);
+Router.get("/checkout/today", checkAuth, checkoutToday);
 
 Router.get("/:id", checkAuth, getReservationDetails);
 
+Router.put("/checkout/:id", checkAuth, checkoutReservation);
+Router.put("/rooms/:id", checkAuth, updateRooms);
 Router.put("/approve/:id", checkAuth, approveReservation);
 Router.put("/reject/:id", checkAuth, rejectReservation);
 Router.put("/hold/:id", checkAuth, holdReservation);
-Router.put("/payment/:id",checkAuth,updatePaymentStatus);
+Router.put("/payment/:id", checkAuth, updatePaymentStatus);
 Router.put("/:id/assign", checkAuth, assignReservation);
 Router.put("/:id", checkAuth, updateReservation);
 

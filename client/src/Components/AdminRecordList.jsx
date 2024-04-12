@@ -3,8 +3,6 @@ import React, { useEffect, useState } from "react";
 import List from "@mui/material/List";
 import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
-import { useSelector, useDispatch } from "react-redux";
-import { privateRequest } from "../utils/useFetch";
 import { useNavigate } from "react-router-dom";
 import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 
@@ -18,12 +16,12 @@ import TextField from "@mui/material/TextField";
 import DownloadIcon from "@mui/icons-material/Download";
 import DoneIcon from "@mui/icons-material/Done";
 import CloseIcon from "@mui/icons-material/Close";
+import http from "../utils/httpService";
 
 export default function AdminRecordList({ status = "pending" }) {
   const [checked, setChecked] = useState([]);
   const [values, setValues] = useState([]);
   const [loadingStatus, setLoadingStatus] = useState("Loading");
-  const user = useSelector((state) => state.user);
   const [records, setRecords] = useState([]);
   const [newRecords, setNewRecords] = useState([]);
   const [sortType, setSortType] = useState("");
@@ -41,18 +39,15 @@ export default function AdminRecordList({ status = "pending" }) {
 
   const navigate = useNavigate();
 
-  const makeRequest = privateRequest(user.accessToken, user.refreshToken);
-
   const fetchRecords = async () => {
     try {
-      const res = await makeRequest.get("/reservation/" + status);
-      const reservations = res.data;
+      const res = await http.get("/reservation/" + status);
+      const reservations = res?.data;
       setLoadingStatus("Success");
-      setValues(reservations.map((res) => res._id));
-      setRecords(reservations);
-      setNewRecords(reservations);
-    } catch (err) {
-      toast.error(err.response.data);
+      setValues(reservations?.map((res) => res._id));
+      setRecords(reservations || []);
+      setNewRecords(reservations || []);
+    } catch (error) {
       setLoadingStatus("Error");
     }
   };
@@ -213,7 +208,7 @@ export default function AdminRecordList({ status = "pending" }) {
             size="large"
             onClick={toggleDropdown}
             endIcon={isOpen ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
-            style={{ backgroundColor: "#DFDFDF", color: "#606060" }}
+            style={{ backgroundColor: "#365899", color: "#FFF" }}
             className="h-full"
           >
             {searchChoice}
@@ -291,19 +286,13 @@ export default function AdminRecordList({ status = "pending" }) {
                         try {
                           checked.forEach(async (record) => {
                             if (record !== "#") {
-                              await makeRequest.put(
-                                "/reservation/approve/" + record
-                              );
+                              await http.put("/reservation/approve/" + record);
                             }
                           });
                           toast.success("Requests Approved");
                           window.location.reload();
                         } catch (error) {
-                          if (error.response?.data?.message) {
-                            toast.error(error.response.data);
-                          } else {
-                            toast.error("An error occurred");
-                          }
+                          console.log(error?.message)
                         }
                       }}
                     />
@@ -315,9 +304,7 @@ export default function AdminRecordList({ status = "pending" }) {
                         try {
                           checked.forEach(async (record) => {
                             if (record !== "#") {
-                              await makeRequest.put(
-                                "/reservation/reject/" + record
-                              );
+                              await http.put("/reservation/reject/" + record);
                             }
                           });
                           toast.success("Requests Rejected");
@@ -367,13 +354,13 @@ export default function AdminRecordList({ status = "pending" }) {
                   <div className="w-[10%]">{getDate(record.departureDate)}</div>
                   <div className="w-[10%]">{record.roomType}</div>
                   <div className="flex justify-evenly gap-2 w-[10%]">
-                    {record.status !== "APPROVED" && (
+                    {status !== "approved" && (
                       <IconButton edge="end" aria-label="comments">
                         <DoneIcon
                           className="text-green-500 h-5"
                           onClick={async () => {
                             try {
-                              await makeRequest.put(
+                              await http.put(
                                 "/reservation/approve/" + record._id
                               );
                               toast.success("Reservation Approved");
@@ -389,14 +376,12 @@ export default function AdminRecordList({ status = "pending" }) {
                         />
                       </IconButton>
                     )}
-                    {record.status !== "REJECTED" && (
+                    {status !== "rejected" && (
                       <IconButton edge="end" aria-label="comments">
                         <CloseIcon
                           className="text-red-500 h-5"
                           onClick={async () => {
-                            await makeRequest.put(
-                              "/reservation/reject/" + record._id
-                            );
+                            await http.put("/reservation/reject/" + record._id);
                           }}
                         />
                       </IconButton>
@@ -415,7 +400,7 @@ export default function AdminRecordList({ status = "pending" }) {
                       <DownloadIcon
                         onClick={async () => {
                           try {
-                            const res = await makeRequest.get(
+                            const res = await http.get(
                               "/reservation/documents/" + record._id,
                               { responseType: "blob" }
                             );

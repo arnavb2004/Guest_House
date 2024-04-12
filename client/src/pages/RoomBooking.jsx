@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 import { getDate } from "../utils/handleDate";
 import { useLocation, useParams } from "react-router-dom";
 import Switch from "@mui/material/Switch";
-import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteIcon from "@mui/icons-material/Delete";
 import RoomList from "../components/RoomList";
 
 const RoomBooking = () => {
@@ -16,12 +16,12 @@ const RoomBooking = () => {
   const userRecord = useLocation().state.userRecord;
   const guestName = userRecord.guestName;
   const user = useSelector((state) => state.user);
-  const makeRequest = privateRequest(user.accessToken, user.refreshToken);
+  const http = privateRequest(user.accessToken, user.refreshToken);
 
   const fetchRooms = async () => {
     try {
-      const res = await makeRequest.get("/reservation/rooms");
-      const reservation = await makeRequest.get("/reservation/" + id);
+      const res = await http.get("/reservation/rooms");
+      const reservation = await http.get("/reservation/" + id);
       setRoomsData(res.data);
       setRoomList(reservation.data.reservation.bookings);
     } catch (error) {
@@ -144,9 +144,9 @@ const RoomBooking = () => {
   };
 
   const deleteRoom = (room) => {
-    const updatedRoomList = roomList.filter(currRoom => currRoom !== room)
-    setRoomList(updatedRoomList)
-  }
+    const updatedRoomList = roomList.filter((currRoom) => currRoom !== room);
+    setRoomList(updatedRoomList);
+  };
 
   return (
     <div className="room-booking h-fit ">
@@ -218,7 +218,7 @@ const RoomBooking = () => {
           </div>
         ))}
       </div>
-      <RoomList roomList={ roomList } setRoomList={setRoomList} id={id}/>
+      <RoomList roomList={roomList} setRoomList={setRoomList} id={id} />
     </div>
   );
 };
