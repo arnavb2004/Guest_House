@@ -1,10 +1,11 @@
 import Meal from "../models/Meal.js";
 import User from "../models/User.js";
+import Reservation from "../models/Reservation.js";
 
 export async function createOrder(req, res) {
   try {
     const email = req.user.email;
-    const { items } = req.body;
+    const { items, reservationId, dateofbooking } = req.body;
     let amount = 0;
     for (let i = 0; i < items.length; i++) {
       amount += items[i].price * items[i].quantity;
@@ -14,6 +15,8 @@ export async function createOrder(req, res) {
       items,
       amount,
       reviewers: [{ role: "ADMIN", status: "PENDING", comments: "" }],
+      reservationId,
+      dateofbooking
     });
     await meal.save();
     res.status(200).json({ message: "Order created successfully" });
@@ -85,6 +88,7 @@ const updateOrderStatus = (order) => {
   } else {
     order.status = "PENDING";
   }
+
   return order;
 };
 
@@ -217,6 +221,11 @@ export async function approveOrder(req, res) {
     });
     let initStatus = order.status;
     order = updateOrderStatus(order);
+    console.log("HOHOHO",order._id,order)
+    if(order.status == 'APPROVED'){
+      console.log("YES")
+      await Reservation.findByIdAndUpdate(order.reservationId,{ $push: { diningIds: order._id } })
+    }
     console.log(order);
     //add the message to the user model of who made the order
     if (initStatus !== order.status) {

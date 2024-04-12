@@ -66,6 +66,15 @@ const mealSchema = new mongoose.Schema({
     enum: ["PENDING", "APPROVED", "REJECTED", "HOLD"],
     default: "PENDING",
   },
+  reservationId: {
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'Reservation', // Reference to the Reservation model
+    default: null, 
+  },
+  dateofbooking: {
+    type: Date,
+    required: true,
+  }
 });
 
 const Meal = mongoose.model("Meal", mealSchema);
