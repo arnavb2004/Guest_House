@@ -58,14 +58,11 @@ function App() {
             </Route>
 
             <Route path="reservation" element={<Reservation />}>
-              <Route path="" element={<AdminRecordList />} />
+              <Route path="" element={<AdminRecordList status="approved" />} />
+              <Route path="pending-requests" element={<AdminRecordList />} />
               <Route
                 path="rejected-requests"
                 element={<AdminRecordList status="rejected" />}
-              />
-              <Route
-                path="approved-requests"
-                element={<AdminRecordList status="approved" />}
               />
               <Route path=":id" element={<AdminRecordPage />} />
 
@@ -76,10 +73,7 @@ function App() {
 
           <Route path="cashier" element={<Auth allowedRoles={["CASHIER"]} />}>
             <Route path="reservation" element={<Reservation />}>
-              <Route
-                path="current-requests"
-                element={<RecordList current={true} />}
-              />
+              <Route path="" element={<RecordList current={true} />} />
               <Route
                 path="payment-pending"
                 element={<RecordList payment={false} />}
@@ -96,6 +90,7 @@ function App() {
                 path="checkout-today"
                 element={<RecordList checkout="today" />}
               />
+              <Route path=":id" element={<RecordPage />} />
             </Route>
             <Route path="dining" element={<Dining />}></Route>
           </Route>

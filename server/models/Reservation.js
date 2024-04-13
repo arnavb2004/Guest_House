@@ -158,6 +158,15 @@ const reservationSchema = new mongoose.Schema(
         required: true,
       },
     },
+    diningIds: {
+      type: [
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Meal",
+        },
+      ],
+      default: [],
+    },
   },
   {
     timestamps: true, // Adds createdAt and updatedAt timestamps

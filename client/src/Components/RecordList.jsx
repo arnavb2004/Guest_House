@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import Checkbox from "@mui/material/Checkbox";
 import { useSelector, useDispatch } from "react-redux";
 import { privateRequest } from "../utils/useFetch";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
@@ -30,6 +30,8 @@ export default function RecordList({
   const [loadingStatus, setLoadingStatus] = useState("Loading");
   const [sortType, setSortType] = useState("");
   const [sortToggle, setSortToggle] = useState(false);
+  const location = useLocation()
+  
 
   const filterMap = {
     "Guest Name": "guestName",
@@ -50,8 +52,8 @@ export default function RecordList({
       let res;
       if (current === true) {
         res = await http.get("/reservation/current");
-      } else if (payment === true) {
-        res = await http.get("/reservation/payment/done");
+      } else if (payment === false) {
+        res = await http.get("/reservation/payment/pending");
       } else if (checkout === "late") {
         res = await http.get("/reservation/late");
       } else if (checkout === "done") {
@@ -338,7 +340,7 @@ export default function RecordList({
                     <IconButton>
                       <InsertDriveFileIcon
                         onClick={() => {
-                          status === "pending"
+                          location.pathname.split("/").length === 3
                             ? navigate(`${record._id}`)
                             : navigate(`../${record._id}`);
                         }}

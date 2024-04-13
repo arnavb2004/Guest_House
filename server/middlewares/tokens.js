@@ -12,10 +12,11 @@ export const checkAuth = async (req, res, next) => {
       try {
         decodedToken = jwt.decode(accessToken);
       } catch (err) {
-        res.status(401).json({ message: "Invalid access token" });
+        return res.status(401).json({ message: "Invalid access token" });
       }
-      console.log(decodedToken);
-      console.log(Date.now() / 1000);
+      console.log("Decoded Token = ", decodedToken);
+
+      console.log("Date = ", Date.now() / 1000);
       if (decodedToken.exp <= Date.now() / 1000) {
         console.log("Access Token has expired!!,`Checking the refresh token!!");
         var decodedToken;
@@ -27,18 +28,17 @@ export const checkAuth = async (req, res, next) => {
         } catch (err) {
           console.log(err.message);
           if (err.message === "jwt expired") {
-            res
+            return res
               .status(401)
               .json({
                 message: "Refresh Token has expired. Please login again",
               });
-            //decodedToken=jwt.decode(refreshToken);
           } else {
-            res.status(401).json({ message: "Invalid refresh token" });
+            return res.status(401).json({ message: "Invalid refresh token" });
           }
         }
         if (decodedToken.exp <= Date.now() / 1000) {
-          res
+          return res
             .status(401)
             .json({ message: "Refresh Token has expired! Please login again" });
         }
@@ -61,7 +61,7 @@ export const checkAuth = async (req, res, next) => {
         next();
       }
     } else {
-      throw new Error("Invalid access token");
+      return res.status(401).json({ message: "Invalid access token" });
     }
   } catch (error) {
     res.status(401).json({ message: error.message });

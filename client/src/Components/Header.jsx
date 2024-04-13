@@ -12,7 +12,6 @@ import Text from "./Text";
 import Badge from "@mui/material/Badge";
 import http from "../utils/httpService";
 
-
 const Header = () => {
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
@@ -23,8 +22,10 @@ const Header = () => {
   const [notificationMenuOpen, setNotificationMenuOpen] = useState(false);
 
   const fetchNotifications = async () => {
-    const res = await http.get("/user/notifications");
-    dispatch(updateUserDetails({ notifications: res?.data }));
+    try {
+      const res = await http.get("/user/notifications");
+      dispatch(updateUserDetails({ notifications: res?.data }));
+    } catch (error) {}
   };
 
   useEffect(() => {

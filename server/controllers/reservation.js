@@ -217,6 +217,7 @@ export async function getReservationDetails(req, res) {
     if (
       req.user.email != reservation.guestEmail &&
       req.user.role !== "ADMIN" &&
+      req.user.role !== "CASHIER" &&
       !reservation.reviewers.find((r) => r.role === req.user.role)
     ) {
       return res
@@ -734,10 +735,11 @@ export const getPaymentPendingReservations = async (req, res) => {
         .status(403)
         .json({ message: "You are not authorized to perform this action" });
     const reservations = await Reservation.find({
-      departureDate: { $gte: new Date() },
+      // departureDate: { $gte: new Date() },
       "payment.status": "PENDING",
       status: "APPROVED",
     });
+    console.log(reservations)
     res.status(200).json(reservations);
   } catch (error) {
     res.status(400).json({ message: error.message });

@@ -389,7 +389,7 @@ export default function AdminRecordList({ status = "pending" }) {
                     <IconButton edge="end" aria-label="insert">
                       <InsertDriveFileIcon
                         onClick={() => {
-                          status === "pending"
+                          status === "approved"
                             ? navigate(`${record._id}`)
                             : navigate(`../${record._id}`);
                         }}

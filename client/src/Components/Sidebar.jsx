@@ -17,7 +17,7 @@ const Sidebar = () => {
 
   const content =
     user.role === "ADMIN"
-      ? ["Pending Requests", "Rejected Requests", "Approved Requests", "Users"]
+      ? ["Approved Requests", "Pending Requests", "Rejected Requests", "Users"]
       : user.role === "USER"
       ? [
           "Pending Requests",
