@@ -27,7 +27,7 @@ const UserProfileDialog = ({ openDialog, setOpenDialog }) => {
   const [isEditing, setIsEditing] = useState(false);
   const dispatch = useDispatch();
 
-  const makeRequest = privateRequest(user.accessToken, user.refreshToken);
+  const http = privateRequest(user.accessToken, user.refreshToken);
 
   const handleCloseDialog = () => {
     setOpenDialog(false);
@@ -38,17 +38,16 @@ const UserProfileDialog = ({ openDialog, setOpenDialog }) => {
       updateUserDetails({ name: editableName, contact: editableContact })
     );
     try {
-      await makeRequest.put(`/user/${user.id}`, {
+      await http.put(`/user/${user.id}`, {
         name: editableName,
         contact: editableContact,
       });
     } catch (error) {
-        if (error.response?.data?.message) {
-          toast.error(error.response.data);
-        }
-        else {
-          toast.error("An error occurred");
-        }
+      if (error.response?.data?.message) {
+        toast.error(error.response.data);
+      } else {
+        toast.error("An error occurred");
+      }
     }
 
     setIsEditing(false); // Exit editing mode after updating

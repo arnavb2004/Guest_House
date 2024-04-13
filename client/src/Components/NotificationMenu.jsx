@@ -11,18 +11,18 @@ const NotificationMenu = () => {
   const user = useSelector((state) => state.user);
   const [notifications, setNotifications] = useState(user?.notifications);
   const [status, setStatus] = useState("Success");
-  const makeRequest = privateRequest(user.accessToken, user.refreshToken);
-  if (!(user?.notifications)) {
+  const http = privateRequest(user.accessToken, user.refreshToken);
+  if (!user?.notifications) {
     fetchNotifications();
   }
   const fetchNotifications = async () => {
     try {
-      const res = await makeRequest.get("/user/notifications");
+      const res = await http.get("/user/notifications");
       setNotifications(res.data);
       setStatus("Success");
     } catch (err) {
-      if (err.response?.data?.message) toast(err.response.data.message);
-      else toast("Error fetching notifications");
+      if (err.response?.data?.message) toast.error(err.response.data.message);
+      else toast.error("Error fetching notifications");
       setStatus("Error");
       console.log(err.response.data);
     }
@@ -30,12 +30,12 @@ const NotificationMenu = () => {
   const navigate = useNavigate();
 
   const handleReservationRedirect = async (res_id, not_id) => {
-    await makeRequest.put(`/user/notifications/delete/${not_id}`);
+    await http.put(`/user/notifications/delete/${not_id}`);
     //redirect to reservation page
     navigate(`/${user.role.toLowerCase()}/reservation/${res_id}`);
     console.log(res_id);
   };
-  console.log(notifications)
+  console.log(notifications);
 
   return (
     <div className="absolute z-[999] font-['Dosis'] flex flex-col items-start uppercase right-0 mt-4 w-64 bg-white border border-gray-300 rounded shadow-lg">

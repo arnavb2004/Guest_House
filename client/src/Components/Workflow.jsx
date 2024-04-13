@@ -11,7 +11,7 @@ const Workflow = ({ id, userRecord, reviewers, setReviewers }) => {
 
   const { stepsCompleted } = userRecord;
   const user = useSelector((state) => state.user);
-  const makeRequest = privateRequest(user.accessToken, user.refreshToken);
+  const http = privateRequest(user.accessToken, user.refreshToken);
   const reviewer = reviewers.find((reviewer) => reviewer.role === user.role);
   const comments = reviewer?.comments;
   // const stepsCompleted = 2;
@@ -24,7 +24,7 @@ const Workflow = ({ id, userRecord, reviewers, setReviewers }) => {
             <button
               onClick={async () => {
                 try {
-                  await makeRequest.put("/reservation/approve/" + id, {
+                  await http.put("/reservation/approve/" + id, {
                     comments,
                   });
                   toast.success("Reservation Approved");
@@ -44,7 +44,7 @@ const Workflow = ({ id, userRecord, reviewers, setReviewers }) => {
             <button
               onClick={async () => {
                 try {
-                  await makeRequest.put("/reservation/reject/" + id, {
+                  await http.put("/reservation/reject/" + id, {
                     comments,
                   });
                   toast.success("Reservation Rejected");
@@ -64,7 +64,7 @@ const Workflow = ({ id, userRecord, reviewers, setReviewers }) => {
             <button
               onClick={async () => {
                 try {
-                  await makeRequest.put("/reservation/hold/" + id, {
+                  await http.put("/reservation/hold/" + id, {
                     comments,
                   });
                   toast.success("Reservation put on hold");

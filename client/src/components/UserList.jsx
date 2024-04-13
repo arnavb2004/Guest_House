@@ -38,7 +38,7 @@ export default function UserList() {
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
   };
-  const makeRequest = privateRequest(user.accessToken, user.refreshToken);
+  const http = privateRequest(user.accessToken, user.refreshToken);
   
   const options = ["Name", "Email", "Contact", "Role"];
   const roles = ['USER', 'ADMIN','HOD','CHAIRMAN','DIRECTOR','DEAN','CASHIER','REGISTRAR','ASSOCIATE DEAN']
@@ -100,7 +100,7 @@ export default function UserList() {
   };
   const updateRole = async (role) => {
     try {
-      const res = await makeRequest.put("/user/updateRole", { userId: selectedUserId, role });
+      const res = await http.put("/user/updateRole", { userId: selectedUserId, role });
       if (res.status === 200) {
         console.log(res.data.message);
         // Optionally, you can update the local state with the new user data
@@ -125,13 +125,14 @@ export default function UserList() {
 
   const fetchUsers = async () => {
     try {
-      const res = await makeRequest.get("/user/all");
+      const res = await http.get("/user/all");
       setValues(res.data.map((res) => res._id));
       setUsers(res.data);
       setNewUsers(res.data);
       setStatus("Success");
     } catch (err) {
-      if (err.response?.data?.message) toast(err.response.data.message);
+      if (err.response?.data?.message) toast.errort(err.response.data.message);
+      else toast.error("Error fetching users");
       setStatus("Error");
     }
   };
@@ -140,7 +141,6 @@ export default function UserList() {
     setStatus("Loading");
     fetchUsers();
   }, []);
-
 
   return (
     <div className="flex flex-col p-5 px-0 w-full">

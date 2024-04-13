@@ -61,7 +61,7 @@ const reservationSchema = new mongoose.Schema(
             "ASSOCIATE DEAN",
           ],
         },
-        comments:{
+        comments: {
           type: String,
         },
         status: {
@@ -101,38 +101,71 @@ const reservationSchema = new mongoose.Schema(
           type: Date,
           required: true,
         },
-        roomNumber:{
+        roomNumber: {
           type: Number,
           required: true,
-        }
+        },
       },
     ],
-    payment:{
-      status:{
-        type:String,
-        enum:["PENDING","PAID"],
-        default:"PENDING"
+    payment: {
+      source: {
+        type: String,
+        enum: ["GUEST", "DEPARTMENT", "OTHERS"],
+        required: true,
+        default: "GUEST",
       },
-      amount:{
-        type:Number,
-        // required:true,
+      status: {
+        type: String,
+        enum: ["PENDING", "PAID"],
+        default: "PENDING",
       },
-      payment_method:{
-        type:String,
-        // enum:["CASH","CARD","CHEQUE","UPI","DEPT"],
-        // required:true,
+      billRaised: {
+        type: Boolean,
+        default: true,
       },
-      transaction_id:{
-        type:String,
+      amount: {
+        type: Number,
         // required:true,
       },
     },
+    checkOut: {
+      type: Boolean,
+      default: false,
+    },
+    applicant: {
+      name: {
+        type: String,
+        required: true,
+      },
+      designation: {
+        type: String,
+        required: true,
+      },
+      department: {
+        type: String,
+        required: true,
+      },
+      code: {
+        type: String,
+        required: true,
+      },
+      mobile: {
+        type: String,
+        required: true,
+      },
+      email: {
+        type: String,
+        required: true,
+      },
+    },
     diningIds: {
-      type: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Meal'
-      }],
-      default: []
+      type: [
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Meal",
+        },
+      ],
+      default: [],
     },
   },
   {

@@ -5,29 +5,25 @@ import { getDate, getTime, transporter } from "../utils.js";
 import archiver from "archiver";
 import { getFileById } from "../middlewares/fileStore.js";
 import mongoose from "mongoose";
-import { google } from 'googleapis'
-import keys from '../secrets.json' assert { type: 'json' };
-import { reseller } from "googleapis/build/src/apis/reseller/index.js";
+import { google } from "googleapis";
 
-const googleSheets = google.sheets('v4');
+const googleSheets = google.sheets("v4");
 const auth = new google.auth.JWT(
-  keys.client_email, 
-  null, 
-  keys.private_key, 
-  ['https://www.googleapis.com/auth/spreadsheets']
+  process.env.client_email,
+  null,
+  process.env.private_key,
+  ["https://www.googleapis.com/auth/spreadsheets"]
 );
 
 const spreadsheetId = `${process.env.GOOGLE_SHEET_ID}`; // Replace with your Google Sheet's ID
 
 async function appendReservationToSheet(reservation) {
-  console.log("Entred Logic");
   await auth.authorize();
-  console.log("Entred Logic2");
   const response = await googleSheets.spreadsheets.values.append({
     auth,
     spreadsheetId,
-    range: 'Sheet1', // Assuming you are using the first sheet; change if necessary
-    valueInputOption: 'RAW',
+    range: "Sheet1", // Assuming you are using the first sheet; change if necessary
+    valueInputOption: "RAW",
     resource: {
       values: [
         [
@@ -39,20 +35,14 @@ async function appendReservationToSheet(reservation) {
           reservation.arrivalDate,
           reservation.departureDate,
           reservation.purpose,
-          reservation.category
+          reservation.category,
           // Add more fields as necessary
         ],
       ],
     },
   });
-  console.log("Exit Logic");
   return response;
 }
-
-// Use this function where you handle the reservation creation
-// For example, in your createReservation function:
-// await appendReservationToSheet(reservation);
-
 
 async function sendVerificationEmail(to, subject, body) {
   try {
@@ -73,8 +63,6 @@ export async function createReservation(req, res) {
   try {
     //user details are contained in req.user
 
-    // console.log(req.body);
-
     const {
       numberOfGuests,
       numberOfRooms,
@@ -87,10 +75,14 @@ export async function createReservation(req, res) {
       address,
       category,
       departureDate,
-      reviewers
+      reviewers,
+      applicant,
+      source,
     } = req.body;
-
-    // console.log(arrivalTime);
+    console.log(source);
+    console.log(applicant[0]);
+    const applicantData = JSON.parse(applicant[0]);
+    console.log(applicantData);
 
     const email = req.user.email;
     const receiptid = req.files["receipt"][0].id;
@@ -99,11 +91,11 @@ export async function createReservation(req, res) {
       extension: f.originalname.split(".")[1],
     }));
     console.log(reviewers);
-    const reviewersArray = reviewers.split(",").map(role => ({
+    const reviewersArray = reviewers.split(",").map((role) => ({
       role,
       comments: "",
       status: "PENDING",
-    }))
+    }));
     const reservation = await Reservation.create({
       guestEmail: email,
       guestName,
@@ -117,6 +109,8 @@ export async function createReservation(req, res) {
       category,
       stepsCompleted: 1,
       files: fileids,
+      payment: { source: source },
+      applicant: applicantData,
       reviewers: reviewersArray,
       receipt: receiptid,
     });
@@ -125,7 +119,9 @@ export async function createReservation(req, res) {
 
     console.log("sending mail");
 
-    const users = await User.find({ "reviewers.role": { $in: reviewersArray } });
+    const users = await User.find({
+      "reviewers.role": { $in: reviewersArray },
+    });
 
     console.log("\n\n\n\n\n", users, "\n\n\n\n\n");
 
@@ -221,6 +217,7 @@ export async function getReservationDetails(req, res) {
     if (
       req.user.email != reservation.guestEmail &&
       req.user.role !== "ADMIN" &&
+      req.user.role !== "CASHIER" &&
       !reservation.reviewers.find((r) => r.role === req.user.role)
     ) {
       return res
@@ -306,17 +303,6 @@ export async function approveReservation(req, res) {
       });
       await resUser.save();
     }
-    //
-    // if(adminStatus === "APPROVED") {
-    //   reservation.status = "APPROVED";
-    // } else if(isApproved) {
-    //   reservation.status = "PENDING";
-    // } else {
-    //   reservation.status = "REJECTED";
-    // }
-
-    // if (req.body.comments) reservation.comments = req.body.comments;
-
     // const body =
     //   "<div>Your reservation has been approved</div><br><div>Comments: " +
     //   req.body.comments +
@@ -571,11 +557,10 @@ const updateReservationStatus = (reservation) => {
   let isRejected = false;
   let adminStatus;
   reviewers.forEach((reviewer) => {
-    
     if (reviewer.role === "ADMIN") {
       adminStatus = reviewer.status;
     } else {
-      if (reviewer.status !== "APPROVED") {
+      if (reviewer.status === "APPROVED") {
         isApproved = true;
       }
       if (reviewer.status === "REJECTED") {
@@ -723,6 +708,109 @@ export const sendNotification = async (req, res) => {
     user.notifications.push({ message, sender, res_id });
     await user.save();
     res.status(200).json({ message: "Notification sent" });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+export const getCurrentReservations = async (req, res) => {
+  try {
+    if (req.user.role !== "CASHIER")
+      return res
+        .status(403)
+        .json({ message: "You are not authorized to perform this action" });
+    const reservations = await Reservation.find({
+      departureDate: { $gte: new Date() },
+      status: "APPROVED",
+    });
+    res.status(200).json(reservations);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+export const getPaymentPendingReservations = async (req, res) => {
+  try {
+    if (req.user.role !== "CASHIER")
+      return res
+        .status(403)
+        .json({ message: "You are not authorized to perform this action" });
+    const reservations = await Reservation.find({
+      // departureDate: { $gte: new Date() },
+      "payment.status": "PENDING",
+      status: "APPROVED",
+    });
+    console.log(reservations)
+    res.status(200).json(reservations);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+export const getCheckedOutReservations = async (req, res) => {
+  try {
+    if (req.user.role !== "CASHIER")
+      return res
+        .status(403)
+        .json({ message: "You are not authorized to perform this action" });
+    const reservations = await Reservation.find({
+      checkout: true,
+    });
+    res.status(200).json(reservations);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+export const getLateCheckoutReservations = async (req, res) => {
+  try {
+    if (req.user.role !== "CASHIER")
+      return res
+        .status(403)
+        .json({ message: "You are not authorized to perform this action" });
+    const reservations = await Reservation.find({
+      departureDate: { $lt: new Date() },
+      status: "APPROVED",
+      checkout: false,
+    });
+    res.status(200).json(reservations);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+export const checkoutReservation = async (req, res) => {
+  try {
+    if (req.user.role !== "CASHIER")
+      return res
+        .status(403)
+        .json({ message: "You are not authorized to perform this action" });
+
+    const { id } = req.params;
+    const reservation = await Reservation.findById(id);
+    if (reservation.payment.status !== "PAID") {
+      return res.status(400).json({ message: "Payment not completed" });
+    }
+
+    reservation.checkout = true;
+    await reservation.save();
+    res.status(200).json({ message: "Checkout successful" });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+export const checkoutToday = async (req, res) => {
+  try {
+    const todayStart = new Date();
+    todayStart.setHours(0, 0, 0, 0); // Set hours, minutes, seconds, and milliseconds to 0 for the start of today
+
+    const todayEnd = new Date();
+    todayEnd.setHours(23, 59, 59, 999); // Set hours, minutes, seconds, and milliseconds to the end of today
+
+    const reservations = await Reservation.find({
+      departureDate: { $gt: new Date(), $lte: todayEnd },
+      status: "APPROVED",
+      checkout: false,
+    });
+    res.status(200).json(reservations);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }

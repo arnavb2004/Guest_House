@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import Checkbox from "@mui/material/Checkbox";
 import { useSelector, useDispatch } from "react-redux";
 import { privateRequest } from "../utils/useFetch";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
@@ -16,7 +16,12 @@ import DownloadIcon from "@mui/icons-material/Download";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { IconButton } from "@mui/material";
 
-export default function RecordList({ status = "pending" }) {
+export default function RecordList({
+  status = "pending",
+  current,
+  payment,
+  checkout,
+}) {
   const [checked, setChecked] = useState([]);
   const [values, setValues] = useState([]);
   const user = useSelector((state) => state.user);
@@ -25,6 +30,8 @@ export default function RecordList({ status = "pending" }) {
   const [loadingStatus, setLoadingStatus] = useState("Loading");
   const [sortType, setSortType] = useState("");
   const [sortToggle, setSortToggle] = useState(false);
+  const location = useLocation()
+  
 
   const filterMap = {
     "Guest Name": "guestName",
@@ -38,25 +45,41 @@ export default function RecordList({ status = "pending" }) {
 
   const navigate = useNavigate();
 
-  const makeRequest = privateRequest(user.accessToken, user.refreshToken);
+  const http = privateRequest(user.accessToken, user.refreshToken);
 
   const fetchRecords = async () => {
     try {
-      const res = await makeRequest.get("/reservation/" + status);
+      let res;
+      if (current === true) {
+        res = await http.get("/reservation/current");
+      } else if (payment === false) {
+        res = await http.get("/reservation/payment/pending");
+      } else if (checkout === "late") {
+        res = await http.get("/reservation/late");
+      } else if (checkout === "done") {
+        res = await http.get("/reservation/checkedout");
+      } else if (checkout === "today") {
+        res = await http.get("/reservation/checkout/today");
+      } else {
+        res = await http.get("/reservation/" + status);
+      }
+
       const reservations = res.data;
+      console.log(reservations)
       setValues(reservations.map((res) => res._id));
       setRecords(reservations);
       setNewRecords(reservations);
       setLoadingStatus("Success");
     } catch (err) {
-      if (err.response?.data?.message) toast(err.response.data.message);
+      if (err.response?.data?.message) toast.error(err.response.data.message);
+      else toast.error("Error fetching records");
       setLoadingStatus("Error");
     }
   };
   useEffect(() => {
     setLoadingStatus("Loading");
     fetchRecords();
-  }, [status]);
+  }, [status, current, payment, checkout]);
   const dispatch = useDispatch();
   const handleToggle = (value) => () => {
     const currentIndex = checked.indexOf(value);
@@ -317,7 +340,7 @@ export default function RecordList({ status = "pending" }) {
                     <IconButton>
                       <InsertDriveFileIcon
                         onClick={() => {
-                          status === "pending"
+                          location.pathname.split("/").length === 3
                             ? navigate(`${record._id}`)
                             : navigate(`../${record._id}`);
                         }}
@@ -328,7 +351,7 @@ export default function RecordList({ status = "pending" }) {
                       <DownloadIcon
                         onClick={async () => {
                           try {
-                            const res = await makeRequest.get(
+                            const res = await http.get(
                               "/reservation/documents/" + record._id,
                               { responseType: "blob" }
                             );

@@ -4,17 +4,15 @@ import User from "../models/User.js";
 export const checkAuth = async (req, res, next) => {
   try {
     console.log("Checking the access token");
-    console.log(req.headers);
-    console.log(req.body);
-    const accessToken = req.headers.accesstoken.split(" ")[0];
-    const refreshToken = req.headers.refreshtoken.split(" ")[0];
+    const accessToken = req.headers.accesstoken.split(" ")[1];
+    const refreshToken = req.headers.refreshtoken.split(" ")[1];
     console.log(accessToken);
     if (accessToken && refreshToken) {
       var decodedToken;
       try {
         decodedToken = jwt.decode(accessToken);
       } catch (err) {
-        throw new Error("Invalid access token");
+        return res.status(401).json({ message: "Invalid access token" });
       }
       console.log("Decoded Token = ", decodedToken);
 
@@ -30,14 +28,19 @@ export const checkAuth = async (req, res, next) => {
         } catch (err) {
           console.log(err.message);
           if (err.message === "jwt expired") {
-            throw new Error("Refresh Token has expired! Please login again");
-            //decodedToken=jwt.decode(refreshToken);
+            return res
+              .status(401)
+              .json({
+                message: "Refresh Token has expired. Please login again",
+              });
           } else {
-            throw new Error("Invalid refresh token");
+            return res.status(401).json({ message: "Invalid refresh token" });
           }
         }
         if (decodedToken.exp <= Date.now() / 1000) {
-          throw new Error("Refresh Token has expired! Please login again");
+          return res
+            .status(401)
+            .json({ message: "Refresh Token has expired! Please login again" });
         }
         const user = await User.findOne({ email: decodedToken.email });
         console.log("User found!! adding to the req body");
@@ -58,7 +61,7 @@ export const checkAuth = async (req, res, next) => {
         next();
       }
     } else {
-      throw new Error("Invalid access token");
+      return res.status(401).json({ message: "Invalid access token" });
     }
   } catch (error) {
     res.status(401).json({ message: error.message });

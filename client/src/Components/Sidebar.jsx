@@ -17,7 +17,7 @@ const Sidebar = () => {
 
   const content =
     user.role === "ADMIN"
-      ? ["Pending Requests", "Rejected Requests", "Approved Requests", "Users"]
+      ? ["Approved Requests", "Pending Requests", "Rejected Requests", "Users"]
       : user.role === "USER"
       ? [
           "Pending Requests",
@@ -25,7 +25,15 @@ const Sidebar = () => {
           "Approved Requests",
           "Reservation Form",
         ]
-      : ["Pending Requests", "Rejected Requests", "Approved Requests"]; // other roles
+      : user.role === "CASHIER"
+      ? [
+          "Current Requests",
+          "Late Checkout",
+          "Checked Out",
+          "Checkout today",
+          "Payment Pending",
+        ] // other roles
+      : ["Pending Requests", "Rejected Requests", "Approved Requests"];
 
   return (
     <div className="flex flex-col lg:absolute lg:z-100 h-full">
@@ -41,12 +49,6 @@ const Sidebar = () => {
         >
           ☰
         </div>
-        {/* <div className='cursor-default text-xl relative font-["Single Day"] font-["Dosis"]'>
-          GUEST HOUSE
-        </div>
-        <div className="bottom-[2px] relative ">
-          <HomeOutlinedIcon className="h-20 w-20" fontSize="medium" />
-        </div> */}
       </div>
       <hr></hr>
       <div
@@ -68,11 +70,7 @@ const Sidebar = () => {
             <Link
               className=""
               key={"sidebar-" + index}
-              to={
-                item === "Pending Requests"
-                  ? ""
-                  : `${item.toLowerCase().replace(" ", "-")}`
-              }
+              to={index === 0 ? "" : `${item.toLowerCase().replace(" ", "-")}`}
             >
               <li className={" " + styles["menu-item"]}>{item}</li>
               <hr></hr>

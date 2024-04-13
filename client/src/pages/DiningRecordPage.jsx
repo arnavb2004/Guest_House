@@ -19,7 +19,7 @@ export default function DiningRecordPage() {
     HOLD: "bg-yellow-400",
   };
 
-  const makeRequest = privateRequest(user.accessToken, user.refreshToken);
+  const http = privateRequest(user.accessToken, user.refreshToken);
   const [status, setStatus] = useState("Loading");
 
   const [reviewers, setReviewers] = useState([]);
@@ -43,7 +43,7 @@ export default function DiningRecordPage() {
   useEffect(() => {
     const fetchRecord = async () => {
       try {
-        const response = await makeRequest.get(`/dining/${id}`);
+        const response = await http.get(`/dining/${id}`);
         setStatus("Success");
         console.log(response.data);
         setUserRecord(response.data.order);
@@ -135,7 +135,7 @@ export default function DiningRecordPage() {
               <button
                 onClick={() => {
                   try {
-                    const res = makeRequest.put(`/dining/${id}/assign`, {
+                    const res = http.put(`/dining/${id}/assign`, {
                       reviewers: checkedValues,
                     });
                     toast.success("Assigned Successfully");

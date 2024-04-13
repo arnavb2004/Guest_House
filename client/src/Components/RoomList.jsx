@@ -23,7 +23,7 @@ export default function RoomList({ roomList, setRoomList, id }) {
     setRoomList(updatedRoomList);
   };
   const user = useSelector((state) => state.user);
-  const makeRequest = privateRequest(user.accessToken, user.refreshToken);
+  const http = privateRequest(user.accessToken, user.refreshToken);
   const navigate = useNavigate();
   return (
     <>
@@ -61,7 +61,7 @@ export default function RoomList({ roomList, setRoomList, id }) {
               className="p-2 w-fit bg-[rgb(54,88,153)]  rounded-lg text-white mr-16"
               onClick={async () => {
                 try {
-                  await makeRequest.put("/reservation/rooms/" + id, roomList);
+                  await http.put("/reservation/rooms/" + id, roomList);
                   window.location.reload();
                 } catch (err) {
                   if (err.response?.data?.message)

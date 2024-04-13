@@ -17,7 +17,7 @@ const Cart = () => {
   const cart = cartSlice.cartItems;
   const totalAmount = cartSlice.totalAmount;
   const dispatch = useDispatch();
-  const makeRequest = privateRequest(user.accessToken, user.refreshToken);
+  const http = privateRequest(user.accessToken, user.refreshToken);
   const [bookingDate, setBookingDate] = useState("");
   const [selectedReservationId, setSelectedReservationId] = useState("");
   const [acceptedRequests, setAcceptedRequests] = useState([]);
@@ -30,7 +30,7 @@ const Cart = () => {
   useEffect(() => {
     const fetchAcceptedRequests = async () => {
       try {
-        const res = await makeRequest.get("/reservation/APPROVED");
+        const res = await http.get("/reservation/APPROVED");
         // console.log(res)
         setAcceptedRequests(res.data);
       } catch (error) {
@@ -73,7 +73,7 @@ const Cart = () => {
       foodItems.push({ name, price, id, category, quantity: value });
     }
 
-    await makeRequest.post("/dining", { items: foodItems , reservationId: selectedReservationId, dateofbooking: bookingDate});
+    await http.post("/dining", { items: foodItems });
 
     alert(`Total Amount: ₹${totalAmount.toFixed(2)}`);
 
@@ -237,7 +237,6 @@ const Cart = () => {
     <div>
       <div className={styles.cart + ' font-["Dosis"]'}>
         <h2 className='text-3xl font-["Dosis"] text-center pb-2'>CART</h2>
-        <ToastContainer />
         {isCartEmpty ? (
           <>
             <table>
@@ -298,7 +297,7 @@ const Cart = () => {
               <thead>
                 <tr>
                   <th>Item</th>
-                  <th>Price</th>  
+                  <th>Price</th>
                   <th>Quantity</th>
                   <th></th>
                 </tr>
