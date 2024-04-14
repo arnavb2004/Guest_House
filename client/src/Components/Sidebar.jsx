@@ -20,9 +20,9 @@ const Sidebar = () => {
       ? ["Approved Requests", "Pending Requests", "Rejected Requests", "Users"]
       : user.role === "USER"
       ? [
+          "Approved Requests",
           "Pending Requests",
           "Rejected Requests",
-          "Approved Requests",
           "Reservation Form",
         ]
       : user.role === "CASHIER"
@@ -33,7 +33,7 @@ const Sidebar = () => {
           "Checkout today",
           "Payment Pending",
         ] // other roles
-      : ["Pending Requests", "Rejected Requests", "Approved Requests"];
+      : ["Approved Requests", "Pending Requests", "Rejected Requests"];
 
   return (
     <div className="flex flex-col lg:absolute lg:z-100 h-full">

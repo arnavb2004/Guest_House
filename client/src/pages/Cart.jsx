@@ -55,7 +55,7 @@ const Cart = () => {
       // bookingDateTime.setSeconds(new Date().getSeconds());
 
       // console.log("After appending current time:", bookingDateTime);
-      return (arrivalDate <= bookingDateTime && bookingDateTime <= departureDate);
+      return arrivalDate <= bookingDateTime && bookingDateTime <= departureDate;
     });
     setFilteredRequests(filtered);
   }, [bookingDate, acceptedRequests]);
@@ -72,14 +72,15 @@ const Cart = () => {
       const { name, price, id, category } = menuItems1[index];
       foodItems.push({ name, price, id, category, quantity: value });
     }
+    try {
+      await http.post("/dining", { items: foodItems });
 
-    await http.post("/dining", { items: foodItems });
-
-    alert(`Total Amount: ₹${totalAmount.toFixed(2)}`);
+      alert(`Total Amount: ₹${totalAmount.toFixed(2)}`);
+    } catch (error) {}
 
     // Further actions like sending the order to a server or resetting the cart can be performed here.
   };
-  
+
   const handleGetReceipt = async () => {
     try {
       const pdfDoc = await PDFDocument.create();
@@ -289,9 +290,18 @@ const Cart = () => {
                   </option>
                 ))}
               </select>
-              {selectedReservationId !== "default" && selectedReservationId !== "" && selectedReservationId !== "not_in_reservation" && (
-                <button  className = "text-white" onClick={() => navigate(`../../reservation/${selectedReservationId}`)}>View Details</button>
-              )}
+              {selectedReservationId !== "default" &&
+                selectedReservationId !== "" &&
+                selectedReservationId !== "not_in_reservation" && (
+                  <button
+                    className="text-white"
+                    onClick={() =>
+                      navigate(`../../reservation/${selectedReservationId}`)
+                    }
+                  >
+                    View Details
+                  </button>
+                )}
             </div>
             <table>
               <thead>

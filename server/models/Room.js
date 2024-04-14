@@ -5,12 +5,6 @@ const RoomSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-
-  type: {
-    type: String,
-    enum: ["Single Occupancy", "Double Occupancy"],
-    required: true,
-  },
   bookings: [
     {
       startDate: {

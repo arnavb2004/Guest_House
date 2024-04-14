@@ -13,7 +13,7 @@ import Button from "@mui/material/Button";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import TextField from "@mui/material/TextField";
-import {useSelector, useDispatch} from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 import DeleteIcon from "@mui/icons-material/Delete";
 import Slider from "@mui/material/Slider";
@@ -109,16 +109,16 @@ export default function DiningList({ status = "pending" }) {
 
   const navigate = useNavigate();
 
-
   const fetchRecords = async () => {
-    const res = await http.get("/dining/" + status);
-    let orders = res?.data || [];
-    orders = orders.filter((order) => order.status?.toLowerCase() == status);
-    setValues(orders.map((res) => res._id));
-    setRecords(orders);
-    setNewRecords(orders);
-    setLoadingStatus("Success");
-  
+    try {
+      const res = await http.get("/dining/" + status);
+      let orders = res?.data || [];
+      orders = orders.filter((order) => order.status?.toLowerCase() == status);
+      setValues(orders.map((res) => res._id));
+      setRecords(orders);
+      setNewRecords(orders);
+      setLoadingStatus("Success");
+    } catch (error) {}
   };
   useEffect(() => {
     setLoadingStatus("Loading");
