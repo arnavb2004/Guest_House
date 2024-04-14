@@ -38,6 +38,7 @@ export default function DiningRecordPage() {
     "REGISTRAR",
     "CHAIRMAN",
     "ASSOCIATE DEAN",
+    "CASHIER"
   ];
 
   useEffect(() => {
