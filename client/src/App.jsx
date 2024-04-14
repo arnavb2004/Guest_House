@@ -92,7 +92,27 @@ function App() {
               />
               <Route path=":id" element={<RecordPage />} />
             </Route>
-            <Route path="dining" element={<Dining />}></Route>
+            
+            <Route path="dining" element={<Dining />}>
+              <Route path="" element={<DiningList source = "Guest" paymentstatus = {false} />} />
+              <Route
+                path="payment-pending-guest"
+                element={<DiningList status="approved" source = "Guest" paymentstatus = {false} />} 
+              />
+              <Route
+                path="payment-pending-department"
+                element={<DiningList status="approved" source = "Department" paymentstatus = {false} />} 
+              />
+              <Route
+                path="payment-done-guest"
+                element={<DiningList status="approved" source = "Guest" paymentstatus = {true} />} 
+              />
+              <Route
+                path="payment-done-department"
+                element={<DiningList status="approved" source = "Department" paymentstatus = {true} />} 
+              />
+              <Route path=":id" element={<DiningRecordPage />} />             
+            </Route>
           </Route>
 
           <Route path="user" element={<Auth allowedRoles={["USER"]} />}>

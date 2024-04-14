@@ -30,11 +30,14 @@ const DiningSidebar = () => {
           "Book Dining",
           "Cart"
         ]
-      : [
-          "Pending Requests",
-          "Rejected Requests",
-          "Approved Requests"
-        ]; // other roles
+      : user.role === "CASHIER"
+      ? [
+          "Payment Pending Department",
+          "Payment Pending Guest",
+          "Payment Done Guest",
+          "Payment Done Department",
+        ] // other roles
+      : ["Pending Requests", "Rejected Requests", "Approved Requests"];
 
   
   return (
@@ -80,6 +83,14 @@ const DiningSidebar = () => {
               to={
                 item === "Pending Requests"
                   ? ""
+                  : item === "Payment Pending Department"
+                  ? "payment-pending-department"
+                  : item === "Payment Pending Guest"
+                  ? "payment-pending-guest"
+                  : item === "Payment Done Guest"
+                  ? "payment-done-guest"
+                  : item === "Payment Done Department"
+                  ? "payment-done-department"
                   : `${item.toLowerCase().replace(" ", "-")}`
               }
             >

@@ -74,7 +74,20 @@ const mealSchema = new mongoose.Schema({
   dateofbooking: {
     type: Date,
     required: true,
-  }
+  },
+  payment: {
+    source: {
+      type: String,
+      enum: ["GUEST", "DEPARTMENT", "OTHERS"],
+      required: true,
+      default: "GUEST",
+    },
+    status: {
+      type: String,
+      enum: ["PENDING", "PAID"],
+      default: "PENDING",
+    },
+  },
 });
 
 const Meal = mongoose.model("Meal", mealSchema);
