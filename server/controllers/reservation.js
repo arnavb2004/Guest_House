@@ -649,12 +649,34 @@ export const updateRooms = async (req, res) => {
   try {
     const allottedRooms = req.body;
     const id = req.params.id;
+    const prevRes = await Reservation.findById(id);
+    const prevAllottedRooms = prevRes.bookings;
+    for (const prevAllottedRoom of prevAllottedRooms) {
+      const room = await Room.findOne({
+        roomNumber: prevAllottedRoom.roomNumber,
+      });
+      if (!room) {
+        throw new Error(
+          `Room with number ${prevAllottedRoom.roomNumber} not found`,
+          400
+        );
+      }
+      const bookingIndex = room.bookings.findIndex(
+        (booking) =>
+          getDate(booking.startDate) == getDate(prevAllottedRoom.startDate) &&
+          getDate(booking.endDate) == getDate(prevAllottedRoom.endDate)
+      );
+      if (bookingIndex !== -1) {
+        room.bookings.splice(bookingIndex, 1);
+      }
+      await room.save();
+    }
     for (const allottedRoom of allottedRooms) {
       const { roomNumber, startDate, endDate } = allottedRoom;
 
       const room = await Room.findOne({ roomNumber });
       if (!room) {
-        throw new Error(`Room with number ${roomNumber} not found`);
+        throw new Error(`Room with number ${roomNumber} not found`, 400);
       }
 
       const isAvailable = await isDateRangeAvailable(room, startDate, endDate);
@@ -680,7 +702,7 @@ export const updateRooms = async (req, res) => {
     );
 
     if (!reservation) {
-      throw new Error("Failed to update reservation");
+      throw new Error("Failed to update reservation", 400);
     }
     await session.commitTransaction();
     session.endSession();
@@ -739,7 +761,7 @@ export const getPaymentPendingReservations = async (req, res) => {
       "payment.status": "PENDING",
       status: "APPROVED",
     });
-    console.log(reservations)
+    console.log(reservations);
     res.status(200).json(reservations);
   } catch (error) {
     res.status(400).json({ message: error.message });

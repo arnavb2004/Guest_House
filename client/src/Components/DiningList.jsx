@@ -21,7 +21,6 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import Slider from "@mui/material/Slider";
 
 import http from "../utils/httpService";
-import { faL } from "@fortawesome/free-solid-svg-icons";
 
 function valuetext(value) {
   return `${value}`;
@@ -45,7 +44,6 @@ export default function DiningList({
   const [loadingStatus, setLoadingStatus] = useState("Loading");
   const [sortToggle, setSortToggle] = useState(false);
   const [amount, setAmount] = useState([low, high]);
-  const location = useLocation()
 
   const handleChange = (event, newAmount) => {
     setAmount(newAmount);
@@ -118,6 +116,7 @@ export default function DiningList({
   const navigate = useNavigate();
 
   const fetchRecords = async () => {
+    console.log(status)
 
     try {
       let res;

@@ -67,13 +67,18 @@ const mealSchema = new mongoose.Schema({
     default: "PENDING",
   },
   reservationId: {
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: 'Reservation', // Reference to the Reservation model
-    default: null, 
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Reservation", // Reference to the Reservation model
+    default: null,
   },
   dateofbooking: {
     type: Date,
     required: true,
+  },
+  stepsCompleted: {
+    type: Number,
+    required: true,
+    default: 0,
   },
   payment: {
     source: {
@@ -86,6 +91,9 @@ const mealSchema = new mongoose.Schema({
       type: String,
       enum: ["PENDING", "PAID"],
       default: "PENDING",
+    },
+    paymentId: {
+      type: String,
     },
   },
 });

@@ -30,10 +30,12 @@ const NotificationMenu = () => {
   const navigate = useNavigate();
 
   const handleReservationRedirect = async (res_id, not_id) => {
-    await http.put(`/user/notifications/delete/${not_id}`);
-    //redirect to reservation page
-    navigate(`/${user.role.toLowerCase()}/reservation/${res_id}`);
-    console.log(res_id);
+    try {
+      await http.put(`/user/notifications/delete/${not_id}`);
+      //redirect to reservation page
+      navigate(`/${user.role.toLowerCase()}/reservation/${res_id}`);
+      console.log(res_id);
+    } catch (error) {}
   };
   console.log(notifications);
 
