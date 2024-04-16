@@ -21,7 +21,7 @@ if (process.env.NODE_ENV === "production") {
 
 // var storage,upload;
 const connection = mongoose
-  .connect(process.env.MONGO_URL)
+  .connect("")
   .then(() => {
     console.log("Connected to database");
     // storage= new GridFsStorage({db:mongoose.connection.db})
