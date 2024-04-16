@@ -256,7 +256,7 @@ function ReservationForm() {
       }
       formDataToSend.append("reviewers", checkedValues);
       formDataToSend.append("receipt", receipt);
-      await http.post("http://localhost:4751/reservation/", formDataToSend, {
+      await http.post("reservation/", formDataToSend, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
