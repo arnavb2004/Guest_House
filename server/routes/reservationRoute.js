@@ -1,6 +1,6 @@
 import express from "express";
 import { checkAuth } from "../middlewares/tokens.js";
-import { upload } from "../middlewares/fileStore.js";
+import { upload ,checkFileSize} from "../middlewares/fileStore.js";
 
 import {
   createReservation,
@@ -33,6 +33,7 @@ const Router = express.Router();
 Router.post(
   "/",
   checkAuth,
+  checkFileSize,
   upload.fields([
     { name: "files", maxCount: 5 },
     { name: "receipt", maxCount: 1 },

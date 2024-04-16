@@ -97,6 +97,7 @@ export async function createReservation(req, res) {
       status: "PENDING",
     }));
     const reservation = await Reservation.create({
+      srno:1,
       guestEmail: email,
       guestName,
       address,

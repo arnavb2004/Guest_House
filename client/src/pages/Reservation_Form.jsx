@@ -256,11 +256,13 @@ function ReservationForm() {
       }
       formDataToSend.append("reviewers", checkedValues);
       formDataToSend.append("receipt", receipt);
-      await http.post("http://localhost:4751/reservation/", formDataToSend, {
+      const res=await http.post("http://localhost:4751/reservation/", formDataToSend, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
+      console.log(res.status);
+      if(res.status===200){
       // toast.success("Form submitted successfully!");
       toast.update(toast_id, {
         render: "Form submitted successfully!",
@@ -270,20 +272,29 @@ function ReservationForm() {
       });
       setLoading(false);
       navigate("..");
+      }
+      else{
+        toast.update(toast_id, {
+          render: "Form submission failed.",
+          type: "fail",
+          isLoading: false,
+          autoClose: 5000,
+        });
+      }
     } catch (error) {
       console.error("Form submission failed:", error);
       setLoading(false);
       if (error.response?.data?.message) {
         toast.update(toast_id, {
           render: error.response.data.message,
-          type: "success",
+          type: "fail",
           isLoading: false,
           autoClose: 5000,
         });
       } else {
         toast.update(toast_id, {
           render: "Form submission failed.",
-          type: "success",
+          type: "fail",
           isLoading: false,
           autoClose: 5000,
         });
