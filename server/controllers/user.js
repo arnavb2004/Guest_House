@@ -46,33 +46,6 @@ export const updateUser = async (req, res) => {
   }
 };
 
-
-// export const updateRole = async (req, res) => {
-//   console.log("\n\nhere\n\n");
-//   try {
-//     // Check if the user making the request is an admin
-//     if (req.user.role !== 'ADMIN') {
-//       return res.status(403).json({ message: 'You are not authorized to perform this action' });
-//     }
-
-//     // Get the user ID from the request
-//     const { userId, role } = req.body;
-//     // Find the user by ID and update the role
-//     const user = await User.findByIdAndUpdate(
-//       userId,
-//       { role },
-//       { new: true }
-//     );
-
-//     if (!user) {
-//       return res.status(404).json({ message: 'User not found' });
-//     }
-//     res.status(200).json({ message: 'Role updated successfully', user });
-//   } catch (err) {
-//     console.log("\n\n\n error \n\n\n");
-//     res.status(500).json({ message: err.message });
-//   }
-// };
 export const updateRole = async (req, res) => {
   try {
     // Check if the user making the request is an admin

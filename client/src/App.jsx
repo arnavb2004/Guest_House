@@ -43,13 +43,13 @@ function App() {
 
           <Route path="admin" element={<Auth allowedRoles={["ADMIN"]} />}>
             <Route path="dining" element={<Dining />}>
-              <Route path="pending-requests" element={<DiningList />} />
+              <Route path="" element={<DiningList />} />
               <Route
                 path="rejected-requests"
                 element={<DiningList status="rejected" />}
               />
               <Route
-                path=""
+                path="approved-requests"
                 element={<DiningList status="approved" />}
               />
               <Route path="book-dining" element={<BookDining />} />
@@ -59,11 +59,6 @@ function App() {
 
             <Route path="reservation" element={<Reservation />}>
               <Route path="" element={<AdminRecordList status="approved" />} />
-              <Route path="pending-requests" element={<AdminRecordList />} />
-              <Route
-                path="rejected-requests"
-                element={<AdminRecordList status="rejected" />}
-              />
               <Route path=":id" element={<AdminRecordPage />} />
 
               <Route path="users" element={<UserList />} />
@@ -92,7 +87,27 @@ function App() {
               />
               <Route path=":id" element={<RecordPage />} />
             </Route>
-            <Route path="dining" element={<Dining />}></Route>
+            
+            <Route path="dining" element={<Dining />}>
+              <Route path="" element={<DiningList source = "Guest" paymentstatus = {false} />} />
+              <Route
+                path="payment-pending-guest"
+                element={<DiningList status="approved" source = "Guest" paymentstatus = {false} />} 
+              />
+              <Route
+                path="payment-pending-department"
+                element={<DiningList status="approved" source = "Department" paymentstatus = {false} />} 
+              />
+              <Route
+                path="payment-done-guest"
+                element={<DiningList status="approved" source = "Guest" paymentstatus = {true} />} 
+              />
+              <Route
+                path="payment-done-department"
+                element={<DiningList status="approved" source = "Department" paymentstatus = {true} />} 
+              />
+              <Route path=":id" element={<DiningRecordPage />} />             
+            </Route>
           </Route>
 
           <Route path="user" element={<Auth allowedRoles={["USER"]} />}>

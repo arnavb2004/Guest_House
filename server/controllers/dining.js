@@ -5,19 +5,22 @@ import Reservation from "../models/Reservation.js";
 export async function createOrder(req, res) {
   try {
     const email = req.user.email;
-    const { items, reservationId, dateofbooking } = req.body;
+    const { items, reservationId, dateofbooking, sourceofpayment } = req.body;
     let amount = 0;
     for (let i = 0; i < items.length; i++) {
       amount += items[i].price * items[i].quantity;
     }
+    
     const meal = new Meal({
       email,
       items,
       amount,
       reviewers: [{ role: "ADMIN", status: "PENDING", comments: "" }],
       reservationId,
-      dateofbooking
+      dateofbooking,
+      payment: { source: sourceofpayment, status: "PENDING" },
     });
+    meal.stepsCompleted = 1;
     await meal.save();
     res.status(200).json({ message: "Order created successfully" });
   } catch (error) {
@@ -46,6 +49,7 @@ export async function getOrder(req, res) {
     if (
       req.user.email != order.email &&
       req.user.role !== "ADMIN" &&
+      req.user.role !== "CASHIER" &&
       !order.reviewers.find((r) => r.role === req.user.role)
     ) {
       return res
@@ -221,10 +225,14 @@ export async function approveOrder(req, res) {
     });
     let initStatus = order.status;
     order = updateOrderStatus(order);
-    console.log("HOHOHO",order._id,order)
-    if(order.status == 'APPROVED'){
-      console.log("YES")
-      await Reservation.findByIdAndUpdate(order.reservationId,{ $push: { diningIds: order._id } })
+
+    console.log("HOHOHO", order._id, order);
+    if (order.status == "APPROVED") {
+      console.log("YES");
+      order.stepsCompleted = 2;
+      await Reservation.findByIdAndUpdate(order.reservationId, {
+        $push: { diningIds: order._id },
+      });
     }
     console.log(order);
     //add the message to the user model of who made the order
@@ -340,12 +348,18 @@ export async function holdOrder(req, res) {
 
 export async function updateOrder(req, res) {
   try {
-    if (req.user.role !== "ADMIN") {
+    if (req.user.role !== "ADMIN" && req.user.role !== "CASHIER") {
       return res
         .status(403)
         .json({ message: "You are not authorized to perform this action" });
     }
-    await Meal.findByIdAndUpdate(req.params.id, req.body);
+    const meal = await Meal.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
+    if (meal.payment.status === "PAID" && meal.status === "APPROVED") {
+      meal.stepsCompleted = 3;
+    }
+    await meal.save();
     res.status(200).json({ message: "Order updated" });
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -369,5 +383,86 @@ export async function assignOrder(req, res) {
     res.status(200).json({ message: "Order Assigned" });
   } catch (error) {
     res.status(400).json({ message: error.message });
+  }
+}
+
+export async function getPaymentPendingDepartmentOrders(req, res) {
+  try {
+    if (req.user.role !== "CASHIER") {
+      return res
+        .status(403)
+        .json({ message: "You are not authorized to perform this action" });
+    }
+    const orders = await Meal.find({
+      "payment.source": "DEPARTMENT",
+      "payment.status": "PENDING",
+      status: "APPROVED",
+    });
+    res.status(200).json(orders);
+  } catch (err) {
+    res
+      .status(500)
+      .json({ message: "Internal server error", error: err.message });
+  }
+}
+
+export async function getPaymentApprovedDepartmentOrders(req, res) {
+  try {
+    if (req.user.role !== "CASHIER") {
+      return res
+        .status(403)
+        .json({ message: "You are not authorized to perform this action" });
+    }
+    const orders = await Meal.find({
+      "payment.source": "DEPARTMENT",
+      "payment.status": "PAID",
+      status: "APPROVED",
+    });
+    res.status(200).json(orders);
+  } catch (err) {
+    res
+      .status(500)
+      .json({ message: "Internal server error", error: err.message });
+  }
+}
+
+export async function getPaymentPendingGuestOrders(req, res) {
+  try {
+    if (req.user.role !== "CASHIER") {
+      return res
+        .status(403)
+        .json({ message: "You are not authorized to perform this action" });
+    }
+    const orders = await Meal.find({
+      "payment.source": "GUEST",
+      "payment.status": "PENDING",
+      status: "APPROVED",
+    });
+    console.log(orders);
+    res.status(200).json(orders);
+  } catch (err) {
+    res
+      .status(500)
+      .json({ message: "Internal server error", error: err.message });
+  }
+}
+
+export async function getPaymentApprovedGuestOrders(req, res) {
+  try {
+    if (req.user.role !== "CASHIER") {
+      return res
+        .status(403)
+        .json({ message: "You are not authorized to perform this action" });
+    }
+    const orders = await Meal.find({
+      "payment.source": "GUEST",
+      "payment.status": "PAID",
+      status: "APPROVED",
+    });
+    res.status(200).json(orders);
+  } catch (err) {
+    res
+      .status(500)
+      .json({ message: "Internal server error", error: err.message });
   }
 }

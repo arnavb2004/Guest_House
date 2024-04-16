@@ -7,13 +7,15 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
+import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 import Button from "@mui/material/Button";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import TextField from "@mui/material/TextField";
-import { useSelector, useDispatch } from "react-redux";
+import {useSelector, useDispatch} from "react-redux";
+import { useLocation } from "react-router-dom";
 
 import DeleteIcon from "@mui/icons-material/Delete";
 import Slider from "@mui/material/Slider";
@@ -24,7 +26,11 @@ function valuetext(value) {
   return `${value}`;
 }
 
-export default function DiningList({ status = "pending" }) {
+export default function DiningList({ 
+  status = "pending",
+  source,
+  paymentstatus,
+}) {
   const low = 0;
   const high = 500;
   const [checked, setChecked] = useState([]);
@@ -110,20 +116,41 @@ export default function DiningList({ status = "pending" }) {
   const navigate = useNavigate();
 
   const fetchRecords = async () => {
+    console.log(status)
+
     try {
-      const res = await http.get("/dining/" + status);
+      let res;
+      if (source === "Department" && paymentstatus === false) {
+        res = await http.get("/dining/payment-pending-department");
+      } else if (source === "Guest" && paymentstatus === false) {
+        res = await http.get("/dining/payment-pending-guest");
+      } else if (source === "Department" && paymentstatus === true) {
+        res = await http.get("/dining/payment-done-department");
+      } else if (source === "Guest" && paymentstatus === true) {
+        res = await http.get("/dining/payment-done-guest"); 
+      } else {
+        res = await http.get("/dining/" + status);
+      }
+
       let orders = res?.data || [];
+      console.log(orders);
       orders = orders.filter((order) => order.status?.toLowerCase() == status);
       setValues(orders.map((res) => res._id));
       setRecords(orders);
       setNewRecords(orders);
       setLoadingStatus("Success");
-    } catch (error) {}
+
+    } catch (err) {
+      if (err.response?.data?.message) toast.error(err.response.data.message);
+      else toast.error("Error fetching records");
+      setLoadingStatus("Error");
+    }
   };
+
   useEffect(() => {
     setLoadingStatus("Loading");
     fetchRecords();
-  }, [status]);
+  }, [status,source,paymentstatus]);
 
   const dispatch = useDispatch();
   const handleToggle = (value) => () => {
@@ -275,7 +302,8 @@ export default function DiningList({ status = "pending" }) {
                         edge="end"
                         aria-label="comments"
                         onClick={() => {
-                          status === "pending"
+                          console.log(status,source,paymentstatus);
+                          status === "pending" || (source === "Department" & paymentstatus === false)
                             ? navigate(`${record._id}`)
                             : navigate(`../${record._id}`);
                         }}

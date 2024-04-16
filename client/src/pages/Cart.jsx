@@ -19,6 +19,7 @@ const Cart = () => {
   const dispatch = useDispatch();
   const http = privateRequest(user.accessToken, user.refreshToken);
   const [bookingDate, setBookingDate] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState("");
   const [selectedReservationId, setSelectedReservationId] = useState("");
   const [acceptedRequests, setAcceptedRequests] = useState([]);
   const [filteredRequests, setFilteredRequests] = useState([]);
@@ -73,7 +74,16 @@ const Cart = () => {
       foodItems.push({ name, price, id, category, quantity: value });
     }
     try {
-      await http.post("/dining", { items: foodItems });
+      await http.post("/dining", {
+        items: foodItems,
+        reservationId:
+          selectedReservationId === "default" ||
+          selectedReservationId === "not_in_reservation"
+            ? null
+            : selectedReservationId,
+        dateofbooking: bookingDate,
+        sourceofpayment: paymentMethod,
+      });
 
       alert(`Total Amount: ₹${totalAmount.toFixed(2)}`);
     } catch (error) {}
@@ -234,6 +244,10 @@ const Cart = () => {
     setSelectedReservationId(e.target.value);
   };
 
+  const handlePaymentMethodChange = (e) => {
+    setPaymentMethod(e.target.value);
+  };
+
   return (
     <div>
       <div className={styles.cart + ' font-["Dosis"]'}>
@@ -303,6 +317,21 @@ const Cart = () => {
                   </button>
                 )}
             </div>
+
+            <div className="flex flex-row my-5 items-baseline text-black">
+              <p className="mr-10 text-white">Payment Method</p>
+              <select
+                name="paymentMethod"
+                className="mr-10 p-1"
+                onChange={handlePaymentMethodChange}
+                value={paymentMethod}
+              >
+                <option value="">Select payment method</option>
+                <option value="GUEST">Payment by guest</option>
+                <option value="DEPARTMENT">Payment by department</option>
+              </select>
+            </div>
+
             <table>
               <thead>
                 <tr>

@@ -17,26 +17,24 @@ const DiningSidebar = () => {
 
   const content =
     user.role === "ADMIN"
-      ? [
-          "Pending Requests",
-          "Rejected Requests",
-          "Approved Requests"
-        ]
+      ? ["Pending Requests", "Rejected Requests", "Approved Requests"]
       : user.role === "USER"
       ? [
           "Pending Requests",
           "Rejected Requests",
           "Approved Requests",
           "Book Dining",
-          "Cart"
+          "Cart",
         ]
-      : [
-          "Pending Requests",
-          "Rejected Requests",
-          "Approved Requests"
-        ]; // other roles
+      : user.role === "CASHIER"
+      ? [
+          "Payment Pending Department",
+          "Payment Pending Guest",
+          "Payment Done Guest",
+          "Payment Done Department",
+        ] // other roles
+      : ["Pending Requests", "Rejected Requests", "Approved Requests"];
 
-  
   return (
     <div className="flex flex-col">
       <div
@@ -50,12 +48,6 @@ const DiningSidebar = () => {
           onClick={() => setIsOpen((prev) => !prev)}
         >
           ☰
-        </div>
-        <div className='text-xl cursor-default relative font-["Single Day"] font-["Dosis"]'>
-          GUEST HOUSE
-        </div>
-        <div className="bottom-[2px] relative ">
-          <HomeOutlinedIcon className="h-20 w-20" fontSize="medium" />
         </div>
       </div>
       <hr></hr>
@@ -80,6 +72,14 @@ const DiningSidebar = () => {
               to={
                 item === "Pending Requests"
                   ? ""
+                  : item === "Payment Pending Department"
+                  ? "payment-pending-department"
+                  : item === "Payment Pending Guest"
+                  ? "payment-pending-guest"
+                  : item === "Payment Done Guest"
+                  ? "payment-done-guest"
+                  : item === "Payment Done Department"
+                  ? "payment-done-department"
                   : `${item.toLowerCase().replace(" ", "-")}`
               }
             >

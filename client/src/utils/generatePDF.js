@@ -1,13 +1,15 @@
 import { PDFDocument, rgb } from "pdf-lib";
 import fontkit from "@pdf-lib/fontkit";
 import pdfFont from "../forms/Ubuntu-R.ttf";
-
+import iconsFont from "../forms/Wingdings2.ttf";
 
 export const generateFilledPDF = async (formData) => {
   try {
     // Assuming this URL and fetch operation work correctly
-    // const fontUrl = {pdfFont};
     const fontBytes = await fetch(pdfFont).then((res) => res.arrayBuffer());
+    const fontBytesIcons = await fetch(iconsFont).then((res) =>
+      res.arrayBuffer()
+    );
 
     // Fetch the PDF from a URL or local assets (adjust the URL as needed)
     const pdfUrl = `${process.env.PUBLIC_URL}/forms/Register_Form.pdf`;
@@ -16,10 +18,13 @@ export const generateFilledPDF = async (formData) => {
 
     pdfDoc.registerFontkit(fontkit);
     const ubuntuFont = await pdfDoc.embedFont(fontBytes, { subset: true });
+    const pdfIconsFont = await pdfDoc.embedFont(fontBytesIcons, {
+      subset: true,
+    });
 
     const form = pdfDoc.getForm();
     const pages = pdfDoc.getPages();
-    const firstPage = pages[0]; // Assuming all fields are on the first page
+    const firstPage = pages[0];
 
     // Example for a few fields, you'll need to add the rest following this pattern
     firstPage.drawText(formData.guestName, {
@@ -86,36 +91,44 @@ export const generateFilledPDF = async (formData) => {
       color: rgb(0, 0, 0),
     });
 
-    var tick = "Tick";
-    if(formData.category === 'A'){
-      firstPage.drawText( tick, {
-        x: 116,
+    var tick = "P";
+    if (formData.category === "A") {
+      firstPage.drawText(tick, {
+        x: 125,
         y: 510,
-        size: 12,
+        size: 25,
+        font: pdfIconsFont,
+
         color: rgb(0, 0, 0),
       });
     }
-    if(formData.category === 'B'){
-      firstPage.drawText( tick, {
-        x: 246,
+    if (formData.category === "B") {
+      firstPage.drawText(tick, {
+        x: 255,
         y: 510,
-        size: 12,
+        size: 25,
+        font: pdfIconsFont,
+
         color: rgb(0, 0, 0),
       });
     }
-    if(formData.category === 'C'){
-      firstPage.drawText( tick, {
-        x: 376,
+    if (formData.category === "C") {
+      firstPage.drawText(tick, {
+        x: 385,
         y: 510,
-        size: 12,
+        size: 25,
+        font: pdfIconsFont,
+
         color: rgb(0, 0, 0),
       });
     }
-    if(formData.category === 'D'){
-      firstPage.drawText( tick, {
-        x: 506,
+    if (formData.category === "D") {
+      firstPage.drawText(tick, {
+        x: 515,
         y: 510,
-        size: 12,
+        size: 25,
+        font: pdfIconsFont,
+
         color: rgb(0, 0, 0),
       });
     }
@@ -127,14 +140,59 @@ export const generateFilledPDF = async (formData) => {
       font: ubuntuFont,
       color: rgb(0, 0, 0),
     });
-    // Add the rest of your form fields here in a similar manner.
-
-    // Ensure the field names match exactly what's in your PDF
-    // form.getTextField("pdfjs_internal_id_342R").setText("hohoho");
-    // form.getTextField("pdfjs_internal_id_342R").setText("hohoho");
-    // form.getTextField('address').setText("h");
-    // form.updateFieldAppearances(ubuntuFont); // Update appearances with the embedded font
-
+    if (formData.source === "GUEST") {
+      firstPage.drawText("YES", {
+        x: 385,
+        y: 345,
+        size: 12,
+        font: ubuntuFont,
+        color: rgb(0, 0, 0),
+      });
+    } else {
+      firstPage.drawText("NO", {
+        x: 385,
+        y: 345,
+        size: 12,
+        font: ubuntuFont,
+        color: rgb(0, 0, 0),
+      });
+    }
+    firstPage.drawText(formData.applicant.name, {
+      x: 55,
+      y: 215,
+      size: 12,
+      font: ubuntuFont,
+      color: rgb(0, 0, 0),
+    });
+    
+    firstPage.drawText(formData.applicant.designation, {
+      x: 155,
+      y: 215,
+      size: 12,
+      font: ubuntuFont,
+      color: rgb(0, 0, 0),
+    });
+    firstPage.drawText(formData.applicant.department, {
+      x: 255,
+      y: 215,
+      size: 12,
+      font: ubuntuFont,
+      color: rgb(0, 0, 0),
+    });
+    firstPage.drawText(formData.applicant.code, {
+      x: 340,
+      y: 215,
+      size: 12,
+      font: ubuntuFont,
+      color: rgb(0, 0, 0),
+    });
+    firstPage.drawText(formData.applicant.mobile, {
+      x: 440,
+      y: 215,
+      size: 12,
+      font: ubuntuFont,
+      color: rgb(0, 0, 0),
+    });
     const filledPdfBytes = await pdfDoc.save();
     return filledPdfBytes;
   } catch (error) {

@@ -67,14 +67,35 @@ const mealSchema = new mongoose.Schema({
     default: "PENDING",
   },
   reservationId: {
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: 'Reservation', // Reference to the Reservation model
-    default: null, 
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Reservation", // Reference to the Reservation model
+    default: null,
   },
   dateofbooking: {
     type: Date,
     required: true,
-  }
+  },
+  stepsCompleted: {
+    type: Number,
+    required: true,
+    default: 0,
+  },
+  payment: {
+    source: {
+      type: String,
+      enum: ["GUEST", "DEPARTMENT", "OTHERS"],
+      required: true,
+      default: "GUEST",
+    },
+    status: {
+      type: String,
+      enum: ["PENDING", "PAID"],
+      default: "PENDING",
+    },
+    paymentId: {
+      type: String,
+    },
+  },
 });
 
 const Meal = mongoose.model("Meal", mealSchema);

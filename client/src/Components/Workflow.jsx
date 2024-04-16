@@ -19,7 +19,7 @@ const Workflow = ({ id, userRecord, reviewers, setReviewers }) => {
     <div className=" flex flex-col bg-[rgba(255,255,255,0.5)] rounded-lg items-center overflow-x-auto justify-center col-span-3 shadow-lg p-8 gap-10">
       <StepperComponent steps={steps} stepsCompleted={stepsCompleted || 0} />
       <div className="w-full mt-10 flex gap-3 lg:flex-col justify-around pr-3">
-        {user.role !== "USER" && (
+        {user.role !== "USER" && user.role !== "ADMIN" && (
           <>
             <button
               onClick={async () => {
@@ -85,7 +85,7 @@ const Workflow = ({ id, userRecord, reviewers, setReviewers }) => {
         )}
       </div>
       <div className="w-full">
-        {user.role !== "USER" && (
+        {user.role !== "USER" && user.role !== "ADMIN" && (
           <textarea
             // disabled={user.role !== "ADMIN"}
             className="w-full p-2 bg-white border-gray-500 rounded-lg"

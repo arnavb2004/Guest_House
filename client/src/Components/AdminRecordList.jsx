@@ -17,6 +17,7 @@ import DownloadIcon from "@mui/icons-material/Download";
 import DoneIcon from "@mui/icons-material/Done";
 import CloseIcon from "@mui/icons-material/Close";
 import http from "../utils/httpService";
+import { useSelector } from "react-redux";
 
 export default function AdminRecordList({ status = "pending" }) {
   const [checked, setChecked] = useState([]);
@@ -26,6 +27,8 @@ export default function AdminRecordList({ status = "pending" }) {
   const [newRecords, setNewRecords] = useState([]);
   const [sortType, setSortType] = useState("");
   const [sortToggle, setSortToggle] = useState(false);
+
+  const user = useSelector((state) => state.user);
 
   const filterMap = {
     "Guest Name": "guestName",
@@ -277,7 +280,7 @@ export default function AdminRecordList({ status = "pending" }) {
               Room Type
             </div>
             <div className="flex justify-evenly gap-2 w-[10%]">
-              {checked.length > 0 && (
+              {user.role!=='ADMIN' && checked.length > 0 && (
                 <div className="flex">
                   <IconButton edge="end" aria-label="comments">
                     <DoneIcon
@@ -354,7 +357,7 @@ export default function AdminRecordList({ status = "pending" }) {
                   <div className="w-[10%]">{getDate(record.departureDate)}</div>
                   <div className="w-[10%]">{record.roomType}</div>
                   <div className="flex justify-evenly gap-2 w-[10%]">
-                    {status !== "approved" && (
+                    {user.role!=='ADMIN' && status !== "approved" && (
                       <IconButton edge="end" aria-label="comments">
                         <DoneIcon
                           className="text-green-500 h-5"
@@ -376,7 +379,7 @@ export default function AdminRecordList({ status = "pending" }) {
                         />
                       </IconButton>
                     )}
-                    {status !== "rejected" && (
+                    {user.role!=='ADMIN' && status !== "rejected" && (
                       <IconButton edge="end" aria-label="comments">
                         <CloseIcon
                           className="text-red-500 h-5"
