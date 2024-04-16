@@ -23,6 +23,10 @@ const userSchema = new Schema({
     enum: ['USER', 'ADMIN','HOD','CHAIRMAN','DIRECTOR','DEAN','REGISTRAR','ASSOCIATE DEAN', 'CASHIER'],
     default: 'USER',
   },
+  pendingRequest: {
+    type: Number,
+    default: 0
+  },
   notifications: [
     {
       message: {

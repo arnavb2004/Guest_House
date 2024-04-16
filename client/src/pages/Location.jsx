@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 const Location = () => {
 	return (
 		<div className="location w-5/6 flex flex-wrap justify-around my-10">
-			<div className="basis-full p-4">
+			<div className="basis-full p-4 bg-sky-100">
 				<div className="pb-3">
 					<h2 className="text-2xl font-semibold">
 						Directions to IIT Ropar Guest House
