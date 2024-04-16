@@ -281,7 +281,7 @@ export default function AdminRecordList({ status = "pending" }) {
                 <div className="flex">
                   <IconButton edge="end" aria-label="comments">
                     <DoneIcon
-                      className="text-green-500 h-5"
+                      className="text-green-500 h-5 mr-2"
                       onClick={async () => {
                         try {
                           checked.forEach(async (record) => {
@@ -299,7 +299,7 @@ export default function AdminRecordList({ status = "pending" }) {
                   </IconButton>
                   <IconButton edge="end" aria-label="comments">
                     <CloseIcon
-                      className="text-red-400 h-5"
+                      className="text-red-400 h-5 ml-2"
                       onClick={async () => {
                         try {
                           checked.forEach(async (record) => {
