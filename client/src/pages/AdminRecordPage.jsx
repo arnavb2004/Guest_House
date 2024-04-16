@@ -155,47 +155,7 @@ export default function AdminRecordPage() {
         </div>
       </div>
       <div className='col-span-5 md:flex-col overflow-auto shadow-lg flex justify-between  p-5  gap-4 m-9 font-["Dosis"] bg-[rgba(255,255,255,0.5)] rounded-lg'>
-        {user.role === "ADMIN" && (
-          <div className="w-max ">
-            <div className="text-2xl font-semibold font-['Dosis'] px-5">
-              Reviewers
-            </div>
-            <div className="p-5 w-max">
-              <ul>
-                {roles.map((role) => (
-                  <li key={"role-" + role}>
-                    <input
-                      type="checkbox"
-                      id={role}
-                      checked={checkedValues.includes(role)}
-                      value={role}
-                      onChange={handleCheckboxChange}
-                    />
-                    <label className="px-2 text-lg" htmlFor={role}>
-                      {role}
-                    </label>
-                  </li>
-                ))}
-              </ul>
-              <button
-                onClick={() => {
-                  try {
-                    const res = http.put(`/reservation/${id}/assign`, {
-                      reviewers: checkedValues,
-                    });
-                    toast.success("Assigned Successfully");
-                  } catch (error) {
-                    toast.error("Error Assigning Reviewers");
-                  }
-                }}
-                className="p-3 px-4  mt-8 bg-[rgb(54,88,153)] rounded-lg text-white"
-              >
-                ASSIGN
-              </button>
-            </div>
-          </div>
-        )}
-        {user.role !== "USER" && (
+        
           <div>
             <div className="text-2xl font-semibold font-['Dosis'] px-5">
               Status
@@ -227,7 +187,30 @@ export default function AdminRecordPage() {
               )}
             </div>
           </div>
+          {userRecord.bookings?.length > 0 && (
+          <div>
+            <div className="text-2xl text-center font-semibold font-['Dosis'] px-5">
+              Rooms Assigned
+            </div>
+            <div className="p-5 flex flex-col gap-4 ">
+              <div className="flex gap-4 font-semibold text-center">
+                <div className="w-24">Start Date</div>
+                <div className="w-24">End Date</div>
+                <div className="w-24">Room Number</div>
+              </div>
+              <div className="flex flex-col gap-2 overflow-y-auto max-h-28">
+                {userRecord.bookings.map((booking) => (
+                  <div className="flex gap-4 text-center">
+                    <div className="w-24">{getDate(booking.startDate)}</div>
+                    <div className="w-24">{getDate(booking.endDate)}</div>
+                    <div className="w-20">{booking.roomNumber}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         )}
+
       </div>
       <div className='col-span-5 md:flex-col overflow-auto shadow-lg flex justify-between  p-5  gap-4 m-9 font-["Dosis"] bg-[rgba(255,255,255,0.5)] rounded-lg'>
         

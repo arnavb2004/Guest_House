@@ -59,11 +59,6 @@ function App() {
 
             <Route path="reservation" element={<Reservation />}>
               <Route path="" element={<AdminRecordList status="approved" />} />
-              <Route path="pending-requests" element={<AdminRecordList />} />
-              <Route
-                path="rejected-requests"
-                element={<AdminRecordList status="rejected" />}
-              />
               <Route path=":id" element={<AdminRecordPage />} />
 
               <Route path="users" element={<UserList />} />
@@ -117,9 +112,9 @@ function App() {
 
           <Route path="user" element={<Auth allowedRoles={["USER"]} />}>
             <Route path="reservation" element={<Reservation />}>
-              <Route path="" element={<RecordList />} />
+              <Route path="pending-requests" element={<RecordList />} />
               <Route
-                path="approved-requests"
+                path=""
                 element={<RecordList status="approved" />}
               />
               <Route
@@ -130,13 +125,13 @@ function App() {
               <Route path=":id" element={<RecordPage />} />
             </Route>
             <Route path="dining" element={<Dining />}>
-              <Route path="" element={<DiningList />} />
+              <Route path="pending-requests" element={<DiningList />} />
               <Route
                 path="rejected-requests"
                 element={<DiningList status="rejected" />}
               />
               <Route
-                path="approved-requests"
+                path=""
                 element={<DiningList status="approved" />}
               />
               <Route path="book-dining" element={<BookDining />} />
@@ -176,13 +171,13 @@ function App() {
             </Route>
 
             <Route path="reservation" element={<Reservation />}>
-              <Route path="" element={<AdminRecordList />} />
+              <Route path="pending-requests" element={<AdminRecordList />} />
               <Route
                 path="rejected-requests"
                 element={<AdminRecordList status="rejected" />}
               />
               <Route
-                path="approved-requests"
+                path=""
                 element={<AdminRecordList status="approved" />}
               />
               <Route path=":id" element={<AdminRecordPage />} />

@@ -2,11 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Navigate, useParams } from "react-router-dom";
 import DiningWorkflow from "../components/DiningWorkflow";
-import Workflow from "../components/Workflow";
 import { privateRequest } from "../utils/useFetch";
-import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
-import { Link } from "react-router-dom";
 
 export default function DiningRecordPage() {
   const { id } = useParams();
@@ -134,16 +131,7 @@ export default function DiningRecordPage() {
                 ))}
               </ul>
               <button
-                onClick={() => {
-                  try {
-                    const res = http.put(`/dining/${id}/assign`, {
-                      reviewers: checkedValues,
-                    });
-                    toast.success("Assigned Successfully");
-                  } catch (error) {
-                    toast.error("Error Assigning Reviewers");
-                  }
-                }}
+                
                 className="p-3 px-4  mt-8 bg-[rgb(54,88,153)] rounded-lg text-white"
               >
                 ASSIGN

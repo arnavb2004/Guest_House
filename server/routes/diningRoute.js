@@ -36,7 +36,6 @@ Router.get("/:id", checkAuth, getOrder);
 Router.put("/approve/:id", checkAuth, approveOrder);
 Router.put("/reject/:id", checkAuth, rejectOrder);
 Router.put("/hold/:id", checkAuth, holdOrder);
-Router.put("/:id/assign", checkAuth, assignOrder);
 Router.put("/:id", checkAuth, updateOrder);
 
 export default Router;

@@ -17,18 +17,14 @@ const DiningSidebar = () => {
 
   const content =
     user.role === "ADMIN"
-      ? [
-          "Pending Requests",
-          "Rejected Requests",
-          "Approved Requests"
-        ]
+      ? ["Pending Requests", "Rejected Requests", "Approved Requests"]
       : user.role === "USER"
       ? [
           "Pending Requests",
           "Rejected Requests",
           "Approved Requests",
           "Book Dining",
-          "Cart"
+          "Cart",
         ]
       : user.role === "CASHIER"
       ? [
@@ -39,7 +35,6 @@ const DiningSidebar = () => {
         ] // other roles
       : ["Pending Requests", "Rejected Requests", "Approved Requests"];
 
-  
   return (
     <div className="flex flex-col">
       <div
@@ -53,12 +48,6 @@ const DiningSidebar = () => {
           onClick={() => setIsOpen((prev) => !prev)}
         >
           ☰
-        </div>
-        <div className='text-xl cursor-default relative font-["Single Day"] font-["Dosis"]'>
-          GUEST HOUSE
-        </div>
-        <div className="bottom-[2px] relative ">
-          <HomeOutlinedIcon className="h-20 w-20" fontSize="medium" />
         </div>
       </div>
       <hr></hr>

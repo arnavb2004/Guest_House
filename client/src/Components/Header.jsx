@@ -29,8 +29,8 @@ const Header = () => {
   };
 
   useEffect(() => {
-    fetchNotifications();
-  }, []);
+    if (user?.id) fetchNotifications();
+  }, [user?.id]);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -70,8 +70,6 @@ const Header = () => {
                 <AccountCircleIcon />
               </IconButton>
               <span>{user.name || user.email}</span>
-            </>
-          )}
           <div className="relative">
             <IconButton onClick={handleNotificationClick}>
               <Badge badgeContent={notifications?.length} color="warning">
@@ -80,6 +78,8 @@ const Header = () => {
             </IconButton>
             {notificationMenuOpen && <NotificationMenu />}
           </div>
+            </>
+          )}
           {user.email ? (
             <button
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"

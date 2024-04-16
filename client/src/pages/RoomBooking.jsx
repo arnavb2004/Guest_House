@@ -6,7 +6,6 @@ import { useSelector } from "react-redux";
 import { getDate } from "../utils/handleDate";
 import { useLocation, useParams } from "react-router-dom";
 import Switch from "@mui/material/Switch";
-import DeleteIcon from "@mui/icons-material/Delete";
 import RoomList from "../components/RoomList";
 
 const RoomBooking = () => {
@@ -52,11 +51,10 @@ const RoomBooking = () => {
     new Date(userRecord.departureDate).toISOString().substring(0, 10)
   );
   const [roomList, setRoomList] = useState([]);
-  const [occupancySwitch, setOccupancySwitch] = useState(false);
 
   useEffect(() => {
     handleFilter();
-  }, [startDate, endDate, occupancySwitch, roomsData]);
+  }, [startDate, endDate, roomsData]);
 
   const handleFilter = () => {
     try {
@@ -76,14 +74,7 @@ const RoomBooking = () => {
         return { ...room, bookings: filteredBookings };
       });
 
-      // Set the rooms state to the filtered rooms
-      setRooms(
-        updatedRooms.filter(
-          (room) =>
-            room.type ===
-            (occupancySwitch ? "Double Occupancy" : "Single Occupancy")
-        )
-      );
+      setRooms(updatedRooms)
 
       // toast.success("Filtered!!");
     } catch (error) {
@@ -152,14 +143,7 @@ const RoomBooking = () => {
     <div className="room-booking h-fit ">
       <h2 className="room-heading text-4xl font-bold">Room Booking</h2>
       <div className="filter-container">
-        <div className="px-4">
-          Single Occupancy
-          <Switch
-            checked={occupancySwitch}
-            onChange={(e) => setOccupancySwitch(e.target.checked)}
-          />
-          Double Occupancy
-        </div>
+        
         <div>
           <label className="filter-label">Start Date:</label>
           <input
@@ -179,9 +163,6 @@ const RoomBooking = () => {
             onChange={(e) => setEndDate(new Date(e.target.value).toISOString())}
             className="filter-input"
           />
-          {/* <button onClick={handleFilter} className="filter-button">
-            Filter
-          </button> */}
         </div>
       </div>
       <div className="room-grid">
@@ -192,7 +173,7 @@ const RoomBooking = () => {
               room.bookings.length > 0
                 ? "booked-during-range cursor-not-allowed rounded-lg bg-[rgb(191,190,190)] text-white"
                 : "available cursor-pointer border-[3px] hover:bg-green-500 border-green-500 rounded-lg"
-            } ${room.type === "Single Occupancy" ? "" : ""}`}
+            }`}
           >
             <div
               className="room-info"
