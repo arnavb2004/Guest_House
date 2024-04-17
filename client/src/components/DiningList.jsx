@@ -65,10 +65,10 @@ export default function DiningList({
         } else {
           return num >= amount[0];
         }
-      } else
-        return record[filterMap[searchChoice]]
-          .toLowerCase()
-          .includes(searchTerm?.toLowerCase());
+      } else {
+        const valueToSearch = record[filterMap[searchChoice]];
+        return typeof valueToSearch === 'string' && valueToSearch.toLowerCase().includes(searchTerm?.toLowerCase());
+      }
     });
     setNewRecords(tempRecords);
   };
@@ -240,115 +240,58 @@ export default function DiningList({
         sx={{ width: "100%", padding: "0px" }}
         className="bg-gray-50 rounded-md overflow-hidden"
       >
-        <ListItem
-          className=" bg-[#365899] text-white"
-          key="#"
-          secondaryAction={
-            checked.length > 0 && (
-              <div className="flex gap-2">
-                <IconButton edge="end" aria-label="comments">
-                  <DeleteIcon className="text-gray-300" />
-                </IconButton>
-              </div>
-            )
-          }
-          disablePadding
-        >
-          <div className="p-2.5 px-4 flex w-full items-center">
-            <ListItemIcon>
+        <div className="bg-[#365899] text-white text-[1.13vw] w-full" key="#">
+          <div className="p-2.5 px-4 flex gap-4 w-full items-center text-center">
+            <div className="flex items-center gap-2 w-[1%]">
               <Checkbox
                 edge="start"
                 color="secondary"
                 checked={checked.indexOf("#") !== -1}
                 tabIndex={-1}
-                disableRipple
+                className=" "
                 onClick={handleToggle("#")}
-                inputProps={{ "aria-labelledby": "checkbox-list-label-header" }}
+                disableRipple
               />
-            </ListItemIcon>
-            <ListItemText
-              id="checkbox-list-label-header"
-              name="email"
-              className=" text-wrap w-12"
-              sx={{ overflow: "hidden" }}
-              primary="Email"
-            />
-            <ListItemText
-              id="checkbox-list-label-header"
-              name="amount"
-              className=" text-wrap w-8 text-center cursor-pointer"
-              onClick={handleSortToggle}
-              primary="Total Amount"
-            />
-            <ListItemText
-              id="checkbox-list-label-header"
-              className=" text-wrap w-8 text-center mr-8"
-              primary="Status"
-            />
+            </div>
+            <div className="w-[40%]">Email</div>
+            <div className="w-[30%]">Total Amount</div>
+            <div className="w-[30%]">Status</div>
+            <div className="flex justify-evenly gap-2 w-[5%]">
+              {checked.length > 0 && (
+                <div className="flex">
+                  <IconButton edge="end" aria-label="comments">
+                    <DeleteIcon className="text-gray-300" />
+                  </IconButton>
+                </div>
+              )}
+            </div>
           </div>
-        </ListItem>
+        </div>
         {loadingStatus === "Success" && newRecords.length > 0 && (
           <div className="h-96 overflow-y-auto">
             {newRecords.map((record) => {
               const labelId = `checkbox-list-label-${record._id}`;
 
               return (
-                <ListItem
+                <div
                   key={record._id}
-                  className="border-b"
-                  secondaryAction={
-                    <div>
-                      <IconButton
-                        edge="end"
-                        aria-label="comments"
-                        onClick={() => {
-                          console.log(status,source,paymentstatus);
-                          status === "pending" || (source === "Department" & paymentstatus === false)
-                            ? navigate(`${record._id}`)
-                            : navigate(`../${record._id}`);
-                        }}
-                      >
-                        <InsertDriveFileIcon color="black" />
-                      </IconButton>
-                    </div>
-                  }
-                  disablePadding
+                  className="border-b items-center flex gap-4 text-center px-4 p-2.5 text-[1vw]"
                 >
-                  <ListItemButton
-                    className=""
-                    sx={{ paddingY: "10px" }}
-                    onClick={handleToggle(record._id)}
-                    role={undefined}
-                    dense
-                  >
-                    <ListItemIcon>
-                      <Checkbox
-                        edge="start"
-                        checked={checked.indexOf(record._id) !== -1}
-                        tabIndex={-1}
-                        disableRipple
-                        inputProps={{ "aria-labelledby": labelId }}
-                      />
-                    </ListItemIcon>
-
-                    <ListItemText
-                      id="checkbox-list-label-header"
-                      className=" text-wrap w-12"
-                      sx={{ overflow: "hidden" }}
-                      primary={record.email}
+                  <div className="flex items-center gap-2 w-[1%]">
+                    <Checkbox
+                      edge="start"
+                      checked={checked.indexOf(record._id) !== -1}
+                      onClick={handleToggle(record._id)}
+                      tabIndex={-1}
+                      disableRipple
+                      inputProps={{ "aria-labelledby": labelId }}
                     />
-                    <ListItemText
-                      id="checkbox-list-label-header"
-                      className=" text-wrap w-10 text-center"
-                      primary={record.amount}
-                    />
-                    <ListItemText
-                      id="checkbox-list-label-header"
-                      className=" text-wrap w-10 text-center"
-                      primary={status.toUpperCase()}
-                    />
-                  </ListItemButton>
-                </ListItem>
+                  </div>
+                  <div className="w-[40%] text-center">{record.email}</div>
+                  <div className="w-[30%]">{record.amount}</div>
+                  <div className="w-[30%]">{status.toUpperCase()}</div>
+                  <div className="w-[5%]"></div>
+                </div>
               );
             })}
           </div>

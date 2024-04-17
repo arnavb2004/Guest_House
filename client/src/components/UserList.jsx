@@ -187,116 +187,66 @@ export default function UserList() {
         sx={{ width: "100%", padding: "0px" }}
         className="bg-gray-50 rounded-md overflow-hidden"
       >
-        <ListItem
-          className=" bg-[#365899] text-white"
-          key="#"
-          secondaryAction={
-            checked.length > 0 && (
-              <div className="flex gap-2">
-                <IconButton edge="end" aria-label="comments">
-                  <DeleteIcon className="text-gray-300" />
-                </IconButton>
-              </div>
-            )
-          }
-          disablePadding
-        >
-          <ListItemButton
-            role={undefined}
-            onClick={handleToggle("#")}
-            dense
-            sx={{ paddingY: "10px" }}
-          >
-            <ListItemIcon>
+        <div className="bg-[#365899] text-white text-[1.13vw] w-full" key="#">
+          <div className="p-2.5 px-4 flex gap-4 w-full items-center text-center">
+            <div className="flex items-center gap-2 w-[20%]">
               <Checkbox
                 edge="start"
+                color="secondary"
                 checked={checked.indexOf("#") !== -1}
                 tabIndex={-1}
+                className=" "
+                onClick={handleToggle("#")}
                 disableRipple
-                inputProps={{ "aria-labelledby": "checkbox-list-label-header" }}
               />
-            </ListItemIcon>
-            <ListItemText
-              id="checkbox-list-label-header"
-              className=" text-wrap w-14 mr-5"
-              sx={{ overflow: "hidden" }}
-              primary="Name"
-            />
-            <ListItemText
-              id="checkbox-list-label-header"
-              className="w-18 ml-10"
-              primary="Email"
-            />
-            <ListItemText id="checkbox-list-label-header" primary="Contact" />
-            <ListItemText
-              id="checkbox-list-label-header"
-              primary="Pending requests"
-            />
-             <ListItemText
-              id="checkbox-list-label-header"
-              primary="Role"
-            />
-          </ListItemButton>
-        </ListItem>
+              <div className="w-full">Name</div>
+            </div>
+            <div className="w-[17%]">Email</div>
+            <div className="w-[17%]">Contact</div>
+            <div className="w-[17%]">Pending Requests</div>
+            <div className="w-[17%] ">Role</div>
+            <div className="flex justify-evenly gap-2 w-[5%]">
+              {checked.length > 0 && (
+                <div className="flex">
+                  <IconButton edge="end" aria-label="comments">
+                    <DeleteIcon className="text-gray-300" />
+                  </IconButton>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
         {status === "Success" && newUsers.length > 0 && (
           <div className="h-96 overflow-y-auto">
             {newUsers.map((user) => {
               const labelId = `checkbox-list-label-${user._id}`;
               if (user.role === "ADMIN") return;
               return (
-                <ListItem
+                <div
                   key={user._id}
-                  className="border-b"
-                  secondaryAction={
-                    <Tooltip title="Edit Role" placement="bottom">
-                      <IconButton edge="end" aria-label="comments" onClick={handleEdit(user._id)}>
-                        <EditIcon/>
-                      </IconButton>
-                    </Tooltip>
-                  }
-                  disablePadding
+                  className="border-b items-center flex gap-4 text-center px-4 p-2.5 text-[1vw]"
                 >
-                  <ListItemButton
-                    className=""
-                    sx={{ paddingY: "10px" }}
-                    role={undefined}
-                    onClick={handleToggle(user._id)}
-                    dense
-                  >
-                    <ListItemIcon>
-                      <Checkbox
-                        edge="start"
-                        checked={checked.indexOf(user._id) !== -1}
-                        tabIndex={-1}
-                        disableRipple
-                        inputProps={{ "aria-labelledby": labelId }}
-                      />
-                    </ListItemIcon>
-                    <ListItemText
-                      id="checkbox-list-label-header"
-                      className=" text-wrap w-12 mr-5"
-                      sx={{ overflow: "hidden" }}
-                      primary={`${user.name}`}
+                  <div className="flex items-center gap-2 w-[20%]">
+                    <Checkbox
+                      edge="start"
+                      checked={checked.indexOf(user._id) !== -1}
+                      onClick={handleToggle(user._id)}
+                      tabIndex={-1}
+                      disableRipple
+                      inputProps={{ "aria-labelledby": labelId }}
                     />
-                    <ListItemText
-                      id="checkbox-list-label-header"
-                      className="w-14"
-                      primary={`${user.email}`}
-                    />
-                    <ListItemText
-                      id="checkbox-list-label-header"
-                      className="w-10"
-                      primary={user.contact}
-                    />
-                    <ListItemText
-                      id="checkbox-list-label-header"
-                      className=""
-                      primary="0 requests pending"
-                    />
-                     <ListItemText
-                      id="checkbox-list-label-header"
-                      primary={user.role}
-                    />
+                    <div className="w-full">
+                      {user.name}
+                    </div>
+                  </div>
+                  <div className="w-[17%]">{user.email}</div>
+                  <div className="w-[17%]">{user.contact}</div>
+                  <div className="w-[17%]">{user.pendingRequest}</div>
+                  <div className="w-[17%]">{user.role}</div>
+                  <div className="w-[5%]">
+                    <IconButton edge="end" aria-label="comments" onClick={handleEdit(user._id)}>
+                      <EditIcon/>
+                    </IconButton>
                     <Menu
                       anchorEl={anchorEl}
                       open={Boolean(anchorEl)}
@@ -323,8 +273,8 @@ export default function UserList() {
                         )
                       })}
                     </Menu>
-                  </ListItemButton>
-                </ListItem>
+                  </div>
+                </div>
               );
             })}
           </div>

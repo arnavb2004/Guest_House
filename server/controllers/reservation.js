@@ -97,6 +97,7 @@ export async function createReservation(req, res) {
       status: "PENDING",
     }));
     const reservation = await Reservation.create({
+      srno:1,
       guestEmail: email,
       guestName,
       address,
@@ -115,18 +116,32 @@ export async function createReservation(req, res) {
       receipt: receiptid,
     });
 
-    await appendReservationToSheet(reservation);
+    const revArray = reviewersArray.map((reviewer) => reviewer.role)
+
+    // await appendReservationToSheet(reservation);
 
     console.log("sending mail");
-
+    console.log("\n\n\n\n",reviewersArray, "\n\n\n\n");
     const users = await User.find({
-      "reviewers.role": { $in: reviewersArray },
+      role: { $in: revArray },
     });
+    try {
+      const user = await User.findOne({ email: email })
+      if (user) {
+        user.pendingRequest += 1;
 
-    console.log("\n\n\n\n\n", users, "\n\n\n\n\n");
+        // Save the updated user document
+        await user.save();
+      } else {
+        console.log("User not found");
+      }
+    } catch (err) {
+      console.log("Error updating user:", err);
+    }
 
+    const emails = users.map((user) => user.email)
     sendVerificationEmail(
-      "hardik32904@gmail.com",
+      emails,
       "New Reservation Request",
       "<div>A new reservation request has been made.</div><br><br><div>Guest Name: " +
         guestName +
@@ -282,7 +297,7 @@ export async function approveReservation(req, res) {
       return reviewer;
     });
     let initStatus = reservation.status;
-    reservation = updateReservationStatus(reservation);
+    reservation = await updateReservationStatus(reservation);
     console.log(reservation);
     //add the message to the user model of who made the reservation
     if (initStatus !== reservation.status) {
@@ -338,7 +353,7 @@ export async function rejectReservation(req, res) {
       return reviewer;
     });
     let initStatus = reservation.status;
-    reservation = updateReservationStatus(reservation);
+    reservation = await updateReservationStatus(reservation);
     if (initStatus !== reservation.status) {
       const resUser = await User.findOne({ email: reservation.guestEmail });
       if (resUser.notifications == null) {
@@ -391,7 +406,8 @@ export async function holdReservation(req, res) {
       return reviewer;
     });
     let initStatus = reservation.status;
-    reservation = updateReservationStatus(reservation);
+    reservation = await updateReservationStatus(reservation);
+    
     if (initStatus !== reservation.status) {
       const resUser = await User.findOne({ email: reservation.guestEmail });
       if (resUser.notifications == null) {
@@ -549,9 +565,10 @@ export const updatePaymentStatus = async (req, res) => {
   }
 };
 
-const updateReservationStatus = (reservation) => {
+const updateReservationStatus = async (reservation) => {
   let initStatus = reservation.status;
   let reviewers = reservation.reviewers;
+  const userEmail = reservation.guestEmail;
 
   let isApproved = false;
   let isRejected = false;
@@ -580,6 +597,25 @@ const updateReservationStatus = (reservation) => {
     reservation.stepsCompleted = 2;
   } else {
     reservation.stepsCompleted = 1;
+  }
+  if(initStatus !== reservation.status){
+    try {
+      const user = await User.findOne({ email: userEmail })
+      if (user) {
+        if(reservation.status === 'APPROVED' || reservation.status === 'REJECTED') {
+          user.pendingRequest = user.pendingRequest - 1;
+        } else {
+          user.pendingRequest = user.pendingRequest + 1;
+        }
+
+        // Save the updated user document
+        await user.save();
+      } else {
+        console.log("User not found");
+      }
+    } catch (err) {
+      console.log("Error updating user:", err);
+    }
   }
   return reservation;
 };
