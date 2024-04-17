@@ -1,7 +1,13 @@
 import mongoose from "mongoose";
+import Counter from "./Counter.js";
 
 const reservationSchema = new mongoose.Schema(
   {
+    srno:{
+      type: Number,
+      required: true,
+      unique: true,
+    },
     guestEmail: {
       type: String,
       required: true,
@@ -173,6 +179,40 @@ const reservationSchema = new mongoose.Schema(
   }
 );
 
+reservationSchema.post("save", async function (doc) {
+  if (doc.status === "APPROVED") {
+    // Send notification to guest
+    //change the number of pending requests for the user
+    // sendNotification(doc.guestEmail, "Your reservation has been approved");
+  }
+  console.log(doc.srno)
+});
+
+//another one when we create a new object
+reservationSchema.pre("save", async function (next) {
+  // Get the next sequence value
+  try{
+  if(this.isNew){
+    const nextSequence = await Counter.getNextSequence("reservation");
+    this.srno = nextSequence;
+    console.log("Got the next sequence value: ", this.srno)
+  }
+  console.log("saving the reservation")
+  next();
+  }
+  catch(e){
+    next(e)
+    console.log(e)
+  }
+  // Send notification to admin
+  // sendNotification(ADMIN_EMAIL, "A new reservation has been created");
+});
+// reservationSchema.plugin(autoIncrement.plugin, {
+//   model: "Reservation",
+//   field: "srno",
+//   startAt: 1,
+//   incrementBy: 1,
+// });
 const Reservation = mongoose.model("Reservation", reservationSchema);
 
 export default Reservation;

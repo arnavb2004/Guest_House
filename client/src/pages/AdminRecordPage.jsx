@@ -51,11 +51,13 @@ export default function AdminRecordPage() {
 
   useEffect(() => {
     const fetchRecord = async () => {
+      console.log("fetching record...");
       try {
         const response = await http.get(`/reservation/${id}`);
         setStatus("Success");
         setUserRecord(response.data.reservation);
         setReviewers(response.data.reservation.reviewers);
+        console.log(response.data);
         setCheckedValues(
           response.data.reservation.reviewers.map(
             (reviewer) => reviewer.role
@@ -80,7 +82,7 @@ export default function AdminRecordPage() {
       );
     }
   };
-
+  console.log(status);
   if (status === "Error") return <Navigate to="/404" />;
   else if (status === "Loading") return <div>Loading...</div>;
 
@@ -209,6 +211,9 @@ export default function AdminRecordPage() {
           </div>
         )}
 
+      </div>
+      <div className='col-span-5 md:flex-col overflow-auto shadow-lg flex justify-between  p-5  gap-4 m-9 font-["Dosis"] bg-[rgba(255,255,255,0.5)] rounded-lg'>
+        
       </div>
     </>
   );
