@@ -125,13 +125,13 @@ function App() {
               <Route path=":id" element={<RecordPage />} />
             </Route>
             <Route path="dining" element={<Dining />}>
-              <Route path="pending-requests" element={<DiningList />} />
+              <Route path="" element={<DiningList />} />
               <Route
                 path="rejected-requests"
                 element={<DiningList status="rejected" />}
               />
               <Route
-                path=""
+                path="approved-requests"
                 element={<DiningList status="approved" />}
               />
               <Route path="book-dining" element={<BookDining />} />
