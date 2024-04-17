@@ -13,6 +13,7 @@ const upload = multer({
   storage ,
   limits: { fileSize: 1024 * 1024 * 2 },
   fileFilter:(req,file,cb)=>{
+    console.log("Size:",file.size)
     if(file.size>1024*1024*2){
       console.log('File size exceeds 2mb')
       return cb(new Error('File size exceeds 2mb'))

@@ -1,5 +1,6 @@
 import axios from "axios";
 import { toast } from "react-toastify";
+import { BASE_URL } from "../constants";
 import { logout } from "../redux/userSlice";
 
 let store;
@@ -9,7 +10,7 @@ export const injectStore = (_store) => {
 };
 
 axios.interceptors.request.use((config) => {
-  config.baseURL = 'http://localhost:4751/'
+  config.baseURL = BASE_URL;
   config.headers.accessToken = 'Bearer '+store.getState().user.accessToken;
   config.headers.refreshToken = 'Bearer '+store.getState().user.refreshToken;
   console.log(config.headers);

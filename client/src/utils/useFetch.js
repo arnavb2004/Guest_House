@@ -1,8 +1,9 @@
 import axios from "axios";
+import { BASE_URL } from "../constants";
 
 export const privateRequest = function (accessToken, refreshToken) {
   const instance = axios.create({
-    baseURL: "http://localhost:4751",
+    baseURL: BASE_URL,
     headers: {
       accesstoken: "Bearer " + accessToken,
       refreshtoken: "Bearer " + refreshToken,
@@ -13,7 +14,7 @@ export const privateRequest = function (accessToken, refreshToken) {
 
 export const publicRequest = function () {
   const instance = axios.create({
-    baseURL: "http://localhost:4751",
+    baseURL: BASE_URL,
   });
   return instance;
 };

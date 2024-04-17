@@ -242,6 +242,8 @@ function ReservationForm() {
     // Handle form submission
     setLoading(true);
 
+    console.log("Herefecae")
+
     const toast_id = toast.loading("Submitting form...");
 
     try {
@@ -256,24 +258,26 @@ function ReservationForm() {
       }
       formDataToSend.append("reviewers", checkedValues);
       formDataToSend.append("receipt", receipt);
-      const res=await http.post("http://localhost:4751/reservation/", formDataToSend, {
+      const res = await http.post("reservation/", formDataToSend, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
       console.log(res.status);
-      if(res.status===200){
-      // toast.success("Form submitted successfully!");
-      toast.update(toast_id, {
-        render: "Form submitted successfully!",
-        type: "success",
-        isLoading: false,
-        autoClose: 3000,
-      });
-      setLoading(false);
-      navigate("..");
-      }
-      else{
+      if (res.status === 200) {
+        // toast.success("Form submitted successfully!");
+        console.log("success1");
+        toast.update(toast_id, {
+          render: "Form submitted successfully!",
+          type: "success",
+          isLoading: false,
+          autoClose: 3000,
+        });
+        setLoading(false);
+        navigate("..");
+      } else {
+        console.log("fail");
+
         toast.update(toast_id, {
           render: "Form submission failed.",
           type: "fail",
@@ -284,7 +288,9 @@ function ReservationForm() {
     } catch (error) {
       console.error("Form submission failed:", error);
       setLoading(false);
+
       if (error.response?.data?.message) {
+        console.log("fail1");
         toast.update(toast_id, {
           render: error.response.data.message,
           type: "fail",
@@ -292,6 +298,8 @@ function ReservationForm() {
           autoClose: 5000,
         });
       } else {
+        console.log("fail2");
+
         toast.update(toast_id, {
           render: "Form submission failed.",
           type: "fail",

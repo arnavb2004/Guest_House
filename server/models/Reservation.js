@@ -133,6 +133,10 @@ const reservationSchema = new mongoose.Schema(
         type: Number,
         // required:true,
       },
+      paymentId:{
+        type:String,
+        
+      }
     },
     checkOut: {
       type: Boolean,
