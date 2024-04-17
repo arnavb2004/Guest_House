@@ -280,7 +280,7 @@ function ReservationForm() {
 
         toast.update(toast_id, {
           render: "Form submission failed.",
-          type: "fail",
+          type: "error",
           isLoading: false,
           autoClose: 5000,
         });
@@ -293,7 +293,7 @@ function ReservationForm() {
         console.log("fail1");
         toast.update(toast_id, {
           render: error.response.data.message,
-          type: "fail",
+          type: "error",
           isLoading: false,
           autoClose: 5000,
         });
@@ -302,7 +302,7 @@ function ReservationForm() {
 
         toast.update(toast_id, {
           render: "Form submission failed.",
-          type: "fail",
+          type: "error",
           isLoading: false,
           autoClose: 5000,
         });

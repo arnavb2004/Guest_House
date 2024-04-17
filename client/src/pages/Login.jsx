@@ -75,28 +75,38 @@ const Login = ({ isRegister }) => {
   };
 
   const sendOtp = async () => {
+    const toast_id = toast.loading("Sending OTP");
     try {
       setIsDisabled(true);
-      const res = await toast.promise(
-        axios.post(BASE_URL + "/auth/otp", {
-          email: credentials.email,
-        }),
-        {
-          pending: "Sending OTP",
-          success: "OTP sent successfully",
-          error: {
-            render({ data }) {
-              return data.response.data.error;
-            },
-          },
-        }
-      );
+
+      await axios.post(BASE_URL + "/auth/otp", {
+        email: credentials.email,
+      });
+      toast.update(toast_id, {
+        render: "OTP sent successfully",
+        type: "success",
+        isLoading: false,
+        autoClose: 2000,
+      });
+
       setIsDisabled(false);
     } catch (error) {
       setIsDisabled(false);
-      if (error.response?.data?.message)
-        toast.error(error.response.data.message);
-      else toast.error("Something went wrong");
+      if (error.response?.data?.message) {
+        toast.update(toast_id, {
+          render: error.response.data.message,
+          type: "error",
+          isLoading: false,
+          autoClose: 2000,
+        });
+      } else {
+        toast.update(toast_id, {
+          render: "Something went wrong!",
+          type: "error",
+          isLoading: false,
+          autoClose: 2000,
+        });
+      }
     }
   };
 
