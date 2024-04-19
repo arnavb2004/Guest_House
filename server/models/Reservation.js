@@ -3,9 +3,9 @@ import Counter from "./Counter.js";
 
 const reservationSchema = new mongoose.Schema(
   {
-    srno:{
+    srno: {
       type: Number,
-      required: true,
+      // required: true,
       unique: true,
     },
     guestEmail: {
@@ -133,10 +133,9 @@ const reservationSchema = new mongoose.Schema(
         type: Number,
         // required:true,
       },
-      paymentId:{
-        type:String,
-        
-      }
+      paymentId: {
+        type: String,
+      },
     },
     checkOut: {
       type: Boolean,
@@ -189,24 +188,23 @@ reservationSchema.post("save", async function (doc) {
     //change the number of pending requests for the user
     // sendNotification(doc.guestEmail, "Your reservation has been approved");
   }
-  console.log(doc.srno)
+  console.log(doc.srno);
 });
 
 //another one when we create a new object
 reservationSchema.pre("save", async function (next) {
   // Get the next sequence value
-  try{
-  if(this.isNew){
-    const nextSequence = await Counter.getNextSequence("reservation");
-    this.srno = nextSequence;
-    console.log("Got the next sequence value: ", this.srno)
-  }
-  console.log("saving the reservation")
-  next();
-  }
-  catch(e){
-    next(e)
-    console.log(e)
+  try {
+    if (this.isNew) {
+      const nextSequence = await Counter.getNextSequence("reservation");
+      this.srno = nextSequence;
+      console.log("Got the next sequence value: ", this.srno);
+    }
+    console.log("saving the reservation");
+    next();
+  } catch (e) {
+    next(e);
+    console.log(e);
   }
   // Send notification to admin
   // sendNotification(ADMIN_EMAIL, "A new reservation has been created");

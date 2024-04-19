@@ -1,6 +1,6 @@
 import express from "express";
 import { checkAuth } from "../middlewares/tokens.js";
-import { upload ,checkFileSize} from "../middlewares/fileStore.js";
+import { upload, checkFileSize } from "../middlewares/fileStore.js";
 
 import {
   createReservation,
@@ -14,7 +14,6 @@ import {
   getRejectedReservations,
   getReservationDocuments,
   updateReservation,
-  assignReservation,
   getRooms,
   addRooms,
   updateRooms,
@@ -62,7 +61,6 @@ Router.put("/approve/:id", checkAuth, approveReservation);
 Router.put("/reject/:id", checkAuth, rejectReservation);
 Router.put("/hold/:id", checkAuth, holdReservation);
 Router.put("/payment/:id", checkAuth, updatePaymentStatus);
-Router.put("/:id/assign", checkAuth, assignReservation);
 Router.put("/:id", checkAuth, updateReservation);
 
 export default Router;

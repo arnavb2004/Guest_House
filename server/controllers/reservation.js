@@ -97,7 +97,7 @@ export async function createReservation(req, res) {
       status: "PENDING",
     }));
     const reservation = await Reservation.create({
-      srno:1,
+      srno: 1,
       guestEmail: email,
       guestName,
       address,
@@ -116,17 +116,17 @@ export async function createReservation(req, res) {
       receipt: receiptid,
     });
 
-    const revArray = reviewersArray.map((reviewer) => reviewer.role)
+    const revArray = reviewersArray.map((reviewer) => reviewer.role);
 
     // await appendReservationToSheet(reservation);
 
     console.log("sending mail");
-    console.log("\n\n\n\n",reviewersArray, "\n\n\n\n");
+    console.log("\n\n\n\n", reviewersArray, "\n\n\n\n");
     const users = await User.find({
       role: { $in: revArray },
     });
     try {
-      const user = await User.findOne({ email: email })
+      const user = await User.findOne({ email: email });
       if (user) {
         user.pendingRequest += 1;
 
@@ -139,7 +139,7 @@ export async function createReservation(req, res) {
       console.log("Error updating user:", err);
     }
 
-    const emails = users.map((user) => user.email)
+    const emails = users.map((user) => user.email);
     sendVerificationEmail(
       emails,
       "New Reservation Request",
@@ -195,12 +195,24 @@ export async function getAllReservationDetails(req, res) {
 
 export async function updateReservation(req, res) {
   try {
-    if (req.user.role !== "ADMIN") {
+    if (req.user.role !== "ADMIN" && req.user.role !== "CASHIER") {
       return res
         .status(403)
         .json({ message: "You are not authorized to perform this action" });
     }
-    await Reservation.findByIdAndUpdate(req.params.id, req.body);
+    const reservation = await Reservation.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+    if (
+      reservation.payment.status === "PAID" &&
+      reservation.status === "APPROVED"
+    ) {
+      reservation.stepsCompleted = 4;
+    }
+
+    await reservation.save();
     res.status(200).json({ message: "Reservation Updated" });
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -407,7 +419,7 @@ export async function holdReservation(req, res) {
     });
     let initStatus = reservation.status;
     reservation = await updateReservationStatus(reservation);
-    
+
     if (initStatus !== reservation.status) {
       const resUser = await User.findOne({ email: reservation.guestEmail });
       if (resUser.notifications == null) {
@@ -598,11 +610,14 @@ const updateReservationStatus = async (reservation) => {
   } else {
     reservation.stepsCompleted = 1;
   }
-  if(initStatus !== reservation.status){
+  if (initStatus !== reservation.status) {
     try {
-      const user = await User.findOne({ email: userEmail })
+      const user = await User.findOne({ email: userEmail });
       if (user) {
-        if(reservation.status === 'APPROVED' || reservation.status === 'REJECTED') {
+        if (
+          reservation.status === "APPROVED" ||
+          reservation.status === "REJECTED"
+        ) {
           user.pendingRequest = user.pendingRequest - 1;
         } else {
           user.pendingRequest = user.pendingRequest + 1;
@@ -810,7 +825,7 @@ export const getCheckedOutReservations = async (req, res) => {
         .status(403)
         .json({ message: "You are not authorized to perform this action" });
     const reservations = await Reservation.find({
-      checkout: true,
+      checkOut: true,
     });
     res.status(200).json(reservations);
   } catch (error) {
@@ -827,7 +842,7 @@ export const getLateCheckoutReservations = async (req, res) => {
     const reservations = await Reservation.find({
       departureDate: { $lt: new Date() },
       status: "APPROVED",
-      checkout: false,
+      checkOut: false,
     });
     res.status(200).json(reservations);
   } catch (error) {
@@ -848,8 +863,9 @@ export const checkoutReservation = async (req, res) => {
       return res.status(400).json({ message: "Payment not completed" });
     }
 
-    reservation.checkout = true;
+    reservation.checkOut = true;
     await reservation.save();
+    console.log("check res:", reservation);
     res.status(200).json({ message: "Checkout successful" });
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -866,7 +882,7 @@ export const checkoutToday = async (req, res) => {
     const reservations = await Reservation.find({
       departureDate: { $gt: new Date(), $lte: todayEnd },
       status: "APPROVED",
-      checkout: false,
+      checkOut: false,
     });
     res.status(200).json(reservations);
   } catch (error) {

@@ -291,6 +291,7 @@ export default function DiningList({
                   <div className="w-[30%]">{record.amount}</div>
                   <div className="w-[30%]">{status.toUpperCase()}</div>
                   <div className="w-[5%]"></div>
+                  9
                 </div>
               );
             })}

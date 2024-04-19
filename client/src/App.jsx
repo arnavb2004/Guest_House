@@ -68,55 +68,79 @@ function App() {
 
           <Route path="cashier" element={<Auth allowedRoles={["CASHIER"]} />}>
             <Route path="reservation" element={<Reservation />}>
-              <Route path="" element={<RecordList current={true} />} />
+              <Route path="" element={<RecordList desc="current-requests" />} />
               <Route
                 path="payment-pending"
-                element={<RecordList payment={false} />}
+                element={<RecordList payment={false} desc="payment-pending" />}
               />
               <Route
                 path="late-checkout"
-                element={<RecordList checkout="late" />}
+                element={<RecordList checkout="late" desc="late-checkout" />}
               />
               <Route
                 path="checked-out"
-                element={<RecordList checkout="done" />}
+                element={<RecordList checkout="done" desc="checked-out" />}
               />
               <Route
                 path="checkout-today"
-                element={<RecordList checkout="today" />}
+                element={<RecordList checkout="today" desc="checkout-today" />}
               />
               <Route path=":id" element={<RecordPage />} />
             </Route>
-            
+
             <Route path="dining" element={<Dining />}>
-              <Route path="" element={<DiningList source = "Guest" paymentstatus = {false} />} />
+              <Route
+                path=""
+                element={<DiningList source="Guest" paymentstatus={false} />}
+              />
               <Route
                 path="payment-pending-guest"
-                element={<DiningList status="approved" source = "Guest" paymentstatus = {false} />} 
+                element={
+                  <DiningList
+                    status="approved"
+                    source="Guest"
+                    paymentstatus={false}
+                  />
+                }
               />
               <Route
                 path="payment-pending-department"
-                element={<DiningList status="approved" source = "Department" paymentstatus = {false} />} 
+                element={
+                  <DiningList
+                    status="approved"
+                    source="Department"
+                    paymentstatus={false}
+                  />
+                }
               />
               <Route
                 path="payment-done-guest"
-                element={<DiningList status="approved" source = "Guest" paymentstatus = {true} />} 
+                element={
+                  <DiningList
+                    status="approved"
+                    source="Guest"
+                    paymentstatus={true}
+                  />
+                }
               />
               <Route
                 path="payment-done-department"
-                element={<DiningList status="approved" source = "Department" paymentstatus = {true} />} 
+                element={
+                  <DiningList
+                    status="approved"
+                    source="Department"
+                    paymentstatus={true}
+                  />
+                }
               />
-              <Route path=":id" element={<DiningRecordPage />} />             
+              <Route path=":id" element={<DiningRecordPage />} />
             </Route>
           </Route>
 
           <Route path="user" element={<Auth allowedRoles={["USER"]} />}>
             <Route path="reservation" element={<Reservation />}>
               <Route path="pending-requests" element={<RecordList />} />
-              <Route
-                path=""
-                element={<RecordList status="approved" />}
-              />
+              <Route path="" element={<RecordList status="approved" />} />
               <Route
                 path="rejected-requests"
                 element={<RecordList status="rejected" />}
@@ -176,10 +200,7 @@ function App() {
                 path="rejected-requests"
                 element={<AdminRecordList status="rejected" />}
               />
-              <Route
-                path=""
-                element={<AdminRecordList status="approved" />}
-              />
+              <Route path="" element={<AdminRecordList status="approved" />} />
               <Route path=":id" element={<AdminRecordPage />} />
 
               <Route path="users" element={<UserList />} />

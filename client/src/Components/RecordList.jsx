@@ -15,13 +15,9 @@ import { getDate } from "../utils/handleDate";
 import DownloadIcon from "@mui/icons-material/Download";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { IconButton } from "@mui/material";
+import LogoutIcon from "@mui/icons-material/Logout";
 
-export default function RecordList({
-  status = "pending",
-  current,
-  payment,
-  checkout,
-}) {
+export default function RecordList({ status = "pending", desc }) {
   const [checked, setChecked] = useState([]);
   const [values, setValues] = useState([]);
   const user = useSelector((state) => state.user);
@@ -30,8 +26,7 @@ export default function RecordList({
   const [loadingStatus, setLoadingStatus] = useState("Loading");
   const [sortType, setSortType] = useState("");
   const [sortToggle, setSortToggle] = useState(false);
-  const location = useLocation()
-  
+  const location = useLocation();
 
   const filterMap = {
     "Guest Name": "guestName",
@@ -50,22 +45,33 @@ export default function RecordList({
   const fetchRecords = async () => {
     try {
       let res;
-      if (current === true) {
-        res = await http.get("/reservation/current");
-      } else if (payment === false) {
-        res = await http.get("/reservation/payment/pending");
-      } else if (checkout === "late") {
-        res = await http.get("/reservation/late");
-      } else if (checkout === "done") {
-        res = await http.get("/reservation/checkedout");
-      } else if (checkout === "today") {
-        res = await http.get("/reservation/checkout/today");
-      } else {
-        res = await http.get("/reservation/" + status);
-      }
+      switch (desc) {
+        case "current-requests":
+          res = await http.get("/reservation/current");
+          break;
 
+        case "payment-pending":
+          res = await http.get("/reservation/payment/pending");
+          break;
+
+        case "late-checkout":
+          res = await http.get("/reservation/late");
+          break;
+
+        case "checked-out":
+          res = await http.get("/reservation/checkedout");
+          break;
+
+        case "checkout-today":
+          res = await http.get("/reservation/checkout/today");
+          break;
+
+        default:
+          res = await http.get("/reservation/" + status);
+          break;
+      }
       const reservations = res.data;
-      console.log(reservations)
+      console.log(reservations);
       setValues(reservations.map((res) => res._id));
       setRecords(reservations);
       setNewRecords(reservations);
@@ -79,7 +85,8 @@ export default function RecordList({
   useEffect(() => {
     setLoadingStatus("Loading");
     fetchRecords();
-  }, [status, current, payment, checkout]);
+  }, [status, desc]);
+
   const dispatch = useDispatch();
   const handleToggle = (value) => () => {
     const currentIndex = checked.indexOf(value);
@@ -223,7 +230,7 @@ export default function RecordList({
   return (
     <div className=" flex p-5 px-0 w-full flex-col">
       <div className='text-center text-3xl font-["Dosis"] font-semibold py-4 uppercase'>
-        {status + " requests"}
+        {desc ? desc.toUpperCase().split("-").join(" ") : status + " requests"}
       </div>
       <div className="grid grid-cols-12 gap-8 mb-4">
         <div className="col-span-2 flex flex-col justify-center relative h-full">
@@ -364,6 +371,25 @@ export default function RecordList({
                         color="black"
                       />
                     </IconButton>
+                    {record.payment.status === "PAID" && !record.checkOut && (
+                      <IconButton>
+                        <LogoutIcon
+                          onClick={async () => {
+                            try {
+                              const res = await http.put(
+                                "/reservation/checkout/" + record._id
+                              );
+                              toast.success("Checked out successfully");
+                              window.location.reload();
+                            } catch (error) {
+                              console.log(error);
+                              toast.error(error.response?.data?.message);
+                            }
+                          }}
+                          color="black"
+                        />
+                      </IconButton>
+                    )}
                   </div>
 
                   <div />

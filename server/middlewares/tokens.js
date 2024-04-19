@@ -3,7 +3,6 @@ import User from "../models/User.js";
 
 export const checkAuth = async (req, res, next) => {
   try {
-    console.log("Checking the access token");
     const accessToken = req.headers.accesstoken.split(" ")[1];
     const refreshToken = req.headers.refreshtoken.split(" ")[1];
     console.log(accessToken);
@@ -12,13 +11,14 @@ export const checkAuth = async (req, res, next) => {
       try {
         decodedToken = jwt.decode(accessToken);
       } catch (err) {
-        return res.status(401).json({ message: "Invalid access token" });
+        return res
+          .status(401)
+          .json({ message: "Invalid credentials! Please login again" });
       }
       console.log("Decoded Token = ", decodedToken);
 
       console.log("Date = ", Date.now() / 1000);
       if (decodedToken.exp <= Date.now() / 1000) {
-        console.log("Access Token has expired!!,`Checking the refresh token!!");
         var decodedToken;
         try {
           decodedToken = jwt.verify(
@@ -28,19 +28,19 @@ export const checkAuth = async (req, res, next) => {
         } catch (err) {
           console.log(err.message);
           if (err.message === "jwt expired") {
+            return res.status(401).json({
+              message: "Your session has expired! Please login again",
+            });
+          } else {
             return res
               .status(401)
-              .json({
-                message: "Refresh Token has expired. Please login again",
-              });
-          } else {
-            return res.status(401).json({ message: "Invalid refresh token" });
+              .json({ message: "Invalid credentials! Please login again" });
           }
         }
         if (decodedToken.exp <= Date.now() / 1000) {
           return res
             .status(401)
-            .json({ message: "Refresh Token has expired! Please login again" });
+            .json({ message: "Your session has expired! Please login again" });
         }
         const user = await User.findOne({ email: decodedToken.email });
         console.log("User found!! adding to the req body");
@@ -61,9 +61,13 @@ export const checkAuth = async (req, res, next) => {
         next();
       }
     } else {
-      return res.status(401).json({ message: "Invalid access token" });
+      return res
+        .status(401)
+        .json({ message: "Invalid credentials! Please login again" });
     }
   } catch (error) {
-    res.status(401).json({ message: error.message });
+    res
+      .status(401)
+      .json({ message: "Something went wrong! Please login again" });
   }
 };

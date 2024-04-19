@@ -1,4 +1,3 @@
-// import { Db } from 'mongodb';
 import mongoose from 'mongoose';
 
 const counterSchema = new mongoose.Schema({
