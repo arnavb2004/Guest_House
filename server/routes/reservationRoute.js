@@ -15,7 +15,8 @@ import {
   getReservationDocuments,
   updateReservation,
   getRooms,
-  addRooms,
+  addRoom,
+  deleteRoom,
   updateRooms,
   sendNotification,
   updatePaymentStatus,
@@ -39,7 +40,6 @@ Router.post(
   ]),
   createReservation
 );
-Router.post("/rooms", checkAuth, addRooms);
 
 Router.get("/all", checkAuth, getAllReservationDetails);
 Router.get("/current", checkAuth, getCurrentReservations);
@@ -50,6 +50,8 @@ Router.get("/approved", checkAuth, getApprovedReservations);
 Router.get("/rejected", checkAuth, getRejectedReservations);
 Router.get("/documents/:id", checkAuth, getReservationDocuments);
 Router.get("/rooms", checkAuth, getRooms);
+Router.post("/rooms", checkAuth, addRoom);
+Router.delete("/rooms", checkAuth, deleteRoom);
 Router.get("/payment/pending", checkAuth, getPaymentPendingReservations);
 Router.get("/checkout/today", checkAuth, checkoutToday);
 
