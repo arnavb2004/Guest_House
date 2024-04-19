@@ -649,22 +649,43 @@ export const getRooms = async (req, res) => {
   }
 };
 
-export const addRooms = async (req, res) => {
-  if (req.user?.role !== "ADMIN")
-    return res
-      .status(403)
-      .json({ message: "You are not authorized to perform this action" });
+export const addRoom = async (req, res) => {
+	if (req.user?.role !== "ADMIN")
+		return res
+			.status(403)
+			.json({ message: "You are not authorized to perform this action" });
+	try {
+		const roomNumber = req.body.roomNumber;
+		const newRoom = await Room.create({ roomNumber: roomNumber });
+		res
+			.status(200)
+			.json({ message: "Room added Successfully", room: newRoom });
+	} catch (err) {
+		res.status(400).json({ success: false, message: err.message });
+	}
+};
 
-  console.log("room list", req.body);
-  try {
-    const roomList = req.body;
-    roomList.forEach(async (room) => {
-      await Room.create(room);
-    });
-    res.status(200).json({ message: "Rooms added" });
-  } catch (err) {
-    res.status(400).json({ success: false, message: err.message });
-  }
+export const deleteRoom = async (req, res) => {
+	if (req.user?.role !== "ADMIN")
+		return res
+			.status(403)
+			.json({ message: "You are not authorized to perform this action" });
+
+	try {
+		const { roomId } = req.body;
+
+		const deletedRoom = await Room.findByIdAndDelete(roomId);
+
+		if (!deletedRoom) {
+			return res.status(404).json({ message: "Room not found" });
+		}
+
+		res
+			.status(200)
+			.json({ message: "Room deleted successfully", room: deletedRoom });
+	} catch (err) {
+		res.status(500).json({ success: false, message: err.message });
+	}
 };
 
 async function isDateRangeAvailable(room, startDate, endDate) {

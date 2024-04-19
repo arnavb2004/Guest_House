@@ -290,8 +290,18 @@ export default function DiningList({
                   <div className="w-[40%] text-center">{record.email}</div>
                   <div className="w-[30%]">{record.amount}</div>
                   <div className="w-[30%]">{status.toUpperCase()}</div>
-                  <div className="w-[5%]"></div>
-                  9
+                  <div className="w-[5%]">
+                    <IconButton edge="end" aria-label="insert">
+                      <InsertDriveFileIcon
+                        onClick={() => {
+                          status === "approved"
+                            ? navigate(`dining/${record._id}`)
+                            : navigate(`../dining/${record._id}`);
+                        }}
+                        color="black"
+                      />
+                    </IconButton>
+                  </div>
                 </div>
               );
             })}

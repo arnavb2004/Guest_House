@@ -24,6 +24,7 @@ import NotFound from "./pages/NotFound";
 import Unauthorized from "./pages/Unauthorized";
 import RoomBooking from "./pages/RoomBooking";
 import AdminRecordPage from "./pages/AdminRecordPage";
+import AddRoom from "./components/AddRoom";
 
 function App() {
   return (
@@ -63,6 +64,7 @@ function App() {
 
               <Route path="users" element={<UserList />} />
               <Route path=":id/rooms" element={<RoomBooking />} />
+              <Route path="rooms" element={<AddRoom />} />
             </Route>
           </Route>
 
