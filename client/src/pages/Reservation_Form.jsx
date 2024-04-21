@@ -13,12 +13,23 @@ import { privateRequest } from "../utils/useFetch";
 import { FileIcon, defaultStyles } from "react-file-icon";
 import { Link, useNavigate } from "react-router-dom";
 import ApplicantTable from "../components/ApplicantTable";
+import NewWindow from "../components/NewWindow";
+import { useEffect } from "react";
 
 function ReservationForm() {
   const user = useSelector((state) => state.user);
   const http = privateRequest(user.accessToken, user.refreshToken);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+
+  const [showTC, setShowTC] = useState(false);
+  const [showCat, setShowCat] = useState(false);
+
+
+  useEffect(() => {
+    setShowCat(false);
+    setShowTC(false);
+  }, [showTC,showCat]);
 
   const [files, setFiles] = useState([]);
   const [formData, setFormData] = useState({
@@ -242,7 +253,7 @@ function ReservationForm() {
     // Handle form submission
     setLoading(true);
 
-    console.log("Herefecae")
+    console.log("Herefecae");
 
     const toast_id = toast.loading("Submitting form...");
 
@@ -429,6 +440,9 @@ function ReservationForm() {
             />
           </div>
 
+          {showCat && <NewWindow link="/forms/categories.pdf" />}
+          {showTC && <NewWindow link="/forms/TermsAndConditions.pdf" />}
+
           <TextField
             label="Purpose of Booking"
             error={errorText.purpose !== ""}
@@ -445,13 +459,14 @@ function ReservationForm() {
           <div className="form-group">
             <label>
               Category*: (Refer to{" "}
-              <a
-                className="underline"
-                href="/forms/categories.pdf"
-                target="_blank"
+              <span
+                className="underline cursor-pointer"
+                onClick={() => {
+                  setShowCat(true);
+                }}
               >
                 this
-              </a>{" "}
+              </span>{" "}
               page for details of categories and tariff)
             </label>
 
@@ -627,13 +642,13 @@ function ReservationForm() {
 
           <div>
             By clicking on Submit, you hereby agree to the{" "}
-            <a
-              href="/forms/TermsAndConditions.pdf"
-              className="underline"
-              target="_blank"
-            >
-              Terms and Conditions
-            </a>
+            <span
+             className="underline cursor-pointer"
+             onClick={()=>{
+              setShowTC(true)
+             }}
+             >Terms and Conditions</span>
+
           </div>
           <button
             type="submit"

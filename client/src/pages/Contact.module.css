@@ -7,7 +7,8 @@
 
 body {
   font-family: Arial, sans-serif;
-  background-image: url('../images/backgroundImage.jpeg');
+  /* background-image: url('../images/backgroundImage.jpeg'); */
+  background-color: rgb(249,250,251);
   background-size: cover;
   background-repeat: no-repeat;
   background-attachment: fixed;

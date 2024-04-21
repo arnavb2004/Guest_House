@@ -84,7 +84,8 @@ export default function AdminRecordPage() {
   };
   console.log(status);
   if (status === "Error") return <Navigate to="/404" />;
-  else if (status === "Loading") return <div>Loading...</div>;
+  else if (status === "Loading") return <div className="flex h-full w-full text-xl font-semibold items-center justify-center">Loading...</div>;
+
 
   return (
     <>

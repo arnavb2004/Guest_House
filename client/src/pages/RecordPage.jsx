@@ -52,7 +52,12 @@ export default function RecordPage() {
   }, [id]);
 
   if (status === "Error") return <Navigate to="/404" />;
-  else if (status === "Loading") return <div>Loading...</div>;
+  else if (status === "Loading")
+    return (
+      <div className="flex h-full w-full text-xl font-semibold items-center justify-center">
+        Loading...
+      </div>
+    );
 
   return (
     <>
@@ -133,7 +138,8 @@ export default function RecordPage() {
                 <div className="w-20">{reviewer.role}</div>
                 <div
                   className={
-                    "border relative top-1 w-5 h-5 " + color[reviewer.status]
+                    "border rounded-full relative top-1 w-5 h-5 " +
+                    color[reviewer.status]
                   }
                 ></div>
                 <div className="w-72">{reviewer.comments}</div>
@@ -164,6 +170,15 @@ export default function RecordPage() {
             </div>
           </div>
         )}
+      </div>
+      <div className='col-span-5 md:flex-col overflow-auto md:gap-8 shadow-lg flex p-5 gap-2 m-9 font-["Dosis"] bg-[rgba(255,255,255,0.5)] rounded-lg'>
+        <div>
+          <div className="text-2xl font-semibold font-['Dosis'] px-5">
+            Payment
+          </div>
+          
+
+        </div>
       </div>
     </>
   );

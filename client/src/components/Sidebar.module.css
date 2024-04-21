@@ -5,7 +5,9 @@
   top: 48px; /* Adjusted to start below the header */
   height: 100%; /* Adjust height to account for header */
   width: 250px;
-  background: linear-gradient(to bottom,#365899, #365899); /* Light blue gradient */
+  background: linear-gradient(to bottom,#365899, #365899);
+  /* background-color: white; */
+  /* background-color: rgb(249,250,251); */
   padding: 20px;
   border-right: 1px solid #ccc; /* Adding partition */
   display: flex; /* Use flexbox to arrange items vertically */
@@ -36,7 +38,7 @@
 }
 
 .menu-item:not(:last-child) {
-  border-bottom: 1px solid #ccc; /* Optional: Add border between items */
+  /* border-bottom: 1px solid #ccc; Optional: Add border between items */
 }
 
 

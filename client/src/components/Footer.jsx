@@ -8,7 +8,7 @@ import LinkedInIcon from '@mui/icons-material/LinkedIn';
 const Footer = () => {
   return (
     <footer className="flex flex-col font-['Dosis'] pt-[2rem] w-full  bg-slate-700  text-gray-200 bottom-0">
-      <div className="flex justify-around px-32">
+      <div className="flex justify-around px-32 ">
         <div className=" flex flex-col gap-4 items-center text-md">
           {/* <h4>About Us</h4> */}
           <img src={logo} className="h-20 flex m-auto"></img>
@@ -62,7 +62,7 @@ const Footer = () => {
         </div>
       </div>
 
-      <div className=" flex mt-20 justify-center bg-gray-600">
+      <div className=" flex mt-5 justify-center bg-gray-600">
         <div className="px-2 pt-4 pb-4 text-sm ">© 2024 Indian Institute of Technology Ropar, Rupnagar - 140001, INDIA</div>
       </div>
     </footer>

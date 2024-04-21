@@ -4,7 +4,7 @@ import List from "@mui/material/List";
 import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
 import { useNavigate } from "react-router-dom";
-import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
+import VisibilityIcon from '@mui/icons-material/Visibility';
 
 import { getDate } from "../utils/handleDate";
 import { toast } from "react-toastify";
@@ -200,15 +200,15 @@ export default function AdminRecordList({ status = "pending" }) {
   }, [sortToggle, sortType]);
 
   return (
-    <div className="flex p-5 px-0 w-full flex-col">
-      <div className='text-center text-3xl font-["Dosis"] font-semibold py-4 uppercase'>
+    <div className="flex p-2 px-0 w-full flex-col">
+      <div className='text-center text-2xl font-["Dosis"] font-semibold py-2 uppercase'>
         {status + " requests"}
       </div>
       <div className="grid grid-cols-12 gap-8 mb-4">
-        <div className="col-span-2 flex flex-col justify-center relative h-full">
+        <div className="h-10 col-span-2 flex flex-col justify-center relative">
           <Button
             variant="contained"
-            size="large"
+            size="small"
             onClick={toggleDropdown}
             endIcon={isOpen ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
             style={{ backgroundColor: "#365899", color: "#FFF" }}
@@ -236,6 +236,7 @@ export default function AdminRecordList({ status = "pending" }) {
         <TextField
           label="Search items"
           variant="outlined"
+          size="small"
           className="col-span-10 w-full p-2.5 h-full"
           value={searchTerm}
           onChange={handleSearchChange}
@@ -243,10 +244,10 @@ export default function AdminRecordList({ status = "pending" }) {
       </div>
       <List
         sx={{ width: "100%", padding: "0px" }}
-        className="bg-gray-50 rounded-md overflow-hidden"
+        className="bg-gray-50 border rounded-md  overflow-hidden"
       >
-        <div className=" bg-[#365899] text-white text-[1.13vw] w-full" key="#">
-          <div className="p-2.5 px-4 flex gap-4 w-full items-center text-center">
+        <div className="font-semibold border-b-2 text-[1.13vw] w-full" key="#">
+          <div className="p-1 px-4 flex gap-4 w-full items-center text-center">
             <div className="flex items-center gap-2 w-[15%]">
               <Checkbox
                 edge="start"
@@ -262,10 +263,10 @@ export default function AdminRecordList({ status = "pending" }) {
               </div>
             </div>
             <div onClick={handleSortToggle} className="w-[10%]">
-              Number of Guests
+              No. of Guests
             </div>
             <div onClick={handleSortToggle} className="w-[10%]">
-              Number of Rooms
+              No. of Rooms
             </div>
             <div onClick={handleSortToggle} className="w-[10%]">
               Category
@@ -331,13 +332,13 @@ export default function AdminRecordList({ status = "pending" }) {
         </div>
 
         {loadingStatus === "Success" && newRecords.length > 0 && (
-          <div className="h-96 overflow-y-auto">
+          <div className="max-h-96 overflow-y-auto">
             {newRecords.map((record) => {
               const labelId = `checkbox-list-label-${record._id}`;
               return (
                 <div
                   key={record._id}
-                  className="border-b items-center flex gap-4 text-center px-4 p-2.5 text-[1vw]"
+                  className="border-b-[1px] border-gray-100 items-center flex gap-4 text-center px-4 p-1 text-[1vw]"
                 >
                   <div className="flex items-center gap-2 w-[15%] overflow-hidden">
                     <Checkbox
@@ -390,7 +391,7 @@ export default function AdminRecordList({ status = "pending" }) {
                       </IconButton>
                     )}
                     <IconButton edge="end" aria-label="insert">
-                      <InsertDriveFileIcon
+                      <VisibilityIcon
                         onClick={() => {
                           status === "approved"
                             ? navigate(`${record._id}`)

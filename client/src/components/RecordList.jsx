@@ -4,7 +4,7 @@ import Checkbox from "@mui/material/Checkbox";
 import { useSelector, useDispatch } from "react-redux";
 import { privateRequest } from "../utils/useFetch";
 import { useLocation, useNavigate } from "react-router-dom";
-import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
 import Button from "@mui/material/Button";
@@ -228,15 +228,15 @@ export default function RecordList({ status = "pending", desc }) {
   }, [sortToggle, sortType]);
 
   return (
-    <div className=" flex p-5 px-0 w-full flex-col">
-      <div className='text-center text-3xl font-["Dosis"] font-semibold py-4 uppercase'>
+    <div className=" flex p-2 px-0 w-full flex-col">
+      <div className='text-center text-2xl font-["Dosis"] font-semibold py-2 uppercase'>
         {desc ? desc.toUpperCase().split("-").join(" ") : status + " requests"}
       </div>
       <div className="grid grid-cols-12 gap-8 mb-4">
-        <div className="col-span-2 flex flex-col justify-center relative h-full">
+        <div className="h-10 col-span-2 flex flex-col justify-center relative">
           <Button
             variant="contained"
-            size="large"
+            size="small"
             onClick={toggleDropdown}
             endIcon={isOpen ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
             style={{ backgroundColor: "#365899", color: "#FFF" }}
@@ -263,7 +263,9 @@ export default function RecordList({ status = "pending", desc }) {
         <TextField
           label="Search items"
           variant="outlined"
-          className="col-span-10 w-full p-2.5 h-full"
+          // sx={{ height: "2.5rem", paddingy:"15p", border:"1px solid black"}}
+          className="col-span-10 w-full"
+          size="small"
           value={searchTerm}
           onChange={handleSearchChange}
         />
@@ -272,8 +274,8 @@ export default function RecordList({ status = "pending", desc }) {
         sx={{ width: "100%", padding: "0px" }}
         className="bg-gray-50 rounded-md overflow-hidden"
       >
-        <div className=" bg-[#365899] text-white text-[1.13vw]  w-full" key="#">
-          <div className="p-2.5 px-4 flex gap-4 w-full items-center justify-around text-center">
+        <div className=" font-semibold border-b-2 text-[1.13vw]  w-full h-15" key="#">
+          <div className="p-1 px-4 flex gap-4 w-full items-center justify-around text-center">
             <div className="flex items-center gap-2 w-[15%] overflow-hidden">
               <Checkbox
                 edge="start"
@@ -289,10 +291,10 @@ export default function RecordList({ status = "pending", desc }) {
               </div>
             </div>
             <div onClick={handleSortToggle} className="w-[10%] ">
-              Number of Guests
+              No. of Guests
             </div>
             <div onClick={handleSortToggle} className="w-[10%] ">
-              Number of Rooms
+              No. of Rooms
             </div>
             <div onClick={handleSortToggle} className="w-[10%] ">
               Category
@@ -324,7 +326,7 @@ export default function RecordList({ status = "pending", desc }) {
               return (
                 <div
                   key={record._id}
-                  className="border-b items-center flex gap-4 text-center justify-around px-4 p-2.5 text-[1vw]"
+                  className="border-b-[1px] border-gray-100 items-center flex gap-4 text-center justify-around px-4 p-1 text-[1vw]"
                 >
                   <div className="flex items-center gap-2 w-[15%] overflow-hidden">
                     <Checkbox
@@ -345,7 +347,7 @@ export default function RecordList({ status = "pending", desc }) {
                   <div className="w-[10%]">{record.roomType}</div>
                   <div className="flex justify-evenly gap-4 w-[10%]">
                     <IconButton>
-                      <InsertDriveFileIcon
+                      <VisibilityIcon
                         onClick={() => {
                           location.pathname.split("/").length === 3
                             ? navigate(`${record._id}`)

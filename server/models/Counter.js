@@ -14,7 +14,6 @@ counterSchema.statics.getNextSequence=async function (name) {
     );
     return count.seq;
 }
-
 const Counter = mongoose.model("Counter", counterSchema);
 const intitializeCounter = async () => {
     var counter = await Counter.findOne({ _id: "reservation" });
@@ -26,6 +25,8 @@ const intitializeCounter = async () => {
         await Counter.create({ _id: "meal", seq: 1});
     }
 }
-intitializeCounter();
+setTimeout(() => {
+    intitializeCounter();
+}, 5000);
 
 export default Counter;

@@ -35,11 +35,20 @@ const Register = () => {
   }
 
   const handleChange = (e) => {
+    if (e.target.name === "contact") {
+      if (e.target.value.length > 10) return;
+      if (isNaN(e.target.value) || isNaN(parseFloat(e.target.value))) return;
+    }
     setCredentials((user) => ({ ...user, [e.target.name]: e.target.value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!credentials.name || !credentials.contact) {
+      toast.error("Please fill all fields");
+      return;
+    }
 
     try {
       const res = await axios.post(BASE_URL + "/auth/register", {

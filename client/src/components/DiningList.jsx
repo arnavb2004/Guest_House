@@ -9,7 +9,7 @@ import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import Button from "@mui/material/Button";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
@@ -178,15 +178,15 @@ export default function DiningList({
   };
 
   return (
-    <div className=" flex p-5 px-0 w-full flex-col">
-      <div className='text-center text-3xl font-["Dosis"] font-semibold py-4 uppercase'>
+    <div className=" flex p-2 px-0 w-full flex-col">
+      <div className='text-center text-2xl font-["Dosis"] font-semibold py-2 uppercase'>
         Dining Records
       </div>
       <div className="grid grid-cols-12 gap-8 mb-4">
-        <div className="col-span-2 flex flex-col justify-center relative h-full">
+        <div className="col-span-2 flex flex-col justify-center relative h-10">
           <Button
             variant="contained"
-            size="large"
+            size="small"
             onClick={toggleDropdown}
             endIcon={isOpen ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
             style={{ backgroundColor: "#365899", color: "#FFF" }}
@@ -214,6 +214,7 @@ export default function DiningList({
           <TextField
             label="Search items"
             variant="outlined"
+            size="small"
             className="col-span-10 w-full p-2.5 h-full"
             value={searchTerm}
             onChange={handleSearchChange}
@@ -238,10 +239,10 @@ export default function DiningList({
       </div>
       <List
         sx={{ width: "100%", padding: "0px" }}
-        className="bg-gray-50 rounded-md overflow-hidden"
+        className="bg-gray-50 rounded-md border overflow-hidden"
       >
-        <div className="bg-[#365899] text-white text-[1.13vw] w-full" key="#">
-          <div className="p-2.5 px-4 flex gap-4 w-full items-center text-center">
+        <div className="font-semibold border-b-2 text-[1.13vw] w-full" key="#">
+          <div className="p-1 px-4 flex gap-4 w-full items-center text-center">
             <div className="flex items-center gap-2 w-[1%]">
               <Checkbox
                 edge="start"
@@ -253,9 +254,10 @@ export default function DiningList({
                 disableRipple
               />
             </div>
-            <div className="w-[40%]">Email</div>
+            <div className="w-[30%]">Email</div>
             <div className="w-[30%]">Total Amount</div>
-            <div className="w-[30%]">Status</div>
+            <div className="w-[35%]">Status</div>
+            <div className="w-[35%]">Actions</div>
             <div className="flex justify-evenly gap-2 w-[5%]">
               {checked.length > 0 && (
                 <div className="flex">
@@ -268,14 +270,14 @@ export default function DiningList({
           </div>
         </div>
         {loadingStatus === "Success" && newRecords.length > 0 && (
-          <div className="h-96 overflow-y-auto">
+          <div className="h-96  overflow-y-auto">
             {newRecords.map((record) => {
               const labelId = `checkbox-list-label-${record._id}`;
 
               return (
                 <div
                   key={record._id}
-                  className="border-b items-center flex gap-4 text-center px-4 p-2.5 text-[1vw]"
+                  className="border-b-[1px] border-gray-100 items-center flex gap-4 text-center px-4 p-1 text-[1vw]"
                 >
                   <div className="flex items-center gap-2 w-[1%]">
                     <Checkbox
@@ -287,21 +289,22 @@ export default function DiningList({
                       inputProps={{ "aria-labelledby": labelId }}
                     />
                   </div>
-                  <div className="w-[40%] text-center">{record.email}</div>
+                  <div className="w-[30%] text-center">{record.email}</div>
                   <div className="w-[30%]">{record.amount}</div>
                   <div className="w-[30%]">{status.toUpperCase()}</div>
-                  <div className="w-[5%]">
+                  <div className="w-[34%]">
                     <IconButton edge="end" aria-label="insert">
-                      <InsertDriveFileIcon
+                      <VisibilityIcon
                         onClick={() => {
-                          status === "approved"
-                            ? navigate(`dining/${record._id}`)
-                            : navigate(`../dining/${record._id}`);
+                          status === "pending"
+                            ? navigate(`${record._id}`)
+                            : navigate(`../${record._id}`);
                         }}
                         color="black"
                       />
                     </IconButton>
                   </div>
+                  <div className="w-[5%]"></div>
                 </div>
               );
             })}
