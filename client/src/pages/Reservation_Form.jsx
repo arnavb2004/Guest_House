@@ -25,11 +25,10 @@ function ReservationForm() {
   const [showTC, setShowTC] = useState(false);
   const [showCat, setShowCat] = useState(false);
 
-
   useEffect(() => {
     setShowCat(false);
     setShowTC(false);
-  }, [showTC,showCat]);
+  }, [showTC, showCat]);
 
   const [files, setFiles] = useState([]);
   const [formData, setFormData] = useState({
@@ -106,9 +105,10 @@ function ReservationForm() {
   const catCReviewers = ["CHAIRMAN"];
   const catDReviewers = ["CHAIRMAN"];
   const [checkedValues, setCheckedValues] = useState([]);
-
+  console.log(checkedValues);
   const handleChange = (e) => {
     const { name, value } = e.target;
+    if(name==='category') setCheckedValues([])
     setFormData({
       ...formData,
       [name]: value,
@@ -253,8 +253,6 @@ function ReservationForm() {
     // Handle form submission
     setLoading(true);
 
-    console.log("Herefecae");
-
     const toast_id = toast.loading("Submitting form...");
 
     try {
@@ -267,7 +265,7 @@ function ReservationForm() {
       for (const file of files) {
         formDataToSend.append("files", file);
       }
-      formDataToSend.append("reviewers", checkedValues);
+      formDataToSend.append("reviewers", Array.from(new Set(checkedValues)));
       formDataToSend.append("receipt", receipt);
       const res = await http.post("reservation/", formDataToSend, {
         headers: {
@@ -593,6 +591,7 @@ function ReservationForm() {
               <div>
                 <InputFileUpload className="" onFileUpload={handleFileUpload} />
               </div>
+
               {Array.from(files).length > 0 ? (
                 <div className="flex flex-col  overflow-y-auto max-w-[30rem] h-16 gap-2 pr-2">
                   {Array.from(files).map((file, index) => {
@@ -619,12 +618,15 @@ function ReservationForm() {
                     );
                   })}
                 </div>
+              ) : formData.category === "A" || formData.category === "B" ? (
+                <div className="flex items-center text-gray-500">
+                  *Uploading files is mandatory for category A and B (size
+                  limit: 2MB)
+                </div>
               ) : (
-                (formData.category === "A" || formData.category === "B") && (
-                  <div className="flex items-center text-gray-500">
-                    *Uploading files is mandatory for category A and B
-                  </div>
-                )
+                <div className="flex items-center text-gray-500">
+                  File size limit: 2MB
+                </div>
               )}
             </div>
             <div className="mt-5 flex flex-col gap-2">
@@ -643,12 +645,13 @@ function ReservationForm() {
           <div>
             By clicking on Submit, you hereby agree to the{" "}
             <span
-             className="underline cursor-pointer"
-             onClick={()=>{
-              setShowTC(true)
-             }}
-             >Terms and Conditions</span>
-
+              className="underline cursor-pointer"
+              onClick={() => {
+                setShowTC(true);
+              }}
+            >
+              Terms and Conditions
+            </span>
           </div>
           <button
             type="submit"

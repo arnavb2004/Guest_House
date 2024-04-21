@@ -118,7 +118,7 @@ export async function createReservation(req, res) {
 
     const revArray = reviewersArray.map((reviewer) => reviewer.role);
 
-    // await appendReservationToSheet(reservation);
+    await appendReservationToSheet(reservation);
 
     console.log("sending mail");
     console.log("\n\n\n\n", reviewersArray, "\n\n\n\n");

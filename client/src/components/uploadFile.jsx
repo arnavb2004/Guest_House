@@ -46,8 +46,8 @@ export default function InputFileUpload({ onFileUpload }) {
         if (file.size <= maxSizeInBytes) {
           filesToUpload.push(file);
         } else {
-          // alert(`File "${file.name}" exceeds the maximum size limit (2MB) and will not be uploaded.`);
-          toast.error(`File "${file.name}" exceeds the maximum size limit (2MB) and will not be uploaded.`);
+          toast.error(`File "${file.name}" exceeds the maximum size limit (2MB)`);
+          return;
         }
       }
       // Pass only valid files to the onFileUpload handler
