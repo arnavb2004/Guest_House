@@ -26,6 +26,7 @@ import {
   getLateCheckoutReservations,
   checkoutReservation,
   checkoutToday,
+  getDiningAmount
 } from "../controllers/reservation.js";
 
 const Router = express.Router();
@@ -64,5 +65,6 @@ Router.put("/reject/:id", checkAuth, rejectReservation);
 Router.put("/hold/:id", checkAuth, holdReservation);
 Router.put("/payment/:id", checkAuth, updatePaymentStatus);
 Router.put("/:id", checkAuth, updateReservation);
+Router.post("/:id", checkAuth, getDiningAmount);
 
 export default Router;
