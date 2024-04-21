@@ -1,6 +1,7 @@
 import Reservation from "../models/Reservation.js";
 import Room from "../models/Room.js";
 import User from "../models/User.js";
+import Meal from "../models/Meal.js";
 import { getDate, getTime, transporter } from "../utils.js";
 import archiver from "archiver";
 import { getFileById } from "../middlewares/fileStore.js";
@@ -910,3 +911,23 @@ export const checkoutToday = async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 };
+
+export const getDiningAmount = async (req, res) => {
+  try {
+    const {id} = req.body
+    const reservation = await Reservation.findById(id)
+    const diningIds = reservation.diningIds
+    let totalAmount = 0
+    if(diningIds.length > 0){
+      const meals = await Meal.find({
+        '_id': { $in: diningIds }
+      });
+      totalAmount = meals.reduce((accumulator, currentObject) => {
+        return accumulator + currentObject.amount;
+      }, 0);
+    }
+    res.status(200).json({totalAmount});
+  } catch(error) {
+    res.status(400).json({ message: error.message });
+  }
+}

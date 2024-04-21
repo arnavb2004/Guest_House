@@ -18,6 +18,10 @@ export default function AdminRecordPage() {
 
   const [status, setStatus] = useState("Loading");
 
+  const [totalDiningFare, setTotalDiningFare] = useState(0);
+  const [totalRoomFare, setTotalRoomFare] = useState(0);
+  const [totalFare, setTotalFare] = useState(0);
+
   const color = {
     PENDING: "bg-gray-400",
     APPROVED: "bg-green-400",
@@ -49,6 +53,10 @@ export default function AdminRecordPage() {
     "ASSOCIATE DEAN",
   ];
 
+  const roomPricesB = {'Single Occupancy': 600, 'Double Occupancy': 850}
+  const roomPricesC = {'Single Occupancy': 900, 'Double Occupancy': 1250}
+  const roomPricesD = {'Single Occupancy': 1300, 'Double Occupancy': 1800}
+
   useEffect(() => {
     const fetchRecord = async () => {
       console.log("fetching record...");
@@ -63,11 +71,35 @@ export default function AdminRecordPage() {
             (reviewer) => reviewer.role
           ) || []
         );
+        if(response.data.reservation.category === 'B') {
+          setTotalRoomFare(roomPricesB[response.data.reservation.roomType])
+        } 
+        if(response.data.reservation.category === 'C') {
+          setTotalRoomFare(roomPricesC[response.data.reservation.roomType])
+        } 
+        if(response.data.reservation.category === 'D') {
+          setTotalRoomFare(roomPricesD[response.data.reservation.roomType])
+        } 
       } catch (error) {
         setStatus("Error");
         console.error("Error fetching user data:", error);
       }
     };
+
+    const getDiningAmount = async () => {
+      try {
+        const response = await http.post(`/reservation/${id}`, {
+          id: id
+        });
+        setTotalDiningFare(response.data.totalAmount)
+      }
+      catch (error) {
+        setStatus("Error");
+        console.error("Error total Dining Amount:", error);
+      }
+    }
+
+    getDiningAmount()
 
     fetchRecord();
   }, [id]);
@@ -78,14 +110,20 @@ export default function AdminRecordPage() {
       setCheckedValues((prevCheckedValues) => [...prevCheckedValues, value]);
     } else {
       setCheckedValues((prevCheckedValues) =>
-        prevCheckedValues.filter((item) => item !== value)
+        prevCheckedValues.filter((item) => item !== value)  
       );
     }
   };
-  console.log(status);
+
+  useEffect(() => {
+    setTotalFare(totalDiningFare + totalRoomFare)
+  }, [totalDiningFare, totalRoomFare])
+
   if (status === "Error") return <Navigate to="/404" />;
   else if (status === "Loading") return <div className="flex h-full w-full text-xl font-semibold items-center justify-center">Loading...</div>;
 
+  // useEffect(() => {
+  // }, []);
 
   return (
     <>
@@ -152,6 +190,19 @@ export default function AdminRecordPage() {
           <div className="flex justify-between px-32 pb-5">
             <p className="p-2 text-xl font-semibold">Category:</p>
             <p className="p-2 text-lg">{userRecord.category}</p>
+          </div>
+          <hr />
+          <div className="flex justify-between px-32 pb-5">
+            <p className="p-2 text-xl font-semibold">Room Fare:</p>
+            <p className="p-2 text-lg">Rs. {totalRoomFare}/- only</p>
+          </div>
+          <div className="flex justify-between px-32 pb-5">
+            <p className="p-2 text-xl font-semibold">Dining Fare:</p>
+            <p className="p-2 text-lg">Rs. {totalDiningFare}/- only</p>
+          </div>
+          <div className="flex justify-between px-32 pb-5">
+            <p className="p-2 text-xl font-semibold">Total Amount:</p>
+            <p className="p-2 text-lg">Rs. {totalFare}/- only</p>
           </div>
         </div>
       </div>
