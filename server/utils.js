@@ -35,3 +35,19 @@ export const getTime = (dateString) => {
   return time;
 };
 
+
+export async function sendVerificationEmail(to, subject, body) {
+  try {
+    const info = await transporter.sendMail({
+      from: "dep.test.p04@gmail.com",
+      to: to, // list of receivers
+      subject: subject, // Subject line
+      html: body, // plain text body
+    });
+    console.log("Message sent", info.messageId);
+  } catch (error) {
+    console.log("Error occurred while sending email: ", error);
+    throw error;
+  }
+}
+

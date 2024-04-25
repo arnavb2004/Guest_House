@@ -7,11 +7,32 @@ const Home = () => {
   const otherLinks = [
     {
       link: "https://www.iitrpr.ac.in/guest-house/",
-      text: "More details about Guest House",
+      text: "Guest House",
     },
     {
+      link: "https://www.iitrpr.ac.in/contact",
+      text: "Contact Us",
+    },
+    {
+      link: "https://www.iitrpr.ac.in/academic",
+      text: "Academics",
+    },
+    {
+      link: "https://www.iitrpr.ac.in/research",
+      text: "Research",
+    },
+    {
+      link: "https://www.iitrpr.ac.in/admissions",
+      text: "Admissions",
+    },
+    {
+      link: "https://www.iitrpr.ac.in/facilities",
+      text: "Facilities",
+    },
+
+    {
       link: "https://www.iitrpr.ac.in/",
-      text: "Explore other things in IIT Ropar",
+      text: "More",
     },
   ];
   return (
@@ -70,7 +91,9 @@ const Home = () => {
                   href={item.link}
                   target="_blank"
                   rel="noreferrer"
-                >{item.text}</a>
+                >
+                  {item.text}
+                </a>
                 <hr className="border-dotted border-t-2 border-gray-400 my-1" />
               </>
             ))}

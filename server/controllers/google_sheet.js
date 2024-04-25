@@ -1,33 +1,34 @@
 import { google } from 'googleapis';
-import keys from '../secrets.json' assert { type: 'json' };
 
-const googleSheets = google.sheets('v4');
+
+
+const googleSheets = google.sheets("v4");
 const auth = new google.auth.JWT(
-  keys.client_email,
+  process.env.client_email,
   null,
-  keys.private_key,
-  ['https://www.googleapis.com/auth/spreadsheets']
+  process.env.private_key,
+  ["https://www.googleapis.com/auth/spreadsheets"]
 );
 
-const spreadsheetId = `1_sJJXxe49nSpc-zq7bo2qrzgJZKniz0h1lIiwMG5_wA`;
+const spreadsheetId = process.env.GOOGLE_SHEET_ID;
 
-async function appendReservationToSheet(reservation, category) {
+export async function appendReservationToSheet(reservation, category) {
     console.log("Entered Logic");
     await auth.authorize();
     console.log("Entered Logic2");
 
     let sheetName;
     switch (category) {
-        case 'a':
+        case 'A':
             sheetName = 'Sheet1';
             break;
-        case 'b':
+        case 'B':
             sheetName = 'Sheet2';
             break;
-        case 'c':
+        case 'C':
             sheetName = 'Sheet3';
             break;
-        case 'd':
+        case 'D':
             sheetName = 'Sheet4';
             break;
         default:
@@ -123,17 +124,17 @@ async function fillRowFromColumn(sheetName, row, startColumn, data) {
 }
 
 // Sample reservations for testing
-const sampleReservations = [
-    { guestName: 'John Doe', guestEmail: 'john@example.com', numberOfGuests: 2, numberOfRooms: 1, roomType: 'Deluxe', arrivalDate: '2024-04-10', departureDate: '2024-04-12', purpose: 'Vacation', category: 'c' },
-    { guestName: 'Jane Doe', guestEmail: 'jane@example.com', numberOfGuests: 4, numberOfRooms: 2, roomType: 'Suite', arrivalDate: '2024-04-15', departureDate: '2024-04-20', purpose: 'Business', category: 'b' }
-];
+// const sampleReservations = [
+//     { guestName: 'John Doe', guestEmail: 'john@example.com', numberOfGuests: 2, numberOfRooms: 1, roomType: 'Deluxe', arrivalDate: '2024-04-10', departureDate: '2024-04-12', purpose: 'Vacation', category: 'c' },
+//     { guestName: 'Jane Doe', guestEmail: 'jane@example.com', numberOfGuests: 4, numberOfRooms: 2, roomType: 'Suite', arrivalDate: '2024-04-15', departureDate: '2024-04-20', purpose: 'Business', category: 'b' }
+// ];
 
 // Testing the function for each category
-sampleReservations.forEach(reservation => {
-    appendReservationToSheet(reservation, reservation.category)
-        .then(response => console.log(`Reservation for category ${reservation.category} appended successfully.`))
-        .catch(error => console.error(`Error appending reservation for category ${reservation.category}:`, error));
-});
+// sampleReservations.forEach(reservation => {
+//     appendReservationToSheet(reservation, reservation.category)
+//         .then(response => console.log(`Reservation for category ${reservation.category} appended successfully.`))
+//         .catch(error => console.error(`Error appending reservation for category ${reservation.category}:`, error));
+// });
 
 async function colorRowBySrNo(sheetName, srNo, color) {
     console.log("Entered Logic");
@@ -191,20 +192,20 @@ async function colorRowBySrNo(sheetName, srNo, color) {
     return response;
 }
 
-// Update a specific cell as an example
-updateCellValue('Sheet1', 5, 3, 'New Value')
-    .then(response => console.log('Cell updated successfully.'))
-    .catch(error => console.error('Error updating cell:', error));
+// // Update a specific cell as an example
+// updateCellValue('Sheet1', 5, 3, 'New Value')
+//     .then(response => console.log('Cell updated successfully.'))
+//     .catch(error => console.error('Error updating cell:', error));
 
     
-// Example usage
-const dataToFill = ['Payment Received', 'Visa', 'Completed']; // Data to fill starting from the specified column
-fillRowFromColumn('Sheet1', 5, 13, dataToFill) // Assuming you want to start from column M (13) in row 5
-    .then(response => console.log('Row updated successfully.'))
-    .catch(error => console.error('Error updating row:', error));
+// // Example usage
+// const dataToFill = ['Payment Received', 'Visa', 'Completed']; // Data to fill starting from the specified column
+// fillRowFromColumn('Sheet1', 5, 13, dataToFill) // Assuming you want to start from column M (13) in row 5
+//     .then(response => console.log('Row updated successfully.'))
+//     .catch(error => console.error('Error updating row:', error));
 
-// Example usage
-const color = { red: 1, green: 0, blue: 0 }; // Red color
-colorRowBySrNo('Sheet2', 2, color)  // Change row color where Sr No is 2
-    .then(response => console.log('Row color changed successfully.'))
-    .catch(error => console.error('Error changing row color:', error));
+// // Example usage
+// const color = { red: 1, green: 0, blue: 0 }; // Red color
+// colorRowBySrNo('Sheet2', 2, color)  // Change row color where Sr No is 2
+//     .then(response => console.log('Row color changed successfully.'))
+//     .catch(error => console.error('Error changing row color:', error));

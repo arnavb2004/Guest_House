@@ -17,7 +17,11 @@ axios.interceptors.request.use((config) => {
   return config;
 });
 
-axios.interceptors.response.use(null, (error) => {
+axios.interceptors.response.use((res)=>{
+  toast.success(res.data?.message)
+  console.log(res)
+  return res;
+}, (error) => {
   const expectedError =
     error.response &&
     error.response.status >= 400 &&

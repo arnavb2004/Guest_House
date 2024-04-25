@@ -60,6 +60,7 @@ const Workflow = ({ id, userRecord, reviewers, setReviewers }) => {
                   console.log(diningRecord);
                   try {
                     http.put("/dining/" + id, diningRecord);
+                    window.location.reload()
                   } catch (error) {
                     console.log(error);
                   }

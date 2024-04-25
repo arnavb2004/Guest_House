@@ -7,6 +7,7 @@ import archiver from "archiver";
 import { getFileById } from "../middlewares/fileStore.js";
 import mongoose from "mongoose";
 import { google } from "googleapis";
+import { appendReservationToSheet } from "./google_sheet.js";
 
 const googleSheets = google.sheets("v4");
 const auth = new google.auth.JWT(
@@ -18,32 +19,32 @@ const auth = new google.auth.JWT(
 
 const spreadsheetId = `${process.env.GOOGLE_SHEET_ID}`; // Replace with your Google Sheet's ID
 
-async function appendReservationToSheet(reservation) {
-  await auth.authorize();
-  const response = await googleSheets.spreadsheets.values.append({
-    auth,
-    spreadsheetId,
-    range: "Sheet1", // Assuming you are using the first sheet; change if necessary
-    valueInputOption: "RAW",
-    resource: {
-      values: [
-        [
-          reservation.guestName,
-          reservation.guestEmail,
-          reservation.numberOfGuests,
-          reservation.numberOfRooms,
-          reservation.roomType,
-          reservation.arrivalDate,
-          reservation.departureDate,
-          reservation.purpose,
-          reservation.category,
-          // Add more fields as necessary
-        ],
-      ],
-    },
-  });
-  return response;
-}
+// async function appendReservationToSheet(reservation) {
+//   await auth.authorize();
+//   const response = await googleSheets.spreadsheets.values.append({
+//     auth,
+//     spreadsheetId,
+//     range: "Sheet1", // Assuming you are using the first sheet; change if necessary
+//     valueInputOption: "RAW",
+//     resource: {
+//       values: [
+//         [
+//           reservation.guestName,
+//           reservation.guestEmail,
+//           reservation.numberOfGuests,
+//           reservation.numberOfRooms,
+//           reservation.roomType,
+//           reservation.arrivalDate,
+//           reservation.departureDate,
+//           reservation.purpose,
+//           reservation.category,
+//           // Add more fields as necessary
+//         ],
+//       ],
+//     },
+//   });
+//   return response;
+// }
 
 async function sendVerificationEmail(to, subject, body) {
   try {
@@ -119,7 +120,7 @@ export async function createReservation(req, res) {
 
     const revArray = reviewersArray.map((reviewer) => reviewer.role);
 
-    await appendReservationToSheet(reservation);
+    await appendReservationToSheet(reservation, category);
 
     console.log("sending mail");
     console.log("\n\n\n\n", reviewersArray, "\n\n\n\n");
@@ -285,6 +286,7 @@ export async function getReservationDocuments(req, res) {
     res.on("finish", () => {
       console.log("Download finished");
     });
+    // res.status(200).json({ message: "Downloaded successfully" })
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
@@ -651,42 +653,40 @@ export const getRooms = async (req, res) => {
 };
 
 export const addRoom = async (req, res) => {
-	if (req.user?.role !== "ADMIN")
-		return res
-			.status(403)
-			.json({ message: "You are not authorized to perform this action" });
-	try {
-		const roomNumber = req.body.roomNumber;
-		const newRoom = await Room.create({ roomNumber: roomNumber });
-		res
-			.status(200)
-			.json({ message: "Room added Successfully", room: newRoom });
-	} catch (err) {
-		res.status(400).json({ success: false, message: err.message });
-	}
+  if (req.user?.role !== "ADMIN")
+    return res
+      .status(403)
+      .json({ message: "You are not authorized to perform this action" });
+  try {
+    const roomNumber = req.body.roomNumber;
+    const newRoom = await Room.create({ roomNumber: roomNumber });
+    res.status(200).json({ message: "Room added Successfully", room: newRoom });
+  } catch (err) {
+    res.status(400).json({ success: false, message: err.message });
+  }
 };
 
 export const deleteRoom = async (req, res) => {
-	if (req.user?.role !== "ADMIN")
-		return res
-			.status(403)
-			.json({ message: "You are not authorized to perform this action" });
+  if (req.user?.role !== "ADMIN")
+    return res
+      .status(403)
+      .json({ message: "You are not authorized to perform this action" });
 
-	try {
-		const { roomId } = req.body;
+  try {
+    const { roomId } = req.body;
 
-		const deletedRoom = await Room.findByIdAndDelete(roomId);
+    const deletedRoom = await Room.findByIdAndDelete(roomId);
 
-		if (!deletedRoom) {
-			return res.status(404).json({ message: "Room not found" });
-		}
+    if (!deletedRoom) {
+      return res.status(404).json({ message: "Room not found" });
+    }
 
-		res
-			.status(200)
-			.json({ message: "Room deleted successfully", room: deletedRoom });
-	} catch (err) {
-		res.status(500).json({ success: false, message: err.message });
-	}
+    res
+      .status(200)
+      .json({ message: "Room deleted successfully", room: deletedRoom });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
 };
 
 async function isDateRangeAvailable(room, startDate, endDate) {
@@ -914,20 +914,20 @@ export const checkoutToday = async (req, res) => {
 
 export const getDiningAmount = async (req, res) => {
   try {
-    const {id} = req.body
-    const reservation = await Reservation.findById(id)
-    const diningIds = reservation.diningIds
-    let totalAmount = 0
-    if(diningIds.length > 0){
+    const { id } = req.body;
+    const reservation = await Reservation.findById(id);
+    const diningIds = reservation.diningIds;
+    let totalAmount = 0;
+    if (diningIds.length > 0) {
       const meals = await Meal.find({
-        '_id': { $in: diningIds }
+        _id: { $in: diningIds },
       });
       totalAmount = meals.reduce((accumulator, currentObject) => {
         return accumulator + currentObject.amount;
       }, 0);
     }
-    res.status(200).json({totalAmount});
-  } catch(error) {
+    res.status(200).json({ totalAmount });
+  } catch (error) {
     res.status(400).json({ message: error.message });
   }
-}
+};

@@ -94,7 +94,7 @@ export const deleteNotification = async (req, res) => {
     await user.save();
     return res.status(200).json(user.notifications);
   }
-  catch{
+  catch(err){
     return res.status(500).json({ message: err.message });
   }
 }

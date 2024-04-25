@@ -23,6 +23,10 @@ export default function RecordPage() {
 
   const [status, setStatus] = useState("Loading");
 
+  const [totalDiningFare, setTotalDiningFare] = useState(0);
+  const [totalRoomFare, setTotalRoomFare] = useState(0);
+  const [totalFare, setTotalFare] = useState(0);
+
   const [userRecord, setUserRecord] = useState({
     guestName: "",
     address: "",
@@ -35,6 +39,12 @@ export default function RecordPage() {
     category: "",
   });
 
+  
+  const roomPricesB = {'Single Occupancy': 600, 'Double Occupancy': 850}
+  const roomPricesC = {'Single Occupancy': 900, 'Double Occupancy': 1250}
+  const roomPricesD = {'Single Occupancy': 1300, 'Double Occupancy': 1800}
+
+
   useEffect(() => {
     const fetchRecord = async () => {
       try {
@@ -42,14 +52,43 @@ export default function RecordPage() {
         setStatus("Success");
         setUserRecord(response.data.reservation);
         setReviewers(response.data.reservation.reviewers);
+        if(response.data.reservation.category === 'B') {
+          setTotalRoomFare(roomPricesB[response.data.reservation.roomType])
+        } 
+        if(response.data.reservation.category === 'C') {
+          setTotalRoomFare(roomPricesC[response.data.reservation.roomType])
+        } 
+        if(response.data.reservation.category === 'D') {
+          setTotalRoomFare(roomPricesD[response.data.reservation.roomType])
+        } 
       } catch (error) {
         setStatus("Error");
         console.error("Error fetching user data:", error);
       }
     };
 
+    const getDiningAmount = async () => {
+      try {
+        const response = await http.post(`/reservation/${id}`, {
+          id: id
+        });
+        setTotalDiningFare(response.data.totalAmount)
+      }
+      catch (error) {
+        setStatus("Error");
+        console.error("Error total Dining Amount:", error);
+      }
+    }
+
+    getDiningAmount();
+
     fetchRecord();
   }, [id]);
+
+
+  useEffect(() => {
+    setTotalFare(totalDiningFare + totalRoomFare)
+  }, [totalDiningFare, totalRoomFare])
 
   if (status === "Error") return <Navigate to="/404" />;
   else if (status === "Loading")
@@ -72,58 +111,72 @@ export default function RecordPage() {
 
         <div className='col-span-5 shadow-lg flex flex-col overflow-x-auto justify-center gap-4 font-["Dosis"] bg-[rgba(255,255,255,0.5)] rounded-lg pt-4'>
           <div className="flex justify-between px-32">
-            <p className="p-2 text-xl font-semibold">Guest Name:</p>
-            <p className="p-2 text-lg">{userRecord.guestName}</p>
+            <p className="p-1 text-xl font-semibold">Guest Name:</p>
+            <p className="p-1 text-lg">{userRecord.guestName}</p>
           </div>
           <hr />
           <div className="flex justify-between px-32">
-            <p className="p-2 text-xl font-semibold">Address:</p>
-            <p className="p-2 text-lg">{userRecord.address}</p>
+            <p className="p-0 text-xl font-semibold">Address:</p>
+            <p className="p-0 text-lg">{userRecord.address}</p>
           </div>
           <hr />
           <div className="flex justify-between px-32">
-            <p className="p-2 text-xl font-semibold">Number Of Guests:</p>
-            <p className="p-2 text-lg">{userRecord.numberOfGuests}</p>
+            <p className="p-0 text-xl font-semibold">Number Of Guests:</p>
+            <p className="p-0 text-lg">{userRecord.numberOfGuests}</p>
           </div>
           <hr />
           <div className="flex justify-between px-32">
-            <p className="p-2 text-xl font-semibold">Number Of Rooms:</p>
-            <p className="p-2 text-lg">{userRecord.numberOfRooms}</p>
+            <p className="p-0 text-xl font-semibold">Number Of Rooms:</p>
+            <p className="p-0 text-lg">{userRecord.numberOfRooms}</p>
           </div>
           <hr />
           <div className="flex justify-between px-32">
-            <p className="p-2 text-xl font-semibold">Room Type</p>
-            <p className="p-2 text-lg">{userRecord.roomType}</p>
+            <p className="p-0 text-xl font-semibold">Room Type</p>
+            <p className="p-0 text-lg">{userRecord.roomType}</p>
           </div>
           <hr />
           <div className="flex justify-between px-32">
-            <p className="p-2 text-xl font-semibold">Arrival Date</p>
-            <p className="p-2 text-lg">{getDate(userRecord.arrivalDate)}</p>
+            <p className="p-0 text-xl font-semibold">Arrival Date</p>
+            <p className="p-0 text-lg">{getDate(userRecord.arrivalDate)}</p>
           </div>
           <hr />
           <div className="flex justify-between px-32">
-            <p className="p-2 text-xl font-semibold">Arrival Time:</p>
-            <p className="p-2 text-lg">{getTime(userRecord.arrivalDate)}</p>
+            <p className="p-0 text-xl font-semibold">Arrival Time:</p>
+            <p className="p-0 text-lg">{getTime(userRecord.arrivalDate)}</p>
           </div>
           <hr />
           <div className="flex justify-between px-32">
-            <p className="p-2 text-xl font-semibold">Departure Date:</p>
-            <p className="p-2 text-lg">{getDate(userRecord.departureDate)}</p>
+            <p className="p-0 text-xl font-semibold">Departure Date:</p>
+            <p className="p-0 text-lg">{getDate(userRecord.departureDate)}</p>
           </div>
           <hr />
           <div className="flex justify-between px-32">
-            <p className="p-2 text-xl font-semibold">Departure Time:</p>
-            <p className="p-2 text-lg">{getTime(userRecord.departureDate)}</p>
+            <p className="p-0 text-xl font-semibold">Departure Time:</p>
+            <p className="p-0 text-lg">{getTime(userRecord.departureDate)}</p>
           </div>
           <hr />
           <div className="flex justify-between px-32">
-            <p className="p-2 text-xl font-semibold">Purpose:</p>
-            <p className="p-2 text-lg">{userRecord.purpose}</p>
+            <p className="p-0 text-xl font-semibold">Purpose:</p>
+            <p className="p-0 text-lg">{userRecord.purpose}</p>
           </div>
+          <hr />
+          <div className="flex justify-between px-32 ">
+            <p className="p-0 text-xl font-semibold">Category:</p>
+            <p className="p-0 text-lg">{userRecord.category}</p>
+          </div>
+          
           <hr />
           <div className="flex justify-between px-32 pb-5">
-            <p className="p-2 text-xl font-semibold">Category:</p>
-            <p className="p-2 text-lg">{userRecord.category}</p>
+            <p className="p-0 text-xl font-semibold">Room Fare:</p>
+            <p className="p-0 text-lg">Rs. {totalRoomFare}/- only</p>
+          </div>
+          <div className="flex justify-between px-32 pb-5">
+            <p className="p-0 text-xl font-semibold">Dining Fare:</p>
+            <p className="p-0 text-lg">Rs. {totalDiningFare}/- only</p>
+          </div>
+          <div className="flex justify-between px-32 pb-5">
+            <p className="p-0 text-xl font-semibold">Total Amount:</p>
+            <p className="p-0 text-lg">Rs. {totalFare}/- only</p>
           </div>
         </div>
       </div>
@@ -166,7 +219,7 @@ export default function RecordPage() {
                     <div className="w-20">{booking.roomNumber}</div>
                   </div>
                 ))}
-              </div>
+            </div>
             </div>
           </div>
         )}

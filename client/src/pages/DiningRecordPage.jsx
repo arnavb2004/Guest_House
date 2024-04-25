@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Navigate, useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import DiningWorkflow from "../components/DiningWorkflow";
 import { privateRequest } from "../utils/useFetch";
 import "react-toastify/dist/ReactToastify.min.css";
+import { toast } from "react-toastify";
 
 export default function DiningRecordPage() {
   const { id } = useParams();
@@ -35,7 +36,7 @@ export default function DiningRecordPage() {
     "REGISTRAR",
     "CHAIRMAN",
     "ASSOCIATE DEAN",
-    "CASHIER"
+    "CASHIER",
   ];
 
   useEffect(() => {
@@ -68,6 +69,7 @@ export default function DiningRecordPage() {
       );
     }
   };
+  const navigate = useNavigate();
 
   if (status === "Error") return <Navigate to="/404" />;
   else if (status === "Loading") return <div>Loading...</div>;
@@ -83,7 +85,7 @@ export default function DiningRecordPage() {
           setReviewers={setReviewers}
         />
 
-        <div className='col-span-5 shadow-lg flex flex-col gap-4 font-["Dosis"] bg-[rgba(255,255,255,0.5)] rounded-lg pt-4'>
+        <div className='col-span-5 shadow-lg flex flex-col gap-4 font-["Dosis"] bg-[rgba(255,255,255,0.5)] rounded-lg py-4'>
           <div className="flex justify-between px-32  ">
             <p className="p-2 text-xl font-semibold">Guest Email:</p>
             <p className="p-2 text-lg">{userRecord.email}</p>
@@ -105,42 +107,32 @@ export default function DiningRecordPage() {
             <p className="p-2 text-xl font-semibold">Amount: </p>
             <p className="p-2 text-xl">{userRecord.amount}</p>
           </div>
+
+          <div className="flex px-32">
+          <p className="p-2 text-xl font-semibold">Paid by: </p>
+            <p className="p-2 text-xl">{userRecord.payment.source}</p>
+          </div>
+          <div className="flex px-32">
+            <p className="p-2 text-xl font-semibold">Reservation: </p>
+            <p
+              onClick={() => {
+                if (userRecord.reservationId) {
+                  navigate(`../../reservation/${userRecord.reservationId}`);
+                } else {
+                  toast.error("No reservation found")
+                }
+              }}
+              className="p-2 text-xl cursor-pointer underline hover:text-blue-500"
+            >
+              {userRecord.reservationId
+                ? "View reservation"
+                : "Not under any reservation"}
+            </p>
+          </div>
         </div>
       </div>
       <div className='col-span-5 shadow-lg flex p-5 gap-24 m-9 font-["Dosis"] bg-[rgba(255,255,255,0.5)] rounded-lg'>
-        {user.role === "ADMIN" && (
-          <div>
-            <div className="text-2xl font-semibold font-['Dosis'] px-5">
-              Reviewers
-            </div>
-            <div className="p-5">
-              <ul>
-                {roles.map((role) => (
-                  <li>
-                    <input
-                      type="checkbox"
-                      id={role}
-                      checked={checkedValues.includes(role)}
-                      value={role}
-                      onChange={handleCheckboxChange}
-                    />
-                    <label className="px-2 text-lg" htmlFor={role}>
-                      {role}
-                    </label>
-                  </li>
-                ))}
-              </ul>
-              <button
-                
-                className="p-3 px-4  mt-8 bg-[rgb(54,88,153)] rounded-lg text-white"
-              >
-                ASSIGN
-              </button>
-            </div>
-          </div>
-        )}
-
-        {user.role !== "ADMIN" && (
+        {
           <div>
             <div className="text-2xl font-semibold font-['Dosis'] px-5 ">
               Status
@@ -153,7 +145,7 @@ export default function DiningRecordPage() {
                     <div className="w-20">{reviewer.role}</div>
                     <div
                       className={
-                        "border relative top-1 w-5 h-5 " +
+                        "border relative top-1 w-5 h-5 rounded-full " +
                         color[reviewer.status || "PENDING"]
                       }
                     ></div>
@@ -163,7 +155,7 @@ export default function DiningRecordPage() {
               })}
             </div>
           </div>
-        )}
+        }
       </div>
     </>
   );

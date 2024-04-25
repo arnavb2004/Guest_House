@@ -206,7 +206,7 @@ export default function AdminRecordPage() {
           </div>
         </div>
       </div>
-      <div className='col-span-5 md:flex-col overflow-auto shadow-lg flex justify-between  p-5  gap-4 m-9 font-["Dosis"] bg-[rgba(255,255,255,0.5)] rounded-lg'>
+      <div className='col-span-5 md:flex-col overflow-auto shadow-lg flex justify-around p-5  gap-4 m-9 font-["Dosis"] bg-[rgba(255,255,255,0.5)] rounded-lg'>
         
           <div>
             <div className="text-2xl font-semibold font-['Dosis'] px-5">
@@ -218,7 +218,7 @@ export default function AdminRecordPage() {
                   <div className="w-20">{reviewer.role}</div>
                   <div
                     className={
-                      "border relative top-1 w-5 h-5 " + color[reviewer.status]
+                      "border rounded-full relative top-1 w-5 h-5 " + color[reviewer.status]
                     }
                   ></div>
                   <div className="w-72">{reviewer.comments}</div>
@@ -264,9 +264,9 @@ export default function AdminRecordPage() {
         )}
 
       </div>
-      <div className='col-span-5 md:flex-col overflow-auto shadow-lg flex justify-between  p-5  gap-4 m-9 font-["Dosis"] bg-[rgba(255,255,255,0.5)] rounded-lg'>
+      {/* <div className='col-span-5 md:flex-col overflow-auto shadow-lg flex justify-between  p-5  gap-4 m-9 font-["Dosis"] bg-[rgba(255,255,255,0.5)] rounded-lg'>
         
-      </div>
+      </div> */}
     </>
   );
 }

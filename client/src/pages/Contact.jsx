@@ -3,28 +3,11 @@ import ReCAPTCHA from "react-google-recaptcha";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEnvelope, faUser, faPen } from "@fortawesome/free-solid-svg-icons";
 import styles from "./Contact.module.css";
-
-const Icons = () => {
-  return (
-    <div className="flex justify-center mt-8 space-x-4">
-      <a href="#" className="text-gray-600 hover:text-blue-500">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-6 w-6"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          {/* Social media icon (e.g., Facebook, Twitter, etc.) */}
-        </svg>
-      </a>
-      {/* Add more social media icons here */}
-    </div>
-  );
-};
+import axios from "axios";
+import { BASE_URL } from "../constants.js";
+import { useState } from "react";
 
 const Contact = () => {
-  
   return (
     <>
       <div className={styles.container}>
@@ -52,7 +35,17 @@ const Map = () => (
 );
 
 const ContactForm = () => {
-  const handleSubmit = (e) => {};
+  const [data, setData] = useState({ name: "", email: "", message: "" });
+
+  const handleSubmit = async (e) => {
+    console.log(e.target);
+    await axios.post(BASE_URL + "/utils/mail", {
+      to: "dep.test.p04@gmail.com",
+      subject: "Contact Us request - " + data.name,
+      body: data.message,
+    });
+    // sendVerificationEmail("dep.test.p04@gmail.com","Contact Us request - ", )
+  };
   return (
     <section className={styles.contact}>
       <form className={styles.contactForm}>
@@ -72,6 +65,10 @@ const ContactForm = () => {
             name="name"
             placeholder="Your Name"
             required
+            onChange={(e) => {
+              setData({ ...data, name: e.target.value });
+            }}
+            value={data.name}
           />
         </div>
         <div className={styles.formGroup}>
@@ -82,6 +79,10 @@ const ContactForm = () => {
             name="email"
             placeholder="Your Email"
             required
+            onChange={(e) => {
+              setData({ ...data, email: e.target.value });
+            }}
+            value={data.email}
           />
         </div>
         <div className={styles.formGroup}>
@@ -91,15 +92,19 @@ const ContactForm = () => {
             name="message"
             rows="4"
             placeholder="Your Message"
+            onChange={(e) => {
+              setData({ ...data, message: e.target.value });
+            }}
             required
+            value={data.message}
           ></textarea>
         </div>
-        <button
+        <submit
           onClick={handleSubmit}
           className={styles.submitButton + " ml-7 mt-2"}
         >
           Send Message
-        </button>
+        </submit>
       </form>
     </section>
   );
