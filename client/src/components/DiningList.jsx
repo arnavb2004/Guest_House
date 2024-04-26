@@ -257,7 +257,7 @@ export default function DiningList({
               {checked.length > 0 && (
                 <div className="flex">
                   <IconButton edge="end" aria-label="comments">
-                    <DeleteIcon className="text-gray-300" />
+                    <DeleteIcon className="text-gray-600" />
                   </IconButton>
                 </div>
               )}
