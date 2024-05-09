@@ -105,9 +105,83 @@ function ReservationForm() {
     "D" : "Category D (Guest and Department invited, etc.)"
   }
 
-  const catAReviewers = ["DIRECTOR", "REGISTRAR", "ASSOCIATE DEAN", "DEAN"];
+  const catAReviewers = [
+    "DIRECTOR", 
+    "REGISTRAR", 
+    "ASSOCIATE DEAN HOSTEL MANAGEMENT",
+    "ASSOCIATE DEAN INTERNATIONAL RELATIONS AND ALUMNI AFFAIRS",
+    "ASSOCIATE DEAN CONTINUING EDUCATION AND OUTREACH ACTIVITIES",
+    "ASSOCIATE DEAN INFRASTRUCTURE",
+    "DEAN RESEARCH AND DEVELOPMENT",
+    "DEAN STUDENT AFFAIRS",
+    "DEAN FACULTY AFFAIRS AND ADMINISTRATION",
+    "DEAN UNDER GRADUATE STUDIES",
+    "DEAN POST GRADUATE STUDIES"
+  ];
 
-  const catBReviewers = ["HOD", "DEAN", "ASSOCIATE DEAN", "REGISTRAR"];
+  const catBReviewers = [
+    "HOD COMPUTER SCIENCE",
+    "HOD ELECTRICAL ENGINEERING",
+    "HOD MECHANICAL ENGINEERING",
+    "HOD CHEMISTRY",
+    "HOD MATHEMATICS",
+    "HOD PHYSICS",
+    "HOD HUMANITIES AND SOCIAL SCIENCES",
+    "HOD BIOMEDICAL ENGINEERING",
+    "HOD CHEMICAL ENGINEERING",
+    "HOD METALLURGICAL AND MATERIALS ENGINEERING",
+    "DEAN RESEARCH AND DEVELOPMENT",
+    "DEAN STUDENT AFFAIRS",
+    "DEAN FACULTY AFFAIRS AND ADMINISTRATION",
+    "DEAN UNDER GRADUATE STUDIES",
+    "DEAN POST GRADUATE STUDIES",
+    "ASSOCIATE DEAN HOSTEL MANAGEMENT",
+    "ASSOCIATE DEAN INTERNATIONAL RELATIONS AND ALUMNI AFFAIRS",
+    "ASSOCIATE DEAN CONTINUING EDUCATION AND OUTREACH ACTIVITIES",
+    "ASSOCIATE DEAN INFRASTRUCTURE",
+    "REGISTRAR"
+  ];
+  // const catAReviewers = [
+  //   "DIRECTOR", 
+  //   "REGISTRAR", 
+  //   "ASSOCIATE DEAN",
+  //   "DEAN"
+  // ];
+
+  // const catBReviewers = [
+  //   "HOD",
+  //   "DEAN",
+  //   "ASSOCIATE DEAN",
+  //   "REGISTRAR"
+  // ];
+
+  const AssociateDeans = {
+    "SUB_ROLE_1": "ASSOCIATE DEAN HOSTEL MANAGEMENT",
+    "SUB_ROLE_2": "ASSOCIATE DEAN INTERNATIONAL RELATIONS AND ALUMNI AFFAIRS",
+    "SUB_ROLE_3": "ASSOCIATE DEAN CONTINUING EDUCATION AND OUTREACH ACTIVITIES",
+    "SUB_ROLE_4": "ASSOCIATE DEAN INFRASTRUCTURE"
+  }
+
+  const Deans = {
+    "SUB_ROLE_1": "DEAN RESEARCH AND DEVELOPMENT",
+    "SUB_ROLE_2": "DEAN STUDENT AFFAIRS",
+    "SUB_ROLE_3": "DEAN FACULTY AFFAIRS AND ADMINISTRATION",
+    "SUB_ROLE_4": "DEAN UNDER GRADUATE STUDIES",
+    "SUB_ROLE_5": "DEAN POST GRADUATE STUDIES",
+  }
+
+  const Hods = {
+    "SUB_ROLE_1": "HOD COMPUTER SCIENCE",
+    "SUB_ROLE_2": "HOD ELECTRICAL ENGINEERING",
+    "SUB_ROLE_3": "HOD MECHANICAL ENGINEERING",
+    "SUB_ROLE_4": "HOD CHEMISTRY",
+    "SUB_ROLE_5": "HOD MATHEMATICS",
+    "SUB_ROLE_6": "HOD PHYSICS",
+    "SUB_ROLE_7": "HOD HUMANITIES AND SOCIAL SCIENCES",
+    "SUB_ROLE_8": "HOD BIOMEDICAL ENGINEERING",
+    "SUB_ROLE_9": "HOD CHEMICAL ENGINEERING",
+    "SUB_ROLE_10": "HOD METALLURGICAL AND MATERIALS ENGINEERING",
+  }
 
   const catCReviewers = ["CHAIRMAN"];
   const catDReviewers = ["CHAIRMAN"];
@@ -164,7 +238,7 @@ function ReservationForm() {
       );
     }
   };
-
+  console.log(checkedValues);
   const handleSubRoleChange = (event) => {
     setSubRole(event.target.value);
     // You can handle the sub-role selection here if needed
@@ -530,7 +604,7 @@ function ReservationForm() {
             </div>
 
             <div className="w-full p-2 mb-5">
-              <ul className="flex justify-start gap-3">
+              <ul className="flex justify-start flex-nowrap overflow-x-scroll gap-3">
                 {catReviewers[formData.category].map((reviewer) => (
                   <li key={reviewer} className="flex justify-start gap-1 items-center">
                     <Checkbox
