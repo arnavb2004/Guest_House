@@ -136,6 +136,7 @@ export default function AdminRecordList({ status = "pending" }) {
     "Arrival Date",
     "Departure Date",
     "Room Type",
+    "Room Assigned"
   ];
 
   const handleSortToggle = (event) => {
@@ -146,13 +147,15 @@ export default function AdminRecordList({ status = "pending" }) {
 
   useEffect(() => {
     const handleSort = () => {
+      // console.log("here11212");
+      console.log(sortType);
       const tempRecords = [...newRecords];
       if (sortToggle) {
-        if (sortType === "Number of Guests") {
+        if (sortType === "No. of Guests") {
           tempRecords.sort((a, b) => {
             return a.numberOfGuests - b.numberOfGuests;
           });
-        } else if (sortType === "Number of Rooms") {
+        } else if (sortType === "No. of Rooms") {
           tempRecords.sort((a, b) => {
             return a.numberOfRooms - b.numberOfRooms;
           });
@@ -169,13 +172,17 @@ export default function AdminRecordList({ status = "pending" }) {
           tempRecords.sort((a, b) => {
             return new Date(a.arrivalDate) - new Date(b.arrivalDate);
           });
+        } else if (sortType === "Room Assigned") {
+          tempRecords.sort((a, b) => {
+            return a.bookings?.length - b.bookings?.length;
+          });
         }
       } else {
-        if (sortType === "Number of Guests") {
+        if (sortType === "No. of Guests") {
           tempRecords.sort((a, b) => {
             return b.numberOfGuests - a.numberOfGuests;
           });
-        } else if (sortType === "Number of Rooms") {
+        } else if (sortType === "No. of Rooms") {
           tempRecords.sort((a, b) => {
             return b.numberOfRooms - a.numberOfRooms;
           });
@@ -191,6 +198,10 @@ export default function AdminRecordList({ status = "pending" }) {
         } else if (sortType === "Departure Date") {
           tempRecords.sort((a, b) => {
             return new Date(b.arrivalDate) - new Date(a.arrivalDate);
+          });
+        } else if (sortType === "Room Assigned") {
+          tempRecords.sort((a, b) => {
+            return b.bookings?.length - a.bookings?.length;
           });
         }
       }
@@ -262,23 +273,26 @@ export default function AdminRecordList({ status = "pending" }) {
                 Name
               </div>
             </div>
-            <div onClick={handleSortToggle} className="w-[10%]">
+            <div onClick={handleSortToggle} className="w-[10%] cursor-pointer">
               No. of Guests
             </div>
-            <div onClick={handleSortToggle} className="w-[10%]">
+            <div onClick={handleSortToggle} className="w-[10%] cursor-pointer">
               No. of Rooms
             </div>
-            <div onClick={handleSortToggle} className="w-[10%]">
+            <div onClick={handleSortToggle} className="w-[10%] cursor-pointer">
               Category
             </div>
-            <div onClick={handleSortToggle} className="w-[10%] ">
+            <div onClick={handleSortToggle} className="w-[10%] cursor-pointer">
               Arrival Date
             </div>
-            <div onClick={handleSortToggle} className="w-[10%] ">
+            <div onClick={handleSortToggle} className="w-[10%] cursor-pointer">
               Departure Date
             </div>
             <div onClick={handleSortToggle} className="w-[10%] ">
               Room Type
+            </div>
+            <div onClick={handleSortToggle} className="w-[10%] cursor-pointer">
+              Room Assigned
             </div>
             <div className="flex justify-evenly gap-2 w-[10%]">
               { checked.length > 0 && (
@@ -326,8 +340,6 @@ export default function AdminRecordList({ status = "pending" }) {
                 </div>
               )}
             </div>
-
-            <div />
           </div>
         </div>
 
@@ -357,6 +369,8 @@ export default function AdminRecordList({ status = "pending" }) {
                   <div className="w-[10%]">{getDate(record.arrivalDate)}</div>
                   <div className="w-[10%]">{getDate(record.departureDate)}</div>
                   <div className="w-[10%]">{record.roomType}</div>
+                  {record.bookings?.length > 0 && <div className="w-[10%]">Yes</div>}
+                  {record.bookings?.length <= 0 && <div className="w-[10%]">No</div>}
                   <div className="flex justify-evenly gap-2 w-[10%]">
                     { status !== "approved" && (
                       <IconButton edge="end" aria-label="comments">
