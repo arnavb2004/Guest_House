@@ -7,7 +7,7 @@ import archiver from "archiver";
 import { getFileById } from "../middlewares/fileStore.js";
 import mongoose from "mongoose";
 import { google } from "googleapis";
-import { appendReservationToSheet } from "./google_sheet.js";
+import { appendReservationToSheet, appendReservationToSheetAfterCheckout } from "./google_sheet.js";
 
 const googleSheets = google.sheets("v4");
 const auth = new google.auth.JWT(
@@ -886,6 +886,7 @@ export const checkoutReservation = async (req, res) => {
     }
 
     reservation.checkOut = true;
+    await appendReservationToSheetAfterCheckout(reservation);
     await reservation.save();
     console.log("check res:", reservation);
     res.status(200).json({ message: "Checkout successful" });
