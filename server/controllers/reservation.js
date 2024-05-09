@@ -83,7 +83,8 @@ export async function createReservation(req, res) {
     } = req.body;
     console.log(source);
     console.log(applicant[0]);
-    const applicantData = JSON.parse(applicant[0]);
+    let applicantData;
+    if (applicant[0]) applicantData = JSON.parse(applicant[0]);
     console.log(applicantData);
 
     const email = req.user.email;
@@ -93,22 +94,27 @@ export async function createReservation(req, res) {
       extension: f.originalname.split(".")[1],
     }));
     console.log(reviewers);
-    const reviewersArray = reviewers.split(",").map((role) => ({
+    let reviewersArray = reviewers.split(",").map((role) => ({
       role,
       comments: "",
       status: "PENDING",
     }));
+
+    if (req.user.role === "ADMIN")
+      reviewersArray = [{ role: "ADMIN", comments: "", status: "PENDING" }];
+
     const reservation = await Reservation.create({
       srno: 1,
       guestEmail: email,
+      byAdmin: req.user.role === "ADMIN",
       guestName,
       address,
       purpose,
       numberOfGuests,
       numberOfRooms,
       roomType,
-      arrivalDate: new Date(`${arrivalDate}T${arrivalTime}`),
-      departureDate: new Date(`${departureDate}T${departureTime}`),
+      arrivalDate: new Date(`${arrivalDate}T${arrivalTime || "13:00"}`),
+      departureDate: new Date(`${departureDate}T${departureTime || "11:00"}`),
       category,
       stepsCompleted: 1,
       files: fileids,
@@ -118,9 +124,9 @@ export async function createReservation(req, res) {
       receipt: receiptid,
     });
 
-    const revArray = reviewersArray.map((reviewer) => reviewer.role);
+    let revArray = reviewersArray.map((reviewer) => reviewer.role);
 
-    await appendReservationToSheet(reservation, category);
+    // await appendReservationToSheet(reservation, category);
 
     console.log("sending mail");
     console.log("\n\n\n\n", reviewersArray, "\n\n\n\n");

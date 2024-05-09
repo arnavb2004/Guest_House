@@ -16,7 +16,7 @@ import ApplicantTable from "../components/ApplicantTable";
 import NewWindow from "../components/NewWindow";
 import { useEffect } from "react";
 
-function ReservationForm() {
+function AdminReservationForm() {
   const user = useSelector((state) => state.user);
   const http = privateRequest(user.accessToken, user.refreshToken);
   const navigate = useNavigate();
@@ -69,19 +69,19 @@ function ReservationForm() {
   });
 
   const requiredFields = {
-    guestName: true,
-    address: true,
-    numberOfGuests: true,
-    numberOfRooms: true,
-    roomType: true,
+    guestName: false,
+    address: false,
+    numberOfGuests: false,
+    numberOfRooms: false,
+    roomType: false,
     arrivalDate: true,
-    arrivalTime: true,
+    arrivalTime: false,
     departureDate: true,
-    departureTime: true,
-    purpose: true,
+    departureTime: false,
+    purpose: false,
     category: true,
     source: true,
-    applicant: true,
+    applicant: false,
   };
 
   const patterns = {
@@ -108,7 +108,7 @@ function ReservationForm() {
   console.log(checkedValues);
   const handleChange = (e) => {
     const { name, value } = e.target;
-    if(name==='category') setCheckedValues([])
+    if (name === "category") setCheckedValues([]);
     setFormData({
       ...formData,
       [name]: value,
@@ -147,7 +147,7 @@ function ReservationForm() {
           [key]: "This field is required",
         }));
         passed = false;
-      } else if (patterns[key] && !value.match(patterns[key])) {
+      } else if (value !== "" && patterns[key] && !value.match(patterns[key])) {
         setErrorText((prev) => ({
           ...prev,
           [key]: "Invalid input",
@@ -162,47 +162,11 @@ function ReservationForm() {
     }
 
     const arrivalDateTime = new Date(
-      `${formData.arrivalDate}T${formData.arrivalTime}`
+      `${formData.arrivalDate}T${formData.arrivalTime || "13:00"}`
     );
     const departureDateTime = new Date(
-      `${formData.departureDate}T${formData.departureTime}`
+      `${formData.departureDate}T${formData.departureTime || "11:00"}`
     );
-
-    // Check if no of rooms are Sufficient for Double occupancy
-    if (formData.roomType === "Double Occupancy") {
-      const numberOfGuests = parseInt(formData.numberOfGuests);
-      const numberOfRooms = parseInt(formData.numberOfRooms);
-      if (2 * numberOfRooms < numberOfGuests) {
-        setErrorText((prev) => ({
-          ...prev,
-          numberOfRooms:
-            "Number of rooms are not sufficient as per number of guests and room type",
-        }));
-        passed = false;
-        toast.error(
-          "Number of rooms are not sufficient as per number of guests and room type"
-        );
-        return;
-      }
-    }
-
-    // Check if no of rooms are Sufficient for Single occupancy
-    if (formData.roomType === "Single Occupancy") {
-      const numberOfGuests = parseInt(formData.numberOfGuests);
-      const numberOfRooms = parseInt(formData.numberOfRooms);
-      if (numberOfRooms < numberOfGuests) {
-        setErrorText((prev) => ({
-          ...prev,
-          numberOfRooms:
-            "Number of rooms are not sufficient as per number of guests and room type",
-        }));
-        passed = false;
-        toast.error(
-          "Number of rooms are not sufficient as per number of guests and room type"
-        );
-        return;
-      }
-    }
 
     // Check if departure is after arrival
     if (departureDateTime <= arrivalDateTime) {
@@ -216,37 +180,8 @@ function ReservationForm() {
       return;
     }
 
-    if (formData.arrivalTime < "13:00") {
-      toast.error("Arrival time should be after 01:00 PM");
-      return;
-    }
-
-    if (formData.departureTime > "11:00") {
-      toast.error("Departure time should be before 11:00 AM");
-      return;
-    }
-
-    for (let [key, value] of Object.entries(formData.applicant)) {
-      if (value === "") {
-        passed = false;
-      }
-    }
-
     if (!passed) {
       toast.error("Please Fill All Necessary Fields Correctly.");
-      return;
-    }
-
-    if (
-      (formData.category === "A" || formData.category === "B") &&
-      Array.from(files).length === 0
-    ) {
-      toast.error("Uploading files is mandatory for category A and B");
-      return;
-    }
-
-    if (checkedValues.length === 0) {
-      toast.error("Please add a reviewer/reviewers");
       return;
     }
 
@@ -677,4 +612,4 @@ function ReservationForm() {
   );
 }
 
-export default ReservationForm;
+export default AdminReservationForm;

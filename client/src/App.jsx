@@ -25,6 +25,7 @@ import Unauthorized from "./pages/Unauthorized";
 import RoomBooking from "./pages/RoomBooking";
 import AdminRecordPage from "./pages/AdminRecordPage";
 import AddRoom from "./components/AddRoom";
+import AdminReservationForm from "./pages/AdminReservationForm";
 
 function App() {
   return (
@@ -61,7 +62,7 @@ function App() {
             <Route path="reservation" element={<Reservation />}>
               <Route path="" element={<AdminRecordList status="approved" />} />
               <Route path="pending-requests" element={<AdminRecordList />} />
-              <Route path="reservation-form" element={<ReservationForm />} />
+              <Route path="reservation-form" element={<AdminReservationForm />} />
 
 
               <Route path="users" element={<UserList />} />
