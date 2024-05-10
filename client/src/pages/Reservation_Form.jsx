@@ -3,7 +3,15 @@ import React, { useState } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
 
-import { FormControl, InputLabel, Select, MenuItem, Checkbox, ListItemText, TextField } from "@mui/material";
+import {
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Checkbox,
+  ListItemText,
+  TextField,
+} from "@mui/material";
 import "./Reservation_Form.css";
 import { updateFilledPDF } from "../utils/generatePDF";
 import InputFileUpload from "../components/uploadFile";
@@ -23,7 +31,7 @@ function ReservationForm() {
 
   const [showTC, setShowTC] = useState(false);
   const [showCat, setShowCat] = useState(false);
-  const [subRole, setSubRole] = useState('');
+  const [subRole, setSubRole] = useState([]);
 
   useEffect(() => {
     setShowCat(false);
@@ -99,76 +107,21 @@ function ReservationForm() {
   };
 
   const categoryInfo = {
-    "A" : "Category A",
-    "B" : "Category B",
-    "C" : "Category C (For student's family only their parents are allowed)",
-    "D" : "Category D (Guest and Department invited, etc.)"
-  }
+    A: "Category A",
+    B: "Category B",
+    C: "Category C (For student's family only their parents are allowed)",
+    D: "Category D (Guest and Department invited, etc.)",
+  };
 
-  const catAReviewers = [
-    "DIRECTOR", 
-    "REGISTRAR", 
-    "ASSOCIATE DEAN HOSTEL MANAGEMENT",
-    "ASSOCIATE DEAN INTERNATIONAL RELATIONS AND ALUMNI AFFAIRS",
-    "ASSOCIATE DEAN CONTINUING EDUCATION AND OUTREACH ACTIVITIES",
-    "ASSOCIATE DEAN INFRASTRUCTURE",
-    "DEAN RESEARCH AND DEVELOPMENT",
-    "DEAN STUDENT AFFAIRS",
-    "DEAN FACULTY AFFAIRS AND ADMINISTRATION",
-    "DEAN UNDER GRADUATE STUDIES",
-    "DEAN POST GRADUATE STUDIES"
-  ];
-
+  const catAReviewers = ["DIRECTOR", "REGISTRAR", "ASSOCIATE DEAN", "DEAN"];
+  
   const catBReviewers = [
-    "HOD COMPUTER SCIENCE",
-    "HOD ELECTRICAL ENGINEERING",
-    "HOD MECHANICAL ENGINEERING",
-    "HOD CHEMISTRY",
-    "HOD MATHEMATICS",
-    "HOD PHYSICS",
-    "HOD HUMANITIES AND SOCIAL SCIENCES",
-    "HOD BIOMEDICAL ENGINEERING",
-    "HOD CHEMICAL ENGINEERING",
-    "HOD METALLURGICAL AND MATERIALS ENGINEERING",
-    "DEAN RESEARCH AND DEVELOPMENT",
-    "DEAN STUDENT AFFAIRS",
-    "DEAN FACULTY AFFAIRS AND ADMINISTRATION",
-    "DEAN UNDER GRADUATE STUDIES",
-    "DEAN POST GRADUATE STUDIES",
-    "ASSOCIATE DEAN HOSTEL MANAGEMENT",
-    "ASSOCIATE DEAN INTERNATIONAL RELATIONS AND ALUMNI AFFAIRS",
-    "ASSOCIATE DEAN CONTINUING EDUCATION AND OUTREACH ACTIVITIES",
-    "ASSOCIATE DEAN INFRASTRUCTURE",
+    "HOD",
+    "DEAN",
+    "ASSOCIATE DEAN",
     "REGISTRAR"
   ];
-  // const catAReviewers = [
-  //   "DIRECTOR", 
-  //   "REGISTRAR", 
-  //   "ASSOCIATE DEAN",
-  //   "DEAN"
-  // ];
 
-  // const catBReviewers = [
-  //   "HOD",
-  //   "DEAN",
-  //   "ASSOCIATE DEAN",
-  //   "REGISTRAR"
-  // ];
-
-  const AssociateDeans = {
-    "SUB_ROLE_1": "ASSOCIATE DEAN HOSTEL MANAGEMENT",
-    "SUB_ROLE_2": "ASSOCIATE DEAN INTERNATIONAL RELATIONS AND ALUMNI AFFAIRS",
-    "SUB_ROLE_3": "ASSOCIATE DEAN CONTINUING EDUCATION AND OUTREACH ACTIVITIES",
-    "SUB_ROLE_4": "ASSOCIATE DEAN INFRASTRUCTURE"
-  }
-
-  const Deans = {
-    "SUB_ROLE_1": "DEAN RESEARCH AND DEVELOPMENT",
-    "SUB_ROLE_2": "DEAN STUDENT AFFAIRS",
-    "SUB_ROLE_3": "DEAN FACULTY AFFAIRS AND ADMINISTRATION",
-    "SUB_ROLE_4": "DEAN UNDER GRADUATE STUDIES",
-    "SUB_ROLE_5": "DEAN POST GRADUATE STUDIES",
-  }
 
   const Hods = {
     "SUB_ROLE_1": "HOD COMPUTER SCIENCE",
@@ -187,42 +140,49 @@ function ReservationForm() {
   const catDReviewers = ["CHAIRMAN"];
 
   const roomFareA = {
-    'Single Occupancy': 0,
-    'Double Occupancy': 0
-  }
+    "Single Occupancy": 0,
+    "Double Occupancy": 0,
+  };
   const roomFareB = {
-    'Single Occupancy': 600,
-    'Double Occupancy': 850
-  }
+    "Single Occupancy": 600,
+    "Double Occupancy": 850,
+  };
   const roomFareC = {
-    'Single Occupancy': 900,
-    'Double Occupancy': 1250
-  }
+    "Single Occupancy": 900,
+    "Double Occupancy": 1250,
+  };
   const roomFareD = {
-    'Single Occupancy': 1300,
-    'Double Occupancy': 1800
-  }
+    "Single Occupancy": 1300,
+    "Double Occupancy": 1800,
+  };
 
   const catReviewers = {
-    "A" : catAReviewers,
-    "B" : catBReviewers,
-    "C" : catCReviewers,
-    "D" : catDReviewers
-  }
+    A: catAReviewers,
+    B: catBReviewers,
+    C: catCReviewers,
+    D: catDReviewers,
+  };
 
   const roomFare = {
-    "A" : roomFareA,
-    "B" : roomFareB,
-    "C" : roomFareC,
-    "D" : roomFareD
-  }
+    A: roomFareA,
+    B: roomFareB,
+    C: roomFareC,
+    D: roomFareD,
+  };
+
 
   const [checkedValues, setCheckedValues] = useState([]);
   // console.log(checkedValues);
   // console.log(formData.category);
+
+  console.log(checkedValues);
+  console.log(subRole);
   const handleChange = (e) => {
     const { name, value } = e.target;
-    if(name==='category') setCheckedValues([])
+    if (name === "category") {
+      setCheckedValues([]);
+      setSubRole([]);
+    }
     setFormData({
       ...formData,
       [name]: value,
@@ -232,15 +192,21 @@ function ReservationForm() {
     const { value, checked } = event.target;
     if (checked) {
       setCheckedValues((prevCheckedValues) => [...prevCheckedValues, value]);
+      setSubRole((prevSubRole) => [...prevSubRole, ""]);
     } else {
-      setCheckedValues((prevCheckedValues) =>
-        prevCheckedValues.filter((item) => item !== value)
-      );
+      setCheckedValues((prevCheckedValues) => {
+        const index = prevCheckedValues.indexOf(value);
+        prevCheckedValues.splice(index, 1);
+        subRole.splice(index, 1);
+      });
     }
   };
-  console.log(checkedValues);
-  const handleSubRoleChange = (event) => {
-    setSubRole(event.target.value);
+
+  const handleSubRoleChange = (event, reviewer) => {
+    const index = checkedValues.indexOf(reviewer);
+    const temp = [...subRole];
+    temp[index] = event.target.value;
+    setSubRole(temp);
   };
 
   const handleFileUpload = (files) => {
@@ -384,6 +350,7 @@ function ReservationForm() {
         formDataToSend.append("files", file);
       }
       formDataToSend.append("reviewers", Array.from(new Set(checkedValues)));
+      formDataToSend.append("subroles", Array.from(new Set(subRole)));
       formDataToSend.append("receipt", receipt);
       const res = await http.post("reservation/", formDataToSend, {
         headers: {
@@ -574,11 +541,13 @@ function ReservationForm() {
               onChange={handleChange}
               value={formData.category}
             >
-              {Object.entries(categoryInfo).map(([categoryCode, categoryName]) => (
-                <option key={categoryCode} value={categoryCode}>
-                  {categoryName}
-                </option>
-              ))}
+              {Object.entries(categoryInfo).map(
+                ([categoryCode, categoryName]) => (
+                  <option key={categoryCode} value={categoryCode}>
+                    {categoryName}
+                  </option>
+                )
+              )}
             </select>
 
             <div className="form-group">
@@ -591,84 +560,141 @@ function ReservationForm() {
                 value={formData.roomType}
               >
                 <option className="" value="Single Occupancy">
-                  {formData.category !== 'A' &&  <span>Single Occupancy (Rs.{roomFare[formData.category]['Single Occupancy']}/- only)</span>}
-                  {formData.category === 'A' &&  <span>Single Occupancy (Free)</span>}
-                  
+                  {formData.category !== "A" && (
+                    <span>
+                      Single Occupancy (Rs.
+                      {roomFare[formData.category]["Single Occupancy"]}/- only)
+                    </span>
+                  )}
+                  {formData.category === "A" && (
+                    <span>Single Occupancy (Free)</span>
+                  )}
                 </option>
                 <option className="" value="Double Occupancy">
-                  {formData.category !== 'A' && <span>Double Occupancy (Rs.{roomFare[formData.category]['Double Occupancy']}/- only)</span>}
-                  {formData.category === 'A' && <span>Double Occupancy (Free)</span>}
+                  {formData.category !== "A" && (
+                    <span>
+                      Double Occupancy (Rs.
+                      {roomFare[formData.category]["Double Occupancy"]}/- only)
+                    </span>
+                  )}
+                  {formData.category === "A" && (
+                    <span>Double Occupancy (Free)</span>
+                  )}
                 </option>
               </select>
             </div>
 
             <div className="w-full p-2 mb-5">
-              <ul className="flex justify-start flex-nowrap overflow-x-scroll gap-3">
+              <ul className="flex flex-col flex-wrap justify-start gap-1">
                 {catReviewers[formData.category].map((reviewer) => (
-                  <li key={reviewer} className="flex justify-start gap-1 items-center">
+                  <li
+                    key={reviewer}
+                    className="flex justify-start gap-1 items-center"
+                  >
                     <Checkbox
                       name="reviewers"
                       id={reviewer}
                       value={reviewer}
                       onChange={handleCheckboxChange}
-                      inputProps={{ 'aria-label': reviewer }}
+                      inputProps={{ "aria-label": reviewer }}
                     />
                     <label className="w-32" htmlFor={reviewer}>
                       {reviewer}
                     </label>
-                    {(reviewer === 'ASSOCIATE DEAN' ) && (checkedValues.includes('ASSOCIATE DEAN')) && (
+                    {reviewer === "ASSOCIATE DEAN" &&
+                      checkedValues.includes("ASSOCIATE DEAN") && (
+                        <FormControl>
+                          <Select
+                            labelId="sub-role-label"
+                            id="sub-role-select"
+                            value={subRole[checkedValues.indexOf("ASSOCIATE DEAN")] || "Select"}
+                            onChange={(e) => handleSubRoleChange(e, reviewer)}
+                          >
+                            <MenuItem value="Select">Select</MenuItem>
+                            <MenuItem value="HOTEL MANAGEMENT">
+                              Hotel Management
+                            </MenuItem>
+                            <MenuItem value="CONTINUING EDUCATION AND OUTREACH ACTIVITIES">
+                              Continuing Education and Outreach Activities
+                            </MenuItem>
+                            <MenuItem value="INTERNATIONAL RELATIONS AND ALUMNI AFFAIRS">
+                              International Relations and Alumni Affairs
+                            </MenuItem>
+                            <MenuItem value="INFRASTRUCTURE">
+                              Infrastructure
+                            </MenuItem>
+                          </Select>
+                        </FormControl>
+                      )}
+                    {reviewer === "HOD" && checkedValues.includes("HOD") && (
                       <FormControl>
                         <Select
                           labelId="sub-role-label"
                           id="sub-role-select"
-                          value= {subRole || 'Select'}
-                          onChange={handleSubRoleChange}
+                          value={subRole[checkedValues.indexOf("HOD")] || "Select"}
+                          onChange={(e) => handleSubRoleChange(e, reviewer)}
                         >
                           <MenuItem value="Select">Select</MenuItem>
-                          <MenuItem value="SUB_ROLE_1">Hotel Management</MenuItem>
-                          <MenuItem value="SUB_ROLE_2">Continuing Education and Outreach Activities</MenuItem>
-                          <MenuItem value="SUB_ROLE_3">International Relations and Alumni Affairs</MenuItem>
-                          <MenuItem value="SUB_ROLE_4">Infrastructure</MenuItem>
+                          <MenuItem value="DEPARTMENT OF COMPUTER SCIENCE">
+                            Department of Computer Science
+                          </MenuItem>
+                          <MenuItem value="DEPARTMENT OF ELECTRICAL ENGINEERING">
+                            Department of Electrical Engineering
+                          </MenuItem>
+                          <MenuItem value="DEPARTMENT OF MECHANICAL ENGINEERING">
+                            Department of Mechanical Engineering
+                          </MenuItem>
+                          <MenuItem value="DEPARTMENT OF CHEMISTRY">
+                            Department of Chemistry
+                          </MenuItem>
+                          <MenuItem value="DEPARTMENT OF MATHEMATICS">
+                            Department of Mathematics
+                          </MenuItem>
+                          <MenuItem value="DEPARTMENT OF PHYSICS">
+                            Department of Physics
+                          </MenuItem>
+                          <MenuItem value="DEPARTMENT OF HUMANITIES AND SOCIAL SCIENCES">
+                            Department of Humanities and Social Sciences
+                          </MenuItem>
+                          <MenuItem value="DEPARTMENT OF BIOMEDICAL ENGINEERING">
+                            Department of Biomedical Engineering
+                          </MenuItem>
+                          <MenuItem value="DEPARTMENT OF CIVIL ENGINEERING">
+                            Department of Civil Engineering
+                          </MenuItem>
+                          <MenuItem value="DEPARTMENT OF CHEMICAL ENGINEERING">
+                            Department of Chemical Engineering
+                          </MenuItem>
+                          <MenuItem value="DEPARTMENT OF METALLURGICAL AND MATERIALS ENGINEERING">
+                            Department of Metallurgical & Materials Engineering
+                          </MenuItem>
                         </Select>
                       </FormControl>
                     )}
-                    {(reviewer === 'HOD' ) && (checkedValues.includes('HOD')) && (
+                    {reviewer === "DEAN" && checkedValues.includes("DEAN") && (
                       <FormControl>
                         <Select
                           labelId="sub-role-label"
                           id="sub-role-select"
-                          value= {subRole || 'Select'}
-                          onChange={handleSubRoleChange}
+                          value={subRole[checkedValues.indexOf("DEAN")] || "Select"}
+                          onChange={(e) => handleSubRoleChange(e, reviewer)}
                         >
                           <MenuItem value="Select">Select</MenuItem>
-                          <MenuItem value="SUB_ROLE_1">Department of Computer Science</MenuItem>
-                          <MenuItem value="SUB_ROLE_2">Department of Electrical Engineering</MenuItem>
-                          <MenuItem value="SUB_ROLE_3">Mechanical Engineering</MenuItem>
-                          <MenuItem value="SUB_ROLE_4">Department of Chemistry</MenuItem>
-                          <MenuItem value="SUB_ROLE_5">Department of Mathematics</MenuItem>
-                          <MenuItem value="SUB_ROLE_6">Department of Physics</MenuItem>
-                          <MenuItem value="SUB_ROLE_7">Department of Humanities and Social Sciences</MenuItem>
-                          <MenuItem value="SUB_ROLE_8">Department of Biomedical Engineering</MenuItem>
-                          <MenuItem value="SUB_ROLE_9">Department of Civil Engineering</MenuItem>
-                          <MenuItem value="SUB_ROLE_10">Department of Chemical Engineering</MenuItem>
-                          <MenuItem value="SUB_ROLE_11">Department of Metallurgical & Materials Engineering</MenuItem>
-                        </Select>
-                      </FormControl>
-                    )}
-                    {(reviewer === 'DEAN' ) && (checkedValues.includes('DEAN')) && (
-                      <FormControl>
-                        <Select
-                          labelId="sub-role-label"
-                          id="sub-role-select"
-                          value= {subRole || 'Select'}
-                          onChange={handleSubRoleChange}
-                        >
-                          <MenuItem value="Select">Select</MenuItem>
-                          <MenuItem value="SUB_ROLE_1">Dean (Research and Development)</MenuItem>
-                          <MenuItem value="SUB_ROLE_2">Dean (Student Affairs)</MenuItem>
-                          <MenuItem value="SUB_ROLE_3">Dean (Faculty Affairs & Administration)</MenuItem>
-                          <MenuItem value="SUB_ROLE_4">Dean (Under Graduate Studies)</MenuItem>
-                          <MenuItem value="SUB_ROLE_5">Dean (Post Graduate & Research)</MenuItem>
+                          <MenuItem value="RESEARCH AND DEVELOPMENT">
+                            Research and Development
+                          </MenuItem>
+                          <MenuItem value="STUDENT AFFAIRS">
+                            Student Affairs
+                          </MenuItem>
+                          <MenuItem value="FACULTY AFFAIRS AND ADMINISTRATION">
+                            Faculty Affairs & Administration
+                          </MenuItem>
+                          <MenuItem value="UNDER GRADUATE STUDIES">
+                            Under Graduate Studies
+                          </MenuItem>
+                          <MenuItem value="POST GRADUATE AND RESEARCH">
+                            Post Graduate & Research
+                          </MenuItem>
                         </Select>
                       </FormControl>
                     )}
@@ -677,7 +703,9 @@ function ReservationForm() {
               </ul>
             </div>
 
-            {(formData.category === "B" || formData.category === "C" || formData.category === "D") && (
+            {(formData.category === "B" ||
+              formData.category === "C" ||
+              formData.category === "D") && (
               <>
                 <label>Payment*:</label>
 

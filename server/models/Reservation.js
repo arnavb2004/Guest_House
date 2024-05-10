@@ -8,7 +8,7 @@ const reservationSchema = new mongoose.Schema(
       // required: true,
       unique: true,
     },
-    byAdmin:{
+    byAdmin: {
       type: Boolean,
       default: false,
     },
@@ -87,6 +87,9 @@ const reservationSchema = new mongoose.Schema(
             'ASSOCIATE DEAN INTERNATIONAL RELATIONS AND ALUMNI AFFAIRS',
             'ASSOCIATE DEAN INFRASTRUCTURE'
           ],
+        },
+        subrole: {
+          type: String,
         },
         comments: {
           type: String,
