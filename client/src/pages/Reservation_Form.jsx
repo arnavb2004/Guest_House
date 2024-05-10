@@ -114,27 +114,21 @@ function ReservationForm() {
   };
 
   const catAReviewers = ["DIRECTOR", "REGISTRAR", "ASSOCIATE DEAN", "DEAN"];
-  
-  const catBReviewers = [
-    "HOD",
-    "DEAN",
-    "ASSOCIATE DEAN",
-    "REGISTRAR"
+
+  const catBReviewers = ["HOD", "DEAN", "ASSOCIATE DEAN", "REGISTRAR"];
+
+  const Hods = [
+    "DEPARTMENT OF COMPUTER SCIENCE",
+    "DEPARTMENT OF ELECTRICAL ENGINEERING",
+    "DEPARTMENT OF MECHANICAL ENGINEERING",
+    "DEPARTMENT OF CHEMISTRY",
+    "DEPARTMENT OF MATHEMATICS",
+    "DEPARTMENT OF PHYSICS",
+    "DEPARTMENT OF HUMANITIES AND SOCIAL SCIENCES",
+    "DEPARTMENT OF BIOMEDICAL ENGINEERING",
+    "DEPARTMENT OF CHEMICAL ENGINEERING",
+    "DEPARTMENT OF METALLURGICAL AND MATERIALS ENGINEERING",
   ];
-
-
-  const Hods = {
-    "SUB_ROLE_1": "HOD COMPUTER SCIENCE",
-    "SUB_ROLE_2": "HOD ELECTRICAL ENGINEERING",
-    "SUB_ROLE_3": "HOD MECHANICAL ENGINEERING",
-    "SUB_ROLE_4": "HOD CHEMISTRY",
-    "SUB_ROLE_5": "HOD MATHEMATICS",
-    "SUB_ROLE_6": "HOD PHYSICS",
-    "SUB_ROLE_7": "HOD HUMANITIES AND SOCIAL SCIENCES",
-    "SUB_ROLE_8": "HOD BIOMEDICAL ENGINEERING",
-    "SUB_ROLE_9": "HOD CHEMICAL ENGINEERING",
-    "SUB_ROLE_10": "HOD METALLURGICAL AND MATERIALS ENGINEERING",
-  }
 
   const catCReviewers = ["CHAIRMAN"];
   const catDReviewers = ["CHAIRMAN"];
@@ -169,7 +163,6 @@ function ReservationForm() {
     C: roomFareC,
     D: roomFareD,
   };
-
 
   const [checkedValues, setCheckedValues] = useState([]);
   // console.log(checkedValues);
@@ -315,6 +308,17 @@ function ReservationForm() {
         passed = false;
       }
     }
+    if (checkedValues.length === 0) {
+      toast.error("Please add a reviewer/reviewers");
+      return;
+    }
+
+    checkedValues.forEach((reviewer, index) => {
+      if (subroles[reviewer] && subRole[index] === "") {
+        toast.error("Please select subrole for each reviewer");
+        return;
+      }
+    });
 
     if (!passed) {
       toast.error("Please Fill All Necessary Fields Correctly.");
@@ -326,11 +330,6 @@ function ReservationForm() {
       Array.from(files).length === 0
     ) {
       toast.error("Uploading files is mandatory for category A and B");
-      return;
-    }
-
-    if (checkedValues.length === 0) {
-      toast.error("Please add a reviewer/reviewers");
       return;
     }
 
@@ -607,7 +606,11 @@ function ReservationForm() {
                           <Select
                             labelId="sub-role-label"
                             id="sub-role-select"
-                            value={subRole[checkedValues.indexOf("ASSOCIATE DEAN")] || "Select"}
+                            value={
+                              subRole[
+                                checkedValues.indexOf("ASSOCIATE DEAN")
+                              ] || "Select"
+                            }
                             onChange={(e) => handleSubRoleChange(e, reviewer)}
                           >
                             <MenuItem value="Select">Select</MenuItem>
@@ -631,7 +634,9 @@ function ReservationForm() {
                         <Select
                           labelId="sub-role-label"
                           id="sub-role-select"
-                          value={subRole[checkedValues.indexOf("HOD")] || "Select"}
+                          value={
+                            subRole[checkedValues.indexOf("HOD")] || "Select"
+                          }
                           onChange={(e) => handleSubRoleChange(e, reviewer)}
                         >
                           <MenuItem value="Select">Select</MenuItem>
@@ -676,7 +681,9 @@ function ReservationForm() {
                         <Select
                           labelId="sub-role-label"
                           id="sub-role-select"
-                          value={subRole[checkedValues.indexOf("DEAN")] || "Select"}
+                          value={
+                            subRole[checkedValues.indexOf("DEAN")] || "Select"
+                          }
                           onChange={(e) => handleSubRoleChange(e, reviewer)}
                         >
                           <MenuItem value="Select">Select</MenuItem>
