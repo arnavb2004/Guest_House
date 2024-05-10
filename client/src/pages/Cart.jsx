@@ -84,8 +84,13 @@ const Cart = () => {
         dateofbooking: bookingDate,
         sourceofpayment: paymentMethod,
       });
-
+      //clear cart
+      dispatch(clearCart());
+      //redirect to dining page
+      //navigate to role/dining
+      //get our current route
       alert(`Total Amount: ₹${totalAmount.toFixed(2)}`);
+      navigate('../../dining')
     } catch (error) {}
 
     // Further actions like sending the order to a server or resetting the cart can be performed here.
