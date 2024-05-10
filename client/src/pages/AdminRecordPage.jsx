@@ -160,7 +160,7 @@ export default function AdminRecordPage() {
             Room Booking
           </Link>
         )}
-        {user.role === "ADMIN" && (
+        {user.role === "ADMIN" && userRecord.byAdmin && (
           <div
             className="p-2 px-4 bg-[rgb(54,88,153)] rounded-lg text-white cursor-pointer"
             onClick={() => setIsEdit(!isEdit)}

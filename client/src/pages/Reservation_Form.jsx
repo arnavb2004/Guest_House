@@ -167,7 +167,6 @@ function ReservationForm() {
 
   const handleSubRoleChange = (event) => {
     setSubRole(event.target.value);
-    // You can handle the sub-role selection here if needed
   };
 
   const handleFileUpload = (files) => {

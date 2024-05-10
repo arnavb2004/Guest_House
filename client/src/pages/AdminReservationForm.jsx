@@ -343,7 +343,7 @@ function AdminReservationForm() {
           </div>
 
           <div className="form-group">
-            <label>Arrival Time*: (Arrival time must be after 01:00 PM)</label>
+            <label>Arrival Time: (Arrival time must be after 01:00 PM)</label>
             <input
               type="time"
               name="arrivalTime"
@@ -363,7 +363,7 @@ function AdminReservationForm() {
           </div>
           <div className="form-group">
             <label>
-              Departure Time*: (Departure time must be before 11:00 AM)
+              Departure Time: (Departure time must be before 11:00 AM)
             </label>
             <input
               type="time"
@@ -552,11 +552,6 @@ function AdminReservationForm() {
                       </div>
                     );
                   })}
-                </div>
-              ) : formData.category === "A" || formData.category === "B" ? (
-                <div className="flex items-center text-gray-500">
-                  *Uploading files is mandatory for category A and B (size
-                  limit: 2MB)
                 </div>
               ) : (
                 <div className="flex items-center text-gray-500">
