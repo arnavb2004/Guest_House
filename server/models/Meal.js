@@ -37,15 +37,7 @@ const mealSchema = new mongoose.Schema({
     {
       role: {
         type: String,
-        enum: [
-          "ADMIN",
-          "HOD",
-          "CHAIRMAN",
-          "DIRECTOR",
-          "DEAN",
-          "REGISTRAR",
-          "ASSOCIATE DEAN",
-        ],
+        
         default: "ADMIN",
       },
       comments: {

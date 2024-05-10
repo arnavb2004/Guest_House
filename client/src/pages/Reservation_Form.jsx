@@ -118,16 +118,16 @@ function ReservationForm() {
   const catBReviewers = ["HOD", "DEAN", "ASSOCIATE DEAN", "REGISTRAR"];
 
   const Hods = [
-    "DEPARTMENT OF COMPUTER SCIENCE",
-    "DEPARTMENT OF ELECTRICAL ENGINEERING",
-    "DEPARTMENT OF MECHANICAL ENGINEERING",
-    "DEPARTMENT OF CHEMISTRY",
-    "DEPARTMENT OF MATHEMATICS",
-    "DEPARTMENT OF PHYSICS",
-    "DEPARTMENT OF HUMANITIES AND SOCIAL SCIENCES",
-    "DEPARTMENT OF BIOMEDICAL ENGINEERING",
-    "DEPARTMENT OF CHEMICAL ENGINEERING",
-    "DEPARTMENT OF METALLURGICAL AND MATERIALS ENGINEERING",
+    "COMPUTER SCIENCE",
+    "ELECTRICAL ENGINEERING",
+    "MECHANICAL ENGINEERING",
+    "CHEMISTRY",
+    "MATHEMATICS",
+    "PHYSICS",
+    "HUMANITIES AND SOCIAL SCIENCES",
+    "BIOMEDICAL ENGINEERING",
+    "CHEMICAL ENGINEERING",
+    "METALLURGICAL AND MATERIALS ENGINEERING",
   ];
 
   const AssociateDeans = [
@@ -668,38 +668,38 @@ function ReservationForm() {
                           onChange={(e) => handleSubRoleChange(e, reviewer)}
                         >
                           <MenuItem value="Select">Select</MenuItem>
-                          <MenuItem value="DEPARTMENT OF COMPUTER SCIENCE">
-                            Department of Computer Science
+                          <MenuItem value="COMPUTER SCIENCE">
+                            Computer Science
                           </MenuItem>
-                          <MenuItem value="DEPARTMENT OF ELECTRICAL ENGINEERING">
-                            Department of Electrical Engineering
+                          <MenuItem value="ELECTRICAL ENGINEERING">
+                            Electrical Engineering
                           </MenuItem>
-                          <MenuItem value="DEPARTMENT OF MECHANICAL ENGINEERING">
-                            Department of Mechanical Engineering
+                          <MenuItem value="MECHANICAL ENGINEERING">
+                            Mechanical Engineering
                           </MenuItem>
-                          <MenuItem value="DEPARTMENT OF CHEMISTRY">
-                            Department of Chemistry
+                          <MenuItem value="CHEMISTRY">
+                            Chemistry
                           </MenuItem>
-                          <MenuItem value="DEPARTMENT OF MATHEMATICS">
-                            Department of Mathematics
+                          <MenuItem value="MATHEMATICS">
+                            Mathematics
                           </MenuItem>
-                          <MenuItem value="DEPARTMENT OF PHYSICS">
-                            Department of Physics
+                          <MenuItem value="PHYSICS">
+                            Physics
                           </MenuItem>
-                          <MenuItem value="DEPARTMENT OF HUMANITIES AND SOCIAL SCIENCES">
-                            Department of Humanities and Social Sciences
+                          <MenuItem value="HUMANITIES AND SOCIAL SCIENCES">
+                            Humanities and Social Sciences
                           </MenuItem>
-                          <MenuItem value="DEPARTMENT OF BIOMEDICAL ENGINEERING">
-                            Department of Biomedical Engineering
+                          <MenuItem value="BIOMEDICAL ENGINEERING">
+                            Biomedical Engineering
                           </MenuItem>
-                          <MenuItem value="DEPARTMENT OF CIVIL ENGINEERING">
-                            Department of Civil Engineering
+                          <MenuItem value="CIVIL ENGINEERING">
+                            Civil Engineering
                           </MenuItem>
-                          <MenuItem value="DEPARTMENT OF CHEMICAL ENGINEERING">
-                            Department of Chemical Engineering
+                          <MenuItem value="CHEMICAL ENGINEERING">
+                            Chemical Engineering
                           </MenuItem>
-                          <MenuItem value="DEPARTMENT OF METALLURGICAL AND MATERIALS ENGINEERING">
-                            Department of Metallurgical & Materials Engineering
+                          <MenuItem value="METALLURGICAL AND MATERIALS ENGINEERING">
+                            Metallurgical & Materials Engineering
                           </MenuItem>
                         </Select>
                       </FormControl>

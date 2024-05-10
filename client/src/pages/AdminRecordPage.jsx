@@ -427,7 +427,7 @@ export default function AdminRecordPage() {
           <div className="p-5 flex flex-col gap-4 ">
             {reviewers.map((reviewer) => (
               <div className="flex gap-4 w-max">
-                <div className="w-56">{reviewer.role} {reviewer.subrole || ""}</div>
+                <div className="w-56">{reviewer.role}</div>
                 <div
                   className={
                     "border rounded-full relative top-1 w-5 h-5 " +
