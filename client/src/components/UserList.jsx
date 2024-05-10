@@ -261,7 +261,7 @@ export default function UserList() {
                   </div>
                   <div className="w-[17%]">{user.email}</div>
                   <div className="w-[17%]">{user.contact}</div>
-                  <div className="w-[17%]">{user.pendingRequest}</div>
+                  <div className="w-[17%]">{Math.abs(user.pendingRequest)}</div>
                   <div className="w-[17%]">{user.role}</div>
                   <div className="w-[5%]">
                     <IconButton edge="end" aria-label="comments" onClick={handleEdit(user._id)}>

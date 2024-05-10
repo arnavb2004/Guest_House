@@ -7,7 +7,10 @@ import archiver from "archiver";
 import { getFileById } from "../middlewares/fileStore.js";
 import mongoose from "mongoose";
 import { google } from "googleapis";
-import { appendReservationToSheet, appendReservationToSheetAfterCheckout } from "./google_sheet.js";
+import {
+  appendReservationToSheet,
+  appendReservationToSheetAfterCheckout,
+} from "./google_sheet.js";
 
 const googleSheets = google.sheets("v4");
 const auth = new google.auth.JWT(
@@ -84,7 +87,9 @@ export async function createReservation(req, res) {
     console.log(subroles);
     let subrolesArray = subroles.split(",");
     let reviewersArray = reviewers.split(",").map((role, index) => ({
-      role: role + " " + subrolesArray[index],
+      role:
+        role +
+        (subrolesArray[index] !== "Select" ? " " + subrolesArray[index] : ""),
       comments: "",
       status: "PENDING",
     }));
@@ -729,10 +734,8 @@ export const deleteRoom = async (req, res) => {
       return res.status(404).json({ message: "Room not found" });
     }
 
-    if(deletedRoom.bookings?.length > 0)
-      return res
-        .status(404)
-        .json({ message: "Room is occupied" });
+    if (deletedRoom.bookings?.length > 0)
+      return res.status(404).json({ message: "Room is occupied" });
 
     res
       .status(200)

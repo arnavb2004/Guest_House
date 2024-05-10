@@ -3,8 +3,15 @@ import React, { useState } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
 
-import FormControl from "@mui/material/FormControl";
-import { TextField } from "@mui/material";
+import {
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Checkbox,
+  ListItemText,
+  TextField,
+} from "@mui/material";
 import "./Reservation_Form.css";
 import { updateFilledPDF } from "../utils/generatePDF";
 import InputFileUpload from "../components/uploadFile";
@@ -16,7 +23,7 @@ import ApplicantTable from "../components/ApplicantTable";
 import NewWindow from "../components/NewWindow";
 import { useEffect } from "react";
 
-function AdminReservationForm() {
+function ReservationForm() {
   const user = useSelector((state) => state.user);
   const http = privateRequest(user.accessToken, user.refreshToken);
   const navigate = useNavigate();
@@ -24,6 +31,7 @@ function AdminReservationForm() {
 
   const [showTC, setShowTC] = useState(false);
   const [showCat, setShowCat] = useState(false);
+  const [subRole, setSubRole] = useState([]);
 
   useEffect(() => {
     setShowCat(false);
@@ -80,7 +88,7 @@ function AdminReservationForm() {
     departureTime: false,
     purpose: false,
     category: true,
-    source: true,
+    source: false,
     applicant: false,
   };
 
@@ -98,17 +106,101 @@ function AdminReservationForm() {
     category: /[\s\S]*/,
   };
 
+  const categoryInfo = {
+    A: "Category A",
+    B: "Category B",
+    C: "Category C (For student's family only their parents are allowed)",
+    D: "Category D (Guest and Department invited, etc.)",
+  };
+
   const catAReviewers = ["DIRECTOR", "REGISTRAR", "ASSOCIATE DEAN", "DEAN"];
 
   const catBReviewers = ["HOD", "DEAN", "ASSOCIATE DEAN", "REGISTRAR"];
 
+  const Hods = [
+    "COMPUTER SCIENCE",
+    "ELECTRICAL ENGINEERING",
+    "MECHANICAL ENGINEERING",
+    "CHEMISTRY",
+    "MATHEMATICS",
+    "PHYSICS",
+    "HUMANITIES AND SOCIAL SCIENCES",
+    "BIOMEDICAL ENGINEERING",
+    "CHEMICAL ENGINEERING",
+    "METALLURGICAL AND MATERIALS ENGINEERING",
+  ];
+
+  const AssociateDeans = [
+    "HOSTEL MANAGEMENT",
+    "INTERNATIONAL RELATIONS AND ALUMNI AFFAIRS",
+    "CONTINUING EDUCATION AND OUTREACH ACTIVITIES",
+    "INFRASTRUCTURE",
+  ];
+
+  const Deans = [
+    "RESEARCH AND DEVELOPMENT",
+    "STUDENT AFFAIRS",
+    "FACULTY AFFAIRS AND ADMINISTRATION",
+    "UNDER GRADUATE STUDIES",
+    "POST GRADUATE STUDIES",
+  ];
+
+  const subroles = {
+    HOD: Hods,
+    "ASSOCIATE DEAN": AssociateDeans,
+    DEAN: Deans,
+  };
+
   const catCReviewers = ["CHAIRMAN"];
   const catDReviewers = ["CHAIRMAN"];
+
+  const roomFareA = {
+    "Single Occupancy": 0,
+    "Double Occupancy": 0,
+  };
+  const roomFareB = {
+    "Single Occupancy": 600,
+    "Double Occupancy": 850,
+  };
+  const roomFareC = {
+    "Single Occupancy": 900,
+    "Double Occupancy": 1250,
+  };
+  const roomFareD = {
+    "Single Occupancy": 1300,
+    "Double Occupancy": 1800,
+  };
+
+  const catReviewers = {
+    A: catAReviewers,
+    B: catBReviewers,
+    C: catCReviewers,
+    D: catDReviewers,
+  };
+
+  const roomFare = {
+    A: roomFareA,
+    B: roomFareB,
+    C: roomFareC,
+    D: roomFareD,
+  };
+
   const [checkedValues, setCheckedValues] = useState([]);
+
   console.log(checkedValues);
+  console.log(subRole);
   const handleChange = (e) => {
     const { name, value } = e.target;
-    if (name === "category") setCheckedValues([]);
+    console.log(name, value);
+    if (name === "category") {
+      if (value === "C" || value === "D") {
+        setCheckedValues(["CHAIRMAN"]);
+        setSubRole(["Select"]);
+      } else {
+        setCheckedValues([]);
+        setSubRole([]);
+      }
+    }
     setFormData({
       ...formData,
       [name]: value,
@@ -118,11 +210,28 @@ function AdminReservationForm() {
     const { value, checked } = event.target;
     if (checked) {
       setCheckedValues((prevCheckedValues) => [...prevCheckedValues, value]);
+      setSubRole((prevSubRole) => [...prevSubRole, "Select"]);
     } else {
-      setCheckedValues((prevCheckedValues) =>
-        prevCheckedValues.filter((item) => item !== value)
-      );
+      setCheckedValues((prevCheckedValues) => {
+        const temp = [...prevCheckedValues];
+        const index = temp.indexOf(value);
+
+        console.log(index);
+        temp.splice(index, 1);
+
+        subRole.splice(index, 1);
+        return temp;
+      });
     }
+  };
+
+  console.log(checkedValues);
+
+  const handleSubRoleChange = (event, reviewer) => {
+    const index = checkedValues.indexOf(reviewer);
+    const temp = [...subRole];
+    temp[index] = event.target.value;
+    setSubRole(temp);
   };
 
   const handleFileUpload = (files) => {
@@ -168,6 +277,7 @@ function AdminReservationForm() {
       `${formData.departureDate}T${formData.departureTime || "11:00"}`
     );
 
+
     // Check if departure is after arrival
     if (departureDateTime <= arrivalDateTime) {
       passed = false;
@@ -178,6 +288,21 @@ function AdminReservationForm() {
       }));
       toast.error("Departure should be After Arrival");
       return;
+    }
+
+
+    for (let [index, reviewer] of checkedValues.entries()) {
+      console.log(subroles[reviewer]);
+      console.log(subRole[index]);
+      if (
+        subroles[reviewer] &&
+        (subRole[index] === "" ||
+          !subRole[index] ||
+          subRole[index] === "Select")
+      ) {
+        toast.error("Please select subrole for each reviewer");
+        return;
+      }
     }
 
     if (!passed) {
@@ -200,7 +325,8 @@ function AdminReservationForm() {
       for (const file of files) {
         formDataToSend.append("files", file);
       }
-      formDataToSend.append("reviewers", Array.from(new Set(checkedValues)));
+      formDataToSend.append("reviewers", checkedValues);
+      formDataToSend.append("subroles", subRole);
       formDataToSend.append("receipt", receipt);
       const res = await http.post("reservation/", formDataToSend, {
         headers: {
@@ -218,7 +344,7 @@ function AdminReservationForm() {
           autoClose: 3000,
         });
         setLoading(false);
-        navigate("..");
+        // navigate("..");
       } else {
         console.log("fail");
 
@@ -253,6 +379,13 @@ function AdminReservationForm() {
       }
     }
   };
+
+  const [showCheckbox, setShowCheckbox] = useState(false);
+
+  useEffect(() => {
+    // setShowCheckbox(false);
+    setShowCheckbox(true);
+  }, [formData.category]);
 
   return (
     <div className="w-full">
@@ -312,24 +445,6 @@ function AdminReservationForm() {
             value={formData.numberOfRooms}
             onChange={handleChange}
           />
-
-          <div className="form-group">
-            <label>Room Type*</label>
-
-            <select
-              name="roomType"
-              className="w-full h-12 border rounded-md border-gray-300 p-2 whitespace-pre"
-              onChange={handleChange}
-              value={formData.roomType}
-            >
-              <option className="" value="Single Occupancy">
-                Single Occupancy
-              </option>
-              <option className="" value="Double Occupancy">
-                Double Occupancy
-              </option>
-            </select>
-          </div>
 
           <div className="form-group">
             <label>Arrival Date*:</label>
@@ -393,7 +508,7 @@ function AdminReservationForm() {
             <label>
               Category*: (Refer to{" "}
               <span
-                className="underline cursor-pointer"
+                className="underline cursor-pointer text-blue-800"
                 onClick={() => {
                   setShowCat(true);
                 }}
@@ -402,108 +517,192 @@ function AdminReservationForm() {
               </span>{" "}
               page for details of categories and tariff)
             </label>
-
             <select
               name="category"
               className="w-full h-12 border rounded-md border-gray-300 p-2 mb-5 whitespace-pre"
               onChange={handleChange}
               value={formData.category}
             >
-              <option className="" value="A">
-                Category A
-              </option>
-              <option className="" value="B">
-                Category B
-              </option>
-              <option className="" value="C">
-                Category C
-              </option>
-              <option className="" value="D">
-                Category D
-              </option>
+              {Object.entries(categoryInfo).map(
+                ([categoryCode, categoryName]) => (
+                  <option key={categoryCode} value={categoryCode}>
+                    {categoryName}
+                  </option>
+                )
+              )}
             </select>
+            <div className="form-group">
+              <label>Room Type*</label>
 
-            <div className="w-full p-2 mb-5">
-              <ul className="flex flex-col justify-center">
-                {formData.category === "A" &&
-                  catAReviewers.map((reviewer) => (
-                    <li
-                      key={reviewer}
-                      className="flex justify-start gap-4 items-center w-full"
-                    >
-                      <input
-                        name="reviewers"
-                        type="checkbox"
-                        id={reviewer}
-                        value={reviewer}
-                        onChange={handleCheckboxChange}
-                        style={{ width: "20px" }}
-                      />
-                      <label className="w-32" htmlFor={reviewer}>
-                        {reviewer}
-                      </label>
-                    </li>
-                  ))}
-                {formData.category === "B" &&
-                  catBReviewers.map((reviewer) => (
-                    <li
-                      key={reviewer}
-                      className="flex justify-start gap-4 items-center w-full"
-                    >
-                      <input
-                        name="reviewers"
-                        type="checkbox"
-                        id={reviewer}
-                        value={reviewer}
-                        onChange={handleCheckboxChange}
-                        style={{ width: "20px" }}
-                      />
-                      <label className="w-32" htmlFor={reviewer}>
-                        {reviewer}
-                      </label>
-                    </li>
-                  ))}
-                {formData.category === "C" &&
-                  catCReviewers.map((reviewer) => (
-                    <li
-                      key={reviewer}
-                      className="flex justify-start gap-4 items-center w-full"
-                    >
-                      <input
-                        name="reviewers"
-                        type="checkbox"
-                        id={reviewer}
-                        value={reviewer}
-                        onChange={handleCheckboxChange}
-                        style={{ width: "20px" }}
-                      />
-                      <label className="w-32" htmlFor={reviewer}>
-                        {reviewer}
-                      </label>
-                    </li>
-                  ))}
-                {formData.category === "D" &&
-                  catDReviewers.map((reviewer) => (
-                    <li
-                      key={reviewer}
-                      className="flex justify-start gap-4 items-center w-full"
-                    >
-                      <input
-                        name="reviewers"
-                        type="checkbox"
-                        id={reviewer}
-                        value={reviewer}
-                        onChange={handleCheckboxChange}
-                        style={{ width: "20px" }}
-                      />
-                      <label className="w-32" htmlFor={reviewer}>
-                        {reviewer}
-                      </label>
-                    </li>
-                  ))}
-              </ul>
+              <select
+                name="roomType"
+                className="w-full h-12 border rounded-md border-gray-300 p-2 whitespace-pre"
+                onChange={handleChange}
+                value={formData.roomType}
+              >
+                <option className="" value="Single Occupancy">
+                  {formData.category !== "A" && (
+                    <span>
+                      Single Occupancy (Rs.
+                      {roomFare[formData.category]["Single Occupancy"]}/- only)
+                    </span>
+                  )}
+                  {formData.category === "A" && (
+                    <span>Single Occupancy (Free)</span>
+                  )}
+                </option>
+                <option className="" value="Double Occupancy">
+                  {formData.category !== "A" && (
+                    <span>
+                      Double Occupancy (Rs.
+                      {roomFare[formData.category]["Double Occupancy"]}/- only)
+                    </span>
+                  )}
+                  {formData.category === "A" && (
+                    <span>Double Occupancy (Free)</span>
+                  )}
+                </option>
+              </select>
             </div>
-            {(formData.category === "B" || formData.category === "C") && (
+            {showCheckbox &&
+              (formData.category === "A" || formData.category === "B") && (
+                <div className="w-full p-2 mb-5">
+                  <ul className="flex flex-col flex-wrap justify-start gap-1">
+                    {catReviewers[formData.category].map((reviewer) => (
+                      <li
+                        key={reviewer}
+                        className="flex justify-start gap-1 items-center"
+                      >
+                        <Checkbox
+                          name="reviewers"
+                          id={reviewer}
+                          value={reviewer}
+                          checked={checkedValues.includes(reviewer)}
+                          onChange={handleCheckboxChange}
+                          inputProps={{ "aria-label": reviewer }}
+                        />
+                        <label className="w-32" htmlFor={reviewer}>
+                          {reviewer}
+                        </label>
+                        {reviewer === "ASSOCIATE DEAN" &&
+                          checkedValues.includes("ASSOCIATE DEAN") && (
+                            <FormControl>
+                              <Select
+                                labelId="sub-role-label"
+                                id="sub-role-select"
+                                value={
+                                  subRole[
+                                    checkedValues.indexOf("ASSOCIATE DEAN")
+                                  ] || "Select"
+                                }
+                                onChange={(e) =>
+                                  handleSubRoleChange(e, reviewer)
+                                }
+                              >
+                                <MenuItem value="Select">Select</MenuItem>
+                                <MenuItem value="HOSTEL MANAGEMENT">
+                                  Hostel Management
+                                </MenuItem>
+                                <MenuItem value="CONTINUING EDUCATION AND OUTREACH ACTIVITIES">
+                                  Continuing Education and Outreach Activities
+                                </MenuItem>
+                                <MenuItem value="INTERNATIONAL RELATIONS AND ALUMNI AFFAIRS">
+                                  International Relations and Alumni Affairs
+                                </MenuItem>
+                                <MenuItem value="INFRASTRUCTURE">
+                                  Infrastructure
+                                </MenuItem>
+                              </Select>
+                            </FormControl>
+                          )}
+                        {reviewer === "HOD" &&
+                          checkedValues.includes("HOD") && (
+                            <FormControl>
+                              <Select
+                                labelId="sub-role-label"
+                                id="sub-role-select"
+                                value={
+                                  subRole[checkedValues.indexOf("HOD")] ||
+                                  "Select"
+                                }
+                                onChange={(e) =>
+                                  handleSubRoleChange(e, reviewer)
+                                }
+                              >
+                                <MenuItem value="Select">Select</MenuItem>
+                                <MenuItem value="COMPUTER SCIENCE">
+                                  Computer Science
+                                </MenuItem>
+                                <MenuItem value="ELECTRICAL ENGINEERING">
+                                  Electrical Engineering
+                                </MenuItem>
+                                <MenuItem value="MECHANICAL ENGINEERING">
+                                  Mechanical Engineering
+                                </MenuItem>
+                                <MenuItem value="CHEMISTRY">Chemistry</MenuItem>
+                                <MenuItem value="MATHEMATICS">
+                                  Mathematics
+                                </MenuItem>
+                                <MenuItem value="PHYSICS">Physics</MenuItem>
+                                <MenuItem value="HUMANITIES AND SOCIAL SCIENCES">
+                                  Humanities and Social Sciences
+                                </MenuItem>
+                                <MenuItem value="BIOMEDICAL ENGINEERING">
+                                  Biomedical Engineering
+                                </MenuItem>
+                                <MenuItem value="CIVIL ENGINEERING">
+                                  Civil Engineering
+                                </MenuItem>
+                                <MenuItem value="CHEMICAL ENGINEERING">
+                                  Chemical Engineering
+                                </MenuItem>
+                                <MenuItem value="METALLURGICAL AND MATERIALS ENGINEERING">
+                                  Metallurgical & Materials Engineering
+                                </MenuItem>
+                              </Select>
+                            </FormControl>
+                          )}
+                        {reviewer === "DEAN" &&
+                          checkedValues.includes("DEAN") && (
+                            <FormControl>
+                              <Select
+                                labelId="sub-role-label"
+                                id="sub-role-select"
+                                value={
+                                  subRole[checkedValues.indexOf("DEAN")] ||
+                                  "Select"
+                                }
+                                onChange={(e) =>
+                                  handleSubRoleChange(e, reviewer)
+                                }
+                              >
+                                <MenuItem value="Select">Select</MenuItem>
+                                <MenuItem value="RESEARCH AND DEVELOPMENT">
+                                  Research and Development
+                                </MenuItem>
+                                <MenuItem value="STUDENT AFFAIRS">
+                                  Student Affairs
+                                </MenuItem>
+                                <MenuItem value="FACULTY AFFAIRS AND ADMINISTRATION">
+                                  Faculty Affairs & Administration
+                                </MenuItem>
+                                <MenuItem value="UNDER GRADUATE STUDIES">
+                                  Under Graduate Studies
+                                </MenuItem>
+                                <MenuItem value="POST GRADUATE AND RESEARCH">
+                                  Post Graduate & Research
+                                </MenuItem>
+                              </Select>
+                            </FormControl>
+                          )}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            {(formData.category === "B" ||
+              formData.category === "C" ||
+              formData.category === "D") && (
               <>
                 <label>Payment*:</label>
 
@@ -521,8 +720,8 @@ function AdminReservationForm() {
                 </select>
               </>
             )}
-
-            <div className="flex gap-10">
+            Add attachements for proof of category (if any):
+            <div className="flex mt-2 gap-10">
               <div>
                 <InputFileUpload className="" onFileUpload={handleFileUpload} />
               </div>
@@ -553,6 +752,11 @@ function AdminReservationForm() {
                     );
                   })}
                 </div>
+              ) : formData.category === "A" || formData.category === "B" ? (
+                <div className="flex items-center text-gray-500">
+                  *Uploading attachments is mandatory for category A and B (size
+                  limit: 2MB)
+                </div>
               ) : (
                 <div className="flex items-center text-gray-500">
                   File size limit: 2MB
@@ -560,7 +764,7 @@ function AdminReservationForm() {
               )}
             </div>
             <div className="mt-5 flex flex-col gap-2">
-              <div>Applicant Details:</div>
+              <div>Applicant/Proposer Details:</div>
               <div>
                 <ApplicantTable
                   entry={formData.applicant}
@@ -575,7 +779,7 @@ function AdminReservationForm() {
           <div>
             By clicking on Submit, you hereby agree to the{" "}
             <span
-              className="underline cursor-pointer"
+              className="underline cursor-pointer text-blue-800"
               onClick={() => {
                 setShowTC(true);
               }}
@@ -607,4 +811,4 @@ function AdminReservationForm() {
   );
 }
 
-export default AdminReservationForm;
+export default ReservationForm;

@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-// import Counter from "./Counter.js";
 import Counter from "./Counter.js";
 const reservationSchema = new mongoose.Schema(
   {

@@ -186,16 +186,20 @@ function ReservationForm() {
   };
 
   const [checkedValues, setCheckedValues] = useState([]);
-  // console.log(checkedValues);
-  // console.log(formData.category);
 
   console.log(checkedValues);
   console.log(subRole);
   const handleChange = (e) => {
     const { name, value } = e.target;
+    console.log(name, value);
     if (name === "category") {
-      setCheckedValues([]);
-      setSubRole([]);
+      if (value === "C" || value === "D") {
+        setCheckedValues(["CHAIRMAN"]);
+        setSubRole(["Select"]);
+      } else {
+        setCheckedValues([]);
+        setSubRole([]);
+      }
     }
     setFormData({
       ...formData,
@@ -206,7 +210,7 @@ function ReservationForm() {
     const { value, checked } = event.target;
     if (checked) {
       setCheckedValues((prevCheckedValues) => [...prevCheckedValues, value]);
-      setSubRole((prevSubRole) => [...prevSubRole, ""]);
+      setSubRole((prevSubRole) => [...prevSubRole, "Select"]);
     } else {
       setCheckedValues((prevCheckedValues) => {
         const temp = [...prevCheckedValues];
@@ -221,7 +225,7 @@ function ReservationForm() {
     }
   };
 
-  console.log(checkedValues)
+  console.log(checkedValues);
 
   const handleSubRoleChange = (event, reviewer) => {
     const index = checkedValues.indexOf(reviewer);
@@ -341,12 +345,22 @@ function ReservationForm() {
       return;
     }
 
-    checkedValues.forEach((reviewer, index) => {
-      if (subroles[reviewer] && subRole[index] === "") {
+    console.log(checkedValues);
+    console.log(subRole);
+
+    for (let [index, reviewer] of checkedValues.entries()) {
+      console.log(subroles[reviewer]);
+      console.log(subRole[index]);
+      if (
+        subroles[reviewer] &&
+        (subRole[index] === "" ||
+          !subRole[index] ||
+          subRole[index] === "Select")
+      ) {
         toast.error("Please select subrole for each reviewer");
         return;
       }
-    });
+    }
 
     if (!passed) {
       toast.error("Please Fill All Necessary Fields Correctly.");
@@ -376,8 +390,8 @@ function ReservationForm() {
       for (const file of files) {
         formDataToSend.append("files", file);
       }
-      formDataToSend.append("reviewers", Array.from(new Set(checkedValues)));
-      formDataToSend.append("subroles", Array.from(new Set(subRole)));
+      formDataToSend.append("reviewers", checkedValues);
+      formDataToSend.append("subroles", subRole);
       formDataToSend.append("receipt", receipt);
       const res = await http.post("reservation/", formDataToSend, {
         headers: {
@@ -395,7 +409,7 @@ function ReservationForm() {
           autoClose: 3000,
         });
         setLoading(false);
-        navigate("..");
+        // navigate("..");
       } else {
         console.log("fail");
 
@@ -430,6 +444,13 @@ function ReservationForm() {
       }
     }
   };
+
+  const [showCheckbox, setShowCheckbox] = useState(false);
+
+  useEffect(() => {
+    // setShowCheckbox(false);
+    setShowCheckbox(true);
+  }, [formData.category]);
 
   return (
     <div className="w-full">
@@ -561,7 +582,6 @@ function ReservationForm() {
               </span>{" "}
               page for details of categories and tariff)
             </label>
-
             <select
               name="category"
               className="w-full h-12 border rounded-md border-gray-300 p-2 mb-5 whitespace-pre"
@@ -576,7 +596,6 @@ function ReservationForm() {
                 )
               )}
             </select>
-
             <div className="form-group">
               <label>Room Type*</label>
 
@@ -610,134 +629,142 @@ function ReservationForm() {
                 </option>
               </select>
             </div>
-
-            <div className="w-full p-2 mb-5">
-              <ul className="flex flex-col flex-wrap justify-start gap-1">
-                {catReviewers[formData.category].map((reviewer) => (
-                  <li
-                    key={reviewer}
-                    className="flex justify-start gap-1 items-center"
-                  >
-                    <Checkbox
-                      name="reviewers"
-                      id={reviewer}
-                      value={reviewer}
-                      onChange={handleCheckboxChange}
-                      inputProps={{ "aria-label": reviewer }}
-                    />
-                    <label className="w-32" htmlFor={reviewer}>
-                      {reviewer}
-                    </label>
-                    {reviewer === "ASSOCIATE DEAN" &&
-                      checkedValues.includes("ASSOCIATE DEAN") && (
-                        <FormControl>
-                          <Select
-                            labelId="sub-role-label"
-                            id="sub-role-select"
-                            value={
-                              subRole[
-                                checkedValues.indexOf("ASSOCIATE DEAN")
-                              ] || "Select"
-                            }
-                            onChange={(e) => handleSubRoleChange(e, reviewer)}
-                          >
-                            <MenuItem value="Select">Select</MenuItem>
-                            <MenuItem value="HOTEL MANAGEMENT">
-                              Hotel Management
-                            </MenuItem>
-                            <MenuItem value="CONTINUING EDUCATION AND OUTREACH ACTIVITIES">
-                              Continuing Education and Outreach Activities
-                            </MenuItem>
-                            <MenuItem value="INTERNATIONAL RELATIONS AND ALUMNI AFFAIRS">
-                              International Relations and Alumni Affairs
-                            </MenuItem>
-                            <MenuItem value="INFRASTRUCTURE">
-                              Infrastructure
-                            </MenuItem>
-                          </Select>
-                        </FormControl>
-                      )}
-                    {reviewer === "HOD" && checkedValues.includes("HOD") && (
-                      <FormControl>
-                        <Select
-                          labelId="sub-role-label"
-                          id="sub-role-select"
-                          value={
-                            subRole[checkedValues.indexOf("HOD")] || "Select"
-                          }
-                          onChange={(e) => handleSubRoleChange(e, reviewer)}
-                        >
-                          <MenuItem value="Select">Select</MenuItem>
-                          <MenuItem value="COMPUTER SCIENCE">
-                            Computer Science
-                          </MenuItem>
-                          <MenuItem value="ELECTRICAL ENGINEERING">
-                            Electrical Engineering
-                          </MenuItem>
-                          <MenuItem value="MECHANICAL ENGINEERING">
-                            Mechanical Engineering
-                          </MenuItem>
-                          <MenuItem value="CHEMISTRY">
-                            Chemistry
-                          </MenuItem>
-                          <MenuItem value="MATHEMATICS">
-                            Mathematics
-                          </MenuItem>
-                          <MenuItem value="PHYSICS">
-                            Physics
-                          </MenuItem>
-                          <MenuItem value="HUMANITIES AND SOCIAL SCIENCES">
-                            Humanities and Social Sciences
-                          </MenuItem>
-                          <MenuItem value="BIOMEDICAL ENGINEERING">
-                            Biomedical Engineering
-                          </MenuItem>
-                          <MenuItem value="CIVIL ENGINEERING">
-                            Civil Engineering
-                          </MenuItem>
-                          <MenuItem value="CHEMICAL ENGINEERING">
-                            Chemical Engineering
-                          </MenuItem>
-                          <MenuItem value="METALLURGICAL AND MATERIALS ENGINEERING">
-                            Metallurgical & Materials Engineering
-                          </MenuItem>
-                        </Select>
-                      </FormControl>
-                    )}
-                    {reviewer === "DEAN" && checkedValues.includes("DEAN") && (
-                      <FormControl>
-                        <Select
-                          labelId="sub-role-label"
-                          id="sub-role-select"
-                          value={
-                            subRole[checkedValues.indexOf("DEAN")] || "Select"
-                          }
-                          onChange={(e) => handleSubRoleChange(e, reviewer)}
-                        >
-                          <MenuItem value="Select">Select</MenuItem>
-                          <MenuItem value="RESEARCH AND DEVELOPMENT">
-                            Research and Development
-                          </MenuItem>
-                          <MenuItem value="STUDENT AFFAIRS">
-                            Student Affairs
-                          </MenuItem>
-                          <MenuItem value="FACULTY AFFAIRS AND ADMINISTRATION">
-                            Faculty Affairs & Administration
-                          </MenuItem>
-                          <MenuItem value="UNDER GRADUATE STUDIES">
-                            Under Graduate Studies
-                          </MenuItem>
-                          <MenuItem value="POST GRADUATE AND RESEARCH">
-                            Post Graduate & Research
-                          </MenuItem>
-                        </Select>
-                      </FormControl>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </div>
-
+            {showCheckbox &&
+              (formData.category === "A" || formData.category === "B") && (
+                <div className="w-full p-2 mb-5">
+                  <ul className="flex flex-col flex-wrap justify-start gap-1">
+                    {catReviewers[formData.category].map((reviewer) => (
+                      <li
+                        key={reviewer}
+                        className="flex justify-start gap-1 items-center"
+                      >
+                        <Checkbox
+                          name="reviewers"
+                          id={reviewer}
+                          value={reviewer}
+                          checked={checkedValues.includes(reviewer)}
+                          onChange={handleCheckboxChange}
+                          inputProps={{ "aria-label": reviewer }}
+                        />
+                        <label className="w-32" htmlFor={reviewer}>
+                          {reviewer}
+                        </label>
+                        {reviewer === "ASSOCIATE DEAN" &&
+                          checkedValues.includes("ASSOCIATE DEAN") && (
+                            <FormControl>
+                              <Select
+                                labelId="sub-role-label"
+                                id="sub-role-select"
+                                value={
+                                  subRole[
+                                    checkedValues.indexOf("ASSOCIATE DEAN")
+                                  ] || "Select"
+                                }
+                                onChange={(e) =>
+                                  handleSubRoleChange(e, reviewer)
+                                }
+                              >
+                                <MenuItem value="Select">Select</MenuItem>
+                                <MenuItem value="HOSTEL MANAGEMENT">
+                                  Hostel Management
+                                </MenuItem>
+                                <MenuItem value="CONTINUING EDUCATION AND OUTREACH ACTIVITIES">
+                                  Continuing Education and Outreach Activities
+                                </MenuItem>
+                                <MenuItem value="INTERNATIONAL RELATIONS AND ALUMNI AFFAIRS">
+                                  International Relations and Alumni Affairs
+                                </MenuItem>
+                                <MenuItem value="INFRASTRUCTURE">
+                                  Infrastructure
+                                </MenuItem>
+                              </Select>
+                            </FormControl>
+                          )}
+                        {reviewer === "HOD" &&
+                          checkedValues.includes("HOD") && (
+                            <FormControl>
+                              <Select
+                                labelId="sub-role-label"
+                                id="sub-role-select"
+                                value={
+                                  subRole[checkedValues.indexOf("HOD")] ||
+                                  "Select"
+                                }
+                                onChange={(e) =>
+                                  handleSubRoleChange(e, reviewer)
+                                }
+                              >
+                                <MenuItem value="Select">Select</MenuItem>
+                                <MenuItem value="COMPUTER SCIENCE">
+                                  Computer Science
+                                </MenuItem>
+                                <MenuItem value="ELECTRICAL ENGINEERING">
+                                  Electrical Engineering
+                                </MenuItem>
+                                <MenuItem value="MECHANICAL ENGINEERING">
+                                  Mechanical Engineering
+                                </MenuItem>
+                                <MenuItem value="CHEMISTRY">Chemistry</MenuItem>
+                                <MenuItem value="MATHEMATICS">
+                                  Mathematics
+                                </MenuItem>
+                                <MenuItem value="PHYSICS">Physics</MenuItem>
+                                <MenuItem value="HUMANITIES AND SOCIAL SCIENCES">
+                                  Humanities and Social Sciences
+                                </MenuItem>
+                                <MenuItem value="BIOMEDICAL ENGINEERING">
+                                  Biomedical Engineering
+                                </MenuItem>
+                                <MenuItem value="CIVIL ENGINEERING">
+                                  Civil Engineering
+                                </MenuItem>
+                                <MenuItem value="CHEMICAL ENGINEERING">
+                                  Chemical Engineering
+                                </MenuItem>
+                                <MenuItem value="METALLURGICAL AND MATERIALS ENGINEERING">
+                                  Metallurgical & Materials Engineering
+                                </MenuItem>
+                              </Select>
+                            </FormControl>
+                          )}
+                        {reviewer === "DEAN" &&
+                          checkedValues.includes("DEAN") && (
+                            <FormControl>
+                              <Select
+                                labelId="sub-role-label"
+                                id="sub-role-select"
+                                value={
+                                  subRole[checkedValues.indexOf("DEAN")] ||
+                                  "Select"
+                                }
+                                onChange={(e) =>
+                                  handleSubRoleChange(e, reviewer)
+                                }
+                              >
+                                <MenuItem value="Select">Select</MenuItem>
+                                <MenuItem value="RESEARCH AND DEVELOPMENT">
+                                  Research and Development
+                                </MenuItem>
+                                <MenuItem value="STUDENT AFFAIRS">
+                                  Student Affairs
+                                </MenuItem>
+                                <MenuItem value="FACULTY AFFAIRS AND ADMINISTRATION">
+                                  Faculty Affairs & Administration
+                                </MenuItem>
+                                <MenuItem value="UNDER GRADUATE STUDIES">
+                                  Under Graduate Studies
+                                </MenuItem>
+                                <MenuItem value="POST GRADUATE AND RESEARCH">
+                                  Post Graduate & Research
+                                </MenuItem>
+                              </Select>
+                            </FormControl>
+                          )}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             {(formData.category === "B" ||
               formData.category === "C" ||
               formData.category === "D") && (
@@ -758,8 +785,8 @@ function ReservationForm() {
                 </select>
               </>
             )}
-
-            <div className="flex gap-10">
+            Add attachements for proof of category (if any):
+            <div className="flex mt-2 gap-10">
               <div>
                 <InputFileUpload className="" onFileUpload={handleFileUpload} />
               </div>
@@ -792,7 +819,7 @@ function ReservationForm() {
                 </div>
               ) : formData.category === "A" || formData.category === "B" ? (
                 <div className="flex items-center text-gray-500">
-                  *Uploading files is mandatory for category A and B (size
+                  *Uploading attachments is mandatory for category A and B (size
                   limit: 2MB)
                 </div>
               ) : (
@@ -802,7 +829,7 @@ function ReservationForm() {
               )}
             </div>
             <div className="mt-5 flex flex-col gap-2">
-              <div>Applicant Details:</div>
+              <div>Applicant/Proposer Details:</div>
               <div>
                 <ApplicantTable
                   entry={formData.applicant}
