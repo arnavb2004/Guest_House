@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, Navigate, useParams } from "react-router-dom";
-import axios from "axios"; // Assuming you use axios for API requests
 import Workflow from "../components/Workflow";
 import { privateRequest } from "../utils/useFetch";
-import { Checkbox } from "@mui/material";
 import { getDate, getTime } from "../utils/handleDate";
-import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
@@ -48,27 +45,11 @@ export default function AdminRecordPage() {
 
   const roles = [
     "DIRECTOR",
-    "HOD COMPUTER SCIENCE",
-    "HOD ELECTRICAL ENGINEERING",
-    "HOD MECHANICAL ENGINEERING",
-    "HOD CHEMISTRY",
-    "HOD MATHEMATICS",
-    "HOD PHYSICS",
-    "HOD HUMANITIES AND SOCIAL SCIENCES",
-    "HOD BIOMEDICAL ENGINEERING",
-    "HOD CHEMICAL ENGINEERING",
-    "HOD METALLURGICAL AND MATERIALS ENGINEERING",
-    "DEAN RESEARCH AND DEVELOPMENT",
-    "DEAN STUDENT AFFAIRS",
-    "DEAN FACULTY AFFAIRS AND ADMINISTRATION",
-    "DEAN UNDER GRADUATE STUDIES",
-    "DEAN POST GRADUATE STUDIES",
+    "HOD",
+    "DEAN",
     "REGISTRAR",
     "CHAIRMAN",
-    "ASSOCIATE DEAN HOSTEL MANAGEMENT",
-    "ASSOCIATE DEAN INTERNATIONAL RELATIONS AND ALUMNI AFFAIRS",
-    "ASSOCIATE DEAN CONTINUING EDUCATION AND OUTREACH ACTIVITIES",
-    "ASSOCIATE DEAN INFRASTRUCTURE",
+    "ASSOCIATE DEAN",
   ];
 
   const roomPricesB = { "Single Occupancy": 600, "Double Occupancy": 850 };
@@ -89,15 +70,6 @@ export default function AdminRecordPage() {
             (reviewer) => reviewer.role
           ) || []
         );
-        if (response.data.reservation.category === "B") {
-          setTotalRoomFare(roomPricesB[response.data.reservation.roomType]);
-        }
-        if (response.data.reservation.category === "C") {
-          setTotalRoomFare(roomPricesC[response.data.reservation.roomType]);
-        }
-        if (response.data.reservation.category === "D") {
-          setTotalRoomFare(roomPricesD[response.data.reservation.roomType]);
-        }
       } catch (error) {
         setStatus("Error");
         console.error("Error fetching user data:", error);
@@ -131,10 +103,6 @@ export default function AdminRecordPage() {
       );
     }
   };
-
-  useEffect(() => {
-    setTotalFare(totalDiningFare + totalRoomFare);
-  }, [totalDiningFare, totalRoomFare]);
 
   if (status === "Error") return <Navigate to="/404" />;
   else if (status === "Loading")
@@ -187,7 +155,10 @@ export default function AdminRecordPage() {
                   fontSize="small"
                   onClick={async () => {
                     try {
-                      const response = await http.put(`/reservation/${id}`, userRecord);
+                      const response = await http.put(
+                        `/reservation/${id}`,
+                        userRecord
+                      );
                       console.log(response.data);
                       setIsEdit(false);
                     } catch (error) {}
@@ -356,7 +327,9 @@ export default function AdminRecordPage() {
             <hr />
             <div className="flex justify-between px-32 pb-5">
               <p className="p-2 text-xl font-semibold">Room Fare:</p>
-              <p className="p-2 text-lg">Rs. {totalRoomFare}/- only</p>
+              <p className="p-2 text-lg">
+                Rs. {userRecord.payment.amount}/- only
+              </p>
             </div>
             <div className="flex justify-between px-32 pb-5">
               <p className="p-2 text-xl font-semibold">Dining Fare:</p>
@@ -364,7 +337,9 @@ export default function AdminRecordPage() {
             </div>
             <div className="flex justify-between px-32 pb-5">
               <p className="p-2 text-xl font-semibold">Total Amount:</p>
-              <p className="p-2 text-lg">Rs. {totalFare}/- only</p>
+              <p className="p-2 text-lg">
+                Rs. {totalDiningFare + userRecord.payment.amount}/- only
+              </p>
             </div>
           </div>
         ) : (
@@ -427,7 +402,9 @@ export default function AdminRecordPage() {
             <hr />
             <div className="flex justify-between px-32 pb-5">
               <p className="p-2 text-xl font-semibold">Room Fare:</p>
-              <p className="p-2 text-lg">Rs. {totalRoomFare}/- only</p>
+              <p className="p-2 text-lg">
+                Rs. {userRecord.payment.amount}/- only
+              </p>
             </div>
             <div className="flex justify-between px-32 pb-5">
               <p className="p-2 text-xl font-semibold">Dining Fare:</p>
@@ -435,7 +412,9 @@ export default function AdminRecordPage() {
             </div>
             <div className="flex justify-between px-32 pb-5">
               <p className="p-2 text-xl font-semibold">Total Amount:</p>
-              <p className="p-2 text-lg">Rs. {totalFare}/- only</p>
+              <p className="p-2 text-lg">
+                Rs. {userRecord.payment.amount + totalDiningFare}/- only
+              </p>
             </div>
           </div>
         )}
@@ -448,7 +427,7 @@ export default function AdminRecordPage() {
           <div className="p-5 flex flex-col gap-4 ">
             {reviewers.map((reviewer) => (
               <div className="flex gap-4 w-max">
-                <div className="w-20">{reviewer.role}</div>
+                <div className="w-56">{reviewer.role} {reviewer.subrole || ""}</div>
                 <div
                   className={
                     "border rounded-full relative top-1 w-5 h-5 " +

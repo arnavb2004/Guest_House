@@ -5,7 +5,6 @@ import { privateRequest } from "../utils/useFetch";
 import { useSelector } from "react-redux";
 import { getDate } from "../utils/handleDate";
 import { useLocation, useParams } from "react-router-dom";
-import Switch from "@mui/material/Switch";
 import RoomList from "../components/RoomList";
 
 const RoomBooking = () => {
