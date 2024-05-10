@@ -138,7 +138,7 @@ export default function DiningRecordPage() {
                   toast.error("No reservation found")
                 }
               }}
-              className="p-2 text-xl cursor-pointer underline hover:text-blue-500"
+              className="p-2 text-xl cursor-pointer text-blue-500 underline hover:text-blue-700"
             >
               {userRecord.reservationId
                 ? "View reservation"
