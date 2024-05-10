@@ -111,8 +111,7 @@ export async function createReservation(req, res) {
     console.log(subroles);
     let subrolesArray = subroles.split(",");
     let reviewersArray = reviewers.split(",").map((role, index) => ({
-      role,
-      subrole: subrolesArray[index],
+      role: role + " " + subrolesArray[index],
       comments: "",
       status: "PENDING",
     }));

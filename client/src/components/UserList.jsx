@@ -246,7 +246,7 @@ export default function UserList() {
           <div className="h-96 overflow-y-auto">
             {newUsers.map((user) => {
               const labelId = `checkbox-list-label-${user._id}`;
-              if (user.role === "ADMIN") return;
+              // if (user.role === "ADMIN") return;
               return (
                 <div
                   key={user._id}

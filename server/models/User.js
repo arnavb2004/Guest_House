@@ -20,22 +20,7 @@ const userSchema = new Schema({
   },
   role: {
     type: String,
-    enum: [
-      "USER",
-      "ADMIN",
-      "HOD",
-      "CHAIRMAN",
-      "DIRECTOR",
-      "DEAN",
-      "REGISTRAR",
-      "ASSOCIATE DEAN",
-      "CASHIER",
-    ],
     default: "USER",
-  },
-  subrole: {
-    type: String,
-    default: "",
   },
   pendingRequest: {
     type: Number,
@@ -49,15 +34,7 @@ const userSchema = new Schema({
       },
       sender: {
         type: String,
-        enum: [
-          "ADMIN",
-          "HOD",
-          "CHAIRMAN",
-          "DIRECTOR",
-          "DEAN",
-          "REGISTRAR",
-          "ASSOCIATE DEAN",
-        ],
+        
       },
       res_id: {
         type: mongoose.Schema.Types.ObjectId,

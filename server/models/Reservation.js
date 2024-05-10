@@ -61,18 +61,6 @@ const reservationSchema = new mongoose.Schema(
       {
         role: {
           type: String,
-          enum: [
-            "ADMIN",
-            "DEAN",
-            "HOD",
-            "ASSOCIATE DEAN",
-            "REGISTRAR",
-            "DIRECTOR",
-            "CHAIRMAN"
-          ],
-        },
-        subrole: {
-          type: String,
         },
         comments: {
           type: String,
