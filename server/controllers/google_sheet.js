@@ -1,24 +1,13 @@
 import { google } from 'googleapis';
 import Meal from "../models/Meal.js";
 
-// const googleSheets = google.sheets("v4");
-// const auth = new google.auth.JWT(
-//   process.env.client_email,
-//   null,
-//   process.env.private_key,
-//   ["https://www.googleapis.com/auth/spreadsheets"]
-// );
-
-import keys from '../secrets.json' assert { type: 'json' };
-
-const googleSheets = google.sheets('v4');
+const googleSheets = google.sheets("v4");
 const auth = new google.auth.JWT(
-  keys.client_email,
+  process.env.client_email,
   null,
-  keys.private_key,
-  ['https://www.googleapis.com/auth/spreadsheets']
+  process.env.private_key,
+  ["https://www.googleapis.com/auth/spreadsheets"]
 );
-
 
 const spreadsheetId = process.env.GOOGLE_SHEET_ID;
 
