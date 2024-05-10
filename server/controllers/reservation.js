@@ -944,7 +944,9 @@ export const checkoutReservation = async (req, res) => {
     let canCheckout = true;
 
     for (const dining of dinings) {
-      if (dining.status !== "PAID") {
+      console.log(dining)
+      console.log(dining.status)
+      if (dining.payment.status !== "PAID") {
         canCheckout = false;
         break;
       }

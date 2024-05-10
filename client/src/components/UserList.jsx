@@ -157,7 +157,7 @@ export default function UserList() {
       setNewUsers(res.data);
       setStatus("Success");
     } catch (err) {
-      if (err.response?.data?.message) toast.errort(err.response.data.message);
+      if (err.response?.data?.message) toast.error(err.response.data.message);
       else toast.error("Error fetching users");
       setStatus("Error");
     }
