@@ -130,6 +130,27 @@ function ReservationForm() {
     "DEPARTMENT OF METALLURGICAL AND MATERIALS ENGINEERING",
   ];
 
+  const AssociateDeans = [
+    "HOSTEL MANAGEMENT",
+    "INTERNATIONAL RELATIONS AND ALUMNI AFFAIRS",
+    "CONTINUING EDUCATION AND OUTREACH ACTIVITIES",
+    "INFRASTRUCTURE",
+  ];
+
+  const Deans = [
+    "RESEARCH AND DEVELOPMENT",
+    "STUDENT AFFAIRS",
+    "FACULTY AFFAIRS AND ADMINISTRATION",
+    "UNDER GRADUATE STUDIES",
+    "POST GRADUATE STUDIES",
+  ];
+
+  const subroles = {
+    HOD: Hods,
+    "ASSOCIATE DEAN": AssociateDeans,
+    DEAN: Deans,
+  };
+
   const catCReviewers = ["CHAIRMAN"];
   const catDReviewers = ["CHAIRMAN"];
 
@@ -188,12 +209,19 @@ function ReservationForm() {
       setSubRole((prevSubRole) => [...prevSubRole, ""]);
     } else {
       setCheckedValues((prevCheckedValues) => {
-        const index = prevCheckedValues.indexOf(value);
-        prevCheckedValues.splice(index, 1);
+        const temp = [...prevCheckedValues];
+        const index = temp.indexOf(value);
+
+        console.log(index);
+        temp.splice(index, 1);
+
         subRole.splice(index, 1);
+        return temp;
       });
     }
   };
+
+  console.log(checkedValues)
 
   const handleSubRoleChange = (event, reviewer) => {
     const index = checkedValues.indexOf(reviewer);

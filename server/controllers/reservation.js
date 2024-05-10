@@ -110,7 +110,7 @@ export async function createReservation(req, res) {
     console.log(reviewers);
     console.log(subroles);
     let subrolesArray = subroles.split(",");
-    let reviewersArray = reviewers.split(",").map((role,index) => ({
+    let reviewersArray = reviewers.split(",").map((role, index) => ({
       role,
       subrole: subrolesArray[index],
       comments: "",
@@ -499,6 +499,8 @@ export async function holdReservation(req, res) {
 }
 
 export const getPendingReservations = async (req, res) => {
+  console.log(req.user.role);
+  console.log(req.user.email);
   console.log("Getting pending reservations...");
   try {
     if (req.user.role === "USER") {
