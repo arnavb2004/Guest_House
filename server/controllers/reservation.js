@@ -78,6 +78,7 @@ export async function createReservation(req, res) {
       category,
       departureDate,
       reviewers,
+      subroles,
       applicant,
       source,
     } = req.body;
@@ -107,8 +108,11 @@ export async function createReservation(req, res) {
       extension: f.originalname.split(".")[1],
     }));
     console.log(reviewers);
-    let reviewersArray = reviewers.split(",").map((role) => ({
+    console.log(subroles);
+    let subrolesArray = subroles.split(",");
+    let reviewersArray = reviewers.split(",").map((role, index) => ({
       role,
+      subrole: subrolesArray[index],
       comments: "",
       status: "PENDING",
     }));
@@ -143,9 +147,11 @@ export async function createReservation(req, res) {
 
     console.log("sending mail");
     console.log("\n\n\n\n", reviewersArray, "\n\n\n\n");
+    console.log(revArray);
     const users = await User.find({
       role: { $in: revArray },
     });
+    console.log(users);
     try {
       const user = await User.findOne({ email: email });
       if (user) {
@@ -159,8 +165,8 @@ export async function createReservation(req, res) {
     } catch (err) {
       console.log("Error updating user:", err);
     }
-
     const emails = users.map((user) => user.email);
+    console.log(emails);
     sendVerificationEmail(
       emails,
       "New Reservation Request",
@@ -388,7 +394,7 @@ export async function rejectReservation(req, res) {
         .status(403)
         .json({ message: "You are not authorized to perform this action" });
     }
-    let found;
+    let found = false;
     reservation.reviewers = reservation.reviewers.map((reviewer) => {
       if (reviewer.role === req.user.role) {
         found = true;
@@ -495,6 +501,8 @@ export async function holdReservation(req, res) {
 }
 
 export const getPendingReservations = async (req, res) => {
+  console.log(req.user.role);
+  console.log(req.user.email);
   console.log("Getting pending reservations...");
   try {
     if (req.user.role === "USER") {

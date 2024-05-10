@@ -8,7 +8,7 @@ const reservationSchema = new mongoose.Schema(
       // required: true,
       unique: true,
     },
-    byAdmin:{
+    byAdmin: {
       type: Boolean,
       default: false,
     },
@@ -63,30 +63,16 @@ const reservationSchema = new mongoose.Schema(
           type: String,
           enum: [
             "ADMIN",
-            "HOD COMPUTER SCIENCE",
-            "HOD ELECTRICAL ENGINEERING",
-            "HOD MECHANICAL ENGINEERING",
-            "HOD CHEMISTRY",
-            "HOD MATHEMATICS",
-            "HOD PHYSICS",
-            "HOD HUMANITIES AND SOCIAL SCIENCES",
-            "HOD BIOMEDICAL ENGINEERING",
-            "HOD CHEMICAL ENGINEERING",
-            "HOD METALLURGICAL AND MATERIALS ENGINEERING",
-            "HOD CIVIL ENGINEERING",
-            "CHAIRMAN",
-            "DIRECTOR",
-            "DEAN RESEARCH AND DEVELOPMENT",
-            "DEAN STUDENT AFFAIRS",
-            "DEAN FACULTY AFFAIRS AND ADMINISTRATION",
-            "DEAN UNDER GRADUATE STUDIES",
-            "DEAN POST GRADUATE STUDIES",
+            "DEAN",
+            "HOD",
+            "ASSOCIATE DEAN",
             "REGISTRAR",
-            'ASSOCIATE DEAN HOSTEL MANAGEMENT',
-            'ASSOCIATE DEAN CONTINUING EDUCATION AND OUTREACH ACTIVITIES',
-            'ASSOCIATE DEAN INTERNATIONAL RELATIONS AND ALUMNI AFFAIRS',
-            'ASSOCIATE DEAN INFRASTRUCTURE'
+            "DIRECTOR",
+            "CHAIRMAN"
           ],
+        },
+        subrole: {
+          type: String,
         },
         comments: {
           type: String,

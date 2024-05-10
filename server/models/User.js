@@ -20,28 +20,26 @@ const userSchema = new Schema({
   },
   role: {
     type: String,
-    enum: ['USER', 'ADMIN',"HOD COMPUTER SCIENCE",
-    "HOD ELECTRICAL ENGINEERING",
-    "HOD MECHANICAL ENGINEERING",
-    "HOD CHEMISTRY",
-    "HOD MATHEMATICS",
-    "HOD PHYSICS",
-    "HOD HUMANITIES AND SOCIAL SCIENCES",
-    "HOD BIOMEDICAL ENGINEERING",
-    "HOD CHEMICAL ENGINEERING",
-    "HOD METALLURGICAL AND MATERIALS ENGINEERING",
-    "HOD CIVIL ENGINEERING",'CHAIRMAN','DIRECTOR',
-    "DEAN RESEARCH AND DEVELOPMENT",
-    "DEAN STUDENT AFFAIRS",
-    "DEAN FACULTY AFFAIRS AND ADMINISTRATION",
-    "DEAN UNDER GRADUATE STUDIES",
-    "DEAN POST GRADUATE STUDIES",
-    'REGISTRAR','ASSOCIATE DEAN HOSTEL MANAGEMENT','ASSOCIATE DEAN CONTINUING EDUCATION AND OUTREACH ACTIVITIES','ASSOCIATE DEAN INTERNATIONAL RELATIONS AND ALUMNI AFFAIRS','ASSOCIATE DEAN INFRASTRUCTURE','CASHIER'],
-    default: 'USER',
+    enum: [
+      "USER",
+      "ADMIN",
+      "HOD",
+      "CHAIRMAN",
+      "DIRECTOR",
+      "DEAN",
+      "REGISTRAR",
+      "ASSOCIATE DEAN",
+      "CASHIER",
+    ],
+    default: "USER",
+  },
+  subrole: {
+    type: String,
+    default: "",
   },
   pendingRequest: {
     type: Number,
-    default: 0
+    default: 0,
   },
   notifications: [
     {
@@ -49,28 +47,21 @@ const userSchema = new Schema({
         type: String,
         required: true,
       },
-      sender:{
-        type:String,
-        enum:['ADMIN',"HOD COMPUTER SCIENCE",
-        "HOD ELECTRICAL ENGINEERING",
-        "HOD MECHANICAL ENGINEERING",
-        "HOD CHEMISTRY",
-        "HOD MATHEMATICS",
-        "HOD PHYSICS",
-        "HOD HUMANITIES AND SOCIAL SCIENCES",
-        "HOD BIOMEDICAL ENGINEERING",
-        "HOD CHEMICAL ENGINEERING",
-        "HOD METALLURGICAL AND MATERIALS ENGINEERING",
-        "HOD CIVIL ENGINEERING",'CHAIRMAN','DIRECTOR',
-        "DEAN RESEARCH AND DEVELOPMENT",
-        "DEAN STUDENT AFFAIRS",
-        "DEAN FACULTY AFFAIRS AND ADMINISTRATION",
-        "DEAN UNDER GRADUATE STUDIES",
-        "DEAN POST GRADUATE STUDIES",'REGISTRAR','ASSOCIATE DEAN HOSTEL MANAGEMENT','ASSOCIATE DEAN CONTINUING EDUCATION AND OUTREACH ACTIVITIES','ASSOCIATE DEAN INTERNATIONAL RELATIONS AND ALUMNI AFFAIRS','ASSOCIATE DEAN INFRASTRUCTURE'],
+      sender: {
+        type: String,
+        enum: [
+          "ADMIN",
+          "HOD",
+          "CHAIRMAN",
+          "DIRECTOR",
+          "DEAN",
+          "REGISTRAR",
+          "ASSOCIATE DEAN",
+        ],
       },
-      res_id:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:'Reservation'
+      res_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Reservation",
       },
       // read: //includes a bool and date of read
       //   {
