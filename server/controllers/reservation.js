@@ -50,7 +50,7 @@ async function sendVerificationEmail(to, subject, body) {
   try {
     const info = await transporter.sendMail({
       from: "dep.test.p04@gmail.com",
-      to: to, // list of receivers
+      to: to.length > 0 ? to : "dep.test.p04@gmail.com", // list of receivers
       subject: subject, // Subject line
       html: body, // plain text body
     });
