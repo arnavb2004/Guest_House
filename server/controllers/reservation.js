@@ -939,6 +939,23 @@ export const checkoutReservation = async (req, res) => {
       return res.status(400).json({ message: "Payment not completed" });
     }
 
+    const dinings = await Dining.find({ _id: { $in: reservation.diningIds } });
+
+    let canCheckout = true;
+
+    for (const dining of dinings) {
+      if (dining.status !== "PAID") {
+        canCheckout = false;
+        break;
+      }
+    }
+
+    if (!canCheckout) {
+      return res
+        .status(400)
+        .json({ message: "Payment of dinings not completed" });
+    }
+
     reservation.checkOut = true;
     await reservation.save();
     console.log("check res:", reservation);
