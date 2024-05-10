@@ -12,14 +12,14 @@ const Table = ({ entry, setEntry }) => {
       <table className="border-collapse border-2 border-gray-500">
         <thead>
           <tr>
-            <th className="border border-gray-500 px-4 py-2">Name*</th>
-            <th className="border border-gray-500 px-4 py-2">Designation*</th>
-            <th className="border border-gray-500 px-4 py-2">Department*</th>
+            <th className="border border-gray-500 px-4 py-2">Name</th>
+            <th className="border border-gray-500 px-4 py-2">Designation</th>
+            <th className="border border-gray-500 px-4 py-2">Department</th>
             <th className="border border-gray-500 px-4 py-2">
-              Employee Code/Entry Number*
+              Employee Code/Entry Number
             </th>
-            <th className="border border-gray-500 px-4 py-2">Mobile Number*</th>
-            <th className="border border-gray-500 px-4 py-2">Email*</th>
+            <th className="border border-gray-500 px-4 py-2">Mobile Number</th>
+            <th className="border border-gray-500 px-4 py-2">Email</th>
           </tr>
         </thead>
         <tbody>

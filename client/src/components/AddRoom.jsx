@@ -155,7 +155,7 @@ export default function AddRoom() {
 									className={`booking-info overflow-y-auto max-h-48 hidden bg-black bg-opacity-80 text-white p-2.5 rounded absolute top-full  left-0 w-full transition-opacity duration-300 ease z-50 ${
 										hoverOverRoom[index] ? "room-booking-info-visible" : ""
 									}`}>
-									{room.bookings.map((booking) => (
+									{room.bookings.toReversed().map((booking) => (
 										<div key={"info-" + room.roomNumber} className="py-1">
 											<p>
 												Booked from: {getDate(booking.startDate)} to{" "}

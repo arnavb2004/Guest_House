@@ -3,7 +3,8 @@ import React, { useState } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
 
-import { FormControl, InputLabel, Select, MenuItem, Checkbox, ListItemText, TextField } from "@mui/material";
+import FormControl from "@mui/material/FormControl";
+import { TextField } from "@mui/material";
 import "./Reservation_Form.css";
 import { updateFilledPDF } from "../utils/generatePDF";
 import InputFileUpload from "../components/uploadFile";
@@ -15,7 +16,7 @@ import ApplicantTable from "../components/ApplicantTable";
 import NewWindow from "../components/NewWindow";
 import { useEffect } from "react";
 
-function ReservationForm() {
+function AdminReservationForm() {
   const user = useSelector((state) => state.user);
   const http = privateRequest(user.accessToken, user.refreshToken);
   const navigate = useNavigate();
@@ -23,7 +24,6 @@ function ReservationForm() {
 
   const [showTC, setShowTC] = useState(false);
   const [showCat, setShowCat] = useState(false);
-  const [subRole, setSubRole] = useState('');
 
   useEffect(() => {
     setShowCat(false);
@@ -69,19 +69,19 @@ function ReservationForm() {
   });
 
   const requiredFields = {
-    guestName: true,
-    address: true,
-    numberOfGuests: true,
-    numberOfRooms: true,
-    roomType: true,
+    guestName: false,
+    address: false,
+    numberOfGuests: false,
+    numberOfRooms: false,
+    roomType: false,
     arrivalDate: true,
-    arrivalTime: true,
+    arrivalTime: false,
     departureDate: true,
-    departureTime: true,
-    purpose: true,
+    departureTime: false,
+    purpose: false,
     category: true,
     source: true,
-    applicant: true,
+    applicant: false,
   };
 
   const patterns = {
@@ -98,131 +98,17 @@ function ReservationForm() {
     category: /[\s\S]*/,
   };
 
-  const categoryInfo = {
-    "A" : "Category A",
-    "B" : "Category B",
-    "C" : "Category C (For student's family only their parents are allowed)",
-    "D" : "Category D (Guest and Department invited, etc.)"
-  }
+  const catAReviewers = ["DIRECTOR", "REGISTRAR", "ASSOCIATE DEAN", "DEAN"];
 
-  const catAReviewers = [
-    "DIRECTOR", 
-    "REGISTRAR", 
-    "ASSOCIATE DEAN HOSTEL MANAGEMENT",
-    "ASSOCIATE DEAN INTERNATIONAL RELATIONS AND ALUMNI AFFAIRS",
-    "ASSOCIATE DEAN CONTINUING EDUCATION AND OUTREACH ACTIVITIES",
-    "ASSOCIATE DEAN INFRASTRUCTURE",
-    "DEAN RESEARCH AND DEVELOPMENT",
-    "DEAN STUDENT AFFAIRS",
-    "DEAN FACULTY AFFAIRS AND ADMINISTRATION",
-    "DEAN UNDER GRADUATE STUDIES",
-    "DEAN POST GRADUATE STUDIES"
-  ];
-
-  const catBReviewers = [
-    "HOD COMPUTER SCIENCE",
-    "HOD ELECTRICAL ENGINEERING",
-    "HOD MECHANICAL ENGINEERING",
-    "HOD CHEMISTRY",
-    "HOD MATHEMATICS",
-    "HOD PHYSICS",
-    "HOD HUMANITIES AND SOCIAL SCIENCES",
-    "HOD BIOMEDICAL ENGINEERING",
-    "HOD CHEMICAL ENGINEERING",
-    "HOD METALLURGICAL AND MATERIALS ENGINEERING",
-    "DEAN RESEARCH AND DEVELOPMENT",
-    "DEAN STUDENT AFFAIRS",
-    "DEAN FACULTY AFFAIRS AND ADMINISTRATION",
-    "DEAN UNDER GRADUATE STUDIES",
-    "DEAN POST GRADUATE STUDIES",
-    "ASSOCIATE DEAN HOSTEL MANAGEMENT",
-    "ASSOCIATE DEAN INTERNATIONAL RELATIONS AND ALUMNI AFFAIRS",
-    "ASSOCIATE DEAN CONTINUING EDUCATION AND OUTREACH ACTIVITIES",
-    "ASSOCIATE DEAN INFRASTRUCTURE",
-    "REGISTRAR"
-  ];
-  // const catAReviewers = [
-  //   "DIRECTOR", 
-  //   "REGISTRAR", 
-  //   "ASSOCIATE DEAN",
-  //   "DEAN"
-  // ];
-
-  // const catBReviewers = [
-  //   "HOD",
-  //   "DEAN",
-  //   "ASSOCIATE DEAN",
-  //   "REGISTRAR"
-  // ];
-
-  const AssociateDeans = {
-    "SUB_ROLE_1": "ASSOCIATE DEAN HOSTEL MANAGEMENT",
-    "SUB_ROLE_2": "ASSOCIATE DEAN INTERNATIONAL RELATIONS AND ALUMNI AFFAIRS",
-    "SUB_ROLE_3": "ASSOCIATE DEAN CONTINUING EDUCATION AND OUTREACH ACTIVITIES",
-    "SUB_ROLE_4": "ASSOCIATE DEAN INFRASTRUCTURE"
-  }
-
-  const Deans = {
-    "SUB_ROLE_1": "DEAN RESEARCH AND DEVELOPMENT",
-    "SUB_ROLE_2": "DEAN STUDENT AFFAIRS",
-    "SUB_ROLE_3": "DEAN FACULTY AFFAIRS AND ADMINISTRATION",
-    "SUB_ROLE_4": "DEAN UNDER GRADUATE STUDIES",
-    "SUB_ROLE_5": "DEAN POST GRADUATE STUDIES",
-  }
-
-  const Hods = {
-    "SUB_ROLE_1": "HOD COMPUTER SCIENCE",
-    "SUB_ROLE_2": "HOD ELECTRICAL ENGINEERING",
-    "SUB_ROLE_3": "HOD MECHANICAL ENGINEERING",
-    "SUB_ROLE_4": "HOD CHEMISTRY",
-    "SUB_ROLE_5": "HOD MATHEMATICS",
-    "SUB_ROLE_6": "HOD PHYSICS",
-    "SUB_ROLE_7": "HOD HUMANITIES AND SOCIAL SCIENCES",
-    "SUB_ROLE_8": "HOD BIOMEDICAL ENGINEERING",
-    "SUB_ROLE_9": "HOD CHEMICAL ENGINEERING",
-    "SUB_ROLE_10": "HOD METALLURGICAL AND MATERIALS ENGINEERING",
-  }
+  const catBReviewers = ["HOD", "DEAN", "ASSOCIATE DEAN", "REGISTRAR"];
 
   const catCReviewers = ["CHAIRMAN"];
   const catDReviewers = ["CHAIRMAN"];
-
-  const roomFareA = {
-    'Single Occupancy': 0,
-    'Double Occupancy': 0
-  }
-  const roomFareB = {
-    'Single Occupancy': 600,
-    'Double Occupancy': 850
-  }
-  const roomFareC = {
-    'Single Occupancy': 900,
-    'Double Occupancy': 1250
-  }
-  const roomFareD = {
-    'Single Occupancy': 1300,
-    'Double Occupancy': 1800
-  }
-
-  const catReviewers = {
-    "A" : catAReviewers,
-    "B" : catBReviewers,
-    "C" : catCReviewers,
-    "D" : catDReviewers
-  }
-
-  const roomFare = {
-    "A" : roomFareA,
-    "B" : roomFareB,
-    "C" : roomFareC,
-    "D" : roomFareD
-  }
-
   const [checkedValues, setCheckedValues] = useState([]);
-  // console.log(checkedValues);
-  // console.log(formData.category);
+  console.log(checkedValues);
   const handleChange = (e) => {
     const { name, value } = e.target;
-    if(name==='category') setCheckedValues([])
+    if (name === "category") setCheckedValues([]);
     setFormData({
       ...formData,
       [name]: value,
@@ -237,10 +123,6 @@ function ReservationForm() {
         prevCheckedValues.filter((item) => item !== value)
       );
     }
-  };
-  console.log(checkedValues);
-  const handleSubRoleChange = (event) => {
-    setSubRole(event.target.value);
   };
 
   const handleFileUpload = (files) => {
@@ -265,7 +147,7 @@ function ReservationForm() {
           [key]: "This field is required",
         }));
         passed = false;
-      } else if (patterns[key] && !value.match(patterns[key])) {
+      } else if (value !== "" && patterns[key] && !value.match(patterns[key])) {
         setErrorText((prev) => ({
           ...prev,
           [key]: "Invalid input",
@@ -280,47 +162,11 @@ function ReservationForm() {
     }
 
     const arrivalDateTime = new Date(
-      `${formData.arrivalDate}T${formData.arrivalTime}`
+      `${formData.arrivalDate}T${formData.arrivalTime || "13:00"}`
     );
     const departureDateTime = new Date(
-      `${formData.departureDate}T${formData.departureTime}`
+      `${formData.departureDate}T${formData.departureTime || "11:00"}`
     );
-
-    // Check if no of rooms are Sufficient for Double occupancy
-    if (formData.roomType === "Double Occupancy") {
-      const numberOfGuests = parseInt(formData.numberOfGuests);
-      const numberOfRooms = parseInt(formData.numberOfRooms);
-      if (2 * numberOfRooms < numberOfGuests) {
-        setErrorText((prev) => ({
-          ...prev,
-          numberOfRooms:
-            "Number of rooms are not sufficient as per number of guests and room type",
-        }));
-        passed = false;
-        toast.error(
-          "Number of rooms are not sufficient as per number of guests and room type"
-        );
-        return;
-      }
-    }
-
-    // Check if no of rooms are Sufficient for Single occupancy
-    if (formData.roomType === "Single Occupancy") {
-      const numberOfGuests = parseInt(formData.numberOfGuests);
-      const numberOfRooms = parseInt(formData.numberOfRooms);
-      if (numberOfRooms < numberOfGuests) {
-        setErrorText((prev) => ({
-          ...prev,
-          numberOfRooms:
-            "Number of rooms are not sufficient as per number of guests and room type",
-        }));
-        passed = false;
-        toast.error(
-          "Number of rooms are not sufficient as per number of guests and room type"
-        );
-        return;
-      }
-    }
 
     // Check if departure is after arrival
     if (departureDateTime <= arrivalDateTime) {
@@ -334,37 +180,8 @@ function ReservationForm() {
       return;
     }
 
-    if (formData.arrivalTime < "13:00") {
-      toast.error("Arrival time should be after 01:00 PM");
-      return;
-    }
-
-    if (formData.departureTime > "11:00") {
-      toast.error("Departure time should be before 11:00 AM");
-      return;
-    }
-
-    for (let [key, value] of Object.entries(formData.applicant)) {
-      if (value === "") {
-        passed = false;
-      }
-    }
-
     if (!passed) {
       toast.error("Please Fill All Necessary Fields Correctly.");
-      return;
-    }
-
-    if (
-      (formData.category === "A" || formData.category === "B") &&
-      Array.from(files).length === 0
-    ) {
-      toast.error("Uploading files is mandatory for category A and B");
-      return;
-    }
-
-    if (checkedValues.length === 0) {
-      toast.error("Please add a reviewer/reviewers");
       return;
     }
 
@@ -401,7 +218,7 @@ function ReservationForm() {
           autoClose: 3000,
         });
         setLoading(false);
-        // navigate("..");
+        navigate("..");
       } else {
         console.log("fail");
 
@@ -497,6 +314,24 @@ function ReservationForm() {
           />
 
           <div className="form-group">
+            <label>Room Type*</label>
+
+            <select
+              name="roomType"
+              className="w-full h-12 border rounded-md border-gray-300 p-2 whitespace-pre"
+              onChange={handleChange}
+              value={formData.roomType}
+            >
+              <option className="" value="Single Occupancy">
+                Single Occupancy
+              </option>
+              <option className="" value="Double Occupancy">
+                Double Occupancy
+              </option>
+            </select>
+          </div>
+
+          <div className="form-group">
             <label>Arrival Date*:</label>
             <input
               type="date"
@@ -508,7 +343,7 @@ function ReservationForm() {
           </div>
 
           <div className="form-group">
-            <label>Arrival Time*: (Arrival time must be after 01:00 PM)</label>
+            <label>Arrival Time: (Arrival time must be after 01:00 PM)</label>
             <input
               type="time"
               name="arrivalTime"
@@ -528,7 +363,7 @@ function ReservationForm() {
           </div>
           <div className="form-group">
             <label>
-              Departure Time*: (Departure time must be before 11:00 AM)
+              Departure Time: (Departure time must be before 11:00 AM)
             </label>
             <input
               type="time"
@@ -558,7 +393,7 @@ function ReservationForm() {
             <label>
               Category*: (Refer to{" "}
               <span
-                className="underline cursor-pointer text-blue-800"
+                className="underline cursor-pointer"
                 onClick={() => {
                   setShowCat(true);
                 }}
@@ -574,110 +409,101 @@ function ReservationForm() {
               onChange={handleChange}
               value={formData.category}
             >
-              {Object.entries(categoryInfo).map(([categoryCode, categoryName]) => (
-                <option key={categoryCode} value={categoryCode}>
-                  {categoryName}
-                </option>
-              ))}
+              <option className="" value="A">
+                Category A
+              </option>
+              <option className="" value="B">
+                Category B
+              </option>
+              <option className="" value="C">
+                Category C
+              </option>
+              <option className="" value="D">
+                Category D
+              </option>
             </select>
 
-            <div className="form-group">
-              <label>Room Type*</label>
-
-              <select
-                name="roomType"
-                className="w-full h-12 border rounded-md border-gray-300 p-2 whitespace-pre"
-                onChange={handleChange}
-                value={formData.roomType}
-              >
-                <option className="" value="Single Occupancy">
-                  {formData.category !== 'A' &&  <span>Single Occupancy (Rs.{roomFare[formData.category]['Single Occupancy']}/- only)</span>}
-                  {formData.category === 'A' &&  <span>Single Occupancy (Free)</span>}
-                  
-                </option>
-                <option className="" value="Double Occupancy">
-                  {formData.category !== 'A' && <span>Double Occupancy (Rs.{roomFare[formData.category]['Double Occupancy']}/- only)</span>}
-                  {formData.category === 'A' && <span>Double Occupancy (Free)</span>}
-                </option>
-              </select>
-            </div>
-
             <div className="w-full p-2 mb-5">
-              <ul className="flex justify-start flex-nowrap overflow-x-scroll gap-3">
-                {catReviewers[formData.category].map((reviewer) => (
-                  <li key={reviewer} className="flex justify-start gap-1 items-center">
-                    <Checkbox
-                      name="reviewers"
-                      id={reviewer}
-                      value={reviewer}
-                      onChange={handleCheckboxChange}
-                      inputProps={{ 'aria-label': reviewer }}
-                    />
-                    <label className="w-32" htmlFor={reviewer}>
-                      {reviewer}
-                    </label>
-                    {(reviewer === 'ASSOCIATE DEAN' ) && (checkedValues.includes('ASSOCIATE DEAN')) && (
-                      <FormControl>
-                        <Select
-                          labelId="sub-role-label"
-                          id="sub-role-select"
-                          value= {subRole || 'Select'}
-                          onChange={handleSubRoleChange}
-                        >
-                          <MenuItem value="Select">Select</MenuItem>
-                          <MenuItem value="SUB_ROLE_1">Hotel Management</MenuItem>
-                          <MenuItem value="SUB_ROLE_2">Continuing Education and Outreach Activities</MenuItem>
-                          <MenuItem value="SUB_ROLE_3">International Relations and Alumni Affairs</MenuItem>
-                          <MenuItem value="SUB_ROLE_4">Infrastructure</MenuItem>
-                        </Select>
-                      </FormControl>
-                    )}
-                    {(reviewer === 'HOD' ) && (checkedValues.includes('HOD')) && (
-                      <FormControl>
-                        <Select
-                          labelId="sub-role-label"
-                          id="sub-role-select"
-                          value= {subRole || 'Select'}
-                          onChange={handleSubRoleChange}
-                        >
-                          <MenuItem value="Select">Select</MenuItem>
-                          <MenuItem value="SUB_ROLE_1">Department of Computer Science</MenuItem>
-                          <MenuItem value="SUB_ROLE_2">Department of Electrical Engineering</MenuItem>
-                          <MenuItem value="SUB_ROLE_3">Mechanical Engineering</MenuItem>
-                          <MenuItem value="SUB_ROLE_4">Department of Chemistry</MenuItem>
-                          <MenuItem value="SUB_ROLE_5">Department of Mathematics</MenuItem>
-                          <MenuItem value="SUB_ROLE_6">Department of Physics</MenuItem>
-                          <MenuItem value="SUB_ROLE_7">Department of Humanities and Social Sciences</MenuItem>
-                          <MenuItem value="SUB_ROLE_8">Department of Biomedical Engineering</MenuItem>
-                          <MenuItem value="SUB_ROLE_9">Department of Civil Engineering</MenuItem>
-                          <MenuItem value="SUB_ROLE_10">Department of Chemical Engineering</MenuItem>
-                          <MenuItem value="SUB_ROLE_11">Department of Metallurgical & Materials Engineering</MenuItem>
-                        </Select>
-                      </FormControl>
-                    )}
-                    {(reviewer === 'DEAN' ) && (checkedValues.includes('DEAN')) && (
-                      <FormControl>
-                        <Select
-                          labelId="sub-role-label"
-                          id="sub-role-select"
-                          value= {subRole || 'Select'}
-                          onChange={handleSubRoleChange}
-                        >
-                          <MenuItem value="Select">Select</MenuItem>
-                          <MenuItem value="SUB_ROLE_1">Dean (Research and Development)</MenuItem>
-                          <MenuItem value="SUB_ROLE_2">Dean (Student Affairs)</MenuItem>
-                          <MenuItem value="SUB_ROLE_3">Dean (Faculty Affairs & Administration)</MenuItem>
-                          <MenuItem value="SUB_ROLE_4">Dean (Under Graduate Studies)</MenuItem>
-                          <MenuItem value="SUB_ROLE_5">Dean (Post Graduate & Research)</MenuItem>
-                        </Select>
-                      </FormControl>
-                    )}
-                  </li>
-                ))}
+              <ul className="flex flex-col justify-center">
+                {formData.category === "A" &&
+                  catAReviewers.map((reviewer) => (
+                    <li
+                      key={reviewer}
+                      className="flex justify-start gap-4 items-center w-full"
+                    >
+                      <input
+                        name="reviewers"
+                        type="checkbox"
+                        id={reviewer}
+                        value={reviewer}
+                        onChange={handleCheckboxChange}
+                        style={{ width: "20px" }}
+                      />
+                      <label className="w-32" htmlFor={reviewer}>
+                        {reviewer}
+                      </label>
+                    </li>
+                  ))}
+                {formData.category === "B" &&
+                  catBReviewers.map((reviewer) => (
+                    <li
+                      key={reviewer}
+                      className="flex justify-start gap-4 items-center w-full"
+                    >
+                      <input
+                        name="reviewers"
+                        type="checkbox"
+                        id={reviewer}
+                        value={reviewer}
+                        onChange={handleCheckboxChange}
+                        style={{ width: "20px" }}
+                      />
+                      <label className="w-32" htmlFor={reviewer}>
+                        {reviewer}
+                      </label>
+                    </li>
+                  ))}
+                {formData.category === "C" &&
+                  catCReviewers.map((reviewer) => (
+                    <li
+                      key={reviewer}
+                      className="flex justify-start gap-4 items-center w-full"
+                    >
+                      <input
+                        name="reviewers"
+                        type="checkbox"
+                        id={reviewer}
+                        value={reviewer}
+                        onChange={handleCheckboxChange}
+                        style={{ width: "20px" }}
+                      />
+                      <label className="w-32" htmlFor={reviewer}>
+                        {reviewer}
+                      </label>
+                    </li>
+                  ))}
+                {formData.category === "D" &&
+                  catDReviewers.map((reviewer) => (
+                    <li
+                      key={reviewer}
+                      className="flex justify-start gap-4 items-center w-full"
+                    >
+                      <input
+                        name="reviewers"
+                        type="checkbox"
+                        id={reviewer}
+                        value={reviewer}
+                        onChange={handleCheckboxChange}
+                        style={{ width: "20px" }}
+                      />
+                      <label className="w-32" htmlFor={reviewer}>
+                        {reviewer}
+                      </label>
+                    </li>
+                  ))}
               </ul>
             </div>
-
-            {(formData.category === "B" || formData.category === "C" || formData.category === "D") && (
+            {(formData.category === "B" || formData.category === "C") && (
               <>
                 <label>Payment*:</label>
 
@@ -727,11 +553,6 @@ function ReservationForm() {
                     );
                   })}
                 </div>
-              ) : formData.category === "A" || formData.category === "B" ? (
-                <div className="flex items-center text-gray-500">
-                  *Uploading files is mandatory for category A and B (size
-                  limit: 2MB)
-                </div>
               ) : (
                 <div className="flex items-center text-gray-500">
                   File size limit: 2MB
@@ -754,7 +575,7 @@ function ReservationForm() {
           <div>
             By clicking on Submit, you hereby agree to the{" "}
             <span
-              className="underline cursor-pointer text-blue-800"
+              className="underline cursor-pointer"
               onClick={() => {
                 setShowTC(true);
               }}
@@ -786,4 +607,4 @@ function ReservationForm() {
   );
 }
 
-export default ReservationForm;
+export default AdminReservationForm;

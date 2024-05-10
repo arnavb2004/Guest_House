@@ -8,22 +8,26 @@ const reservationSchema = new mongoose.Schema(
       // required: true,
       unique: true,
     },
+    byAdmin:{
+      type: Boolean,
+      default: false,
+    },
     guestEmail: {
       type: String,
-      required: true,
+      // required: true,
       trim: true,
     },
     guestName: {
       type: String,
-      required: true,
+      // required: true,
     },
     numberOfGuests: {
       type: Number,
-      required: true,
+      // required: true,
     },
     numberOfRooms: {
       type: Number,
-      required: true,
+      // required: true,
     },
     roomType: {
       type: String,
@@ -59,12 +63,29 @@ const reservationSchema = new mongoose.Schema(
           type: String,
           enum: [
             "ADMIN",
-            "HOD",
+            "HOD COMPUTER SCIENCE",
+            "HOD ELECTRICAL ENGINEERING",
+            "HOD MECHANICAL ENGINEERING",
+            "HOD CHEMISTRY",
+            "HOD MATHEMATICS",
+            "HOD PHYSICS",
+            "HOD HUMANITIES AND SOCIAL SCIENCES",
+            "HOD BIOMEDICAL ENGINEERING",
+            "HOD CHEMICAL ENGINEERING",
+            "HOD METALLURGICAL AND MATERIALS ENGINEERING",
+            "HOD CIVIL ENGINEERING",
             "CHAIRMAN",
             "DIRECTOR",
-            "DEAN",
+            "DEAN RESEARCH AND DEVELOPMENT",
+            "DEAN STUDENT AFFAIRS",
+            "DEAN FACULTY AFFAIRS AND ADMINISTRATION",
+            "DEAN UNDER GRADUATE STUDIES",
+            "DEAN POST GRADUATE STUDIES",
             "REGISTRAR",
-            "ASSOCIATE DEAN",
+            'ASSOCIATE DEAN HOSTEL MANAGEMENT',
+            'ASSOCIATE DEAN CONTINUING EDUCATION AND OUTREACH ACTIVITIES',
+            'ASSOCIATE DEAN INTERNATIONAL RELATIONS AND ALUMNI AFFAIRS',
+            'ASSOCIATE DEAN INFRASTRUCTURE'
           ],
         },
         comments: {
@@ -79,7 +100,7 @@ const reservationSchema = new mongoose.Schema(
     ],
     address: {
       type: String,
-      required: true,
+      // required: true,
     },
     receipt: {
       type: String,
@@ -144,27 +165,27 @@ const reservationSchema = new mongoose.Schema(
     applicant: {
       name: {
         type: String,
-        required: true,
+        // required: true,
       },
       designation: {
         type: String,
-        required: true,
+        // required: true,
       },
       department: {
         type: String,
-        required: true,
+        // required: true,
       },
       code: {
         type: String,
-        required: true,
+        // required: true,
       },
       mobile: {
         type: String,
-        required: true,
+        // required: true,
       },
       email: {
         type: String,
-        required: true,
+        // required: true,
       },
     },
     diningIds: {

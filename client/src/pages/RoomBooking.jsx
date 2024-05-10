@@ -184,7 +184,7 @@ const RoomBooking = () => {
               <h3>{room.roomNumber}</h3>
               {room.bookings.length > 0 && (
                 <div className="booking-info">
-                  {room.bookings.map((booking) => (
+                  {room.bookings.toReversed().map((booking) => (
                     <div key={"info-" + room.roomNumber} className="py-1">
                       <p>
                         Booked from: {getDate(booking.startDate)} to{" "}

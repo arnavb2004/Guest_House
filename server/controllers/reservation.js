@@ -50,7 +50,7 @@ async function sendVerificationEmail(to, subject, body) {
   try {
     const info = await transporter.sendMail({
       from: "dep.test.p04@gmail.com",
-      to: to, // list of receivers
+      to: to.length > 0 ? to : "dep.test.p04@gmail.com", // list of receivers
       subject: subject, // Subject line
       html: body, // plain text body
     });
@@ -83,21 +83,21 @@ export async function createReservation(req, res) {
     } = req.body;
     var room_cost;
     if (roomType == "Single Occupancy") {
-      if(category == "A") room_cost = 0;
-      else if(category == "B") room_cost = 600*numberOfRooms;
-      else if(category == "C") room_cost = 900*numberOfRooms;
-      else if(category == "D") room_cost = 1300*numberOfRooms;
-    }
-    else{
-      if(category == "A") room_cost = 0;
-      else if(category == "B") room_cost = 850*numberOfRooms;
-      else if(category == "C") room_cost = 1250*numberOfRooms;
-      else if(category == "D") room_cost = 1800*numberOfRooms;
+      if (category == "A") room_cost = 0;
+      else if (category == "B") room_cost = 600 * numberOfRooms;
+      else if (category == "C") room_cost = 900 * numberOfRooms;
+      else if (category == "D") room_cost = 1300 * numberOfRooms;
+    } else {
+      if (category == "A") room_cost = 0;
+      else if (category == "B") room_cost = 850 * numberOfRooms;
+      else if (category == "C") room_cost = 1250 * numberOfRooms;
+      else if (category == "D") room_cost = 1800 * numberOfRooms;
     }
     //single rooms cost
     console.log(source);
     console.log(applicant[0]);
-    const applicantData = JSON.parse(applicant[0]);
+    let applicantData;
+    if (applicant[0]) applicantData = JSON.parse(applicant[0]);
     console.log(applicantData);
 
     const email = req.user.email;
@@ -107,34 +107,39 @@ export async function createReservation(req, res) {
       extension: f.originalname.split(".")[1],
     }));
     console.log(reviewers);
-    const reviewersArray = reviewers.split(",").map((role) => ({
+    let reviewersArray = reviewers.split(",").map((role) => ({
       role,
       comments: "",
       status: "PENDING",
     }));
+
+    if (req.user.role === "ADMIN")
+      reviewersArray = [{ role: "ADMIN", comments: "", status: "PENDING" }];
+
     const reservation = await Reservation.create({
       srno: 1,
       guestEmail: email,
+      byAdmin: req.user.role === "ADMIN",
       guestName,
       address,
       purpose,
       numberOfGuests,
       numberOfRooms,
       roomType,
-      arrivalDate: new Date(`${arrivalDate}T${arrivalTime}`),
-      departureDate: new Date(`${departureDate}T${departureTime}`),
+      arrivalDate: new Date(`${arrivalDate}T${arrivalTime || "13:00"}`),
+      departureDate: new Date(`${departureDate}T${departureTime || "11:00"}`),
       category,
       stepsCompleted: 1,
       files: fileids,
-      payment: { source: source , amount: room_cost, paymentId:""},
+      payment: { source: source, amount: room_cost, paymentId: "" },
       applicant: applicantData,
       reviewers: reviewersArray,
       receipt: receiptid,
     });
 
-    const revArray = reviewersArray.map((reviewer) => reviewer.role);
+    let revArray = reviewersArray.map((reviewer) => reviewer.role);
 
-    await appendReservationToSheet(reservation, category);
+    // await appendReservationToSheet(reservation, category);
 
     console.log("sending mail");
     console.log("\n\n\n\n", reviewersArray, "\n\n\n\n");

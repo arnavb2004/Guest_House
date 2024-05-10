@@ -273,13 +273,13 @@ export default function AdminRecordList({ status = "pending" }) {
                 Name
               </div>
             </div>
-            <div onClick={handleSortToggle} className="w-[10%] cursor-pointer">
+            <div onClick={handleSortToggle} className="w-[8%] cursor-pointer">
               No. of Guests
             </div>
-            <div onClick={handleSortToggle} className="w-[10%] cursor-pointer">
+            <div onClick={handleSortToggle} className="w-[8%] cursor-pointer">
               No. of Rooms
             </div>
-            <div onClick={handleSortToggle} className="w-[10%] cursor-pointer">
+            <div onClick={handleSortToggle} className="w-[5%] cursor-pointer">
               Category
             </div>
             <div onClick={handleSortToggle} className="w-[10%] cursor-pointer">
@@ -288,7 +288,7 @@ export default function AdminRecordList({ status = "pending" }) {
             <div onClick={handleSortToggle} className="w-[10%] cursor-pointer">
               Departure Date
             </div>
-            <div onClick={handleSortToggle} className="w-[10%] ">
+            <div onClick={handleSortToggle} className="w-[9%] ">
               Room Type
             </div>
             <div onClick={handleSortToggle} className="w-[10%] cursor-pointer">
@@ -363,9 +363,9 @@ export default function AdminRecordList({ status = "pending" }) {
                     />
                     <div className="w-full">{record.guestName}</div>
                   </div>
-                  <div className="w-[10%]">{record.numberOfGuests}</div>
-                  <div className="w-[10%]">{record.numberOfRooms}</div>
-                  <div className="w-[10%]">{record.category}</div>
+                  <div className="w-[8%]">{record.numberOfGuests}</div>
+                  <div className="w-[8%]">{record.numberOfRooms}</div>
+                  <div className="w-[5%]">{record.category}</div>
                   <div className="w-[10%]">{getDate(record.arrivalDate)}</div>
                   <div className="w-[10%]">{getDate(record.departureDate)}</div>
                   <div className="w-[10%]">{record.roomType}</div>
