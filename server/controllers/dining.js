@@ -4,6 +4,7 @@ import Reservation from "../models/Reservation.js";
 
 export async function createOrder(req, res) {
   try {
+    console.log("Creating order...");
     const email = req.user.email;
     const { items, reservationId, dateofbooking, sourceofpayment } = req.body;
     let amount = 0;
@@ -21,7 +22,9 @@ export async function createOrder(req, res) {
       payment: { source: sourceofpayment, status: "PENDING" },
     });
     meal.stepsCompleted = 1;
+    console.log("About to save order...")
     await meal.save();
+    console.log("Order created successfully")
     res.status(200).json({ message: "Order created successfully" });
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -33,7 +36,10 @@ export async function getOrders(req, res) {
     const user = req.user;
 
     if (user.role !== "ADMIN") {
-      const orders = await Meal.find({ email: user.email });
+      //sort the orders by date of booking
+      //newest first
+      const orders = await Meal.find({ email: user.email }).sort({dateofbooking: -1});
+      // const orders = await Meal.find({ email: user.email });
       return res.status(200).json(orders);
     }
     const orders = await Meal.find();
@@ -103,9 +109,9 @@ export const getPendingOrders = async (req, res) => {
       const orders = await Meal.find({
         email: req.user.email,
         status: "PENDING",
-      }).sort({
-        createdAt: -1,
-      });
+      }).sort({dateofbooking: -1});//.sort({
+      //   createdAt: -1,
+      // });
       return res.status(200).json(orders);
     } else if (req.user.role === "ADMIN") {
       const orders = await Meal.find({
@@ -139,9 +145,9 @@ export const getApprovedOrders = async (req, res) => {
       const orders = await Meal.find({
         email: req.user.email,
         status: "APPROVED",
-      }).sort({
-        createdAt: -1,
-      });
+      }).sort({dateofbooking: -1});//.sort({
+      //   createdAt: -1,
+      // });
       return res.status(200).json(orders);
     } else if (req.user.role === "ADMIN") {
       const orders = await Meal.find({
@@ -175,9 +181,9 @@ export const getRejectedOrders = async (req, res) => {
       const orders = await Meal.find({
         email: req.user.email,
         status: "REJECTED",
-      }).sort({
-        createdAt: -1,
-      });
+      }).sort({dateofbooking: -1});//.sort({
+      //   createdAt: -1,
+      // });
       return res.status(200).json(orders);
     } else if (req.user.role === "ADMIN") {
       const orders = await Meal.find({

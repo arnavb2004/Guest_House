@@ -12,9 +12,7 @@ const NotificationMenu = () => {
   const [notifications, setNotifications] = useState(user?.notifications);
   const [status, setStatus] = useState("Success");
   const http = privateRequest(user.accessToken, user.refreshToken);
-  if (!user?.notifications) {
-    fetchNotifications();
-  }
+  
   const fetchNotifications = async () => {
     try {
       const res = await http.get("/user/notifications");
@@ -35,8 +33,28 @@ const NotificationMenu = () => {
       //redirect to reservation page
       navigate(`/${user.role.toLowerCase()}/reservation/${res_id}`);
       console.log(res_id);
-    } catch (error) {}
+    } catch (error) {
+      toast.error(error)
+    }
   };
+  const handleDeletingReadNotifications=async()=>{
+    for (let i = 0; i < notifications.length; i++) {
+      const res_id=notifications[i].res_id;
+      const not_id=notifications[i]._id;
+      try {
+        await http.put(`/user/notifications/delete/${not_id}`);
+        //redirect to reservation page
+        navigate(`/${user.role.toLowerCase()}/reservation/${res_id}`);
+        console.log(res_id);
+      } catch (error) {}
+    } 
+  }
+  if (!user?.notifications) {//if notifications are not loaded
+    fetchNotifications();
+  }
+  else{
+    handleDeletingReadNotifications();
+  }
   console.log(notifications);
 
   return (
@@ -76,6 +94,8 @@ const NotificationMenu = () => {
         )}
       </div>
     </div>
+    // need to call a function after clicking on the notification
+
   );
 };
 
