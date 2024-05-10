@@ -7,7 +7,7 @@ import archiver from "archiver";
 import { getFileById } from "../middlewares/fileStore.js";
 import mongoose from "mongoose";
 import { google } from "googleapis";
-import { appendReservationToSheet } from "./google_sheet.js";
+import { appendReservationToSheet, appendReservationToSheetAfterCheckout } from "./google_sheet.js";
 
 const googleSheets = google.sheets("v4");
 const auth = new google.auth.JWT(
@@ -142,7 +142,7 @@ export async function createReservation(req, res) {
 
     let revArray = reviewersArray.map((reviewer) => reviewer.role);
 
-    // await appendReservationToSheet(reservation, category);
+    await appendReservationToSheet(reservation, category);
 
     console.log("sending mail");
     console.log("\n\n\n\n", reviewersArray, "\n\n\n\n");
@@ -756,6 +756,11 @@ export const deleteRoom = async (req, res) => {
       return res.status(404).json({ message: "Room not found" });
     }
 
+    if(deletedRoom.bookings?.length > 0)
+      return res
+        .status(404)
+        .json({ message: "Room is occupied" });
+
     res
       .status(200)
       .json({ message: "Room deleted successfully", room: deletedRoom });
@@ -980,6 +985,7 @@ export const checkoutReservation = async (req, res) => {
     }
 
     reservation.checkOut = true;
+    await appendReservationToSheetAfterCheckout(reservation);
     await reservation.save();
     console.log("check res:", reservation);
     res.status(200).json({ message: "Checkout successful" });
