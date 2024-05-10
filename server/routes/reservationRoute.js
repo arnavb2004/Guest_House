@@ -26,7 +26,8 @@ import {
   getLateCheckoutReservations,
   checkoutReservation,
   checkoutToday,
-  getDiningAmount
+  getDiningAmount,
+  deleteReservations
 } from "../controllers/reservation.js";
 
 const Router = express.Router();
@@ -51,11 +52,8 @@ Router.get("/approved", checkAuth, getApprovedReservations);
 Router.get("/rejected", checkAuth, getRejectedReservations);
 Router.get("/documents/:id", checkAuth, getReservationDocuments);
 Router.get("/rooms", checkAuth, getRooms);
-Router.post("/rooms", checkAuth, addRoom);
-Router.delete("/rooms", checkAuth, deleteRoom);
 Router.get("/payment/pending", checkAuth, getPaymentPendingReservations);
 Router.get("/checkout/today", checkAuth, checkoutToday);
-
 Router.get("/:id", checkAuth, getReservationDetails);
 
 Router.put("/checkout/:id", checkAuth, checkoutReservation);
@@ -65,6 +63,11 @@ Router.put("/reject/:id", checkAuth, rejectReservation);
 Router.put("/hold/:id", checkAuth, holdReservation);
 Router.put("/payment/:id", checkAuth, updatePaymentStatus);
 Router.put("/:id", checkAuth, updateReservation);
+
+Router.post("/rooms", checkAuth, addRoom);
 Router.post("/:id", checkAuth, getDiningAmount);
+
+Router.delete("/rooms", checkAuth, deleteRoom);
+Router.delete("/",checkAuth,deleteReservations)
 
 export default Router;

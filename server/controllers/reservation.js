@@ -316,6 +316,28 @@ export async function getReservationDocuments(req, res) {
   }
 }
 
+export async function deleteReservations(req, res) {
+  const { ids } = req.body;
+  ids = ids.filter((id) => id !== "#" && id !== "");
+  try {
+    const reservations = await Reservation.find({ _id: { $in: ids } });
+    for (const reservation of reservations) {
+      if (
+        req.user.email !== reservation.guestEmail &&
+        req.user.role !== "ADMIN"
+      ) {
+        return res.status(403).json({
+          message: "You are not authorized to delete this reservation",
+        });
+      }
+    }
+    await Reservation.deleteMany({ _id: { $in: ids } });
+    res.status(200).json({ message: "Reservations Deleted" });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+}
+
 export async function approveReservation(req, res) {
   try {
     let reservation = await Reservation.findById(req.params.id);
@@ -943,8 +965,8 @@ export const checkoutReservation = async (req, res) => {
     let canCheckout = true;
 
     for (const dining of dinings) {
-      console.log(dining)
-      console.log(dining.status)
+      console.log(dining);
+      console.log(dining.status);
       if (dining.payment.status !== "PAID") {
         canCheckout = false;
         break;
