@@ -15,6 +15,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import Slider from "@mui/material/Slider";
 
 import http from "../utils/httpService";
+import { getDate } from "../utils/handleDate";
 
 function valuetext(value) {
   return `${value}`;
@@ -250,6 +251,7 @@ export default function DiningList({
             </div>
             <div className="w-[30%]">Email</div>
             <div className="w-[30%]">Total Amount</div>
+            <div className="w-[30%]">Date</div>
             <div className="w-[35%]">Status</div>
             <div className="w-[35%]">Actions</div>
             <div className="flex justify-evenly gap-2 w-[5%]">
@@ -279,6 +281,7 @@ export default function DiningList({
                   </div>
                   <div className="w-[30%] text-center">{record.email}</div>
                   <div className="w-[30%]">{record.amount}</div>
+                  <div className="w-[30%]">{getDate(record.dateofbooking)}</div>
                   <div className="w-[30%]">{status.toUpperCase()}</div>
                   <div className="w-[34%]">
                     <IconButton edge="end" aria-label="insert">
