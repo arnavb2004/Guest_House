@@ -555,8 +555,8 @@ export async function appendReservationToSheetAfterCheckout(reservation) {
                 roomNumbers = reservation.bookings.map(booking => booking.roomNumber).join(', ');
                 updateCellValue(sheetName, newSrNo, 8, roomNumbers);
                 updateCellValue(sheetName, newSrNo, 15, reservation.payment.amount);
-                gst = (reservation.payment.amount)*(0);
-                sgst = (reservation.payment.amount)*(0);
+                gst = (reservation.payment.amount)*(0.06);
+                sgst = (reservation.payment.amount)*(0.06);
                 updateCellValue(sheetName, newSrNo, 16, gst);
                 updateCellValue(sheetName, newSrNo, 17, sgst);
                 grand_total = reservation.payment.amount + gst + sgst;
