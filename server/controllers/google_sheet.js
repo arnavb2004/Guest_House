@@ -34,13 +34,11 @@ export async function appendReservationToSheet(reservation, category) {
             console.log("hello2");
             console.log(newSrNo);
             updateCellValue(sheetName, newSrNo + 5, 1, newSrNo);
-            updateCellValue(sheetName, newSrNo + 5, 2, reservation.srNo);
-            updateCellValue(sheetName, newSrNo + 5, 3, reservation.srNo);
+            updateCellValue(sheetName, newSrNo + 5, 2, reservation._id);
+            updateCellValue(sheetName, newSrNo + 5, 3, reservation.srno);
             updateCellValue(sheetName, newSrNo + 5, 5, reservation.arrivalDate);
             updateCellValue(sheetName, newSrNo + 5, 6, reservation.guestName);
             updateCellValue(sheetName, newSrNo + 5, 7, reservation.applicant.Name);
-            roomNumbers = reservation.bookings.map(booking => booking.roomNumber).join(', ');
-            updateCellValue(sheetName, newSrNo + 5, 8, roomNumbers);
             updateCellValue(sheetName, newSrNo + 5, 9, reservation.category);
             updateCellValue(sheetName, newSrNo + 5, 10, reservation.roomType)
             updateCellValue(sheetName, newSrNo + 5, 11, reservation.arrivalDate);
@@ -65,7 +63,7 @@ export async function appendReservationToSheet(reservation, category) {
                 console.log(newSrNo);
                 updateCellValue(sheetName, newSrNo + 5, 1, newSrNo);
                 updateCellValue(sheetName, newSrNo + 5, 2, reservation._id);
-                updateCellValue(sheetName, newSrNo + 5, 3, reservation.srNo);
+                updateCellValue(sheetName, newSrNo + 5, 3, reservation.srno);
                 updateCellValue(sheetName, newSrNo + 5, 5, reservation.arrivalDate);
                 updateCellValue(sheetName, newSrNo + 5, 6, reservation.guestName);
                 updateCellValue(sheetName, newSrNo + 5, 7, reservation.applicant.Name);
@@ -86,7 +84,7 @@ export async function appendReservationToSheet(reservation, category) {
                 console.log(newSrNo);
                 updateCellValue(sheetName, newSrNo + 5, 1, newSrNo);
                 updateCellValue(sheetName, newSrNo + 5, 2, reservation._id);
-                updateCellValue(sheetName, newSrNo + 5, 3, reservation.srNo);
+                updateCellValue(sheetName, newSrNo + 5, 3, reservation.srno);
                 updateCellValue(sheetName, newSrNo + 5, 5, reservation.arrivalDate);
                 updateCellValue(sheetName, newSrNo + 5, 6, reservation.guestName);
                 updateCellValue(sheetName, newSrNo + 5, 7, reservation.applicant.Name);
@@ -110,7 +108,7 @@ export async function appendReservationToSheet(reservation, category) {
                 console.log(newSrNo);
                 updateCellValue(sheetName, newSrNo + 5, 1, newSrNo);
                 updateCellValue(sheetName, newSrNo + 5, 2, reservation._id);
-                updateCellValue(sheetName, newSrNo + 5, 3, reservation.srNo);
+                updateCellValue(sheetName, newSrNo + 5, 3, reservation.srno);
                 updateCellValue(sheetName, newSrNo + 5, 5, reservation.arrivalDate);
                 updateCellValue(sheetName, newSrNo + 5, 6, reservation.guestName);
                 updateCellValue(sheetName, newSrNo + 5, 7, reservation.applicant.Name);
@@ -131,7 +129,7 @@ export async function appendReservationToSheet(reservation, category) {
                 console.log(newSrNo);
                 updateCellValue(sheetName, newSrNo + 5, 1, newSrNo);
                 updateCellValue(sheetName, newSrNo + 5, 2, reservation._id);
-                updateCellValue(sheetName, newSrNo + 5, 3, reservation.srNo);
+                updateCellValue(sheetName, newSrNo + 5, 3, reservation.srno);
                 updateCellValue(sheetName, newSrNo + 5, 5, reservation.arrivalDate);
                 updateCellValue(sheetName, newSrNo + 5, 6, reservation.guestName);
                 updateCellValue(sheetName, newSrNo + 5, 7, reservation.applicant.Name);
@@ -152,7 +150,7 @@ export async function appendReservationToSheet(reservation, category) {
                 console.log(newSrNo);
                 updateCellValue(sheetName, newSrNo + 5, 1, newSrNo);
                 updateCellValue(sheetName, newSrNo + 5, 2, reservation._id);
-                updateCellValue(sheetName, newSrNo + 5, 3, reservation.srNo);
+                updateCellValue(sheetName, newSrNo + 5, 3, reservation.srno);
                 updateCellValue(sheetName, newSrNo + 5, 5, reservation.arrivalDate);
                 updateCellValue(sheetName, newSrNo + 5, 6, reservation.guestName);
                 updateCellValue(sheetName, newSrNo + 5, 7, reservation.applicant.Name);
@@ -175,7 +173,7 @@ export async function appendReservationToSheet(reservation, category) {
                 console.log(newSrNo);
                 updateCellValue(sheetName, newSrNo + 5, 1, newSrNo);
                 updateCellValue(sheetName, newSrNo + 5, 2, reservation._id);
-                updateCellValue(sheetName, newSrNo + 5, 3, reservation.srNo);
+                updateCellValue(sheetName, newSrNo + 5, 3, reservation.srno);
                 updateCellValue(sheetName, newSrNo + 5, 5, reservation.arrivalDate);
                 updateCellValue(sheetName, newSrNo + 5, 6, reservation.guestName);
                 updateCellValue(sheetName, newSrNo + 5, 7, reservation.applicant.Name);
@@ -196,7 +194,7 @@ export async function appendReservationToSheet(reservation, category) {
                 console.log(newSrNo);
                 updateCellValue(sheetName, newSrNo + 5, 1, newSrNo);
                 updateCellValue(sheetName, newSrNo + 5, 2, reservation._id);
-                updateCellValue(sheetName, newSrNo + 5, 3, reservation.srNo);
+                updateCellValue(sheetName, newSrNo + 5, 3, reservation.srno);
                 updateCellValue(sheetName, newSrNo + 5, 5, reservation.arrivalDate);
                 updateCellValue(sheetName, newSrNo + 5, 6, reservation.guestName);
                 updateCellValue(sheetName, newSrNo + 5, 7, reservation.applicant.Name);
@@ -265,7 +263,7 @@ export async function appendReservationToSheetAfterCheckout(reservation) {
             newSrNo = await findRowByReservationId(sheetName, reservation._id);
             newSrNo = newSrNo + 1;
             console.log(newSrNo);
-            updateCellValue(sheetName, newSrNo, 3, reservation.srNo);
+            updateCellValue(sheetName, newSrNo, 3, reservation.srno);
             roomNumbers = reservation.bookings.map(booking => booking.roomNumber).join(', ');
             updateCellValue(sheetName, newSrNo, 8, roomNumbers);
             diningIds = reservation.diningIds;
@@ -310,7 +308,7 @@ export async function appendReservationToSheetAfterCheckout(reservation) {
                 newSrNo = await findRowByReservationId(sheetName, reservation._id);
                 newSrNo = newSrNo + 1;
                 console.log(newSrNo);
-                updateCellValue(sheetName, newSrNo, 3, reservation.srNo);
+                updateCellValue(sheetName, newSrNo, 3, reservation.srno);
                 roomNumbers = reservation.bookings.map(booking => booking.roomNumber).join(', ');
                 updateCellValue(sheetName, newSrNo, 8, roomNumbers);
                 updateCellValue(sheetName, newSrNo, 15, reservation.payment.amount);
@@ -368,7 +366,7 @@ export async function appendReservationToSheetAfterCheckout(reservation) {
                 newSrNo = await findRowByReservationId(sheetName, reservation._id);
                 newSrNo = newSrNo + 1;
                 console.log(newSrNo);
-                updateCellValue(sheetName, newSrNo, 3, reservation.srNo);
+                updateCellValue(sheetName, newSrNo, 3, reservation.srno);
                 roomNumbers = reservation.bookings.map(booking => booking.roomNumber).join(', ');
                 updateCellValue(sheetName, newSrNo, 8, roomNumbers);
                 updateCellValue(sheetName, newSrNo, 15, reservation.payment.amount);
@@ -428,7 +426,7 @@ export async function appendReservationToSheetAfterCheckout(reservation) {
                 newSrNo = await findRowByReservationId(sheetName, reservation._id);
                 newSrNo = newSrNo + 1;
                 console.log(newSrNo);
-                updateCellValue(sheetName, newSrNo, 3, reservation.srNo);
+                updateCellValue(sheetName, newSrNo, 3, reservation.srno);
                 roomNumbers = reservation.bookings.map(booking => booking.roomNumber).join(', ');
                 updateCellValue(sheetName, newSrNo, 8, roomNumbers);
                 updateCellValue(sheetName, newSrNo, 15, reservation.payment.amount);
@@ -484,7 +482,7 @@ export async function appendReservationToSheetAfterCheckout(reservation) {
                 newSrNo = await findRowByReservationId(sheetName, reservation._id);
                 newSrNo = newSrNo + 1;
                 console.log(newSrNo);
-                updateCellValue(sheetName, newSrNo, 3, reservation.srNo);
+                updateCellValue(sheetName, newSrNo, 3, reservation.srno);
                 roomNumbers = reservation.bookings.map(booking => booking.roomNumber).join(', ');
                 updateCellValue(sheetName, newSrNo, 8, roomNumbers);
                 updateCellValue(sheetName, newSrNo, 15, reservation.payment.amount);
@@ -540,7 +538,7 @@ export async function appendReservationToSheetAfterCheckout(reservation) {
                 newSrNo = await findRowByReservationId(sheetName, reservation._id);
                 newSrNo = newSrNo + 1;
                 console.log(newSrNo);
-                updateCellValue(sheetName, newSrNo, 3, reservation.srNo);
+                updateCellValue(sheetName, newSrNo, 3, reservation.srno);
                 roomNumbers = reservation.bookings.map(booking => booking.roomNumber).join(', ');
                 updateCellValue(sheetName, newSrNo, 8, roomNumbers);
                 updateCellValue(sheetName, newSrNo, 15, reservation.payment.amount);
@@ -599,7 +597,7 @@ export async function appendReservationToSheetAfterCheckout(reservation) {
                 newSrNo = await findRowByReservationId(sheetName, reservation._id);
                 newSrNo = newSrNo + 1;
                 console.log(newSrNo);
-                updateCellValue(sheetName, newSrNo, 3, reservation.srNo);
+                updateCellValue(sheetName, newSrNo, 3, reservation.srno);
                 roomNumbers = reservation.bookings.map(booking => booking.roomNumber).join(', ');
                 updateCellValue(sheetName, newSrNo, 8, roomNumbers);
                 updateCellValue(sheetName, newSrNo, 15, reservation.payment.amount);
@@ -654,7 +652,7 @@ export async function appendReservationToSheetAfterCheckout(reservation) {
                 newSrNo = await findRowByReservationId(sheetName, reservation._id);
                 newSrNo = newSrNo + 1;
                 console.log(newSrNo);
-                updateCellValue(sheetName, newSrNo, 3, reservation.srNo);
+                updateCellValue(sheetName, newSrNo, 3, reservation.srno);
                 roomNumbers = reservation.bookings.map(booking => booking.roomNumber).join(', ');
                 updateCellValue(sheetName, newSrNo, 8, roomNumbers);
                 updateCellValue(sheetName, newSrNo, 15, reservation.payment.amount);
