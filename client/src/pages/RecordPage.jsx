@@ -24,8 +24,6 @@ export default function RecordPage() {
   const [status, setStatus] = useState("Loading");
 
   const [totalDiningFare, setTotalDiningFare] = useState(0);
-  const [totalRoomFare, setTotalRoomFare] = useState(0);
-  const [totalFare, setTotalFare] = useState(0);
 
   const [userRecord, setUserRecord] = useState({
     guestName: "",
@@ -52,15 +50,7 @@ export default function RecordPage() {
         setStatus("Success");
         setUserRecord(response.data.reservation);
         setReviewers(response.data.reservation.reviewers);
-        if(response.data.reservation.category === 'B') {
-          setTotalRoomFare(roomPricesB[response.data.reservation.roomType])
-        } 
-        if(response.data.reservation.category === 'C') {
-          setTotalRoomFare(roomPricesC[response.data.reservation.roomType])
-        } 
-        if(response.data.reservation.category === 'D') {
-          setTotalRoomFare(roomPricesD[response.data.reservation.roomType])
-        } 
+        
       } catch (error) {
         setStatus("Error");
         console.error("Error fetching user data:", error);
@@ -85,10 +75,6 @@ export default function RecordPage() {
     fetchRecord();
   }, [id]);
 
-
-  useEffect(() => {
-    setTotalFare(totalDiningFare + totalRoomFare)
-  }, [totalDiningFare, totalRoomFare])
 
   if (status === "Error") return <Navigate to="/404" />;
   else if (status === "Loading")
@@ -168,7 +154,6 @@ export default function RecordPage() {
           <hr />
           <div className="flex justify-between px-32 pb-5">
             <p className="p-0 text-xl font-semibold">Room Fare:</p>
-            {/* <p className="p-0 text-lg">Rs. {totalRoomFare}/- only</p> */}
             <p className="p-0 text-lg">Rs. {userRecord.payment.amount}/- only</p>
           </div>
           <div className="flex justify-between px-32 pb-5">

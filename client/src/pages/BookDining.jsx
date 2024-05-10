@@ -86,7 +86,7 @@ const BookDining = () => {
         <BasicTabs tabs={tabs} tabItems={tabItems} />
       </div>
       <div className="flex justify-center mt-5">
-        <Link to="/dining/cart" className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">
+        <Link to="../cart" className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">
           Go to Cart <ShoppingCartIcon />
         </Link>
       </div>
