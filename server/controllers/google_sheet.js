@@ -63,37 +63,162 @@ export async function appendReservationToSheet(reservation, category) {
             updateCellValue(sheetName, newSrNo + 5, 18, 0);
             break;
         case 'D':
-            
-            console.log("hello");
-            sheetName = 'CatDUTR';
-            lastSrNo = await getLastSrNo(sheetName);
-            console.log("hello3");
-            newSrNo = lastSrNo + 1;
+    
+            if(reservation.payment.source == "DEPARTMENT"){
+                console.log("hello");
+                sheetName = 'CatDPBDeptBNR';
+                lastSrNo = await getLastSrNo(sheetName);
+                console.log("hello3");
+                newSrNo = lastSrNo + 1;
 
-            range = `${sheetName}`; // Use the determined sheet name
-            console.log("hello2");
-            console.log(newSrNo);
-            updateCellValue(sheetName, newSrNo + 5, 1, newSrNo);
-            updateCellValue(sheetName, newSrNo + 5, 2, reservation._id);
-            updateCellValue(sheetName, newSrNo + 5, 3, reservation.srNo);
-            updateCellValue(sheetName, newSrNo + 5, 5, reservation.arrivalDate);
-            updateCellValue(sheetName, newSrNo + 5, 6, reservation.guestName);
-            updateCellValue(sheetName, newSrNo + 5, 7, reservation.applicant.Name);
-            roomNumbers = reservation.bookings.map(booking => booking.roomNumber).join(', ');
-            updateCellValue(sheetName, newSrNo + 5, 8, roomNumbers);
-            updateCellValue(sheetName, newSrNo + 5, 9, reservation.category);
-            updateCellValue(sheetName, newSrNo + 5, 10, reservation.roomType)
-            updateCellValue(sheetName, newSrNo + 5, 11, reservation.arrivalDate);
-            updateCellValue(sheetName, newSrNo + 5, 12, reservation.departureDate);
+                range = `${sheetName}`; // Use the determined sheet name
+                console.log("hello2");
+                console.log(newSrNo);
+                updateCellValue(sheetName, newSrNo + 5, 1, newSrNo);
+                updateCellValue(sheetName, newSrNo + 5, 2, reservation._id);
+                updateCellValue(sheetName, newSrNo + 5, 3, reservation.srNo);
+                updateCellValue(sheetName, newSrNo + 5, 5, reservation.arrivalDate);
+                updateCellValue(sheetName, newSrNo + 5, 6, reservation.guestName);
+                updateCellValue(sheetName, newSrNo + 5, 7, reservation.applicant.Name);
+                updateCellValue(sheetName, newSrNo + 5, 9, reservation.category);
+                updateCellValue(sheetName, newSrNo + 5, 10, reservation.roomType)
+                updateCellValue(sheetName, newSrNo + 5, 11, reservation.arrivalDate);
+                updateCellValue(sheetName, newSrNo + 5, 12, reservation.departureDate);
+            }
+            else {
+                console.log("hello");
+                sheetName = 'CatDUTR';
+                lastSrNo = await getLastSrNo(sheetName);
+                console.log("hello3");
+                newSrNo = lastSrNo + 1;
+
+                range = `${sheetName}`; // Use the determined sheet name
+                console.log("hello2");
+                console.log(newSrNo);
+                updateCellValue(sheetName, newSrNo + 5, 1, newSrNo);
+                updateCellValue(sheetName, newSrNo + 5, 2, reservation._id);
+                updateCellValue(sheetName, newSrNo + 5, 3, reservation.srNo);
+                updateCellValue(sheetName, newSrNo + 5, 5, reservation.arrivalDate);
+                updateCellValue(sheetName, newSrNo + 5, 6, reservation.guestName);
+                updateCellValue(sheetName, newSrNo + 5, 7, reservation.applicant.Name);
+                updateCellValue(sheetName, newSrNo + 5, 9, reservation.category);
+                updateCellValue(sheetName, newSrNo + 5, 10, reservation.roomType)
+                updateCellValue(sheetName, newSrNo + 5, 11, reservation.arrivalDate);
+                updateCellValue(sheetName, newSrNo + 5, 12, reservation.departureDate);
+            }
+        break;
+
+        case 'B':
+            if(reservation.payment.source == "DEPARTMENT"){
+                console.log("hello");
+                sheetName = 'CatBPBDeptBNR';
+                lastSrNo = await getLastSrNo(sheetName);
+                console.log("hello3");
+                newSrNo = lastSrNo + 1;
+
+                range = `${sheetName}`; // Use the determined sheet name
+                console.log("hello2");
+                console.log(newSrNo);
+                updateCellValue(sheetName, newSrNo + 5, 1, newSrNo);
+                updateCellValue(sheetName, newSrNo + 5, 2, reservation._id);
+                updateCellValue(sheetName, newSrNo + 5, 3, reservation.srNo);
+                updateCellValue(sheetName, newSrNo + 5, 5, reservation.arrivalDate);
+                updateCellValue(sheetName, newSrNo + 5, 6, reservation.guestName);
+                updateCellValue(sheetName, newSrNo + 5, 7, reservation.applicant.Name);
+                updateCellValue(sheetName, newSrNo + 5, 9, reservation.category);
+                updateCellValue(sheetName, newSrNo + 5, 10, reservation.roomType)
+                updateCellValue(sheetName, newSrNo + 5, 11, reservation.arrivalDate);
+                updateCellValue(sheetName, newSrNo + 5, 12, reservation.departureDate);
+            }
+            else if(reservation.payment.source == "GUEST"){
+                console.log("hello");
+                sheetName = 'CatBUTR';
+                lastSrNo = await getLastSrNo(sheetName);
+                console.log("hello3");
+                newSrNo = lastSrNo + 1;
+
+                range = `${sheetName}`; // Use the determined sheet name
+                console.log("hello2");
+                console.log(newSrNo);
+                updateCellValue(sheetName, newSrNo + 5, 1, newSrNo);
+                updateCellValue(sheetName, newSrNo + 5, 2, reservation._id);
+                updateCellValue(sheetName, newSrNo + 5, 3, reservation.srNo);
+                updateCellValue(sheetName, newSrNo + 5, 5, reservation.arrivalDate);
+                updateCellValue(sheetName, newSrNo + 5, 6, reservation.guestName);
+                updateCellValue(sheetName, newSrNo + 5, 7, reservation.applicant.Name);
+                updateCellValue(sheetName, newSrNo + 5, 9, reservation.category);
+                updateCellValue(sheetName, newSrNo + 5, 10, reservation.roomType)
+                updateCellValue(sheetName, newSrNo + 5, 11, reservation.arrivalDate);
+                updateCellValue(sheetName, newSrNo + 5, 12, reservation.departureDate);
+            }
+            else{
+                console.log("hello");
+                sheetName = 'CatBPBOthersource';
+                lastSrNo = await getLastSrNo(sheetName);
+                console.log("hello3");
+                newSrNo = lastSrNo + 1;
+
+                range = `${sheetName}`; // Use the determined sheet name
+                console.log("hello2");
+                console.log(newSrNo);
+                updateCellValue(sheetName, newSrNo + 5, 1, newSrNo);
+                updateCellValue(sheetName, newSrNo + 5, 2, reservation._id);
+                updateCellValue(sheetName, newSrNo + 5, 3, reservation.srNo);
+                updateCellValue(sheetName, newSrNo + 5, 5, reservation.arrivalDate);
+                updateCellValue(sheetName, newSrNo + 5, 6, reservation.guestName);
+                updateCellValue(sheetName, newSrNo + 5, 7, reservation.applicant.Name);
+                updateCellValue(sheetName, newSrNo + 5, 9, reservation.category);
+                updateCellValue(sheetName, newSrNo + 5, 10, reservation.roomType)
+                updateCellValue(sheetName, newSrNo + 5, 11, reservation.arrivalDate);
+                updateCellValue(sheetName, newSrNo + 5, 12, reservation.departureDate);
+            }
             break;
         case 'C':
-            sheetName = 'Sheet3';
-            break;
-        case 'D':
-            sheetName = 'Sheet4';
+            if(reservation.payment.source == "DEPARTMENT"){
+                console.log("hello");
+                sheetName = 'CatCPBDeptBNR';
+                lastSrNo = await getLastSrNo(sheetName);
+                console.log("hello3");
+                newSrNo = lastSrNo + 1;
+
+                range = `${sheetName}`; // Use the determined sheet name
+                console.log("hello2");
+                console.log(newSrNo);
+                updateCellValue(sheetName, newSrNo + 5, 1, newSrNo);
+                updateCellValue(sheetName, newSrNo + 5, 2, reservation._id);
+                updateCellValue(sheetName, newSrNo + 5, 3, reservation.srNo);
+                updateCellValue(sheetName, newSrNo + 5, 5, reservation.arrivalDate);
+                updateCellValue(sheetName, newSrNo + 5, 6, reservation.guestName);
+                updateCellValue(sheetName, newSrNo + 5, 7, reservation.applicant.Name);
+                updateCellValue(sheetName, newSrNo + 5, 9, reservation.category);
+                updateCellValue(sheetName, newSrNo + 5, 10, reservation.roomType)
+                updateCellValue(sheetName, newSrNo + 5, 11, reservation.arrivalDate);
+                updateCellValue(sheetName, newSrNo + 5, 12, reservation.departureDate);
+            }
+            else {
+                console.log("hello");
+                sheetName = 'CatCUTR';
+                lastSrNo = await getLastSrNo(sheetName);
+                console.log("hello3");
+                newSrNo = lastSrNo + 1;
+
+                range = `${sheetName}`; // Use the determined sheet name
+                console.log("hello2");
+                console.log(newSrNo);
+                updateCellValue(sheetName, newSrNo + 5, 1, newSrNo);
+                updateCellValue(sheetName, newSrNo + 5, 2, reservation._id);
+                updateCellValue(sheetName, newSrNo + 5, 3, reservation.srNo);
+                updateCellValue(sheetName, newSrNo + 5, 5, reservation.arrivalDate);
+                updateCellValue(sheetName, newSrNo + 5, 6, reservation.guestName);
+                updateCellValue(sheetName, newSrNo + 5, 7, reservation.applicant.Name);
+                updateCellValue(sheetName, newSrNo + 5, 9, reservation.category);
+                updateCellValue(sheetName, newSrNo + 5, 10, reservation.roomType)
+                updateCellValue(sheetName, newSrNo + 5, 11, reservation.arrivalDate);
+                updateCellValue(sheetName, newSrNo + 5, 12, reservation.departureDate);
+            }
             break;
         default:
-            sheetName = 'Sheet5'; // Default sheet if category does not match
+            sheetName = 'heads'; // Default sheet if category does not match
     }
     console.log("Exit Logic");
 }
@@ -101,24 +226,16 @@ export async function appendReservationToSheet(reservation, category) {
 async function findRowByReservationId(sheetName, reservationId) {
     console.log("Sheet Name:", sheetName);
     try {
-        // Get the sheet ID and data to find the row number for the given Sr No
-        const sheetMetadataResponse = await googleSheets.spreadsheets.get({
-            auth,
-            spreadsheetId,
-        });
-        const sheetId = sheetMetadataResponse.data.sheets.find(s => s.properties.title === sheetName).properties.sheetId;
 
+        await auth.authorize();
+        console.log("Sheet Name:", sheetName,reservationId);
         const readResponse = await googleSheets.spreadsheets.values.get({
             auth,
             spreadsheetId,
             range: sheetName,
         });
-
+        console.log(readResponse.data.values);
         const rows = readResponse.data.values;
-        console.log(rows[7]);
-        console.log(rows[8][0]);
-        console.log(rows[8][1]);
-        console.log(rows[8][2]);
         console.log(reservationId);
         let rowIndex = rows.findIndex(row => (row[1] === reservationId.toString()));
         if (rowIndex === -1) {
@@ -148,6 +265,8 @@ export async function appendReservationToSheetAfterCheckout(reservation) {
     let sgst;
     let grand_total;
     let TotaldiningAmount = 0;
+    let diningPaymentIds = [];
+    let diningIds;
 
     switch (category) {
         case 'A':
@@ -160,40 +279,21 @@ export async function appendReservationToSheetAfterCheckout(reservation) {
             updateCellValue(sheetName, newSrNo, 3, reservation.srNo);
             roomNumbers = reservation.bookings.map(booking => booking.roomNumber).join(', ');
             updateCellValue(sheetName, newSrNo, 8, roomNumbers);
-            break;
-
-        case 'D':
-            
-            console.log("hello");
-            sheetName = 'CatDUTR';
-            console.log("hello3");
-            newSrNo = await findRowByReservationId(sheetName, reservation._id);
-            newSrNo = newSrNo + 1;
-            console.log(newSrNo);
-            updateCellValue(sheetName, newSrNo, 3, reservation.srNo);
-            roomNumbers = reservation.bookings.map(booking => booking.roomNumber).join(', ');
-            updateCellValue(sheetName, newSrNo, 8, roomNumbers);
-            updateCellValue(sheetName, newSrNo, 15, reservation.payment.amount);
-            gst = (reservation.payment.amount)*(0.06);
-            sgst = (reservation.payment.amount)*(0.06);
-            updateCellValue(sheetName, newSrNo, 16, gst);
-            updateCellValue(sheetName, newSrNo, 17, sgst);
-            grand_total = reservation.payment.amount + gst + sgst;
-            updateCellValue(sheetName, newSrNo, 18, grand_total);
-            updateCellValue(sheetName, newSrNo, 19, reservation.payment.paymentId);
-            console.log(reservation.payment.paymentId);
-            console.log("TillHere1");
-            updateCellValue(sheetName, newSrNo, 20, reservation.payment.amount);
-            console.log("TillHere2");
-            const diningIds = reservation.diningIds;
-            let diningPaymentIds = [];
+            diningIds = reservation.diningIds;
+            console.log("nooo");
+            TotaldiningAmount = 0;
             Promise.all(
                 diningIds.map(async diningId => {
+                    console.log("nooo");
+                    console.log(diningId);
                     try {
+                        console.log(diningId);
                         const dining = await Meal.findById(diningId);
+                        console.log("yoyoy");
+                        console.log(dining);
                         if (dining && dining.payment) {
                             diningPaymentIds.push(dining.payment.paymentId);
-                            TotaldiningAmount += dining.payment.amount;
+                            TotaldiningAmount += dining.amount;
                         }
                     } catch (err) {
                         console.error('Error fetching dining:', err);
@@ -203,23 +303,424 @@ export async function appendReservationToSheetAfterCheckout(reservation) {
             .then(() => {
                 diningPaymentIds = diningPaymentIds.join(', ');
                 console.log('Dining Payment IDs:', diningPaymentIds);
-                updateCellValue(sheetName, newSrNo, 21, diningPaymentIds);
+                updateCellValue(sheetName, newSrNo, 20, diningPaymentIds);
+                updateCellValue(sheetName, newSrNo, 21, TotaldiningAmount);
             })
             .catch(err => {
                 console.error('Error:', err);
             });
-            updateCellValue(sheetName, newSrNo, 22, TotaldiningAmount);
-            break;
             
-        case 'C':
-            sheetName = 'Sheet3';
             break;
 
         case 'D':
-            sheetName = 'Sheet4';
+            
+            if(reservation.payment.source == "DEPARTMENT"){
+                console.log("hello");
+                sheetName = 'CatDPBDeptBNR';
+                console.log("hello3");
+                newSrNo = await findRowByReservationId(sheetName, reservation._id);
+                newSrNo = newSrNo + 1;
+                console.log(newSrNo);
+                updateCellValue(sheetName, newSrNo, 3, reservation.srNo);
+                roomNumbers = reservation.bookings.map(booking => booking.roomNumber).join(', ');
+                updateCellValue(sheetName, newSrNo, 8, roomNumbers);
+                updateCellValue(sheetName, newSrNo, 15, reservation.payment.amount);
+                gst = (reservation.payment.amount)*(0);
+                sgst = (reservation.payment.amount)*(0);
+                updateCellValue(sheetName, newSrNo, 16, gst);
+                updateCellValue(sheetName, newSrNo, 17, sgst);
+                grand_total = reservation.payment.amount + gst + sgst;
+                updateCellValue(sheetName, newSrNo, 18, grand_total);
+                console.log(reservation.payment.paymentId);
+                console.log("TillHere1");
+                updateCellValue(sheetName, newSrNo, 20, reservation.applicant.department);
+                updateCellValue(sheetName, newSrNo, 21, grand_total);
+                console.log("TillHere2");
+                diningIds = reservation.diningIds;
+                diningPaymentIds = [];
+                console.log("nooo");
+                TotaldiningAmount = 0;
+                Promise.all(
+                    diningIds.map(async diningId => {
+                        console.log("nooo");
+                        console.log(diningId);
+                        try {
+                            console.log(diningId);
+                            const dining = await Meal.findById(diningId.toString());
+                            console.log("yoyoy");
+                            console.log(dining);
+                            if (dining && dining.payment) {
+                                diningPaymentIds.push(dining.payment.paymentId);
+                                TotaldiningAmount += dining.amount;
+                                console.log(dining.amount);
+                                console.log(TotaldiningAmount);
+                            }
+                        } catch (err) {
+                            console.error('Error fetching dining:', err);
+                        }
+                    })
+                )
+                .then(() => {
+                    diningPaymentIds = diningPaymentIds.join(', ');
+                    console.log('Dining Payment IDs:', diningPaymentIds);
+                    updateCellValue(sheetName, newSrNo, 22, diningPaymentIds);
+                    console.log('Dining Payment Cost:', TotaldiningAmount);
+                    updateCellValue(sheetName, newSrNo, 23, TotaldiningAmount);
+                })
+                .catch(err => {
+                    console.error('Error:', err);
+                });
+                break;
+            }
+            else {
+                console.log("hello");
+                sheetName = 'CatDUTR';
+                console.log("hello3");
+                newSrNo = await findRowByReservationId(sheetName, reservation._id);
+                newSrNo = newSrNo + 1;
+                console.log(newSrNo);
+                updateCellValue(sheetName, newSrNo, 3, reservation.srNo);
+                roomNumbers = reservation.bookings.map(booking => booking.roomNumber).join(', ');
+                updateCellValue(sheetName, newSrNo, 8, roomNumbers);
+                updateCellValue(sheetName, newSrNo, 15, reservation.payment.amount);
+                gst = (reservation.payment.amount)*(0.06);
+                sgst = (reservation.payment.amount)*(0.06);
+                updateCellValue(sheetName, newSrNo, 16, gst);
+                updateCellValue(sheetName, newSrNo, 17, sgst);
+                grand_total = reservation.payment.amount + gst + sgst;
+                updateCellValue(sheetName, newSrNo, 18, grand_total);
+                updateCellValue(sheetName, newSrNo, 19, reservation.payment.paymentId);
+                console.log(reservation.payment.paymentId);
+                console.log("TillHere1");
+                updateCellValue(sheetName, newSrNo, 20, reservation.payment.amount);
+                console.log("TillHere2");
+                diningIds = reservation.diningIds;
+                diningPaymentIds = [];
+                console.log("nooo");
+                TotaldiningAmount = 0;
+                Promise.all(
+                    diningIds.map(async diningId => {
+                        console.log("nooo");
+                        console.log(diningId);
+                        try {
+                            console.log(diningId);
+                            const dining = await Meal.findById(diningId.toString());
+                            console.log("yoyoy");
+                            console.log(dining);
+                            if (dining && dining.payment) {
+                                diningPaymentIds.push(dining.payment.paymentId);
+                                TotaldiningAmount += dining.amount;
+                            }
+                        } catch (err) {
+                            console.error('Error fetching dining:', err);
+                        }
+                    })
+                )
+                .then(() => {
+                    diningPaymentIds = diningPaymentIds.join(', ');
+                    console.log('Dining Payment IDs:', diningPaymentIds);
+                    updateCellValue(sheetName, newSrNo, 21, diningPaymentIds);
+                    updateCellValue(sheetName, newSrNo, 22, TotaldiningAmount);
+                })
+                .catch(err => {
+                    console.error('Error:', err);
+                });
+                
+                break;
+            }
             break;
+            
+        case 'B':
+
+            if(reservation.payment.source == "DEPARTMENT"){
+                console.log("hello");
+                sheetName = 'CatBPBDeptBNR';
+                console.log("hello3");
+                newSrNo = await findRowByReservationId(sheetName, reservation._id);
+                newSrNo = newSrNo + 1;
+                console.log(newSrNo);
+                updateCellValue(sheetName, newSrNo, 3, reservation.srNo);
+                roomNumbers = reservation.bookings.map(booking => booking.roomNumber).join(', ');
+                updateCellValue(sheetName, newSrNo, 8, roomNumbers);
+                updateCellValue(sheetName, newSrNo, 15, reservation.payment.amount);
+                gst = (reservation.payment.amount)*(0);
+                sgst = (reservation.payment.amount)*(0);
+                updateCellValue(sheetName, newSrNo, 16, gst);
+                updateCellValue(sheetName, newSrNo, 17, sgst);
+                grand_total = reservation.payment.amount + gst + sgst;
+                updateCellValue(sheetName, newSrNo, 18, grand_total);
+                console.log(reservation.payment.paymentId);
+                console.log("TillHere1");
+                updateCellValue(sheetName, newSrNo, 20, reservation.applicant.department);
+                updateCellValue(sheetName, newSrNo, 21, grand_total);
+                console.log("TillHere2");
+                diningIds = reservation.diningIds;
+                diningPaymentIds = [];
+                console.log("nooo");
+                TotaldiningAmount = 0;
+                Promise.all(
+                    diningIds.map(async diningId => {
+                        console.log("nooo");
+                        console.log(diningId);
+                        try {
+                            console.log(diningId);
+                            const dining = await Meal.findById(diningId.toString());
+                            console.log("yoyoy");
+                            console.log(dining);
+                            if (dining && dining.payment) {
+                                diningPaymentIds.push(dining.payment.paymentId);
+                                TotaldiningAmount += dining.amount;
+                            }
+                        } catch (err) {
+                            console.error('Error fetching dining:', err);
+                        }
+                    })
+                )
+                .then(() => {
+                    diningPaymentIds = diningPaymentIds.join(', ');
+                    console.log('Dining Payment IDs:', diningPaymentIds);
+                    updateCellValue(sheetName, newSrNo, 22, diningPaymentIds);
+                    updateCellValue(sheetName, newSrNo, 23, TotaldiningAmount);
+                })
+                .catch(err => {
+                    console.error('Error:', err);
+                });
+                
+                break;
+            }
+            else if(reservation.payment.source == "GUEST"){
+                console.log("hello");
+                sheetName = 'CatBUTR';
+                console.log("hello3");
+                newSrNo = await findRowByReservationId(sheetName, reservation._id);
+                newSrNo = newSrNo + 1;
+                console.log(newSrNo);
+                updateCellValue(sheetName, newSrNo, 3, reservation.srNo);
+                roomNumbers = reservation.bookings.map(booking => booking.roomNumber).join(', ');
+                updateCellValue(sheetName, newSrNo, 8, roomNumbers);
+                updateCellValue(sheetName, newSrNo, 15, reservation.payment.amount);
+                gst = (reservation.payment.amount)*(0.06);
+                sgst = (reservation.payment.amount)*(0.06);
+                updateCellValue(sheetName, newSrNo, 16, gst);
+                updateCellValue(sheetName, newSrNo, 17, sgst);
+                grand_total = reservation.payment.amount + gst + sgst;
+                updateCellValue(sheetName, newSrNo, 18, grand_total);
+                updateCellValue(sheetName, newSrNo, 20, reservation.payment.paymentId);
+                console.log(reservation.payment.paymentId);
+                console.log("TillHere1");
+                updateCellValue(sheetName, newSrNo, 21, reservation.payment.amount);
+                console.log("TillHere2");
+                diningIds = reservation.diningIds;
+                diningPaymentIds = [];
+                console.log("nooo");
+                TotaldiningAmount = 0;
+                Promise.all(
+                    diningIds.map(async diningId => {
+                        console.log("nooo");
+                        console.log(diningId);
+                        try {
+                            console.log(diningId);
+                            const dining = await Meal.findById(diningId.toString());
+                            console.log("yoyoy");
+                            console.log(dining);
+                            if (dining && dining.payment) {
+                                diningPaymentIds.push(dining.payment.paymentId);
+                                TotaldiningAmount += dining.amount;
+                            }
+                        } catch (err) {
+                            console.error('Error fetching dining:', err);
+                        }
+                    })
+                )
+                .then(() => {
+                    diningPaymentIds = diningPaymentIds.join(', ');
+                    console.log('Dining Payment IDs:', diningPaymentIds);
+                    updateCellValue(sheetName, newSrNo, 22, diningPaymentIds);
+                    updateCellValue(sheetName, newSrNo, 23, TotaldiningAmount);
+                })
+                .catch(err => {
+                    console.error('Error:', err);
+                });
+                
+                break;
+            }
+            else{
+                console.log("hello");
+                sheetName = 'CatBPBOthersource';
+                console.log("hello3");
+                newSrNo = await findRowByReservationId(sheetName, reservation._id);
+                newSrNo = newSrNo + 1;
+                console.log(newSrNo);
+                updateCellValue(sheetName, newSrNo, 3, reservation.srNo);
+                roomNumbers = reservation.bookings.map(booking => booking.roomNumber).join(', ');
+                updateCellValue(sheetName, newSrNo, 8, roomNumbers);
+                updateCellValue(sheetName, newSrNo, 15, reservation.payment.amount);
+                gst = (reservation.payment.amount)*(0);
+                sgst = (reservation.payment.amount)*(0);
+                updateCellValue(sheetName, newSrNo, 16, gst);
+                updateCellValue(sheetName, newSrNo, 17, sgst);
+                grand_total = reservation.payment.amount + gst + sgst;
+                updateCellValue(sheetName, newSrNo, 18, grand_total);
+                console.log(reservation.payment.paymentId);
+                console.log("TillHere1");
+                updateCellValue(sheetName, newSrNo, 20, reservation.applicant.department); // Change to Actual Project Name or Other Source
+                updateCellValue(sheetName, newSrNo, 21, grand_total);
+                console.log("TillHere2");
+                diningIds = reservation.diningIds;
+                diningPaymentIds = [];
+                console.log("nooo");
+                TotaldiningAmount = 0;
+                Promise.all(
+                    diningIds.map(async diningId => {
+                        console.log("nooo");
+                        console.log(diningId);
+                        try {
+                            console.log(diningId);
+                            const dining = await Meal.findById(diningId.toString());
+                            console.log("yoyoy");
+                            console.log(dining);
+                            if (dining && dining.payment) {
+                                diningPaymentIds.push(dining.payment.paymentId);
+                                TotaldiningAmount += dining.amount;
+                            }
+                        } catch (err) {
+                            console.error('Error fetching dining:', err);
+                        }
+                    })
+                )
+                .then(() => {
+                    diningPaymentIds = diningPaymentIds.join(', ');
+                    console.log('Dining Payment IDs:', diningPaymentIds);
+                    updateCellValue(sheetName, newSrNo, 22, diningPaymentIds);
+                    updateCellValue(sheetName, newSrNo, 23, TotaldiningAmount);
+                })
+                .catch(err => {
+                    console.error('Error:', err);
+                });
+                
+                break;
+            }
+        break;
+
+        case 'C':
+            if(reservation.payment.source == "DEPARTMENT"){
+                console.log("hello");
+                sheetName = 'CatCPBDeptBNR';
+                console.log("hello3");
+                newSrNo = await findRowByReservationId(sheetName, reservation._id);
+                newSrNo = newSrNo + 1;
+                console.log(newSrNo);
+                updateCellValue(sheetName, newSrNo, 3, reservation.srNo);
+                roomNumbers = reservation.bookings.map(booking => booking.roomNumber).join(', ');
+                updateCellValue(sheetName, newSrNo, 8, roomNumbers);
+                updateCellValue(sheetName, newSrNo, 15, reservation.payment.amount);
+                gst = (reservation.payment.amount)*(0);
+                sgst = (reservation.payment.amount)*(0);
+                updateCellValue(sheetName, newSrNo, 16, gst);
+                updateCellValue(sheetName, newSrNo, 17, sgst);
+                grand_total = reservation.payment.amount + gst + sgst;
+                updateCellValue(sheetName, newSrNo, 18, grand_total);
+                console.log(reservation.payment.paymentId);
+                console.log("TillHere1");
+                updateCellValue(sheetName, newSrNo, 20, reservation.applicant.department);
+                updateCellValue(sheetName, newSrNo, 21, grand_total);
+                console.log("TillHere2");
+                diningIds = reservation.diningIds;
+                diningPaymentIds = [];
+                console.log("nooo");
+                TotaldiningAmount = 0;
+                Promise.all(
+                    diningIds.map(async diningId => {
+                        console.log("nooo");
+                        console.log(diningId);
+                        try {
+                            console.log(diningId);
+                            const dining = await Meal.findById(diningId.toString());
+                            console.log("yoyoy");
+                            console.log(dining);
+                            if (dining && dining.payment) {
+                                diningPaymentIds.push(dining.payment.paymentId);
+                                TotaldiningAmount += dining.amount;
+                            }
+                        } catch (err) {
+                            console.error('Error fetching dining:', err);
+                        }
+                    })
+                )
+                .then(() => {
+                    diningPaymentIds = diningPaymentIds.join(', ');
+                    console.log('Dining Payment IDs:', diningPaymentIds);
+                    updateCellValue(sheetName, newSrNo, 22, diningPaymentIds);
+                    updateCellValue(sheetName, newSrNo, 23, TotaldiningAmount);
+                })
+                .catch(err => {
+                    console.error('Error:', err);
+                });
+                break;
+            }
+            else {
+                console.log("hello");
+                sheetName = 'CatCUTR';
+                console.log("hello3");
+                newSrNo = await findRowByReservationId(sheetName, reservation._id);
+                newSrNo = newSrNo + 1;
+                console.log(newSrNo);
+                updateCellValue(sheetName, newSrNo, 3, reservation.srNo);
+                roomNumbers = reservation.bookings.map(booking => booking.roomNumber).join(', ');
+                updateCellValue(sheetName, newSrNo, 8, roomNumbers);
+                updateCellValue(sheetName, newSrNo, 15, reservation.payment.amount);
+                gst = (reservation.payment.amount)*(0.06);
+                sgst = (reservation.payment.amount)*(0.06);
+                updateCellValue(sheetName, newSrNo, 16, gst);
+                updateCellValue(sheetName, newSrNo, 17, sgst);
+                grand_total = reservation.payment.amount + gst + sgst;
+                updateCellValue(sheetName, newSrNo, 18, grand_total);
+                updateCellValue(sheetName, newSrNo, 20, reservation.payment.paymentId);
+                console.log(reservation.payment.paymentId);
+                console.log("TillHere1");
+                updateCellValue(sheetName, newSrNo, 21, reservation.payment.amount);
+                console.log("TillHere2");
+                diningIds = reservation.diningIds;
+                diningPaymentIds = [];
+                console.log("nooo");
+                TotaldiningAmount = 0;
+                Promise.all(
+                    diningIds.map(async diningId => {
+                        console.log("nooo");
+                        console.log(diningId);
+                        try {
+                            console.log(diningId);
+                            const dining = await Meal.findById(diningId.toString());
+                            console.log("yoyoy");
+                            console.log(dining);
+                            if (dining && dining.payment) {
+                                diningPaymentIds.push(dining.payment.paymentId);
+                                console.log("FFF" + dining.amount);
+                                TotaldiningAmount += dining.amount;
+                            }
+                        } catch (err) {
+                            console.error('Error fetching dining:', err);
+                        }
+                    })
+                )
+                .then(() => {
+                    diningPaymentIds = diningPaymentIds.join(', ');
+                    console.log('Dining Payment IDs:', diningPaymentIds);
+                    updateCellValue(sheetName, newSrNo, 22, diningPaymentIds);
+                    console.log('Dining Payment Cost:', TotaldiningAmount);
+                    updateCellValue(sheetName, newSrNo, 23, TotaldiningAmount);
+                })
+                .catch(err => {
+                    console.error('Error:', err);
+                });
+                
+                break;
+            }
+
+        break;
+
         default:
-            sheetName = 'Sheet5'; // Default sheet if category does not match
+            sheetName = 'heads'; // Default sheet if category does not match
     }
     console.log("Exit Logic");
 }
