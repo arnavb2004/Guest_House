@@ -87,6 +87,7 @@ const Cart = () => {
       
       dispatch(clearCart());
       alert(`Total Amount: ₹${totalAmount.toFixed(2)}`);
+      navigate('../../dining')
     } catch (error) {}
 
     // Further actions like sending the order to a server or resetting the cart can be performed here.

@@ -196,6 +196,16 @@ export default function AdminRecordPage() {
             </div>
             <hr />
             <div className="flex justify-between px-32">
+              <p className="p-2 text-xl font-semibold">Applicant Name:</p>
+              <input
+                name="numberOfGuests"
+                className="px-2 border-gray-700 rounded-md"
+                value={userRecord.applicant?userRecord.applicant.name:'N/A'}
+                onChange={handleChange}
+              ></input>
+            </div>
+            <hr />
+            {/* <div className="flex justify-between px-32">
               <p className="p-2 text-xl font-semibold">Address:</p>
               <input
                 name="address"
@@ -204,7 +214,7 @@ export default function AdminRecordPage() {
                 onChange={handleChange}
               ></input>
             </div>
-            <hr />
+            <hr /> */}
             <div className="flex justify-between px-32">
               <p className="p-2 text-xl font-semibold">Number Of Guests:</p>
               <input
