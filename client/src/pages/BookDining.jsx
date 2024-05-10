@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styles from "./BookDining.module.css";
 import { menuItems1 } from "../fooddata";
 import { useDispatch, useSelector } from "react-redux";
-import { addToCart, removeFromCart } from "../redux/cartSlice";
+import { addToCart, removeFromCart, setCart } from "../redux/cartSlice";
 import BasicTabs from "../components/Tabs";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { Link } from "react-router-dom"; // Import Link for navigation
@@ -18,14 +18,10 @@ export const DiningCard = ({ items }) => {
       {items.map((item) => (
         <div key={item.id} className={styles.card}>
           <div className={styles.cardContent}>
-            <div className={styles.cardTitle}>
-              {item.name}
-            </div>
-            <div className={styles.cardPrice}>
-              ₹{item.price.toFixed(2)}
-            </div>
+            <div className={styles.cardTitle}>{item.name}</div>
+            <div className={styles.cardPrice}>₹{item.price.toFixed(2)}</div>
             <div className={styles.cardActions}>
-              {cart[item.id] && (
+              { (
                 <button
                   onClick={() => dispatch(removeFromCart(item.id))}
                   className={styles.actionButton}
@@ -33,7 +29,13 @@ export const DiningCard = ({ items }) => {
                   -
                 </button>
               )}
-              <div className={`${styles.amount} ${!cart[item.id] && styles.zero}`}>{cart[item.id] || 0}</div>
+              <input
+                value={Number(cart[item.id] || 0)}
+                onChange={(e) => {
+                  dispatch(setCart({ id: item.id, quantity: e.target.value }));
+                }}
+                className={`${styles.amount} w-14 text-center px-2 border-black rounded-md`}
+              ></input>
               <button
                 onClick={() => dispatch(addToCart(item.id))}
                 className={styles.actionButton}
@@ -86,7 +88,10 @@ const BookDining = () => {
         <BasicTabs tabs={tabs} tabItems={tabItems} />
       </div>
       <div className="flex justify-center mt-5">
-        <Link to="../cart" className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">
+        <Link
+          to="../cart"
+          className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded"
+        >
           Go to Cart <ShoppingCartIcon />
         </Link>
       </div>

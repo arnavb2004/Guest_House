@@ -295,23 +295,26 @@ export default function RecordList({ status = "pending", desc }) {
                 Name
               </div>
             </div>
-            <div onClick={handleSortToggle} className="w-[10%] ">
+            <div onClick={handleSortToggle} className="w-[8%] cursor-pointer">
               No. of Guests
             </div>
-            <div onClick={handleSortToggle} className="w-[10%] ">
+            <div onClick={handleSortToggle} className="w-[8%] cursor-pointer">
               No. of Rooms
             </div>
-            <div onClick={handleSortToggle} className="w-[10%] ">
+            <div onClick={handleSortToggle} className="w-[5%] cursor-pointer">
               Category
             </div>
-            <div onClick={handleSortToggle} className="w-[10%] ">
+            <div onClick={handleSortToggle} className="w-[10%] cursor-pointer">
               Arrival Date
             </div>
-            <div onClick={handleSortToggle} className="w-[10%] ">
+            <div onClick={handleSortToggle} className="w-[10%] cursor-pointer">
               Departure Date
             </div>
-            <div onClick={handleSortToggle} className="w-[10%] ">
+            <div onClick={handleSortToggle} className="w-[9%] ">
               Room Type
+            </div>
+            <div onClick={handleSortToggle} className="w-[10%] cursor-pointer">
+              Room Assigned
             </div>
             <div className="flex justify-evenly gap-2 w-[10%]">
              
@@ -340,13 +343,15 @@ export default function RecordList({ status = "pending", desc }) {
                     />
                     <div className="w-full">{record.guestName}</div>
                   </div>
-                  <div className="w-[10%]">{record.numberOfGuests}</div>
-                  <div className="w-[10%]">{record.numberOfRooms}</div>
-                  <div className="w-[10%]">{record.category}</div>
+                  <div className="w-[8%]">{record.numberOfGuests}</div>
+                  <div className="w-[8%]">{record.numberOfRooms}</div>
+                  <div className="w-[5%]">{record.category}</div>
                   <div className="w-[10%]">{getDate(record.arrivalDate)}</div>
                   <div className="w-[10%]">{getDate(record.departureDate)}</div>
                   <div className="w-[10%]">{record.roomType}</div>
-                  <div className="flex justify-evenly gap-4 w-[10%]">
+                  {record.bookings?.length > 0 && <div className="w-[10%]">Yes</div>}
+                  {record.bookings?.length <= 0 && <div className="w-[10%]">No</div>}
+                  <div className="flex justify-evenly gap-4 w-[8%]">
                     <IconButton>
                       <InsertDriveFileIcon
                         onClick={() => {

@@ -250,9 +250,9 @@ export default function DiningList({
               />
             </div>
             <div className="w-[30%]">Email</div>
-            <div className="w-[30%]">Total Amount</div>
-            <div className="w-[30%]">Date</div>
-            <div className="w-[35%]">Status</div>
+            <div className="w-[20%]">Total Amount</div>
+            <div className="w-[20%]">Date</div>
+            <div className="w-[25%]">Status</div>
             <div className="w-[35%]">Actions</div>
             <div className="flex justify-evenly gap-2 w-[5%]">
               
@@ -280,9 +280,9 @@ export default function DiningList({
                     />
                   </div>
                   <div className="w-[30%] text-center">{record.email}</div>
-                  <div className="w-[30%]">{record.amount}</div>
-                  <div className="w-[30%]">{getDate(record.dateofbooking)}</div>
-                  <div className="w-[30%]">{status.toUpperCase()}</div>
+                  <div className="w-[15%]">{record.amount}</div>
+                  <div className="w-[23%]">{getDate(record.dateofbooking)}</div>
+                  <div className="w-[20%]">{status.toUpperCase()}</div>
                   <div className="w-[34%]">
                     <IconButton edge="end" aria-label="insert">
                       <InsertDriveFileIcon

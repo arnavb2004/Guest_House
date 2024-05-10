@@ -84,7 +84,8 @@ const Cart = () => {
         dateofbooking: bookingDate,
         sourceofpayment: paymentMethod,
       });
-
+      
+      dispatch(clearCart());
       alert(`Total Amount: ₹${totalAmount.toFixed(2)}`);
     } catch (error) {}
 
