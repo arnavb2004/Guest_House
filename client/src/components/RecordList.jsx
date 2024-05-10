@@ -4,7 +4,7 @@ import Checkbox from "@mui/material/Checkbox";
 import { useSelector, useDispatch } from "react-redux";
 import { privateRequest } from "../utils/useFetch";
 import { useLocation, useNavigate } from "react-router-dom";
-import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
+import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
 import Button from "@mui/material/Button";
@@ -16,6 +16,7 @@ import DownloadIcon from "@mui/icons-material/Download";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { IconButton } from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
+import http from "../utils/httpService";
 
 export default function RecordList({ status = "pending", desc }) {
   const [checked, setChecked] = useState([]);
@@ -88,6 +89,7 @@ export default function RecordList({ status = "pending", desc }) {
   }, [status, desc]);
 
   const dispatch = useDispatch();
+  console.log(checked);
   const handleToggle = (value) => () => {
     const currentIndex = checked.indexOf(value);
 
@@ -274,7 +276,10 @@ export default function RecordList({ status = "pending", desc }) {
         sx={{ width: "100%", padding: "0px" }}
         className="bg-gray-50 rounded-md overflow-hidden"
       >
-        <div className=" font-semibold border-b-2 text-[1.13vw]  w-full h-15" key="#">
+        <div
+          className=" font-semibold border-b-2 text-[1.13vw]  w-full h-15"
+          key="#"
+        >
           <div className="p-1 px-4 flex gap-4 w-full items-center justify-around text-center">
             <div className="flex items-center gap-2 w-[15%] overflow-hidden">
               <Checkbox
@@ -309,11 +314,7 @@ export default function RecordList({ status = "pending", desc }) {
               Room Type
             </div>
             <div className="flex justify-evenly gap-2 w-[10%]">
-              {checked.length > 0 && (
-                <IconButton>
-                  <DeleteIcon className="text-gray-300" />{" "}
-                </IconButton>
-              )}
+             
             </div>
 
             <div />
@@ -373,25 +374,27 @@ export default function RecordList({ status = "pending", desc }) {
                         color="black"
                       />
                     </IconButton>
-                    {record.payment.status === "PAID" && !record.checkOut && (
-                      <IconButton>
-                        <LogoutIcon
-                          onClick={async () => {
-                            try {
-                              const res = await http.put(
-                                "/reservation/checkout/" + record._id
-                              );
-                              toast.success("Checked out successfully");
-                              window.location.reload();
-                            } catch (error) {
-                              console.log(error);
-                              toast.error(error.response?.data?.message);
-                            }
-                          }}
-                          color="black"
-                        />
-                      </IconButton>
-                    )}
+                    {user.role === "CASHIER" &&
+                      record.payment.status === "PAID" &&
+                      !record.checkOut && (
+                        <IconButton>
+                          <LogoutIcon
+                            onClick={async () => {
+                              try {
+                                const res = await http.put(
+                                  "/reservation/checkout/" + record._id
+                                );
+                                toast.success("Checked out successfully");
+                                window.location.reload();
+                              } catch (error) {
+                                console.log(error);
+                                toast.error(error.response?.data?.message);
+                              }
+                            }}
+                            color="black"
+                          />
+                        </IconButton>
+                      )}
                   </div>
 
                   <div />

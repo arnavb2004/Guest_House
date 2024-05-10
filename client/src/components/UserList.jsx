@@ -232,13 +232,7 @@ export default function UserList() {
             <div className="w-[17%]">Pending Requests</div>
             <div className="w-[17%] ">Role</div>
             <div className="flex justify-evenly gap-2 w-[5%]">
-              {checked.length > 0 && (
-                <div className="flex">
-                  <IconButton edge="end" aria-label="comments">
-                    <DeleteIcon className="text-gray-300" />
-                  </IconButton>
-                </div>
-              )}
+              
             </div>
           </div>
         </div>

@@ -253,13 +253,7 @@ export default function DiningList({
             <div className="w-[35%]">Status</div>
             <div className="w-[35%]">Actions</div>
             <div className="flex justify-evenly gap-2 w-[5%]">
-              {checked.length > 0 && (
-                <div className="flex">
-                  <IconButton edge="end" aria-label="comments">
-                    <DeleteIcon className="text-gray-600" />
-                  </IconButton>
-                </div>
-              )}
+              
             </div>
           </div>
         </div>

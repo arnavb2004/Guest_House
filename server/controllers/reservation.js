@@ -19,33 +19,6 @@ const auth = new google.auth.JWT(
 
 const spreadsheetId = `${process.env.GOOGLE_SHEET_ID}`; // Replace with your Google Sheet's ID
 
-// async function appendReservationToSheet(reservation) {
-//   await auth.authorize();
-//   const response = await googleSheets.spreadsheets.values.append({
-//     auth,
-//     spreadsheetId,
-//     range: "Sheet1", // Assuming you are using the first sheet; change if necessary
-//     valueInputOption: "RAW",
-//     resource: {
-//       values: [
-//         [
-//           reservation.guestName,
-//           reservation.guestEmail,
-//           reservation.numberOfGuests,
-//           reservation.numberOfRooms,
-//           reservation.roomType,
-//           reservation.arrivalDate,
-//           reservation.departureDate,
-//           reservation.purpose,
-//           reservation.category,
-//           // Add more fields as necessary
-//         ],
-//       ],
-//     },
-//   });
-//   return response;
-// }
-
 async function sendVerificationEmail(to, subject, body) {
   try {
     const info = await transporter.sendMail({
@@ -311,6 +284,28 @@ export async function getReservationDocuments(req, res) {
       console.log("Download finished");
     });
     // res.status(200).json({ message: "Downloaded successfully" })
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+}
+
+export async function deleteReservations(req, res) {
+  const { ids } = req.body;
+  ids = ids.filter((id) => id !== "#" && id !== "");
+  try {
+    const reservations = await Reservation.find({ _id: { $in: ids } });
+    for (const reservation of reservations) {
+      if (
+        req.user.email !== reservation.guestEmail &&
+        req.user.role !== "ADMIN"
+      ) {
+        return res.status(403).json({
+          message: "You are not authorized to delete this reservation",
+        });
+      }
+    }
+    await Reservation.deleteMany({ _id: { $in: ids } });
+    res.status(200).json({ message: "Reservations Deleted" });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
@@ -734,6 +729,11 @@ export const deleteRoom = async (req, res) => {
       return res.status(404).json({ message: "Room not found" });
     }
 
+    if(deletedRoom.bookings?.length > 0)
+      return res
+        .status(404)
+        .json({ message: "Room is occupied" });
+
     res
       .status(200)
       .json({ message: "Room deleted successfully", room: deletedRoom });
@@ -943,8 +943,8 @@ export const checkoutReservation = async (req, res) => {
     let canCheckout = true;
 
     for (const dining of dinings) {
-      console.log(dining)
-      console.log(dining.status)
+      console.log(dining);
+      console.log(dining.status);
       if (dining.payment.status !== "PAID") {
         canCheckout = false;
         break;
