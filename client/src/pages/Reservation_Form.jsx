@@ -395,7 +395,7 @@ function ReservationForm() {
           autoClose: 3000,
         });
         setLoading(false);
-        // navigate("..");
+        navigate("..");
       } else {
         console.log("fail");
 
