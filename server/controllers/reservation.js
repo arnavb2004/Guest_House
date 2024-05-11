@@ -59,16 +59,23 @@ export async function createReservation(req, res) {
       source,
     } = req.body;
     var room_cost;
+    const ms = Number(
+      new Date(departureDate).getTime() - new Date(arrivalDate).getTime()
+    );
+    console.log(ms);
+    const days = Number(ms / (1000 * 60 * 60 * 24));
+    console.log(days);
+
     if (roomType == "Single Occupancy") {
       if (category == "A") room_cost = 0;
-      else if (category == "B") room_cost = 600 * numberOfRooms;
-      else if (category == "C") room_cost = 900 * numberOfRooms;
-      else if (category == "D") room_cost = 1300 * numberOfRooms;
+      else if (category == "B") room_cost = 600 * numberOfRooms * days;
+      else if (category == "C") room_cost = 900 * numberOfRooms * days;
+      else if (category == "D") room_cost = 1300 * numberOfRooms * days;
     } else {
       if (category == "A") room_cost = 0;
-      else if (category == "B") room_cost = 850 * numberOfRooms;
-      else if (category == "C") room_cost = 1250 * numberOfRooms;
-      else if (category == "D") room_cost = 1800 * numberOfRooms;
+      else if (category == "B") room_cost = 850 * numberOfRooms * days;
+      else if (category == "C") room_cost = 1250 * numberOfRooms * days;
+      else if (category == "D") room_cost = 1800 * numberOfRooms * days;
     }
     //single rooms cost
     console.log(source);

@@ -362,6 +362,13 @@ function ReservationForm() {
       }
     }
 
+    if (
+      formData.applicant.email.match("[a-z0-9._%+-]+@iitrpr.ac.in$") === null
+    ) {
+      toast.error("Please enter a valid IIT Ropar email address for applicant");
+      return;
+    }
+
     if (!passed) {
       toast.error("Please Fill All Necessary Fields Correctly.");
       return;
@@ -409,7 +416,7 @@ function ReservationForm() {
           autoClose: 3000,
         });
         setLoading(false);
-        navigate("..");
+        // navigate("..");
       } else {
         console.log("fail");
 
