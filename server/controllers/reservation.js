@@ -20,7 +20,7 @@ const auth = new google.auth.JWT(
   ["https://www.googleapis.com/auth/spreadsheets"]
 );
 
-const spreadsheetId = `${process.env.GOOGLE_SHEET_ID}`; // Replace with your Google Sheet's ID
+const spreadsheetId = `${process.env.GOOGLE_SHEET_ID}`;
 
 async function sendVerificationEmail(to, subject, body) {
   try {

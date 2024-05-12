@@ -225,8 +225,6 @@ function ReservationForm() {
     }
   };
 
-  console.log(checkedValues);
-
   const handleSubRoleChange = (event, reviewer) => {
     const index = checkedValues.indexOf(reviewer);
     const temp = [...subRole];
@@ -416,7 +414,7 @@ function ReservationForm() {
           autoClose: 3000,
         });
         setLoading(false);
-        // navigate("..");
+        navigate("..");
       } else {
         console.log("fail");
 
