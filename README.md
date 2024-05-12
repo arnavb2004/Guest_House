@@ -23,6 +23,10 @@ Welcome to the Guest House Management Portal! This web application allows you to
 * **Backend:** NodeJs, ExpressJS
 * **Database:** MongoDB
 
+## Software usage info
+* OS: Windows
+* Software: All the dependences are mentioned in the package.json of client and server directory.
+
   
 ## Installation
 To run the project locally, follow these steps:
@@ -33,3 +37,5 @@ To run the project locally, follow these steps:
 4. Run client and server: `npm start`
 
 The web application will automatically start on your web browser
+
+
