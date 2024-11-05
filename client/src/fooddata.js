@@ -64,7 +64,7 @@ export const menuItems1 = [
     id: 8,
     image: food8,
     price: 30,
-    name: "Sandwitch",
+    name: "Sandwich",
     category: "Snacks",
   },
   {

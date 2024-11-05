@@ -116,6 +116,7 @@ export const googleLoginUser = async (req, res) => {
           success: true,
           user: user,
           message: "User logged in successfully",
+          hideMessage: true,
           accessToken,
           refreshToken,
         });

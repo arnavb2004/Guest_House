@@ -4,7 +4,7 @@ import StepperComponent from "./Stepper";
 import http from "../utils/httpService";
 import { toast } from "react-toastify";
 
-const Workflow = ({ id, userRecord, reviewers, setReviewers }) => {
+const DiningWorkflow = ({ id, userRecord, reviewers, setReviewers }) => {
   console.log(userRecord);
   let diningRecord = userRecord;
   const steps = ["Place Order", "Approval", "Payment"];
@@ -76,6 +76,7 @@ const Workflow = ({ id, userRecord, reviewers, setReviewers }) => {
             <button
               onClick={() => {
                 http.put("/dining/approve/" + id, { comments });
+                window.location.reload();
               }}
               className="border rounded-lg p-3 px-4 bg-green-400 hover:bg-green-500"
             >
@@ -84,6 +85,7 @@ const Workflow = ({ id, userRecord, reviewers, setReviewers }) => {
             <button
               onClick={() => {
                 http.put("/dining/reject/" + id, { comments });
+                window.location.reload();
               }}
               className="border rounded-lg p-3 px-4 bg-red-400 hover:bg-red-500"
             >
@@ -92,6 +94,7 @@ const Workflow = ({ id, userRecord, reviewers, setReviewers }) => {
             <button
               onClick={() => {
                 http.put("/dining/hold/" + id, { comments });
+                window.location.reload();
               }}
               className="border rounded-lg p-3 px-4 bg-yellow-400 hover:bg-yellow-500"
             >
@@ -134,4 +137,4 @@ const Workflow = ({ id, userRecord, reviewers, setReviewers }) => {
   );
 };
 
-export default Workflow;
+export default DiningWorkflow;

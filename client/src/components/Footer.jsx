@@ -38,9 +38,6 @@ const Footer = () => {
               <a href="https://www.iitrpr.ac.in/" target="_blank" rel="noreferrer">About Us</a>
             </li>
             <li>
-              <a href="#services">Services</a>
-            </li>
-            <li>
               <a href="/">Gallery</a>
             </li>
             <li>

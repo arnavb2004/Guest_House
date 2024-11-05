@@ -1,7 +1,12 @@
 import React from "react";
 import ReCAPTCHA from "react-google-recaptcha";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEnvelope, faUser, faPen } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEnvelope,
+  faUser,
+  faPen,
+  faTowerBroadcast,
+} from "@fortawesome/free-solid-svg-icons";
 import styles from "./Contact.module.css";
 import axios from "axios";
 import { BASE_URL } from "../constants.js";
@@ -39,11 +44,13 @@ const ContactForm = () => {
 
   const handleSubmit = async (e) => {
     console.log(e.target);
-    await axios.post(BASE_URL + "/utils/mail", {
+    const req = await axios.post(BASE_URL + "/utils/mail", {
       to: "dep.test.p04@gmail.com",
-      subject: "Contact Us request - " + data.name,
-      body: data.message,
+      subject: "Guest house feedback",
+      body: data.message + `<br /><br />From: ${data.name}<br />${data.email}`,
     });
+    console.log(req);
+    setData({ name: "", email: "", message: "" })
     // sendVerificationEmail("dep.test.p04@gmail.com","Contact Us request - ", )
   };
   return (

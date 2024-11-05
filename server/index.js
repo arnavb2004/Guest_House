@@ -12,7 +12,6 @@ import utilsRoute from "./routes/utilsRoute.js";
 import multer from "multer";
 import { GridFsStorage } from "multer-gridfs-storage";
 
-
 const port = process.env.PORT || 4751;
 dotenv.config();
 const app = express();
@@ -43,7 +42,7 @@ const upload = multer({ storage });
 app.use(cors());
 app.use(express.json()); //for parsing application/json
 // app.use(upload.array('files',10));
-app.use(express.urlencoded({ extended: true })); //for parsing application/x-www-form-urlencoded
+app.use(express.urlencoded({ extended: true }));
 
 app.get("/", (req, res) => {
   console.log(req.files);
@@ -54,10 +53,10 @@ app.get("/", (req, res) => {
 
 //app.use(expressjwt({ secret: process.env.ACCESS_TOKEN_SECRET, algorithms: ['HS256'] }).unless({ path: ["/auth/login", "/auth/register"] }));
 app.use("/auth", authRoute);
-app.use("/user", userRoute);
-app.use("/dining", diningRoute);
-app.use("/reservation", reservationRoute);
-app.use("/utils",utilsRoute);
+app.use("/user", checkAuth, userRoute);
+app.use("/dining", checkAuth, diningRoute);
+app.use("/reservation", checkAuth, reservationRoute);
+app.use("/utils", utilsRoute);
 app.get("/protected", checkAuth, (req, res) => {
   console.log("Protected route Getting executed!!!");
   res.json({

@@ -338,7 +338,7 @@ export default function AdminRecordPage() {
             <div className="flex justify-between px-32 pb-5">
               <p className="p-2 text-xl font-semibold">Room Fare:</p>
               <p className="p-2 text-lg">
-                Rs. {userRecord.payment.amount}/- only
+                Rs. {userRecord.payment.amount || 0}/- only
               </p>
             </div>
             <div className="flex justify-between px-32 pb-5">
@@ -348,7 +348,7 @@ export default function AdminRecordPage() {
             <div className="flex justify-between px-32 pb-5">
               <p className="p-2 text-xl font-semibold">Total Amount:</p>
               <p className="p-2 text-lg">
-                Rs. {totalDiningFare + userRecord.payment.amount}/- only
+                Rs. {totalDiningFare + (userRecord.payment.amount || 0)}/- only
               </p>
             </div>
           </div>
@@ -413,7 +413,7 @@ export default function AdminRecordPage() {
             <div className="flex justify-between px-32 pb-5">
               <p className="p-2 text-xl font-semibold">Room Fare:</p>
               <p className="p-2 text-lg">
-                Rs. {userRecord.payment.amount}/- only
+                Rs. {userRecord.payment.amount || 0}/- only
               </p>
             </div>
             <div className="flex justify-between px-32 pb-5">
@@ -423,7 +423,7 @@ export default function AdminRecordPage() {
             <div className="flex justify-between px-32 pb-5">
               <p className="p-2 text-xl font-semibold">Total Amount:</p>
               <p className="p-2 text-lg">
-                Rs. {userRecord.payment.amount + totalDiningFare}/- only
+                Rs. {(userRecord.payment.amount || 0) + totalDiningFare}/- only
               </p>
             </div>
           </div>

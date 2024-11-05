@@ -98,3 +98,16 @@ export const deleteNotification = async (req, res) => {
     return res.status(500).json({ message: err.message });
   }
 }
+
+export const deleteAllNotifications = async (req, res) => {
+  try {
+    console.log("Notification delete requested");
+    const user = await User.findById(req.user.id);
+    user.notifications = []
+    await user.save();
+    return res.status(200).json(user.notifications);
+  }
+  catch(err){
+    return res.status(500).json({ message: err.message });
+  }
+}

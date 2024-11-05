@@ -18,7 +18,8 @@ export const checkAuth = async (req, res, next) => {
       // console.log("Decoded Token = ", decodedToken);
 
       // console.log("Date = ", Date.now() / 1000);
-      if (decodedToken.exp <= Date.now() / 1000) {
+      if (decodedToken.exp < Date.now() / 1000) {
+        // Access token expired
         var decodedToken;
         try {
           decodedToken = jwt.verify(
@@ -34,15 +35,22 @@ export const checkAuth = async (req, res, next) => {
           } else {
             return res
               .status(401)
-              .json({ message: "Invalid credentials! Please login again" });
+              .json({ message: "Something went wrong! Please login again" });
           }
         }
-        if (decodedToken.exp <= Date.now() / 1000) {
+        if (decodedToken.exp < Date.now() / 1000) {
+          // Refresh token expired
           return res
             .status(401)
             .json({ message: "Your session has expired! Please login again" });
         }
+
         const user = await User.findOne({ email: decodedToken.email });
+        // if (refreshToken !== user.refreshToken) {
+        //   return res
+        //     .status(401)
+        //     .json({ message: "Your session has expired! Please login again" });
+        // }
         console.log("User found!! adding to the req body");
         req.user = user;
 
@@ -55,7 +63,6 @@ export const checkAuth = async (req, res, next) => {
         req.body.newaccessToken = newaccessToken;
         next();
       } else {
-        //console.log("Access Token has expired!!");
         const user = await User.findOne({ email: decodedToken.email });
         req.user = user;
         next();
