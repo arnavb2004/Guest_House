@@ -21,7 +21,6 @@ export async function appendReservationToSheet(reservation, category) {
     let range;
     let newSrNo;
     let roomNumbers;
-
     switch (category) {
         case 'A':
             console.log("hello");
@@ -646,7 +645,7 @@ export async function appendReservationToSheetAfterCheckout(reservation) {
                 break;
             }
             else {
-                console.log("hello");
+                console.log("hellonigs");
                 sheetName = 'CatCUTR';
                 console.log("hello3");
                 newSrNo = await findRowByReservationId(sheetName, reservation._id);
@@ -723,6 +722,9 @@ async function getLastSrNo(sheetName) {
     console.log(response)
     const data = response.data.values;
     console.log(data)
+    if(isNaN(data[data.length - 1][0])){
+        return 0;
+    }
     if (data && data.length > 0) {
         return parseInt(data[data.length - 1][0]); // Assuming the first column contains the serial number
     } else {

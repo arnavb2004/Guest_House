@@ -25,8 +25,8 @@ const spreadsheetId = `${process.env.GOOGLE_SHEET_ID}`;
 async function sendVerificationEmail(to, subject, body) {
   try {
     const info = await transporter.sendMail({
-      from: "arnavbansal17559.6@gmail.com",
-      to: to.length > 0 ? to : "arnavbansal17559.6@gmail.com", // list of receivers
+      from: process.env.EMAIL_USER,
+      to: to.length > 0 ? to : process.env.EMAIL_USER, // list of receivers
       subject: subject, // Subject line
       html: body, // plain text body
     });
