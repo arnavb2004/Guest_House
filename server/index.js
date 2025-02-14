@@ -12,7 +12,7 @@ import utilsRoute from "./routes/utilsRoute.js";
 import multer from "multer";
 import { GridFsStorage } from "multer-gridfs-storage";
 
-const port = process.env.PORT || 4751;
+const port = process.env.PORT || 5000;
 dotenv.config();
 const app = express();
 

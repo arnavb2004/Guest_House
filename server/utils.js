@@ -1,10 +1,13 @@
 import nodemailer from "nodemailer";
+import dotenv from "dotenv";
+dotenv.config();
+
 
 export const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: "dep.test.p04@gmail.com",
-    pass: "tfpfrvmxalvwlupl",
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
   },
 });
 
@@ -39,12 +42,12 @@ export const getTime = (dateString) => {
 export async function sendVerificationEmail(to, subject, body) {
   try {
     const info = await transporter.sendMail({
-      from: "dep.test.p04@gmail.com",
+      from: process.env.EMAIL_USER,
       to: to, // list of receivers
       subject: subject, // Subject line
       html: body, // plain text body
     });
-    console.log("Message sent", info.messageId);
+    console.log("Message sent", info.envelope.to);
   } catch (error) {
     console.log("Error occurred while sending email: ", error);
     throw error;

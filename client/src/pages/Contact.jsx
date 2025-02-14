@@ -45,7 +45,7 @@ const ContactForm = () => {
   const handleSubmit = async (e) => {
     console.log(e.target);
     const req = await axios.post(BASE_URL + "/utils/mail", {
-      to: "dep.test.p04@gmail.com",
+      to: "dep.test.g24@gmail.com",
       subject: "Guest house feedback",
       body: data.message + `<br /><br />From: ${data.name}<br />${data.email}`,
     });

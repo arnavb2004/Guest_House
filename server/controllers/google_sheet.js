@@ -5,7 +5,7 @@ const googleSheets = google.sheets("v4");
 const auth = new google.auth.JWT(
   process.env.client_email,
   null,
-  process.env.private_key,
+  process.env.private_key.replace(/\\n/g, '\n'),
   ["https://www.googleapis.com/auth/spreadsheets"]
 );
 
@@ -97,7 +97,7 @@ export async function appendReservationToSheet(reservation, category) {
 
         case 'B':
             if(reservation.payment.source == "DEPARTMENT"){
-                console.log("hello");
+                console.log("helloB");
                 sheetName = 'CatBPBDeptBNR';
                 lastSrNo = await getLastSrNo(sheetName);
                 console.log("hello3");
@@ -130,13 +130,13 @@ export async function appendReservationToSheet(reservation, category) {
                 updateCellValue(sheetName, newSrNo + 5, 1, newSrNo);
                 updateCellValue(sheetName, newSrNo + 5, 2, reservation._id);
                 updateCellValue(sheetName, newSrNo + 5, 3, reservation.srno);
-                updateCellValue(sheetName, newSrNo + 5, 5, reservation.arrivalDate);
+                updateCellValue(sheetName, newSrNo + 5, 5, new Date().toISOString().split('T')[0]);
                 updateCellValue(sheetName, newSrNo + 5, 6, reservation.guestName);
                 updateCellValue(sheetName, newSrNo + 5, 7, reservation.applicant.Name);
                 updateCellValue(sheetName, newSrNo + 5, 9, reservation.category);
                 updateCellValue(sheetName, newSrNo + 5, 10, reservation.roomType)
-                updateCellValue(sheetName, newSrNo + 5, 11, reservation.arrivalDate);
-                updateCellValue(sheetName, newSrNo + 5, 12, reservation.departureDate);
+                updateCellValue(sheetName, newSrNo + 5, 11, reservation.arrivalDate.toISOString().split('T')[0]);
+                updateCellValue(sheetName, newSrNo + 5, 12, reservation.departureDate.toISOString().split('T')[0]);
             }
             else{
                 console.log("hello");
@@ -719,6 +719,7 @@ async function getLastSrNo(sheetName) {
         spreadsheetId,
         range: sheetName,
     });
+    console.log("heyyyy");
     console.log(response)
     const data = response.data.values;
     console.log(data)

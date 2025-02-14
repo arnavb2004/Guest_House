@@ -25,8 +25,8 @@ const spreadsheetId = `${process.env.GOOGLE_SHEET_ID}`;
 async function sendVerificationEmail(to, subject, body) {
   try {
     const info = await transporter.sendMail({
-      from: "dep.test.p04@gmail.com",
-      to: to.length > 0 ? to : "dep.test.p04@gmail.com", // list of receivers
+      from: "arnavbansal17559.6@gmail.com",
+      to: to.length > 0 ? to : "arnavbansal17559.6@gmail.com", // list of receivers
       subject: subject, // Subject line
       html: body, // plain text body
     });
@@ -126,7 +126,6 @@ export async function createReservation(req, res) {
     });
 
     let revArray = reviewersArray.map((reviewer) => reviewer.role);
-
     await appendReservationToSheet(reservation, category);
 
     console.log("sending mail");
