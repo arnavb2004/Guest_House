@@ -163,8 +163,7 @@ export default function RecordList({ status = "pending", desc }) {
     "Number of Rooms",
     "Number of Guests",
     "Category",
-    "Arrival Date",
-    "Departure Date",
+    ...(user.role !== "USER" ? ["Arrival Date", "Departure Date"] : []),
     "Room Type",
   ];
 

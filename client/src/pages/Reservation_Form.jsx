@@ -323,10 +323,10 @@ function ReservationForm() {
       return;
     }
 
-    if (formData.arrivalTime < "13:00") {
-      toast.error("Arrival time should be after 01:00 PM");
-      return;
-    }
+    // if (formData.arrivalTime < "13:00") {
+    //   toast.error("Arrival time should be after 01:00 PM");
+    //   return;
+    // }
 
     if (formData.departureTime > "11:00") {
       toast.error("Departure time should be before 11:00 AM");
@@ -528,7 +528,7 @@ function ReservationForm() {
           </div>
 
           <div className="form-group">
-            <label>Arrival Time*: (Arrival time must be after 01:00 PM)</label>
+            <label>Arrival Time:* </label>
             <input
               type="time"
               name="arrivalTime"

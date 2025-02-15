@@ -5,6 +5,9 @@ import axios from "axios"; // Assuming you use axios for API requests
 import Workflow from "../components/Workflow";
 import { privateRequest } from "../utils/useFetch";
 import { getDate, getTime } from "../utils/handleDate";
+import LogoutIcon from "@mui/icons-material/Logout";
+import { IconButton } from "@mui/material";
+import { toast } from "react-toastify";
 
 export default function RecordPage() {
   const { id } = useParams();
@@ -167,7 +170,59 @@ export default function RecordPage() {
           </div>
           <div className="flex justify-between px-32 pb-5">
             <p className="p-0 text-xl font-semibold">Total Amount:</p>
-            <p className="p-0 text-lg">Rs. {userRecord.payment.amount+totalDiningFare}/- only</p>
+            <p className="p-0 text-lg">Rs. {userRecord.payment.amount + totalDiningFare}/- only</p>
+
+</div>
+
+<div className="flex justify-between px-32 pb-5">
+
+{user.role === "CASHIER" &&
+
+    userRecord.payment.status === "PAID" &&
+
+    !userRecord.checkOut && <p className="p-0 text-xl font-semibold">checkout user:</p> }
+
+  {user.role === "CASHIER" &&
+
+    userRecord.payment.status === "PAID" &&
+
+    !userRecord.checkOut && (
+
+      <IconButton>
+
+        <LogoutIcon
+
+          onClick={async () => {
+
+            try {
+
+              const res = await http.put(
+
+                "/reservation/checkout/" + userRecord._id
+
+              );
+
+              toast.success("Checked out successfully");
+
+              window.location.reload();
+
+            } catch (error) {
+
+              console.log(error);
+
+              toast.error(error.response?.data?.message);
+
+            }
+
+          }}
+
+          color="black"
+
+        />
+
+      </IconButton>
+
+    )}
           </div>
         </div>
       </div>

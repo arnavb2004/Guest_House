@@ -10,10 +10,6 @@ const Home = () => {
       text: "Guest House",
     },
     {
-      link: "https://www.iitrpr.ac.in/contact",
-      text: "Contact Us",
-    },
-    {
       link: "https://www.iitrpr.ac.in/academic",
       text: "Academics",
     },

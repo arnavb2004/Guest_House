@@ -81,7 +81,10 @@ export default function UserList() {
 
   const filterUsers = () => {
     const tempUsers = users.filter((user) => {
-      return user[filterMap[searchChoice]]
+      console.log(searchChoice);
+      const effectiveSearchChoice = searchChoice === "Filter" ? "Name" : searchChoice;
+      console.log(searchChoice);
+      return user[filterMap[effectiveSearchChoice]]
         .toLowerCase()
         .includes(searchTerm.toLowerCase());
     });
@@ -202,7 +205,7 @@ export default function UserList() {
           )}
         </div>
         <TextField
-          label="Search items"
+          label="Search users"
           variant="outlined"
           className="col-span-10 w-full p-2.5 h-full"
           value={searchTerm}

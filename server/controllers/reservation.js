@@ -782,75 +782,105 @@ export const updateRooms = async (req, res) => {
   session.startTransaction();
 
   try {
-    const allottedRooms = req.body;
-    const id = req.params.id;
-    const prevRes = await Reservation.findById(id);
-    const prevAllottedRooms = prevRes.bookings;
-    for (const prevAllottedRoom of prevAllottedRooms) {
-      const room = await Room.findOne({
-        roomNumber: prevAllottedRoom.roomNumber,
-      });
-      if (!room) {
-        throw new Error(
-          `Room with number ${prevAllottedRoom.roomNumber} not found`,
-          400
-        );
-      }
-      const bookingIndex = room.bookings.findIndex(
-        (booking) =>
-          getDate(booking.startDate) == getDate(prevAllottedRoom.startDate) &&
-          getDate(booking.endDate) == getDate(prevAllottedRoom.endDate)
-      );
-      if (bookingIndex !== -1) {
-        room.bookings.splice(bookingIndex, 1);
-      }
-      await room.save();
+    const { id } = req.params; // Reservation ID
+    const allottedRooms = req.body; // Updated room assignments
+
+    // Fetch the previous reservation details
+    const prevReservation = await Reservation.findById(id);
+    if (!prevReservation) {
+      throw new Error("Reservation not found", 404);
     }
-    for (const allottedRoom of allottedRooms) {
-      const { roomNumber, startDate, endDate } = allottedRoom;
+
+    const prevAllottedRooms = prevReservation.bookings;
+
+    // Step 1: Remove old room assignments no longer in the updated list
+    for (const prevRoom of prevAllottedRooms) {
+      // Check if the room exists in the new allottedRooms; if not, unassign it
+      const isStillAssigned = allottedRooms.some(
+        (room) =>
+          room.roomNumber === prevRoom.roomNumber &&
+          room.startDate === prevRoom.startDate &&
+          room.endDate === prevRoom.endDate
+      );
+
+      if (!isStillAssigned) {
+        const room = await Room.findOne({ roomNumber: prevRoom.roomNumber });
+        if (!room) {
+          throw new Error(
+            `Room with number ${prevRoom.roomNumber} not found`,
+            400
+          );
+        }
+
+        // Remove the booking for the specified date range
+        const bookingIndex = room.bookings.findIndex(
+          (booking) =>
+            getDate(booking.startDate) === getDate(prevRoom.startDate) &&
+            getDate(booking.endDate) === getDate(prevRoom.endDate)
+        );
+
+        if (bookingIndex !== -1) {
+          room.bookings.splice(bookingIndex, 1); // Unassign the room
+          await room.save();
+        }
+      }
+    }
+
+    // Step 2: Assign new rooms or update existing bookings
+    for (const newRoom of allottedRooms) {
+      const { roomNumber, startDate, endDate, user } = newRoom;
 
       const room = await Room.findOne({ roomNumber });
       if (!room) {
         throw new Error(`Room with number ${roomNumber} not found`, 400);
       }
 
+      // Check if the room is available for the specified date range
       const isAvailable = await isDateRangeAvailable(room, startDate, endDate);
-
-      if (isAvailable) {
-        // Update the room bookings to mark the specified period as booked
-        room.bookings.push({
-          startDate: allottedRoom.startDate,
-          endDate: allottedRoom.endDate,
-          user: allottedRoom.user,
-        });
+      if (!isAvailable) {
+        throw new Error(
+          `Room ${roomNumber} is not available for the specified date range`,
+          400
+        );
       }
 
+      // Add the new booking
+      room.bookings.push({ startDate, endDate, user });
       await room.save();
-
-      // Update the reservation document to reflect the assigned rooms for the user
     }
 
-    const reservation = await Reservation.findByIdAndUpdate(
-      id, // Assuming user has an _id property
+    // Step 3: Update the reservation document
+    const updatedReservation = await Reservation.findByIdAndUpdate(
+      id,
       { $set: { bookings: allottedRooms, stepsCompleted: 3 } },
-      { session }
+      { new: true, session }
     );
 
-    if (!reservation) {
+    if (!updatedReservation) {
       throw new Error("Failed to update reservation", 400);
     }
+
+    // Commit the transaction
     await session.commitTransaction();
     session.endSession();
-    res
-      .status(200)
-      .json({ message: "Rooms and reservation updated successfully" });
+
+    res.status(200).json({
+      message: "Rooms and reservation updated successfully",
+      reservation: updatedReservation,
+    });
   } catch (error) {
+    // Rollback transaction in case of any error
     await session.abortTransaction();
     session.endSession();
+
     console.error("Error updating rooms and reservation:", error);
-    res.status(400).json({ success: false, message: error.message });
+    res.status(400).json({
+      success: false,
+      message: error.message || "Failed to update rooms and reservation",
+    });
   }
 };
+
 
 export const sendNotification = async (req, res) => {
   try {

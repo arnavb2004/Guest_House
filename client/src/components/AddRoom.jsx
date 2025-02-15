@@ -41,7 +41,21 @@ export default function AddRoom() {
 	const fetchRooms = async () => {
 		try {
 			const res = await http.get("/reservation/rooms");
-			setRooms(res.data);
+			const currentDate = new Date();
+			const updatedRooms = res.data.map((room) => {
+
+				if (room.bookings.length > 0) {
+					room.bookings.sort(
+						(a, b) => new Date(a.endDate) - new Date(b.endDate)
+					);
+					const lastBooking = room.bookings[room.bookings.length - 1];
+					if (new Date(lastBooking.endDate) < currentDate) {
+						room.bookings = []; // Mark room as available
+					}
+				}
+				return room;
+			});
+			setRooms(updatedRooms);
 		} catch (error) {
 			if (error.response?.data?.message)
 				toast.error(error.response.data.message);

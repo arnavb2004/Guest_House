@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import { privateRequest } from "../utils/useFetch";
 import { useSelector } from "react-redux";
 import { getDate } from "../utils/handleDate";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useParams ,useResolvedPath } from "react-router-dom";
 import RoomList from "../components/RoomList";
 
 const RoomBooking = () => {
@@ -15,6 +15,7 @@ const RoomBooking = () => {
   const guestName = userRecord.guestName;
   const user = useSelector((state) => state.user);
   const http = privateRequest(user.accessToken, user.refreshToken);
+  const room_allot = userRecord.numberOfRooms;
 
   const fetchRooms = async () => {
     try {
@@ -50,6 +51,15 @@ const RoomBooking = () => {
     new Date(userRecord.departureDate).toISOString().substring(0, 10)
   );
   const [roomList, setRoomList] = useState([]);
+const [counter, setCounter] = useState(0);
+
+
+
+  useEffect(() => {
+
+    setCounter(roomList.length);
+
+  }, [roomList]);
 
   useEffect(() => {
     handleFilter();
@@ -133,11 +143,6 @@ const RoomBooking = () => {
     }
   };
 
-  const deleteRoom = (room) => {
-    const updatedRoomList = roomList.filter((currRoom) => currRoom !== room);
-    setRoomList(updatedRoomList);
-  };
-
   return (
     <div className="room-booking h-fit ">
       <h2 className="room-heading text-4xl font-bold">Room Booking</h2>
@@ -177,7 +182,22 @@ const RoomBooking = () => {
             <div
               className="room-info"
               onClick={() => {
-                addRoom(room);
+                if (counter < room_allot) {
+                  setCounter((prevCounter) => {
+                    const newCounter = prevCounter + 1;
+                    if (newCounter <= room_allot) {
+                      addRoom(room);
+                      // toast.success(newCounter);
+                      toast.success("Room added successfully");
+                      console.log(newCounter, "is the counter");
+                    } else {
+                      toast.error("Alloting more rooms");
+                    }
+                    return newCounter;
+                  });
+                } else {
+                  toast.error("Alloting more rooms");
+                }
               }}
             >
               <h3>{room.roomNumber}</h3>
@@ -198,7 +218,7 @@ const RoomBooking = () => {
           </div>
         ))}
       </div>
-      <RoomList roomList={roomList} setRoomList={setRoomList} id={id} />
+      <RoomList roomList={roomList} counter={counter} setCounter={setCounter} setRoomList={setRoomList} id={id} />
     </div>
   );
 };

@@ -9,10 +9,47 @@ import { privateRequest } from "../utils/useFetch";
 import "react-toastify/dist/ReactToastify.min.css";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-export default function RoomList({ roomList, setRoomList, id }) {
-  const deleteRoom = (room) => {
-    const updatedRoomList = roomList.filter((currRoom) => currRoom !== room);
-    setRoomList(updatedRoomList);
+
+export default function RoomList({ roomList, setRoomList, id, counter, setCounter }) {
+
+  const deleteRoom = async (room) => {
+
+    try {
+
+      // Remove the room from the frontend state
+
+      const updatedRoomList = roomList.filter((currRoom) => currRoom !== room);
+
+
+
+      // Update the backend to unassign the room
+
+      await http.put(`/reservation/rooms/${id}`, updatedRoomList);
+
+
+
+      // Update state after successful unassignment
+
+      setRoomList(updatedRoomList);
+
+      toast.success(`Room ${room.roomNumber} unassigned successfully`);
+
+    } catch (err) {
+
+      // Handle errors gracefully
+
+      if (err.response?.data?.message) {
+
+        toast.error(err.response.data.message);
+
+      } else {
+
+        toast.error("Failed to unassign room. Please try again.");
+
+      }
+
+    }
+
   };
   const user = useSelector((state) => state.user);
   const http = privateRequest(user.accessToken, user.refreshToken);
@@ -61,6 +98,7 @@ export default function RoomList({ roomList, setRoomList, id }) {
             className="p-2 w-fit bg-[rgb(54,88,153)]  rounded-lg text-white mr-16"
             onClick={async () => {
               try {
+                toast.success("Room assigned Successfully");
                 await http.put("/reservation/rooms/" + id, roomList);
                 window.location.reload();
               } catch (err) {
