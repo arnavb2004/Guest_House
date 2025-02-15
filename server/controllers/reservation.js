@@ -634,6 +634,52 @@ export const updatePaymentStatus = async (req, res) => {
   }
 };
 
+export const removeFromList = async (req, res) => {
+  if (req.user?.role !== "ADMIN") {
+    return res.status(403).json({ message: "Unauthorized action" });
+  }
+
+  const { id } = req.params; // Reservation ID
+  const { roomNumber } = req.body; // Room to remove
+
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
+  try {
+    // Find the reservation
+    const reservation = await Reservation.findById(id);
+    if (!reservation) {
+      throw new Error("Reservation not found");
+    }
+
+    // Find the room and remove its booking
+    const room = await Room.findOne({ roomNumber });
+    if (!room) {
+      throw new Error(`Room ${roomNumber} not found`);
+    }
+    //console.log("room bookings", room.bookings);
+    // Remove the booking from the room
+    //console.log(reservation._id);
+    // console.log(booking.roomNumber._id);
+    room.bookings = room.bookings.filter((booking) => booking.resid !== reservation._id.toString() );
+    await room.save();
+    //console.log("updated room bookings", room.bookings);
+    // Remove the room from the reservation
+    
+    reservation.bookings = reservation.bookings.filter((booking) => booking.roomNumber !== roomNumber);
+    await reservation.save();
+
+    await session.commitTransaction();
+    session.endSession();
+
+    res.status(200).json({ message: `Room ${roomNumber} unassigned successfully` });
+  } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
+    res.status(400).json({ message: error.message || "Failed to remove room" });
+  }
+};
+
 const updateReservationStatus = async (reservation) => {
   let initStatus = reservation.status;
   let reviewers = reservation.reviewers;
@@ -790,7 +836,14 @@ export const updateRooms = async (req, res) => {
     if (!prevReservation) {
       throw new Error("Reservation not found", 404);
     }
-
+    
+    const RoomsRequest = prevReservation.numberOfRooms;
+    if(req.method === "PUT" && RoomsRequest > allottedRooms.length){
+      return res.status(400).json({
+        success: false,
+        message: `Insufficient rooms allotted. Guest requested ${RoomsRequest} rooms, but only ${allottedRooms.length} assigned.`,
+      });
+    }
     const prevAllottedRooms = prevReservation.bookings;
 
     // Step 1: Remove old room assignments no longer in the updated list
@@ -843,9 +896,9 @@ export const updateRooms = async (req, res) => {
           400
         );
       }
-
+      const resid = prevReservation._id;
       // Add the new booking
-      room.bookings.push({ startDate, endDate, user });
+      room.bookings.push({ startDate, endDate,resid, user });
       await room.save();
     }
 

@@ -369,8 +369,8 @@ export default function AdminRecordList({ status = "pending" }) {
                   <div className="w-[10%]">{getDate(record.arrivalDate)}</div>
                   <div className="w-[10%]">{getDate(record.departureDate)}</div>
                   <div className="w-[10%]">{record.roomType}</div>
-                  {record.bookings?.length > 0 && <div className="w-[10%]">Yes</div>}
-                  {record.bookings?.length <= 0 && <div className="w-[10%]">No</div>}
+                  {record.bookings?.length === record.numberOfRooms&& <div className="w-[10%]">Yes</div>}
+                  {record.bookings?.length !== record.numberOfRooms && <div className="w-[10%]">No</div>}
                   <div className="flex justify-evenly gap-2 w-[10%]">
                     { status !== "approved" && (
                       <IconButton edge="end" aria-label="comments">

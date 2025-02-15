@@ -422,7 +422,7 @@ function ReservationForm() {
           render: "Form submission failed.",
           type: "error",
           isLoading: false,
-          autoClose: 5000,
+          autoClose: 1000,
         });
       }
     } catch (error) {
@@ -435,7 +435,7 @@ function ReservationForm() {
           render: error.response.data.message,
           type: "error",
           isLoading: false,
-          autoClose: 5000,
+          autoClose: 1000,
         });
       } else {
         console.log("fail2");
@@ -444,7 +444,7 @@ function ReservationForm() {
           render: "Form submission failed.",
           type: "error",
           isLoading: false,
-          autoClose: 5000,
+          autoClose: 1000,
         });
       }
     }

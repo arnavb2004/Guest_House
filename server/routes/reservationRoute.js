@@ -27,9 +27,11 @@ import {
   checkoutToday,
   getDiningAmount,
   deleteReservations,
+  removeFromList
 } from "../controllers/reservation.js";
 
 const Router = express.Router();
+
 
 Router.post(
   "/",
@@ -53,7 +55,7 @@ Router.get("/rooms", getRooms);
 Router.get("/payment/pending", getPaymentPendingReservations);
 Router.get("/checkout/today", checkoutToday);
 Router.get("/:id", getReservationDetails);
-
+Router.put("/rooms/:id/remove", removeFromList);
 Router.put("/checkout/:id", checkoutReservation);
 Router.put("/rooms/:id", updateRooms);
 Router.put("/approve/:id", approveReservation);

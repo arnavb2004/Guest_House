@@ -23,7 +23,7 @@ const Slider = (sliderItems) => {
   useEffect(() => {
     const interval = setInterval(() => {
       handleClick("right");
-    }, 5000);
+    }, 1000);
 
     return () => clearInterval(interval);
   }, []);

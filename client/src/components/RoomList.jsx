@@ -24,14 +24,18 @@ export default function RoomList({ roomList, setRoomList, id, counter, setCounte
 
       // Update the backend to unassign the room
 
-      await http.put(`/reservation/rooms/${id}`, updatedRoomList);
-
+      //await http.put(`/reservation/rooms/${id}`, updatedRoomList);
+      await http.put(`/reservation/rooms/${id}/remove`, { roomNumber: room.roomNumber });
 
 
       // Update state after successful unassignment
 
       setRoomList(updatedRoomList);
-
+      setCounter((counter) =>  {
+        const newCounter =  counter - 1;
+        console.log("Updated counter:", newCounter);
+        return newCounter;
+      });
       toast.success(`Room ${room.roomNumber} unassigned successfully`);
 
     } catch (err) {
@@ -97,10 +101,15 @@ export default function RoomList({ roomList, setRoomList, id, counter, setCounte
           <button
             className="p-2 w-fit bg-[rgb(54,88,153)]  rounded-lg text-white mr-16"
             onClick={async () => {
+              // if (roomList.length < initialRoomCount) {
+              //   toast.error(`You need to assign at least ${initialRoomCount} rooms.`);
+              //   return;
+              // }
               try {
                 toast.success("Room assigned Successfully");
                 await http.put("/reservation/rooms/" + id, roomList);
                 window.location.reload();
+                //navigate("/approved-requests");
               } catch (err) {
                 if (err.response?.data?.message)
                   toast.error(err.response.data.message);

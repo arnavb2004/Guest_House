@@ -15,6 +15,10 @@ const RoomSchema = new mongoose.Schema({
         type: Date,
         required: true,
       },
+      resid: {
+        type: String,
+        //required: true,
+      },
       user: {
         type: String,
       },

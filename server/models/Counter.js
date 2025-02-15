@@ -27,7 +27,7 @@ const initializeCounter = async () => {
 };
 // setTimeout(() => {
 //     intitializeCounter();
-// }, 5000);
+// }, 1000);
 
 initializeCounter();
 export default Counter;

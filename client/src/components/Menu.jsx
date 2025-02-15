@@ -15,12 +15,12 @@ const Menu = () => {
 
   const menuItems = [
     { key: 1, name: "home", label: "HOME", link: "/" },
-    {
-      key: 2,
-      name: "dining",
-      label: "DINING",
-      link: "/" + (user.role?.toLowerCase() || "unknown") + "/dining",
-    },
+    // {
+    //   key: 2,
+    //   name: "dining",
+    //   label: "DINING",
+    //   link: "/" + (user.role?.toLowerCase() || "unknown") + "/dining",
+    // },
     {
       key: 5,
       name: "reservation",
