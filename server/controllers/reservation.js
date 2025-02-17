@@ -135,11 +135,13 @@ export async function createReservation(req, res) {
       role: { $in: revArray },
     });
     console.log(users);
+    const emails = users.map((user) => user.email);
     try {
       const user = await User.findOne({ email: email });
+      //console.log(user);
       if (user) {
         user.pendingRequest += 1;
-
+        emails.push(user.email);
         // Save the updated user document
         await user.save();
       } else {
@@ -148,8 +150,9 @@ export async function createReservation(req, res) {
     } catch (err) {
       console.log("Error updating user:", err);
     }
-    const emails = users.map((user) => user.email);
-    console.log(emails);
+    
+    
+    //console.log(emails.length);
     sendVerificationEmail(
       emails,
       "New Reservation Request",
@@ -372,15 +375,15 @@ export async function approveReservation(req, res) {
       });
       await resUser.save();
     }
-    // const body =
-    //   "<div>Your reservation has been approved</div><br><div>Comments: " +
-    //   req.body.comments +
-    //   "</div>";
-    // sendVerificationEmail(
-    //   reservation.guestEmail,
-    //   "Reservation status updated",
-    //   body
-    // );
+    const body =
+      "<div>Your reservation has been approved</div><br><div>Comments: " +
+      req.body.comments +
+      "</div>";
+    sendVerificationEmail(
+      reservation.guestEmail,
+      "Reservation status updated",
+      body
+    );
     await reservation.save();
     res.status(200).json({ message: "Reservation Approved" });
   } catch (error) {
@@ -434,15 +437,15 @@ export async function rejectReservation(req, res) {
       await resUser.save();
     }
 
-    // const body =
-    //   "<div>Your reservation has been rejected</div><br><div>Comments: " +
-    //   req.body.comments +
-    //   "</div>";
-    // sendVerificationEmail(
-    //   reservation.guestEmail,
-    //   "Reservation status updated",
-    //   body
-    // );
+    const body =
+      "<div>Your reservation has been rejected</div><br><div>Comments: " +
+      req.body.comments +
+      "</div>";
+    sendVerificationEmail(
+      reservation.guestEmail,
+      "Reservation status updated",
+      body
+    );
 
     await reservation.save();
     res.status(200).json({ message: "Reservation Rejected" });
