@@ -767,7 +767,8 @@ export const addRoom = async (req, res) => {
       .json({ message: "You are not authorized to perform this action" });
   try {
     const roomNumber = req.body.roomNumber;
-    const newRoom = await Room.create({ roomNumber: roomNumber });
+    const roomType = req.body.roomType;
+    const newRoom = await Room.create({ roomNumber: roomNumber , roomType: roomType});
     res.status(200).json({ message: "Room added Successfully", room: newRoom });
   } catch (err) {
     res.status(400).json({ success: false, message: err.message });
