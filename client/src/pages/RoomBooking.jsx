@@ -15,7 +15,7 @@ const RoomBooking = () => {
   const user = useSelector((state) => state.user);
   const http = privateRequest(user.accessToken, user.refreshToken);
   const room_allot = userRecord.numberOfRooms;
-
+  const room_type = userRecord.roomType;
   const [roomsData, setRoomsData] = useState([]);
   const [rooms, setRooms] = useState([]);
   const [roomList, setRoomList] = useState([]);
@@ -95,6 +95,8 @@ const RoomBooking = () => {
   return (
     <div className="room-booking h-fit">
       <h2 className="room-heading text-4xl font-bold">Room Booking</h2>
+      <h3 className="text-lg font-semibold">Number of rooms requested : {room_allot}</h3>
+      <h3 className="text-lg font-semibold mg-4 mb-4">Room Type requested : {room_type}</h3>
       <div className="filter-container">
         <label className="filter-label">Start Date:</label>
         <input type="date" value={startDate} max={endDate} onChange={(e) => setStartDate(e.target.value)} className="filter-input" />

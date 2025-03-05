@@ -567,7 +567,8 @@ function ReservationForm() {
             {showCheckbox &&
               (formData.category === "A" || formData.category === "B") && (
                 <div className="w-full p-2 mb-5">
-                  <ul className="flex flex-col flex-wrap justify-start gap-1">
+                  <h3 className="w-full text-xl font-semibold  mb-4 mt-2">Select Reviewers</h3>
+                  <ul className="flex flex-col flex-wrap justify-start gap-1 rounded-md border-gray-300">
                     {catReviewers[formData.category].map((reviewer) => (
                       <li
                         key={reviewer}

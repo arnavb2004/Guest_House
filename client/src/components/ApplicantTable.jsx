@@ -1,14 +1,36 @@
-import React from "react";
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
 
 const Table = ({ entry, setEntry }) => {
-    
+  const user = useSelector((state) => state.user); 
+  const [autoFill, setAutoFill] = useState(false); 
+
   const handleChange = (event, field) => {
-    const newEntry = { ...entry, [field]: event.target.value };
-    setEntry(newEntry);
+    setEntry({ ...entry, [field]: event.target.value });
+  };
+
+  const handleAutoFill = (event) => {
+    setAutoFill(event.target.checked);
+    if (event.target.checked) {
+      setEntry({
+        name: user.name || "",
+        mobile: user.contact || "",
+        email: user.email || "",
+      });
+    } else {
+      setEntry({
+        name: "",
+        designation: "",
+        department: "",
+        code: "",
+        mobile: "",
+        email: "",
+      });
+    }
   };
 
   return (
-    <div className="flex justify-center">
+    <div className="flex flex-col items-center">
       <table className="border-collapse border-2 border-gray-500">
         <thead>
           <tr>
@@ -54,6 +76,7 @@ const Table = ({ entry, setEntry }) => {
                 value={entry.code}
                 onChange={(event) => handleChange(event, "code")}
                 className="w-full text-center"
+                readOnly
               />
             </td>
             <td className="border border-gray-500 px-4 py-2">
@@ -70,11 +93,24 @@ const Table = ({ entry, setEntry }) => {
                 value={entry.email}
                 onChange={(event) => handleChange(event, "email")}
                 className="w-full text-center"
+                readOnly
               />
             </td>
           </tr>
         </tbody>
       </table>
+
+      <div className="w-full flex items-center mt-4">
+        <label className="flex flex-row items-center space-x-2">
+          <input
+            type="checkbox"
+            checked={autoFill}
+            onChange={handleAutoFill}
+            className="cursor-pointer"
+          />
+          <span className="text-s font-medium">Auto-Fill with My Details</span>
+        </label>
+      </div>
     </div>
   );
 };

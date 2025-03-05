@@ -22,8 +22,10 @@ const Slider = (sliderItems) => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      handleClick("right");
-    }, 1000);
+      setSlideIndex((slideIndex) =>
+        slideIndex === sliderItems.items.length - 1 ? 0 : slideIndex + 1
+      );
+    }, 3000);
 
     return () => clearInterval(interval);
   }, []);
