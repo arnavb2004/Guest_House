@@ -37,7 +37,8 @@ export default function AdminRecordList({ status = "pending" }) {
     Category: "category",
     "Arrival Date": "arrivalDate",
     "Departure Date": "departureDate",
-    "Room Type": "roomType"
+    "Room Type": "roomType",
+    "Room Assigned": "bookings"
   };
 
   const navigate = useNavigate();
@@ -93,6 +94,24 @@ export default function AdminRecordList({ status = "pending" }) {
 
   const filterRecords = () => {
     const tempRecords = records.filter((record) => {
+      if (searchChoice === "Room Assigned") {
+        const isAssigned = record.bookings?.length === record.numberOfRooms;
+        if (searchChoice === "Room Assigned") {
+          const isAssigned = record.bookings?.length === record.numberOfRooms;
+      
+          // Ensure searchTerm is properly formatted
+          if (typeof searchTerm === "string" && searchTerm.length > 0) {
+              let fsearchTerm = searchTerm.charAt(0).toUpperCase() + searchTerm.slice(1).toLowerCase();
+              return isAssigned ? fsearchTerm === "Yes" : fsearchTerm === "No";
+          } else {
+              return false; // Avoids unexpected errors if searchTerm is empty or not a string
+          }
+      
+          
+      }
+      
+        return isAssigned ? "Yes".includes(searchTerm) : "No".includes(searchTerm);
+      } 
       if (typeof record[filterMap[searchChoice]] === "string") {
         if (
           searchChoice === "Arrival Date" ||
