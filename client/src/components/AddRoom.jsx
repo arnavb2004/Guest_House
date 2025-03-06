@@ -124,7 +124,9 @@ export default function AddRoom() {
 								<div
 									key={room._id}
 									className={`relative p-5 rounded-lg ${
-										room.bookings.length > 0
+										room.bookings.some(
+											(booking) => new Date(booking.startDate) <= new Date() && new Date(booking.endDate) >= new Date()
+										) 
 											  ? "booked-during-range rounded-lg bg-[rgb(191,190,190)] text-white"
                             : "available border-[3px] border-green-500 rounded-lg"
 									}`}
@@ -133,6 +135,28 @@ export default function AddRoom() {
 									onMouseOut={() => setHoverOverRoom(false)}
 								>
 									<h3>{room.roomNumber}</h3>
+									{room.bookings.some(
+											(booking) => new Date(booking.startDate) <= new Date() && new Date(booking.endDate) >= new Date()
+										)  && (
+											<div className="booking-info">
+												{room.bookings
+													.filter(
+														(booking) =>
+															new Date(booking.startDate) <= new Date() &&
+															new Date(booking.endDate) >= new Date()
+													)
+													.toReversed()
+													.map((booking) => (
+														<div key={"info-" + room.roomNumber} className="py-1">
+															<p>
+																Booked from: {getDate(booking.startDate)} to{" "}
+																{getDate(booking.endDate)}
+															</p>
+															<p>User: {booking.user}</p>
+														</div>
+													))}
+											</div>
+										)}
 									{hoverOverRoom === room._id&& (
 										<div className="absolute inset-0 bg-white bg-opacity-5 backdrop-blur-sm flex items-center justify-center">
 											<IconButton aria-label="delete room" onClick={() => deleteRoom(room._id)}>
