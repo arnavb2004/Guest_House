@@ -116,6 +116,54 @@ const UserProfileDialog = ({ openDialog, setOpenDialog }) => {
                   ),
                 }}
               />
+              <TextField
+                margin="dense"
+                id="department"
+                label="Department"
+                type="text"
+                fullWidth
+                variant="outlined"
+                value={user.department}
+                InputProps={{
+                  startAdornment: (
+                    <ListItemIcon>
+                      <PersonIcon />
+                    </ListItemIcon>
+                  ),
+                }}
+              />
+              <TextField
+                margin="dense"
+                id="deignation"
+                label="Designation"
+                type="text"
+                fullWidth
+                variant="outlined"
+                value={user.designation}
+                InputProps={{
+                  startAdornment: (
+                    <ListItemIcon>
+                      <PersonIcon />
+                    </ListItemIcon>
+                  ),
+                }}
+              />
+              <TextField
+                margin="dense"
+                id="ecode"
+                label="Employee Code/ Entry Number"
+                type="text"
+                fullWidth
+                variant="outlined"
+                value={user.ecode}
+                InputProps={{
+                  startAdornment: (
+                    <ListItemIcon>
+                      <PersonIcon />
+                    </ListItemIcon>
+                  ),
+                }}
+              />
             </>
           ) : (
             <DialogContent>
@@ -166,6 +214,54 @@ const UserProfileDialog = ({ openDialog, setOpenDialog }) => {
                   startAdornment: (
                     <ListItemIcon>
                       <ContactPhoneIcon />
+                    </ListItemIcon>
+                  ),
+                }}
+              />
+              <TextField
+                margin="dense"
+                id="department"
+                label="Department"
+                type="text"
+                fullWidth
+                variant="outlined"
+                value={user.department}
+                InputProps={{
+                  startAdornment: (
+                    <ListItemIcon>
+                      <PersonIcon />
+                    </ListItemIcon>
+                  ),
+                }}
+              />
+              <TextField
+                margin="dense"
+                id="deignation"
+                label="Designation"
+                type="text"
+                fullWidth
+                variant="outlined"
+                value={user.designation}
+                InputProps={{
+                  startAdornment: (
+                    <ListItemIcon>
+                      <PersonIcon />
+                    </ListItemIcon>
+                  ),
+                }}
+              />
+              <TextField
+                margin="dense"
+                id="ecode"
+                label="Employee Code/ Entry Number"
+                type="text"
+                fullWidth
+                variant="outlined"
+                value={user.ecode}
+                InputProps={{
+                  startAdornment: (
+                    <ListItemIcon>
+                      <PersonIcon />
                     </ListItemIcon>
                   ),
                 }}

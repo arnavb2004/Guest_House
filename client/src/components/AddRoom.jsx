@@ -134,7 +134,7 @@ export default function AddRoom() {
 									onMouseOver={() => setHoverOverRoom(room._id)}
 									onMouseOut={() => setHoverOverRoom(false)}
 								>
-									<h3>{room.roomNumber}</h3>
+									<h3>Room {room.roomNumber}</h3>
 									{room.bookings.some(
 											(booking) => new Date(booking.startDate) <= new Date() && new Date(booking.endDate) >= new Date()
 										)  && (
