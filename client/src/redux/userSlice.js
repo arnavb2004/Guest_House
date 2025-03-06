@@ -12,6 +12,9 @@ const userSlice = createSlice({
     accessToken: "",
     refreshToken: "",
     notifications: [],
+    ecode: "",
+    department: "",
+    designation: "",
   },
   reducers: {
     setUserSlice: (state, action) => {
@@ -24,6 +27,9 @@ const userSlice = createSlice({
       state.email = user.email;
       state.accessToken = accessToken;
       state.refreshToken = refreshToken;
+      state.ecode = user.ecode;
+      state.department = user.department;
+      state.designation = user.designation;
     },
     logout: (state) => {
       state.id = "";
@@ -34,6 +40,9 @@ const userSlice = createSlice({
       state.accessToken = "";
       state.refreshToken = "";
       state.notifications = [];
+      state.ecode = "";
+      state.department = "";
+      state.designation = "";
     },
     updateUserDetails: (state, action) => {
       const { name, contact, notifications } = action.payload;

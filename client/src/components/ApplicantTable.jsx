@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState , useEffect} from "react";
 import { useSelector } from "react-redux";
 
 const Table = ({ entry, setEntry }) => {
@@ -16,6 +16,9 @@ const Table = ({ entry, setEntry }) => {
         name: user.name || "",
         mobile: user.contact || "",
         email: user.email || "",
+        code : user.ecode ,
+        department : user.department ||"",
+        designation : user.designation || "",
       });
     } else {
       setEntry({
