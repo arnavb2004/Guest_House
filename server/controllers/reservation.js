@@ -62,7 +62,7 @@ export async function createReservation(req, res) {
     const ms = Number(
       new Date(departureDate).getTime() - new Date(arrivalDate).getTime()
     );
-    console.log(ms);
+    console.log("ms",ms);
     const days = Number(ms / (1000 * 60 * 60 * 24));
     console.log(days);
 
