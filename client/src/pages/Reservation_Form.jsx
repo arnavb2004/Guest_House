@@ -389,8 +389,7 @@ function ReservationForm() {
       const formDataToSend = new FormData();
       Object.entries(formData).forEach(([fieldName, fieldValue]) => {
         if (fieldName === "applicant")
-          formDataToSend.append(fieldName, fieldValue);
-        // formDataToSend.append(fieldName, fieldValue);
+          formDataToSend.append(fieldName,fieldValue);
       });
       for (const file of files) {
         formDataToSend.append("files", file);
@@ -398,7 +397,11 @@ function ReservationForm() {
       formDataToSend.append("reviewers", checkedValues);
       formDataToSend.append("subroles", subRole);
       formDataToSend.append("receipt", receipt);
-      const res = await http.post("reservation/", formDataToSend);
+      const res = await http.post("reservation/", formDataToSend, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
       console.log(res.status);
       if (res.status === 200) {
         // toast.success("Form submitted successfully!");
