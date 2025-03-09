@@ -126,7 +126,7 @@ export async function createReservation(req, res) {
     });
 
     let revArray = reviewersArray.map((reviewer) => reviewer.role);
-    //await appendReservationToSheet(reservation, category);
+    await appendReservationToSheet(reservation, category);
 
     console.log("sending mail");
     console.log("\n\n\n\n", reviewersArray, "\n\n\n\n");
