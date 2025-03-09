@@ -388,15 +388,17 @@ function ReservationForm() {
     try {
       const formDataToSend = new FormData();
       Object.entries(formData).forEach(([fieldName, fieldValue]) => {
-        if (fieldName === "applicant")
-          // formDataToSend.append(fieldName, JSON.stringify(fieldValue));
-        formDataToSend.append(fieldName, fieldValue);
+        if (fieldName === "applicant") {
+          formDataToSend.append(fieldName, JSON.stringify(fieldValue));
+        } else {
+          formDataToSend.append(fieldName, fieldValue);
+        }
       });
       for (const file of files) {
         formDataToSend.append("files", file);
       }
-      formDataToSend.append("reviewers", checkedValues);
-      formDataToSend.append("subroles", subRole);
+      formDataToSend.append("reviewers", JSON.stringify(checkedValues));
+      formDataToSend.append("subroles", JSON.stringify(subRole));
       formDataToSend.append("receipt", receipt);
       const res = await http.post("reservation/", formDataToSend, {
         headers: {
