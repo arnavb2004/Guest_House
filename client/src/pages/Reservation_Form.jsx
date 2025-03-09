@@ -398,11 +398,7 @@ function ReservationForm() {
       formDataToSend.append("reviewers", checkedValues);
       formDataToSend.append("subroles", subRole);
       formDataToSend.append("receipt", receipt);
-      const res = await http.post("reservation/", formDataToSend, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const res = await http.post("reservation/", formDataToSend);
       console.log(res.status);
       if (res.status === 200) {
         // toast.success("Form submitted successfully!");
