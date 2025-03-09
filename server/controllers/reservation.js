@@ -83,7 +83,7 @@ export async function createReservation(req, res) {
     let applicantData;
     if (applicant && applicant[0] && typeof applicant[0] === "string") {
       try {
-        applicantData = JSON.parse(applicant[0]);
+        applicantData = applicant[0];
       } catch (error) {
         console.error("Error parsing JSON:", error, "Input:", applicant[0]);
         applicantData = {}; // Default value to avoid breaking the app
