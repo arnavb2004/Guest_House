@@ -36,9 +36,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // ✅ Disable console.log in production
-if (process.env.NODE_ENV === "production") {
-  console.log = () => {};
-}
+// if (process.env.NODE_ENV === "production") {
+//   console.log = () => {};
+// }
 
 // ✅ Connect to MongoDB
 mongoose
