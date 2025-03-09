@@ -80,7 +80,7 @@ export async function createReservation(req, res) {
     //single rooms cost
     console.log(source);
     console.log(applicant[0]);
-    let applicantData = {};
+    let applicantData;
     if (applicant[0]) applicantData = JSON.parse(applicant[0]);
     console.log(applicantData);
 

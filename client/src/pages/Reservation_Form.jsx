@@ -387,37 +387,22 @@ function ReservationForm() {
 
     try {
       const formDataToSend = new FormData();
-
-Object.entries(formData).forEach(([fieldName, fieldValue]) => {
-  if (fieldName === "applicant") {
-    formDataToSend.append(
-      fieldName, 
-      typeof fieldValue === "string" ? fieldValue : JSON.stringify(fieldValue)
-    );
-  } else {
-    formDataToSend.append(fieldName, fieldValue);
-  }
-});
-
-for (const file of files) {
-  formDataToSend.append("files", file);
-}
-
-// Ensure `reviewers` and `subroles` are formatted correctly
-formDataToSend.append("reviewers", 
-  typeof checkedValues === "string" ? checkedValues : JSON.stringify(checkedValues)
-);
-formDataToSend.append("subroles", 
-  typeof subRole === "string" ? subRole : JSON.stringify(subRole)
-);
-formDataToSend.append("receipt", receipt);
-
-const res = await http.post("reservation/", formDataToSend, {
-  headers: {
-    // No need to set "Content-Type", Axios handles it automatically
-  },
-});
-
+      Object.entries(formData).forEach(([fieldName, fieldValue]) => {
+        if (fieldName === "applicant")
+          formDataToSend.append(fieldName, JSON.stringify(fieldValue));
+        formDataToSend.append(fieldName, fieldValue);
+      });
+      for (const file of files) {
+        formDataToSend.append("files", file);
+      }
+      formDataToSend.append("reviewers", checkedValues);
+      formDataToSend.append("subroles", subRole);
+      formDataToSend.append("receipt", receipt);
+      const res = await http.post("reservation/", formDataToSend, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
       console.log(res.status);
       if (res.status === 200) {
         // toast.success("Form submitted successfully!");
