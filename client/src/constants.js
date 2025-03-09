@@ -1,1 +1,1 @@
-export const BASE_URL = "https://guest-house-server-arnav-bansals-projects.vercel.app";
+export const BASE_URL = "https://guest-house-server.vercel.app/";
