@@ -80,15 +80,15 @@ export async function createReservation(req, res) {
     //single rooms cost
     console.log(source);
     console.log(applicant[0]);
-    let applicantData;
-    if (applicant && applicant[0] && typeof applicant[0] === "string") {
-      try {
-        applicantData = applicant[0];
-      } catch (error) {
-        console.error("Error parsing JSON:", error, "Input:", applicant[0]);
-        applicantData = {}; // Default value to avoid breaking the app
-      }
-    }
+    let applicantData = applicant[0];
+    // if (applicant && applicant[0] && typeof applicant[0] === "string") {
+    //   try {
+    //     applicantData = applicant[0];
+    //   } catch (error) {
+    //     console.error("Error parsing JSON:", error, "Input:", applicant[0]);
+    //     applicantData = {}; // Default value to avoid breaking the app
+    //   }
+    // }
         console.log(applicantData);
 
     const email = req.user.email;
