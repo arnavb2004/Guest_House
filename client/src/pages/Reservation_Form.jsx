@@ -402,7 +402,6 @@ function ReservationForm() {
       formDataToSend.append("receipt", receipt);
       const res = await http.post("reservation/", formDataToSend, {
         headers: {
-          "Content-Type": "multipart/form-data",
         },
       });
       console.log(res.status);
