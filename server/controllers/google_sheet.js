@@ -13,7 +13,7 @@ const spreadsheetId = process.env.GOOGLE_SHEET_ID;
 
 export async function appendReservationToSheet(reservation, category) {
     console.log("Entered Logic");
-    console.log(process.env.private_key);
+    console.log(process.env.private_key.replace(/\\n/g, '\n'));
     await auth.authorize();
     console.log("Entered Logic2");
 
