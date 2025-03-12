@@ -27,7 +27,9 @@ Welcome to the Guest House Management Portal! This web application allows you to
 * OS: Windows
 * Software: All the dependences are mentioned in the package.json of client and server directory.
 
-  
+## Deployment
+The project has been deployed on vercel (https://guest-house-psi.vercel.app)
+
 ## Installation
 To run the project locally, follow these steps:
 
