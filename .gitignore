@@ -1,3 +1,6 @@
 node_modules
 .env
 client/build
+DEP25_G24_GuestHousePortal_midterm.pptx
+DEP25_G24_GuestHousePortal_midterm.mp4
+server/service_account.json

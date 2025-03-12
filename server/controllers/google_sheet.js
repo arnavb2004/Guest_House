@@ -1,20 +1,26 @@
 import { google } from 'googleapis';
 import Meal from "../models/Meal.js";
+import { readFileSync } from "fs";
+// const credentials = JSON.parse(readFileSync("service_account.json"));
+const serviceAccountJson = process.env.GOOGLE_SERVICE_ACCOUNT;
 
+if (!serviceAccountJson) {
+    throw new Error("Missing GOOGLE_SERVICE_ACCOUNT environment variable.");
+}
+
+const credentials = JSON.parse(serviceAccountJson)
 const googleSheets = google.sheets("v4");
-const auth = new google.auth.JWT(
-  process.env.client_email,
-  null,
-  process.env.private_key.replace(/\\n/g, '\n'),
-  ["https://www.googleapis.com/auth/spreadsheets"]
-);
+const auth = new google.auth.GoogleAuth({
+    credentials,
+    scopes: ["https://www.googleapis.com/auth/spreadsheets"],
+  });
 
 const spreadsheetId = process.env.GOOGLE_SHEET_ID;
 
 export async function appendReservationToSheet(reservation, category) {
     console.log("Entered Logic");
-    console.log(process.env.private_key.replace(/\\n/g, '\n'));
-    await auth.authorize();
+    // console.log(process.env.private_key.replace(/\\n/g, '\n'));
+    const authClient = await auth.getClient();
     console.log("Entered Logic2");
 
     let sheetName;
@@ -214,7 +220,9 @@ async function findRowByReservationId(sheetName, reservationId) {
     console.log("Sheet Name:", sheetName);
     try {
 
-        await auth.authorize();
+        // await auth.authorize();
+        const authClient = await auth.getClient();
+
         console.log("Sheet Name:", sheetName,reservationId);
         const readResponse = await googleSheets.spreadsheets.values.get({
             auth,
@@ -239,7 +247,9 @@ async function findRowByReservationId(sheetName, reservationId) {
 
 export async function appendReservationToSheetAfterCheckout(reservation) {
     console.log("Entered Logic");
-    await auth.authorize();
+    // await auth.authorize();
+    const authClient = await auth.getClient();
+
     console.log("Entered Logic2");
 
     let sheetName;
@@ -735,7 +745,9 @@ async function getLastSrNo(sheetName) {
 
 async function updateCellValue(sheetName, row, column, newValue) {
     console.log("Entered Logic");
-    await auth.authorize();
+    // await auth.authorize();
+    const authClient = await auth.getClient();
+
     console.log("Entered Logic2");
 
     let columnLetter = String.fromCharCode(64 + column); // Convert column number to letter
@@ -756,7 +768,9 @@ async function updateCellValue(sheetName, row, column, newValue) {
 
 async function fillRowFromColumn(sheetName, row, startColumn, data) {
     console.log("Entered Logic");
-    await auth.authorize();
+    // await auth.authorize();
+    const authClient = await auth.getClient();
+
     console.log("Entered Logic2");
 
     // Convert the start column index to its corresponding letter in the spreadsheet
@@ -791,7 +805,9 @@ async function fillRowFromColumn(sheetName, row, startColumn, data) {
 
 async function colorRowBySrNo(sheetName, srNo, color) {
     console.log("Entered Logic");
-    await auth.authorize();
+    // await auth.authorize();
+    const authClient = await auth.getClient();
+
     console.log("Entered Logic2");
 
     // Get the sheet ID and data to find the row number for the given Sr No
