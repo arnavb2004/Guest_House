@@ -23,18 +23,18 @@ Welcome to the Guest House Management Portal! This web application allows you to
 * **Backend:** NodeJs, ExpressJS
 * **Database:** MongoDB
 
+## Deployment
+The project has been deployed on vercel (https://guest-house-psi.vercel.app)
+
 ## Software usage info
 * OS: Windows
 * Software: All the dependences are mentioned in the package.json of client and server directory.
 
-## Deployment
-The project has been deployed on vercel (https://guest-house-psi.vercel.app)
-
 ## Installation
 To run the project locally, follow these steps:
 
-1. Clone this repository: `git clone https://github.com/Hardik329/DEP24-P04-GuestHouse`
-2. Navigate to the project directory: `cd DEP24-P04-GuestHouse`
+1. Clone this repository: `git clone https://github.com/arnavb2004/Guest_House`
+2. Navigate to the project directory: `cd Guest_House`
 3. Install dependencies: `npm install`
 4. Run client and server: `npm start`
 
