@@ -17,15 +17,24 @@ const app = express();
 const port = process.env.PORT || 4751;
 
 // ✅ Proper CORS setup
+const allowedOrigins = ["https://guest-house-psi.vercel.app", "http://localhost:3000"]
 app.use(
   cors({
-    origin: "https://guest-house-psi.vercel.app",
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     methods: "GET,POST,PUT,DELETE,PATCH",
     credentials: true, // Allow cookies and authentication headers
   })
 );
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "https://guest-house-psi.vercel.app");
+  if (allowedOrigins.includes(req.headers.origin)) {
+    res.header("Access-Control-Allow-Origin", req.headers.origin);
+  }  
   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE,PATCH");
   res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
   res.header("Access-Control-Allow-Credentials", "true");

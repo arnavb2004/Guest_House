@@ -1,1 +1,1 @@
-export const BASE_URL = "https://guest-house-server.vercel.app";
+export const BASE_URL = process.env.NODE_ENV ==="production" ? "https://guest-house-server.vercel.app" : "http://localhost:4751";
