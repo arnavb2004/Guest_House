@@ -24,6 +24,8 @@ const UserProfileDialog = ({ openDialog, setOpenDialog }) => {
   const user = useSelector((state) => state.user);
   const [editableName, setEditableName] = useState(user.name);
   const [editableContact, setEditableContact] = useState(user.contact || "");
+  const [editableDepartment, setEditableDepartment] = useState(user.department || "");
+  const [editableDesignation, setEditableDesignation] = useState(user.designation || "");
   const [isEditing, setIsEditing] = useState(false);
   const dispatch = useDispatch();
 
@@ -31,16 +33,19 @@ const UserProfileDialog = ({ openDialog, setOpenDialog }) => {
 
   const handleCloseDialog = () => {
     setOpenDialog(false);
+    window.location.reload();
   };
 
   const handleUpdateUserDetails = async () => {
     dispatch(
-      updateUserDetails({ name: editableName, contact: editableContact })
+      updateUserDetails({ name: editableName, contact: editableContact, department: editableDepartment, designation : editableDesignation })
     );
     try {
       await http.put(`/user/${user.id}`, {
         name: editableName,
         contact: editableContact,
+        department : editableDepartment,
+        designation : editableDesignation,
       });
     } catch (error) {
       if (error.response?.data?.message) {
@@ -52,6 +57,7 @@ const UserProfileDialog = ({ openDialog, setOpenDialog }) => {
 
     setIsEditing(false); // Exit editing mode after updating
     setOpenDialog(false);
+    window.location.reload();
   };
 
   const handleEnableEditing = () => {
@@ -123,7 +129,8 @@ const UserProfileDialog = ({ openDialog, setOpenDialog }) => {
                 type="text"
                 fullWidth
                 variant="outlined"
-                value={user.department}
+                value={editableDepartment}
+                onChange={(e) => setEditableDepartment(e.target.value)}
                 InputProps={{
                   startAdornment: (
                     <ListItemIcon>
@@ -139,7 +146,8 @@ const UserProfileDialog = ({ openDialog, setOpenDialog }) => {
                 type="text"
                 fullWidth
                 variant="outlined"
-                value={user.designation}
+                value={editableDesignation}
+                onChange={(e) => setEditableDesignation(e.target.value)}
                 InputProps={{
                   startAdornment: (
                     <ListItemIcon>
@@ -227,6 +235,7 @@ const UserProfileDialog = ({ openDialog, setOpenDialog }) => {
                 variant="outlined"
                 value={user.department}
                 InputProps={{
+                  readOnly: true,
                   startAdornment: (
                     <ListItemIcon>
                       <PersonIcon />
@@ -243,6 +252,7 @@ const UserProfileDialog = ({ openDialog, setOpenDialog }) => {
                 variant="outlined"
                 value={user.designation}
                 InputProps={{
+                  readOnly: true,
                   startAdornment: (
                     <ListItemIcon>
                       <PersonIcon />
@@ -259,6 +269,7 @@ const UserProfileDialog = ({ openDialog, setOpenDialog }) => {
                 variant="outlined"
                 value={user.ecode}
                 InputProps={{
+                  readOnly: true,
                   startAdornment: (
                     <ListItemIcon>
                       <PersonIcon />
