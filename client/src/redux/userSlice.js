@@ -45,16 +45,13 @@ const userSlice = createSlice({
       state.designation = "";
     },
     updateUserDetails: (state, action) => {
-      const { name, contact, notifications } = action.payload;
-      if (name !== undefined) {
-        state.name = name;
-      }
-      if (contact !== undefined) {
-        state.contact = contact;
-      }
-      if (notifications !== undefined) {
-        state.notifications = notifications;
-      }
+      const { name, contact, notifications, ecode, department, designation } = action.payload;
+      if (name !== undefined) state.name = name;
+      if (contact !== undefined) state.contact = contact;
+      if (notifications !== undefined) state.notifications = notifications;
+      if (ecode !== undefined) state.ecode = ecode;
+      if (department !== undefined) state.department = department;
+      if (designation !== undefined) state.designation = designation;
     },
   },
 });

@@ -10,6 +10,7 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import Register from "./pages/Register";
 import PDFViewer from "./components/PDFViewer";
 import ReservationForm from "./pages/Reservation_Form";
+import EditReservationForm from "./pages/Edit_ReservationForm";
 import RecordList from "./components/RecordList";
 import BookDining from "./pages/BookDining";
 import UserList from "./components/UserList";
@@ -35,7 +36,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/unauthorized" element={<Unauthorized />} />
-
+          
           <Route path="/" element={<HomePage />}>
             <Route path="/" element={<Home />} />
             <Route path="/people" element={<People />} />
@@ -153,6 +154,7 @@ function App() {
                 element={<RecordList status="rejected" />}
               />
               <Route path="reservation-form" element={<ReservationForm />} />
+              <Route path="edit-reservation/:id" element={<EditReservationForm/>} />
               <Route path=":id" element={<RecordPage />} />
             </Route>
             <Route path="dining" element={<Dining />}>

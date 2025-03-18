@@ -17,6 +17,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { IconButton } from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
 import http from "../utils/httpService";
+import EditIcon from "@mui/icons-material/Edit";
 
 export default function RecordList({ status = "pending", desc }) {
   const [checked, setChecked] = useState([]);
@@ -348,9 +349,19 @@ export default function RecordList({ status = "pending", desc }) {
                   <div className="w-[10%]">{getDate(record.arrivalDate)}</div>
                   <div className="w-[10%]">{getDate(record.departureDate)}</div>
                   <div className="w-[10%]">{record.roomType}</div>
-                  {record.bookings?.length > 0 && <div className="w-[10%]">Yes</div>}
-                  {record.bookings?.length <= 0 && <div className="w-[10%]">No</div>}
-                  <div className="flex justify-evenly gap-4 w-[8%]">
+                  {record.bookings?.length === record.numberOfRooms && <div className="w-[10%]">Yes</div>}
+                  {record.bookings?.length !== record.numberOfRooms && <div className="w-[10%]">No</div>}
+                  <div className="flex justify-evenly gap-2.25 w-[8%]">
+                  {record.bookings.length !== record.numberOfRooms && (
+                    <IconButton>
+                      <EditIcon
+                    onClick={() => navigate(`/user/reservation/edit-reservation/${record._id}`)}
+                    color="black"
+                      />
+                      </IconButton>
+                    )}
+
+
                     <IconButton>
                       <InsertDriveFileIcon
                         onClick={() => {

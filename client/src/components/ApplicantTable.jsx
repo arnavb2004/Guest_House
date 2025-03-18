@@ -16,7 +16,7 @@ const Table = ({ entry, setEntry }) => {
         name: user.name || "",
         mobile: user.contact || "",
         email: user.email || "",
-        code : user.ecode ,
+        code : user.ecode || "",
         department : user.department ||"",
         designation : user.designation || "",
       });

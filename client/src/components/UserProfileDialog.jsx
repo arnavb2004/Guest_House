@@ -26,6 +26,8 @@ const UserProfileDialog = ({ openDialog, setOpenDialog }) => {
   const [editableContact, setEditableContact] = useState(user.contact || "");
   const [editableDepartment, setEditableDepartment] = useState(user.department || "");
   const [editableDesignation, setEditableDesignation] = useState(user.designation || "");
+  const [editableEcode, setEditableEcode] = useState(user.ecode || "");
+
   const [isEditing, setIsEditing] = useState(false);
   const dispatch = useDispatch();
 
@@ -38,7 +40,7 @@ const UserProfileDialog = ({ openDialog, setOpenDialog }) => {
 
   const handleUpdateUserDetails = async () => {
     dispatch(
-      updateUserDetails({ name: editableName, contact: editableContact, department: editableDepartment, designation : editableDesignation })
+      updateUserDetails({ name: editableName, contact: editableContact, department: editableDepartment, designation : editableDesignation, ecode : editableEcode })
     );
     try {
       await http.put(`/user/${user.id}`, {
@@ -46,6 +48,7 @@ const UserProfileDialog = ({ openDialog, setOpenDialog }) => {
         contact: editableContact,
         department : editableDepartment,
         designation : editableDesignation,
+        ecode : editableEcode,
       });
     } catch (error) {
       if (error.response?.data?.message) {
@@ -163,7 +166,8 @@ const UserProfileDialog = ({ openDialog, setOpenDialog }) => {
                 type="text"
                 fullWidth
                 variant="outlined"
-                value={user.ecode}
+                value={editableEcode}
+                onChange={(e) => setEditableEcode(e.target.value)}
                 InputProps={{
                   startAdornment: (
                     <ListItemIcon>
