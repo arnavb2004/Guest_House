@@ -4,7 +4,7 @@ import "./AddRoom.css";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { getDate } from "../utils/handleDate";
-
+import RoomList from "../components/RoomList";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import CloseIcon from "@mui/icons-material/Close";
@@ -14,6 +14,7 @@ import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
+import { useNavigate } from "react-router-dom";
 
 const style = {
 	position: "absolute",
@@ -113,6 +114,8 @@ export default function AddRoom() {
 		return acc;
 	}, {});
 
+	const navigate = useNavigate();
+
 	return (
 		<div className="flex flex-col mt-5 gap-6">
 			{Object.keys(groupedRooms).length > 0 ? (
@@ -120,44 +123,47 @@ export default function AddRoom() {
 					<div key={type} className="mb-6">
 						<h2 className="text-xl font-semibold text-center mb-4">{type}</h2>
 						<div className="grid grid-cols-5 gap-4">
-							{groupedRooms[type].map((room, index) => (
+							{groupedRooms[type].map((room) => (
 								<div
 									key={room._id}
 									className={`relative p-5 rounded-lg ${
 										room.bookings.some(
-											(booking) => new Date(booking.startDate) <= new Date() && new Date(booking.endDate) >= new Date()
-										) 
-											  ? "booked-during-range rounded-lg bg-[rgb(191,190,190)] text-white"
-                            : "available border-[3px] border-green-500 rounded-lg"
+											(booking) =>
+												new Date(booking.startDate) <= new Date() &&
+												new Date(booking.endDate) >= new Date()
+										)
+											? "booked-during-range bg-[rgb(191,190,190)] text-white"
+											: "available border-[3px] border-green-500"
 									}`}
-									
 									onMouseOver={() => setHoverOverRoom(room._id)}
 									onMouseOut={() => setHoverOverRoom(false)}
 								>
 									<h3>Room {room.roomNumber}</h3>
 									{room.bookings.some(
-											(booking) => new Date(booking.startDate) <= new Date() && new Date(booking.endDate) >= new Date()
-										)  && (
-											<div className="booking-info">
-												{room.bookings
-													.filter(
-														(booking) =>
-															new Date(booking.startDate) <= new Date() &&
-															new Date(booking.endDate) >= new Date()
-													)
-													.toReversed()
-													.map((booking) => (
-														<div key={"info-" + room.roomNumber} className="py-1">
-															<p>
-																Booked from: {getDate(booking.startDate)} to{" "}
-																{getDate(booking.endDate)}
-															</p>
-															<p>User: {booking.user}</p>
-														</div>
-													))}
-											</div>
-										)}
-									{hoverOverRoom === room._id&& (
+										(booking) =>
+											new Date(booking.startDate) <= new Date() &&
+											new Date(booking.endDate) >= new Date()
+									) && (
+										<div className="booking-info">
+											{room.bookings
+												.filter(
+													(booking) =>
+														new Date(booking.startDate) <= new Date() &&
+														new Date(booking.endDate) >= new Date()
+												)
+												.toReversed()
+												.map((booking) => (
+													<div key={"info-" + room.roomNumber} className="py-1">
+														<p>
+															Booked from: {getDate(booking.startDate)} to{" "}
+															{getDate(booking.endDate)}
+														</p>
+														<p>User: {booking.user}</p>
+													</div>
+												))}
+										</div>
+									)}
+									{hoverOverRoom === room._id && (
 										<div className="absolute inset-0 bg-white bg-opacity-5 backdrop-blur-sm flex items-center justify-center">
 											<IconButton aria-label="delete room" onClick={() => deleteRoom(room._id)}>
 												<DeleteIcon />
@@ -172,18 +178,24 @@ export default function AddRoom() {
 			) : (
 				<div className="text-center text-lg font-semibold">Loading...</div>
 			)}
-
-			{rooms.length >= 0 && (
-				<div className="flex justify-center">
-					<button
-						className="bg-blue-500 text-white text-lg font-semibold rounded-lg w-32 p-2 hover:bg-blue-600"
-						onClick={handleOpen}
-					>
-						Add Room
-					</button>
-				</div>
-			)}
-
+	
+			{/* Buttons placed side by side */}
+			<div className="flex justify-center gap-4">
+				<button
+					className="bg-blue-500 text-white text-lg font-semibold rounded-lg w-32 p-2 hover:bg-blue-600"
+					onClick={handleOpen}
+				>
+					Add Room
+				</button>
+	
+				<button
+					className="px-4 py-2 bg-blue-500 text-white text-lg font-semibold rounded-lg w-32 hover:bg-blue-600"
+					onClick={() => navigate("/admin/reservation/room-list")}
+				>
+					Room List
+				</button>
+			</div>
+	
 			<Modal open={open} onClose={handleClose}>
 				<Box sx={style}>
 					<div className="flex justify-between w-full">
@@ -214,4 +226,5 @@ export default function AddRoom() {
 			</Modal>
 		</div>
 	);
+	
 }
