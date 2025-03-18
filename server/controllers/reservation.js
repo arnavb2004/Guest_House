@@ -37,6 +37,101 @@ async function sendVerificationEmail(to, subject, body) {
   }
 }
 
+export async function EditReservation(req, res) {
+  try {
+    const { id } = req.params;
+    console.log("Updating reservation ID:", id);
+
+    const {
+      numberOfGuests,
+      numberOfRooms,
+      roomType,
+      purpose,
+      guestName,
+      arrivalDate,
+      arrivalTime,
+      departureDate,
+      departureTime,
+      address,
+      category,
+      source,
+      applicant,
+    } = req.body;
+
+    let reservation = await Reservation.findById(id);
+    if (!reservation) {
+      return res.status(404).json({ message: "Reservation not found" });
+    }
+
+    // Calculate room cost
+    const days = Math.ceil(
+      (new Date(departureDate) - new Date(arrivalDate)) / (1000 * 60 * 60 * 24)
+    );
+    let room_cost = 0;
+
+    const roomRates = {
+      A: { single: 0, double: 0 },
+      B: { single: 600, double: 850 },
+      C: { single: 900, double: 1250 },
+      D: { single: 1300, double: 1800 },
+    };
+
+    if (category in roomRates) {
+      room_cost =
+        roomType === "Single Occupancy"
+          ? roomRates[category].single * numberOfRooms * days
+          : roomRates[category].double * numberOfRooms * days;
+    }
+
+    // Update reservation details
+    reservation.guestName = guestName;
+    reservation.address = address;
+    reservation.purpose = purpose;
+    reservation.numberOfGuests = numberOfGuests;
+    reservation.numberOfRooms = numberOfRooms;
+    reservation.roomType = roomType;
+    reservation.arrivalDate = new Date(`${arrivalDate}T${arrivalTime || "13:00"}`);
+    reservation.departureDate = new Date(`${departureDate}T${departureTime || "11:00"}`);
+    reservation.category = category;
+    reservation.payment = { source, amount: room_cost };
+    reservation.status = "PENDING";
+    reservation.stepsCompleted = 1;
+    reservation.room_cost = room_cost;
+    reservation.applicant = applicant;
+    
+    await reservation.save();
+
+    // Send email notification only if needed
+    if (req.user?.email) {
+      const email = req.user.email;
+      sendVerificationEmail(
+        [email], // Sending only to the user who made the update
+        "Updated Reservation Request",
+        `<div>Your reservation has been updated.</div><br><br>
+        <div>Guest Name: ${guestName}</div>
+        <div>Guest Email: ${email}</div>
+        <div>Number of Guests: ${numberOfGuests}</div>
+        <div>Number of Rooms: ${numberOfRooms}</div>
+        <div>Room Type: ${roomType}</div>
+        <div>Purpose: ${purpose}</div>
+        <div>Arrival Date: ${new Date(arrivalDate).toISOString().split("T")[0]}</div>
+        <div>Arrival Time: ${arrivalTime}</div>
+        <div>Departure Date: ${new Date(departureDate).toISOString().split("T")[0]}</div>
+        <div>Departure Time: ${departureTime}</div>
+        <div>Address: ${address}</div>
+        <div>Category: ${category}</div>`
+      );
+    }
+
+    res.status(200).json({ message: "Reservation updated successfully." });
+  } catch (error) {
+    console.error("Error updating reservation:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
+
+
+
 export async function createReservation(req, res) {
   try {
     //user details are contained in req.user

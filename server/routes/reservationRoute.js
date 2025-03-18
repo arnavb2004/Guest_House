@@ -27,7 +27,8 @@ import {
   checkoutToday,
   getDiningAmount,
   deleteReservations,
-  removeFromList
+  removeFromList,
+  EditReservation
 } from "../controllers/reservation.js";
 
 const Router = express.Router();
@@ -41,6 +42,16 @@ Router.post(
     { name: "receipt", maxCount: 1 },
   ]),
   createReservation
+);
+
+Router.put(
+  "/edit/:id",
+  checkFileSize,
+  upload.fields([
+    { name: "files", maxCount: 5 },
+    { name: "receipt", maxCount: 1 },
+  ]),
+  EditReservation
 );
 
 Router.get("/all", getAllReservationDetails);
