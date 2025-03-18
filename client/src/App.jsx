@@ -10,7 +10,6 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import Register from "./pages/Register";
 import PDFViewer from "./components/PDFViewer";
 import ReservationForm from "./pages/Reservation_Form";
-import EditReservationForm from "./pages/Edit_ReservationForm";
 import RecordList from "./components/RecordList";
 import BookDining from "./pages/BookDining";
 import UserList from "./components/UserList";
@@ -24,6 +23,7 @@ import Dining from "./pages/Dining";
 import NotFound from "./pages/NotFound";
 import Unauthorized from "./pages/Unauthorized";
 import RoomBooking from "./pages/RoomBooking";
+import RoomList from "./pages/RoomList";
 import AdminRecordPage from "./pages/AdminRecordPage";
 import AddRoom from "./components/AddRoom";
 import AdminReservationForm from "./pages/AdminReservationForm";
@@ -36,7 +36,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/unauthorized" element={<Unauthorized />} />
-          
+
           <Route path="/" element={<HomePage />}>
             <Route path="/" element={<Home />} />
             <Route path="/people" element={<People />} />
@@ -59,6 +59,12 @@ function App() {
               <Route path="cart" element={<Cart />} />
               <Route path=":id" element={<DiningRecordPage />} />
             </Route>
+
+              {/* <Route path="/room-booking" element={<RoomBooking />} />
+              <Route path="/room-list" element={<RoomList />} /> */}
+              
+              <Route path="/admin/reservation/add-room" element={<AddRoom />} />
+              <Route path="/admin/reservation/room-list" element={<RoomList />} />
 
             <Route path="reservation" element={<Reservation />}>
               <Route path="" element={<AdminRecordList status="approved" />} />
@@ -154,7 +160,6 @@ function App() {
                 element={<RecordList status="rejected" />}
               />
               <Route path="reservation-form" element={<ReservationForm />} />
-              <Route path="edit-reservation/:id" element={<EditReservationForm/>} />
               <Route path=":id" element={<RecordPage />} />
             </Route>
             <Route path="dining" element={<Dining />}>
