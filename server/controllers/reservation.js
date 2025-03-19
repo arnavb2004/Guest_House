@@ -37,6 +37,27 @@ async function sendVerificationEmail(to, subject, body) {
   }
 }
 
+export const getAllRooms = async (req, res) => {
+  try {
+    // console.log("hey");
+      const currentDate = new Date(); 
+
+      const rooms = await Room.find(); 
+
+      const updatedRooms = rooms.map(room => {
+        const futureBookings = room.bookings.filter(booking => 
+          new Date(booking.endDate) >= currentDate 
+        );
+
+        return { ...room._doc, bookings: futureBookings }; 
+      });
+
+      res.json(updatedRooms); 
+    } catch (error) {
+      res.status(500).json({ message: "Error fetching rooms", error });
+    }
+};
+
 export async function EditReservation(req, res) {
   try {
     const { id } = req.params;
@@ -83,6 +104,14 @@ export async function EditReservation(req, res) {
           : roomRates[category].double * numberOfRooms * days;
     }
 
+    const user = await User.findById(req.user._id);
+    if(!user) console.log("user not found");
+    console.log("user :",user);
+    if (reservation.status!=="PENDING" ) {
+      user.pendingRequest = user.pendingRequest +1;
+    }
+    await user.save();
+    
     // Update reservation details
     reservation.guestName = guestName;
     reservation.address = address;
@@ -94,13 +123,14 @@ export async function EditReservation(req, res) {
     reservation.departureDate = new Date(`${departureDate}T${departureTime || "11:00"}`);
     reservation.category = category;
     reservation.payment = { source, amount: room_cost };
+    
     reservation.status = "PENDING";
     reservation.stepsCompleted = 1;
     reservation.room_cost = room_cost;
     reservation.applicant = applicant;
     
     await reservation.save();
-
+    
     // Send email notification only if needed
     if (req.user?.email) {
       const email = req.user.email;

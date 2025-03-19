@@ -27,6 +27,7 @@ import RoomBooking from "./pages/RoomBooking";
 import AdminRecordPage from "./pages/AdminRecordPage";
 import AddRoom from "./components/AddRoom";
 import AdminReservationForm from "./pages/AdminReservationForm";
+import RoomDataList from "./pages/RoomDataList";
 
 function App() {
   return (
@@ -60,11 +61,13 @@ function App() {
               <Route path=":id" element={<DiningRecordPage />} />
             </Route>
 
+
+
             <Route path="reservation" element={<Reservation />}>
               <Route path="" element={<AdminRecordList status="approved" />} />
               <Route path="pending-requests" element={<AdminRecordList />} />
               <Route path="reservation-form" element={<AdminReservationForm />} />
-
+              <Route path="room-details" element={<RoomDataList />} />
 
               <Route path="users" element={<UserList />} />
               <Route path="rooms" element={<AddRoom />} />

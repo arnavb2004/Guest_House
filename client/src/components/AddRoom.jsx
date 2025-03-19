@@ -14,6 +14,7 @@ import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
+import { useNavigate } from "react-router-dom"
 
 const style = {
 	position: "absolute",
@@ -39,6 +40,7 @@ export default function AddRoom() {
 
 	const user = useSelector((state) => state.user);
 	const http = privateRequest(user.accessToken, user.refreshToken);
+	const navigate = useNavigate();
 
 	const fetchRooms = async () => {
 		try {
@@ -174,12 +176,19 @@ export default function AddRoom() {
 			)}
 
 			{rooms.length >= 0 && (
-				<div className="flex justify-center">
+				<div className="flex flex-col items-center gap-4">
 					<button
 						className="bg-blue-500 text-white text-lg font-semibold rounded-lg w-32 p-2 hover:bg-blue-600"
 						onClick={handleOpen}
 					>
 						Add Room
+					</button>
+
+					<button
+						className="px-4 py-2 bg-blue-500 text-white text-lg font-semibold rounded-lg w-32 hover:bg-blue-600"
+						onClick={() => navigate("/admin/reservation/room-details")}
+					>
+						Room Details
 					</button>
 				</div>
 			)}

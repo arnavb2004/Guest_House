@@ -28,7 +28,8 @@ import {
   getDiningAmount,
   deleteReservations,
   removeFromList,
-  EditReservation
+  EditReservation,
+  getAllRooms
 } from "../controllers/reservation.js";
 
 const Router = express.Router();
@@ -54,6 +55,7 @@ Router.put(
   EditReservation
 );
 
+Router.get("/room-details", getAllRooms);
 Router.get("/all", getAllReservationDetails);
 Router.get("/current", getCurrentReservations);
 Router.get("/late", getLateCheckoutReservations);
