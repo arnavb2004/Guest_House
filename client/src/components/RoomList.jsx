@@ -67,6 +67,7 @@ export default function RoomList({ roomList, setRoomList, id, counter, setCounte
 
       toast.success(`Room ${editData.roomNumber} updated successfully`);
       setOpen(false);
+      window.location.reload();
     } catch (err) {
       toast.error(err.response?.data?.message || "Failed to update room. Please try again.");
     }
