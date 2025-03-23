@@ -86,6 +86,7 @@ const RoomBooking = () => {
       }
 
       const newRoom = { user: guestName, startDate, endDate, roomNumber: room.roomNumber };
+      console.log("New Room:", newRoom);
       setRoomList((prev) => [...prev, newRoom]);
     } else {
       toast.error("Select Start and End Date");

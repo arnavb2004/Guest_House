@@ -80,16 +80,16 @@ function ReservationForm() {
     guestName: false,
     address: false,
     numberOfGuests: false,
-    numberOfRooms: false,
-    roomType: false,
+    numberOfRooms: true,
+    roomType: true,
     arrivalDate: true,
     arrivalTime: false,
     departureDate: true,
     departureTime: false,
-    purpose: false,
+    purpose: true,
     category: true,
     source: false,
-    applicant: false,
+    applicant: true,
   };
 
   const patterns = {
@@ -344,7 +344,7 @@ function ReservationForm() {
           autoClose: 3000,
         });
         setLoading(false);
-        // navigate("..");
+        navigate("/admin/reservation/pending-requests");
       } else {
         console.log("fail");
 

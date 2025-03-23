@@ -29,7 +29,8 @@ import {
   deleteReservations,
   removeFromList,
   EditReservation,
-  getAllRooms
+  getAllRooms,
+  updateRoomBookings
 } from "../controllers/reservation.js";
 
 const Router = express.Router();
@@ -55,6 +56,7 @@ Router.put(
   EditReservation
 );
 
+Router.put("/rooms/:id/update", updateRoomBookings);
 Router.get("/room-details", getAllRooms);
 Router.get("/all", getAllReservationDetails);
 Router.get("/current", getCurrentReservations);

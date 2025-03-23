@@ -166,7 +166,7 @@ export async function createReservation(req, res) {
   try {
     //user details are contained in req.user
 
-    const {
+    let {
       numberOfGuests,
       numberOfRooms,
       roomType,
@@ -226,8 +226,10 @@ export async function createReservation(req, res) {
       status: "PENDING",
     }));
 
-    if (req.user.role === "ADMIN")
+    if (req.user.role === "ADMIN"){
+      if(guestName === "") guestName = "ADMIN";
       reviewersArray = [{ role: "ADMIN", comments: "", status: "PENDING" }];
+    }
 
     const reservation = await Reservation.create({
       srno: 1,
@@ -946,6 +948,64 @@ async function isDateRangeAvailable(room, startDate, endDate) {
   return true; // Date range is available
 }
 
+export const updateRoomBookings = async (req, res) => {
+  try {
+    const { id } = req.params; // Reservation ID
+    const { user, startDate, endDate, roomNumber, _id } = req.body; // Updated data
+    const resid = id;
+    // Find the Reservation by ID
+    let reservation = await Reservation.findById(id);
+    if (!reservation) {
+      return res.status(404).json({ message: "Reservation not found" });
+    }
+    
+    // console.log("Reservation ", reservation);
+    // Find the Room by roomNumber
+    let room = await Room.findOne({ roomNumber });
+    if (!room) {
+      return res.status(404).json({ message: "Room not found" });
+    }
+    // console.log("Room " , room);
+    // Find the Booking in the Room's bookings array
+    // console.log("resid", resid);
+    let roomBooking = room.bookings.find((b) => b.resid.toString() == resid);
+    // let roomBooking = room.bookings.find((b) => console.log("id : ", b._id.toString()));
+
+    if (!roomBooking) {
+      return res.status(404).json({ message: "Room booking not found" });
+    }
+
+    // Update Room's booking details
+    roomBooking.user = user;
+    roomBooking.startDate = new Date(startDate);
+    roomBooking.endDate = new Date(endDate);
+
+    // Find the Booking in the Reservation's bookings array
+    let reservationBooking = reservation.bookings.find((b) => b.roomNumber === roomNumber);
+    if (!reservationBooking) {
+      return res.status(404).json({ message: "Booking not found in reservation" });
+    }
+
+    // Update Reservation's booking details
+    reservationBooking.user = user;
+    reservationBooking.startDate = new Date(startDate);
+    reservationBooking.endDate = new Date(endDate);
+
+    // Save both Room and Reservation
+    await room.save();
+    await reservation.save();
+
+    res.status(200).json({
+      message: "Room booking updated successfully",
+      updatedRoomBooking: roomBooking,
+      updatedReservationBooking: reservationBooking,
+    });
+
+  } catch (error) {
+    console.error("Error updating room booking:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
 // Function to update rooms and reservation
 export const updateRooms = async (req, res) => {
   if (req.user?.role !== "ADMIN") {
@@ -958,6 +1018,7 @@ export const updateRooms = async (req, res) => {
 
   try {
     const { id } = req.params; // Reservation ID
+    //console.log("id", id);
     const allottedRooms = req.body; // Updated room assignments
 
     // Fetch the previous reservation details
@@ -1002,7 +1063,8 @@ export const updateRooms = async (req, res) => {
     //     }
     //   }
     // }
-    const resid = prevReservation._id;
+    const resid = id;
+    console.log("resid ", resid);
     // Step 2: Assign new rooms or update existing bookings
     for (const newRoom of allottedRooms) {
       const { roomNumber, startDate, endDate, user } = newRoom;
