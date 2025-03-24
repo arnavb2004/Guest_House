@@ -188,8 +188,6 @@ const http = privateRequest(user.accessToken, user.refreshToken);
           )}
         </div>
       </div>
-
-      <Footer />
     </div>
   );
 };
