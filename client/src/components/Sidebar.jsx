@@ -23,6 +23,7 @@ const Sidebar = () => {
           "Users",
           "Rooms",
           "Reservation Form",
+          "Monthly Report",
         ]
       : user.role === "USER"
       ? [

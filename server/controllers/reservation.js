@@ -948,6 +948,90 @@ async function isDateRangeAvailable(room, startDate, endDate) {
   return true; // Date range is available
 }
 
+export const monthlyReport = async (req, res) => {
+  try {
+    const { month } = req.params; // Extract month from URL (YYYY-MM)
+    if (!month) {
+      return res.status(400).json({ message: "Month is required in format YYYY-MM" });
+    }
+
+    // Define start and end dates for the month
+    const startDate = new Date(`${month}-01T00:00:00.000Z`);
+    const endDate = new Date(`${month}-31T23:59:59.999Z`);
+
+    // Fetch reservations where at least one booking falls in the month
+    const reservations = await Reservation.find({
+      "bookings.startDate": { $gte: startDate, $lt: endDate },
+    });
+
+    console.log("Reservations", reservations);
+    
+    // Initialize report summary
+    let totalBookings = 0;
+    let totalRevenue = 0;
+    let totalCheckedOut = 0;
+    let totalPendingPayments = 0;
+    
+    let categoryData = {}; // Stores data by category
+
+    reservations.forEach((reservation) => {
+      reservation.bookings.forEach((booking) => {
+        if (booking.startDate >= startDate && booking.startDate <= endDate) {
+          totalBookings++;
+
+          let category = reservation.category || "Uncategorized"; // Ensure category exists
+          if (!categoryData[category]) {
+            categoryData[category] = { 
+              revenue: 0, 
+              pendingPayments: 0, 
+              totalBookings: 0, 
+              checkedOut: 0 
+            };
+          }
+
+          let revenue = reservation.payment.amount || 0;
+          totalRevenue += revenue;
+          categoryData[category].revenue += revenue;
+          categoryData[category].totalBookings++;
+
+          if (reservation.checkOut) {
+            totalCheckedOut++;
+            categoryData[category].checkedOut++;
+          }
+
+          if (reservation.payment.status === "PENDING") {
+            totalPendingPayments += reservation.payment.amount;
+            categoryData[category].pendingPayments += reservation.payment.amount;
+          }
+        }
+      });
+    });
+
+    // Convert category data into an array format
+    const categories = Object.keys(categoryData).map((cat) => ({
+      name: cat,
+      totalBookings: categoryData[cat].totalBookings,
+      revenue: categoryData[cat].revenue,
+      checkedOut: categoryData[cat].checkedOut,
+      pendingPayments: categoryData[cat].pendingPayments
+    }));
+
+    res.json({
+      month,
+      totalBookings,
+      revenue: totalRevenue,
+      checkedOut: totalCheckedOut,
+      pendingPayments: totalPendingPayments,
+      categories,
+    });
+
+  } catch (error) {
+    console.error("Error generating monthly report:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+
 export const updateRoomBookings = async (req, res) => {
   try {
     const { id } = req.params; // Reservation ID

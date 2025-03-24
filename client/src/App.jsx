@@ -28,6 +28,7 @@ import AdminRecordPage from "./pages/AdminRecordPage";
 import AddRoom from "./components/AddRoom";
 import AdminReservationForm from "./pages/AdminReservationForm";
 import RoomDataList from "./pages/RoomDataList";
+import MonthlyReport from "./pages/MonthlyReport";
 
 function App() {
   return (
@@ -68,7 +69,7 @@ function App() {
               <Route path="pending-requests" element={<AdminRecordList />} />
               <Route path="reservation-form" element={<AdminReservationForm />} />
               <Route path="room-details" element={<RoomDataList />} />
-
+              <Route path="monthly-report" element={<MonthlyReport />} />
               <Route path="users" element={<UserList />} />
               <Route path="rooms" element={<AddRoom />} />
               <Route path=":id/rooms" element={<RoomBooking />} />
