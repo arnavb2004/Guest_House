@@ -971,12 +971,12 @@ export const monthlyReport = async (req, res) => {
     let totalRevenue = 0;
     let totalCheckedOut = 0;
     let totalPendingPayments = 0;
-    
+    let totalPendingPaymentsDetails = [];
     let categoryData = {}; // Stores data by category
 
     reservations.forEach((reservation) => {
-      reservation.bookings.forEach((booking) => {
-        if (booking.startDate >= startDate && booking.startDate <= endDate) {
+      // reservation.bookings.forEach((booking) => {
+        if (reservation.arrivalDate >= startDate && reservation.departureDate <= endDate) {
           totalBookings++;
 
           let category = reservation.category || "Uncategorized"; // Ensure category exists
@@ -985,7 +985,8 @@ export const monthlyReport = async (req, res) => {
               revenue: 0, 
               pendingPayments: 0, 
               totalBookings: 0, 
-              checkedOut: 0 
+              checkedOut: 0,
+              pendingPaymentsDetails: []
             };
           }
 
@@ -1001,10 +1002,25 @@ export const monthlyReport = async (req, res) => {
 
           if (reservation.payment.status === "PENDING") {
             totalPendingPayments += reservation.payment.amount;
+            totalPendingPaymentsDetails.push({
+              category : reservation.category,
+              guestName : reservation.guestName,
+              applicantEmail : reservation.guestEmail,
+              applicantName : reservation.applicant.name,
+              paymentAmount : reservation.payment.amount,
+              paymentMode : reservation.payment.source
+            });
             categoryData[category].pendingPayments += reservation.payment.amount;
+            categoryData[category].pendingPaymentsDetails.push({
+              guestName : reservation.guestName,
+              applicantEmail : reservation.guestEmail,
+              applicantName : reservation.applicant.name,
+              paymentAmount : reservation.payment.amount,
+              paymentMode : reservation.payment.source
+            });
           }
         }
-      });
+      // );
     });
 
     // Convert category data into an array format
@@ -1013,7 +1029,8 @@ export const monthlyReport = async (req, res) => {
       totalBookings: categoryData[cat].totalBookings,
       revenue: categoryData[cat].revenue,
       checkedOut: categoryData[cat].checkedOut,
-      pendingPayments: categoryData[cat].pendingPayments
+      pendingPayments: categoryData[cat].pendingPayments,
+      pendingPaymentsDetails: categoryData[cat].pendingPaymentsDetails
     }));
 
     res.json({
@@ -1022,6 +1039,7 @@ export const monthlyReport = async (req, res) => {
       revenue: totalRevenue,
       checkedOut: totalCheckedOut,
       pendingPayments: totalPendingPayments,
+      pendingPaymentsDetails: totalPendingPaymentsDetails,
       categories,
     });
 
