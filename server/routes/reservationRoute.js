@@ -32,6 +32,7 @@ import {
   getAllRooms,
   updateRoomBookings,
   monthlyReport,
+  withdrawApplication,
 } from "../controllers/reservation.js";
 
 const Router = express.Router();
@@ -57,6 +58,7 @@ Router.put(
   EditReservation
 );
 
+Router.delete("/withdraw/:id", withdrawApplication);
 Router.get("/reports/monthly/:month", monthlyReport);
 Router.put("/rooms/:id/update", updateRoomBookings);
 Router.get("/room-details", getAllRooms);
