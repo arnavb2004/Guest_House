@@ -39,24 +39,47 @@ async function sendVerificationEmail(to, subject, body) {
 
 export const getAllRooms = async (req, res) => {
   try {
-    // console.log("hey");
-      const currentDate = new Date(); 
+    const currentDate = new Date();
 
-      const rooms = await Room.find(); 
+    // Fetch all rooms
+    const rooms = await Room.find();
 
-      const updatedRooms = rooms.map(room => {
-        const futureBookings = room.bookings.filter(booking => 
-          new Date(booking.endDate) >= currentDate 
-        );
-
-        return { ...room._doc, bookings: futureBookings }; 
+    // Map through each room to filter and update booking data
+    const updatedRooms = await Promise.all(rooms.map(async (room) => {
+      // Filter future bookings based on endDate
+      const futureBookings = room.bookings.filter((booking) => {
+        const bookingEndDate = new Date(booking.endDate);
+        return bookingEndDate >= currentDate; // Keep only future bookings
       });
 
-      res.json(updatedRooms); 
-    } catch (error) {
-      res.status(500).json({ message: "Error fetching rooms", error });
-    }
+      // For each future booking, find the corresponding reservation
+      const updatedBookings = await Promise.all(futureBookings.map(async (booking) => {
+        const reservation = await Reservation.findById(booking.resid); // Assuming resid is the reservation's ID
+        
+        // If the reservation is found, add the purpose, otherwise default to 'No Purpose'
+        return {
+          ...booking._doc,
+          purpose: reservation ? reservation.purpose : 'No Purpose'
+        };
+      }));
+
+      // Return room with updated bookings
+      return {
+        ...room._doc,
+        bookings: updatedBookings
+      };
+    }));
+
+    // console.log("Updated rooms with booking details:", updatedRooms);
+    // Send the updated rooms with booking details back as response
+    res.json(updatedRooms);
+
+  } catch (error) {
+    console.error("Error fetching rooms:", error);
+    res.status(500).json({ message: "Error fetching rooms", error });
+  }
 };
+
 
 export async function EditReservation(req, res) {
   try {
@@ -903,26 +926,29 @@ export const addRoom = async (req, res) => {
 };
 
 export const deleteRoom = async (req, res) => {
-  if (req.user?.role !== "ADMIN")
-    return res
-      .status(403)
-      .json({ message: "You are not authorized to perform this action" });
+  if (req.user?.role !== "ADMIN") {
+    return res.status(403).json({ message: "You are not authorized to perform this action" });
+  }
 
   try {
     const { roomId } = req.body;
 
-    const deletedRoom = await Room.findByIdAndDelete(roomId);
+    // Fetch the room before deleting
+    const room = await Room.findById(roomId);
 
-    if (!deletedRoom) {
+    if (!room) {
       return res.status(404).json({ message: "Room not found" });
     }
 
-    if (deletedRoom.bookings?.length > 0)
-      return res.status(404).json({ message: "Room is occupied" });
+    // Check if the room has active bookings
+    if (room.bookings?.length > 0) {
+      return res.status(400).json({ message: "Room is occupied" });
+    }
 
-    res
-      .status(200)
-      .json({ message: "Room deleted successfully", room: deletedRoom });
+    // If no bookings, proceed with deletion
+    await Room.findByIdAndDelete(roomId);
+
+    res.status(200).json({ message: "Room deleted successfully", room });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
