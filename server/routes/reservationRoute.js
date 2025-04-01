@@ -33,6 +33,8 @@ import {
   updateRoomBookings,
   monthlyReport,
   withdrawApplication,
+  sendReminder,
+  sendReminderAll,
 } from "../controllers/reservation.js";
 
 const Router = express.Router();
@@ -58,6 +60,8 @@ Router.put(
   EditReservation
 );
 
+Router.post("/send-reminder-all", sendReminderAll);
+Router.post("/send-reminder", sendReminder);
 Router.delete("/withdraw/:id", withdrawApplication);
 Router.get("/reports/monthly/:month", monthlyReport);
 Router.put("/rooms/:id/update", updateRoomBookings);

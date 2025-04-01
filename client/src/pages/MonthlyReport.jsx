@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { privateRequest } from "../utils/useFetch";
+import {toast} from "react-toastify";
 
 const MonthlyReport = () => {
   const [month, setMonth] = useState(new Date().toISOString().slice(0, 7)); // Default to current month (YYYY-MM)
@@ -38,11 +39,35 @@ const MonthlyReport = () => {
     }));
   };
 
+  const handleSendReminder = async (reservationId) => {
+    try {
+      const response = await http.post("/reservation/send-reminder", {reservationId});
+      if (response.status === 200) {
+        toast.success("Reminder sent successfully!");
+      } else {
+        throw new Error(response.data?.message || "Failed to send reminder");
+      }
+    } catch (error) {
+      toast.error(`Error: ${error.message}`);
+    }
+  };
+  const handleSendReminderToAll = async (pendingPaymentsDetails) => {
+    try {
+      const response = await http.post("/reservation/send-reminder-all", {pendingPaymentsDetails});
+      if (response.status === 200) {
+        toast.success("Reminder sent successfully!");
+      } else {
+        throw new Error(response.data?.message || "Failed to send reminder");
+      }
+    } catch (error) {
+      toast.error(`Error: ${error.message}`);
+    }
+  };
+
   return (
     <div className="p-6">
       <h2 className="text-2xl font-bold mb-4">Monthly Report</h2>
 
-      {/* Month Selector */}
       <div className="mb-4">
         <label className="mr-2 font-semibold">Select Month:</label>
         <input
@@ -59,7 +84,6 @@ const MonthlyReport = () => {
         <p className="text-red-500">{error}</p>
       ) : reportData ? (
         <div className="overflow-x-auto">
-          {/* Overall Summary Table */}
           <table className="w-full border-collapse border border-gray-300 mb-6">
             <thead>
               <tr className="bg-gray-200">
@@ -89,10 +113,17 @@ const MonthlyReport = () => {
             {showAllPending ? "Hide All Pending Payments" : "View All Pending Payments"}
           </button>
 
-          {/* All Pending Payments Table */}
           {showAllPending && (
             <div className="p-4 border border-gray-300 bg-gray-100 rounded-md mb-6">
               <h4 className="font-semibold mb-2">All Pending Payments</h4>
+              <td className="border px-4 py-2">
+                <button
+                  onClick={() => handleSendReminderToAll(reportData.pendingPaymentsDetails)}
+                  className="bg-blue-500 text-white px-4 py-1 rounded-md hover:bg-blue-700"
+                >
+                  Send Reminder To All
+                </button>
+              </td>
               <table className="w-full border-collapse border border-gray-300">
                 <thead>
                   <tr className="bg-gray-200">
@@ -102,6 +133,7 @@ const MonthlyReport = () => {
                     <th className="border px-4 py-2">Applicant Name</th>
                     <th className="border px-4 py-2">Amount</th>
                     <th className="border px-4 py-2">Payment Mode</th>
+                    <th className="border px-4 py-2">Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -114,6 +146,14 @@ const MonthlyReport = () => {
                         <td className="border px-4 py-2">{payment.applicantName}</td>
                         <td className="border px-4 py-2">Rs {payment.paymentAmount}</td>
                         <td className="border px-4 py-2">{payment.paymentMode}</td>
+                        <td className="border px-4 py-2">
+                      <button
+                        onClick={() => handleSendReminder(payment.reservationId)}
+                        className="bg-blue-500 text-white px-4 py-1 rounded-md hover:bg-blue-700"
+                      >
+                        Send Reminder
+                      </button>
+                    </td>
                       </tr>
                     ))
                   ) : (
@@ -128,7 +168,6 @@ const MonthlyReport = () => {
             </div>
           )}
 
-          {/* Categorized Data Table */}
           <h3 className="text-xl font-bold mb-2">Category-wise Breakdown</h3>
           <table className="w-full border-collapse border border-gray-300 mb-6">
             <thead>
@@ -153,7 +192,7 @@ const MonthlyReport = () => {
                     <td className="border px-4 py-2">
                       <button
                         onClick={() => toggleCategory(category.name)}
-                        className="bg-blue-500 text-white px-4 py-1 rounded-md hover:bg-blue-700"
+                        className="bg-red-500 text-white px-4 py-1 rounded-md hover:bg-red-700"
                       >
                         {expandedCategories[category.name] ? "Hide Details" : "View Details"}
                       </button>
@@ -165,6 +204,14 @@ const MonthlyReport = () => {
                       <td colSpan="6">
                       <div className="p-4 border border-gray-300 bg-gray-50 rounded-md shadow-md">
                         <h4 className="font-semibold text-lg text-blue-600">Pending Payments for {category.name}</h4>
+                        <td className="border px-4 py-2">
+                          <button
+                            onClick={() => handleSendReminderToAll(category.pendingPaymentsDetails)}
+                            className="bg-blue-500 text-white px-4 py-1 rounded-md hover:bg-blue-700"
+                          >
+                            Send Reminder To All
+                          </button>
+                        </td>
                         <table className="w-full border-collapse border border-gray-300 mt-2">
                         <thead>
                               <tr className="bg-gray-200">
@@ -173,6 +220,7 @@ const MonthlyReport = () => {
                                 <th className="border px-4 py-2">Applicant Name</th>
                                 <th className="border px-4 py-2">Amount</th>
                                 <th className="border px-4 py-2">Payment Mode</th>
+                                <th className="border px-4 py-2">Action</th>
                               </tr>
                             </thead>
                             <tbody>
@@ -185,6 +233,14 @@ const MonthlyReport = () => {
                                     <td className="border px-4 py-2">{payment.applicantName}</td>
                                     <td className="border px-4 py-2">Rs {payment.paymentAmount}</td>
                                     <td className="border px-4 py-2">{payment.paymentMode}</td>
+                                    <td className="border px-4 py-2">
+                                      <button
+                                        onClick={() => handleSendReminder(payment.reservationId)}
+                                        className="bg-blue-500 text-white px-4 py-1 rounded-md hover:bg-blue-700"
+                                      >
+                                        Send Reminder
+                                      </button>
+                                    </td>
                                   </tr>
                                 ))
                               ) : (

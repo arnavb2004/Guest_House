@@ -997,6 +997,78 @@ export async function withdrawApplication(req, res) {
   }
 };
 
+
+
+export const sendReminder = async (req, res) => {
+  const id = req.body.reservationId;
+  try{
+  const reservation = await Reservation.findById(id);
+  if (!reservation) {
+    return res.status(404).json({ message: "Reservation not found" });
+  }
+  // console.log(reservation);
+  const email = reservation.guestEmail;
+  sendVerificationEmail(
+    [email], 
+    "Payment Reminder",
+    `<div>This is a reminder for payment of your reservation.</div><br><br>
+    <div>Guest Name: ${reservation.guestName}</div>
+        <div>Guest Email: ${email}</div>
+        <div>Number of Guests: ${reservation.numberOfGuests}</div>
+        <div>Number of Rooms: ${reservation.numberOfRooms}</div>
+        <div>Room Type: ${reservation.roomType}</div>
+        <div>Purpose: ${reservation.purpose}</div>
+        <div>Arrival Date: ${new Date(reservation.arrivalDate).toISOString().split("T")[0]}</div>
+        <div>Arrival Time: ${reservation.arrivalTime}</div>
+        <div>Departure Date: ${new Date(reservation.departureDate).toISOString().split("T")[0]}</div>
+        <div>Departure Time: ${reservation.departureTime}</div>
+        <div>Address: ${reservation.address}</div>
+        <div>Category: ${reservation.category}</div>
+        <div>Payment Amount: ${reservation.payment.amount}</div>`
+  );
+  res.status(200).json({ message: "Reminder sent successfully!" });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to send reminder", error: error.message });
+  }
+};
+
+export const sendReminderAll = async (req, res) => {
+  const paymentdetails = req.body.pendingPaymentsDetails;
+  try{
+  for(const i in paymentdetails) {
+    const reservation = await Reservation.findById(paymentdetails[i].reservationId);
+
+  // const reservation = await Reservation.findById(id);
+  if (!reservation) {
+    return res.status(404).json({ message: "Reservation not found" });
+  }
+  // console.log(reservation);
+  const email = reservation.guestEmail;
+  sendVerificationEmail(
+    [email], 
+    "Payment Reminder",
+    `<div>This is a reminder for payment of your reservation.</div><br><br>
+    <div>Guest Name: ${reservation.guestName}</div>
+        <div>Guest Email: ${email}</div>
+        <div>Number of Guests: ${reservation.numberOfGuests}</div>
+        <div>Number of Rooms: ${reservation.numberOfRooms}</div>
+        <div>Room Type: ${reservation.roomType}</div>
+        <div>Purpose: ${reservation.purpose}</div>
+        <div>Arrival Date: ${new Date(reservation.arrivalDate).toISOString().split("T")[0]}</div>
+        <div>Arrival Time: ${reservation.arrivalTime}</div>
+        <div>Departure Date: ${new Date(reservation.departureDate).toISOString().split("T")[0]}</div>
+        <div>Departure Time: ${reservation.departureTime}</div>
+        <div>Address: ${reservation.address}</div>
+        <div>Category: ${reservation.category}</div>
+        <div>Payment Amount: ${reservation.payment.amount}</div>`
+  );
+}
+  res.status(200).json({ message: "Reminder sent successfully!" });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to send reminder", error: error.message });
+  }
+};
+
 export const monthlyReport = async (req, res) => {
   try {
     const { month } = req.params; // Extract month from URL (YYYY-MM)
@@ -1013,7 +1085,7 @@ export const monthlyReport = async (req, res) => {
       "bookings.startDate": { $gte: startDate, $lt: endDate },
     });
 
-    console.log("Reservations", reservations);
+    // console.log("Reservations", reservations);
     
     // Initialize report summary
     let totalBookings = 0;
@@ -1052,6 +1124,7 @@ export const monthlyReport = async (req, res) => {
           if (reservation.payment.status === "PENDING") {
             totalPendingPayments += reservation.payment.amount;
             totalPendingPaymentsDetails.push({
+              reservationId: reservation._id,
               category : reservation.category,
               guestName : reservation.guestName,
               applicantEmail : reservation.guestEmail,
@@ -1061,6 +1134,7 @@ export const monthlyReport = async (req, res) => {
             });
             categoryData[category].pendingPayments += reservation.payment.amount;
             categoryData[category].pendingPaymentsDetails.push({
+              reservationId: reservation._id,
               guestName : reservation.guestName,
               applicantEmail : reservation.guestEmail,
               applicantName : reservation.applicant.name,
