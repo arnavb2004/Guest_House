@@ -59,7 +59,9 @@ export const getAllRooms = async (req, res) => {
         // If the reservation is found, add the purpose, otherwise default to 'No Purpose'
         return {
           ...booking._doc,
-          purpose: reservation ? reservation.purpose : 'No Purpose'
+          purpose: reservation ? reservation.purpose : 'No Purpose',
+
+          roomNumber: room.roomNumber
         };
       }));
 

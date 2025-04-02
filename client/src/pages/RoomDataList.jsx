@@ -26,41 +26,37 @@ const RoomDataList = () => {
   const generateDates = () => {
     const dates = [];
     let current = new Date(startDate);
-    console.log(endDate);
-    while (current <= endDate) {
+    
+    while (current.getTime() <= endDate.getTime()) {  // Ensure inclusion of endDate
       dates.push(current.toISOString().split("T")[0]);
       current.setDate(current.getDate() + 1);
     }
-    return dates;
+    // console.log("dates" , dates);
+    const formattedEndDate = endDate.toISOString().split("T")[0];
+    if (!dates.includes(formattedEndDate)) {
+      dates.push(formattedEndDate);
+    }    return dates;
   };
+  
 
   const dates = generateDates();
 
-  // Filter rooms based on occupancy type
-  // Filter rooms based on occupancy type and room number search query
-const filteredRooms = rooms.filter((room) => {
-  // Check if room type matches the occupancy filter
-  if (occupancyFilter !== "all") {
-    const roomTypeLower = room.roomType?.toLowerCase();
-    if (occupancyFilter === "single" && !roomTypeLower.includes("single")) return false;
-    if (occupancyFilter === "double" && !roomTypeLower.includes("double")) return false;
-  }
+  const filteredRooms = rooms.filter((room) => {
+    if (occupancyFilter !== "all") {
+      const roomTypeLower = room.roomType?.toLowerCase();
+      if (occupancyFilter === "single" && !roomTypeLower.includes("single")) return false;
+      if (occupancyFilter === "double" && !roomTypeLower.includes("double")) return false;
+    }
+    if (searchQuery && !room.roomNumber.toString().toLowerCase().includes(searchQuery.toLowerCase())) {
+      return false;
+    }
+    return true;
+  });
 
-  // Check if room number matches the search query
-  if (searchQuery && !room.roomNumber.toString().toLowerCase().includes(searchQuery.toLowerCase())) {
-    return false;
-  }
-
-  return true;
-});
-
-  
-
-  // Generate unique colors for reservations
   const reservationColors = {};
   const generateRandomColor = () => `hsl(${Math.random() * 360}, 70%, 70%)`;
 
-  const getBookingCellData = (room, date, previousBookings) => {
+  const getBookingCellData = (room, date) => {
     const booking = room.bookings.find(
       (booking) =>
         new Date(booking.startDate) <= new Date(date) &&
@@ -71,19 +67,10 @@ const filteredRooms = rooms.filter((room) => {
       if (!reservationColors[booking.purpose]) {
         reservationColors[booking.purpose] = generateRandomColor();
       }
-
-      if (new Date(booking.startDate).toISOString().split("T")[0] === date) {
-        return {
-          span: Math.floor((new Date(booking.endDate) - new Date(booking.startDate)) / (1000 * 60 * 60 * 24)) + 1,
-          purpose: booking.purpose,
-          color: reservationColors[booking.purpose],
-        };
-      }
-
-      if (new Date(date) > new Date(booking.startDate) && new Date(date) <= new Date(booking.endDate)) {
-        previousBookings.add(room._id);
-        return "skip";
-      }
+      return {
+        purpose: booking.purpose,
+        color: reservationColors[booking.purpose],
+      };
     }
     return null;
   };
@@ -91,8 +78,6 @@ const filteredRooms = rooms.filter((room) => {
   return (
     <div className="w-full px-9 overflow-y-auto">
       <h1 className="text-3xl font-bold text-center my-6">Room Booking Details</h1>
-
-      {/* Filters Section */}
       <div className="flex flex-wrap gap-4 justify-between mb-6">
         <input
           type="text"
@@ -101,18 +86,16 @@ const filteredRooms = rooms.filter((room) => {
           onChange={(e) => setSearchQuery(e.target.value)}
           className="border rounded-lg p-2 w-1/4"
         />
-
-<button
-    onClick={() => {
-      const today = new Date();
-      setStartDate(today);
-      setEndDate(new Date(today.getTime()));  // Set end date to 9 days from today
-    }}
-    className="bg-green-600 text-white px-4 py-2 rounded-lg"
-  >
-    Current Date
-  </button>
-        {/* Occupancy Filter */}
+        <button
+          onClick={() => {
+            const today = new Date();
+            setStartDate(today);
+            setEndDate(new Date(today.getTime()));
+          }}
+          className="bg-green-600 text-white px-4 py-2 rounded-lg"
+        >
+          Current Date
+        </button>
         <select
           value={occupancyFilter}
           onChange={(e) => setOccupancyFilter(e.target.value)}
@@ -122,8 +105,6 @@ const filteredRooms = rooms.filter((room) => {
           <option value="single">Single Occupancy</option>
           <option value="double">Double Occupancy</option>
         </select>
-
-        {/* Date Range Selection */}
         <input
           type="date"
           value={startDate.toISOString().split("T")[0]}
@@ -137,8 +118,6 @@ const filteredRooms = rooms.filter((room) => {
           className="border rounded-lg p-2"
         />
       </div>
-
-      {/* Table for Bookings */}
       <div className="overflow-auto">
         <table className="table-auto border-collapse w-full">
           <thead>
@@ -150,32 +129,43 @@ const filteredRooms = rooms.filter((room) => {
             </tr>
           </thead>
           <tbody>
-            {dates.map((date) => {
-              const previousBookings = new Set();
+            {dates.map((date, dateIndex) => {
               return (
                 <tr key={date}>
-                  <td className="border p-2">{date}</td>
+                  <td className="border p-2 font-bold">{date}</td>
                   {filteredRooms.map((room) => {
-                    const bookingData = getBookingCellData(room, date, previousBookings);
-
-                    if (bookingData === "skip") {
-                      return null;
+                    if (dateIndex > 0) {
+                      const prevBooking = getBookingCellData(room, dates[dateIndex - 1]);
+                      const currentBooking = getBookingCellData(room, date);
+                      if (
+                        prevBooking &&
+                        currentBooking &&
+                        prevBooking.purpose === currentBooking.purpose
+                      ) {
+                        return null; // Skip merging duplicate consecutive bookings
+                      }
                     }
-
-                    if (bookingData) {
-                      return (
-                        <td
-                          key={room._id + date}
-                          className="border p-2 text-center"
-                          rowSpan={bookingData.span}
-                          style={{ backgroundColor: bookingData.color }}
-                        >
-                          {bookingData.purpose}
-                        </td>
-                      );
-                    } else {
-                      return <td key={room._id + date} className="border p-2"></td>;
+                    let span = 1;
+                    while (
+                      dateIndex + span < dates.length &&
+                      getBookingCellData(room, dates[dateIndex + span])?.purpose ===
+                        getBookingCellData(room, date)?.purpose
+                    ) {
+                      span++;
                     }
+                    const bookingData = getBookingCellData(room, date);
+                    return bookingData ? (
+                      <td
+                        key={room._id + date}
+                        className="border p-2 text-center"
+                        style={{ backgroundColor: bookingData.color }}
+                        rowSpan={span}
+                      >
+                        {bookingData.purpose}
+                      </td>
+                    ) : (
+                      <td key={room._id + date} className="border p-2"></td>
+                    );
                   })}
                 </tr>
               );
@@ -183,44 +173,42 @@ const filteredRooms = rooms.filter((room) => {
           </tbody>
         </table>
       </div>
+      <div className="flex justify-center gap-4 my-6">
+        <button
+          onClick={() => {
+            const newStart = new Date(startDate);
+            newStart.setDate(startDate.getDate() - 10);
+            setStartDate(newStart);
+            setEndDate(new Date(newStart.getTime() + 9 * 24 * 60 * 60 * 1000));
+          }}
+          className="bg-gray-600 text-white px-4 py-2 rounded-lg"
+        >
+          Previous 10 Days
+        </button>
 
-<div className="flex justify-center gap-4 my-6">
-  <button
-    onClick={() => {
-      const newStart = new Date(startDate);
-      newStart.setDate(startDate.getDate() - 10);  // Go back 10 days
-      setStartDate(newStart);
-      setEndDate(new Date(newStart.getTime() + 9 * 24 * 60 * 60 * 1000));  // Set the end date 9 days after the new start date
-    }}
-    className="bg-gray-600 text-white px-4 py-2 rounded-lg"
-  >
-    Previous 10 Days
-  </button>
+        <button
+          onClick={() => {
+            const today = new Date();
+            setStartDate(today);
+            setEndDate(new Date(today.getTime() + 9 * 24 * 60 * 60 * 1000));
+          }}
+          className="bg-green-600 text-white px-4 py-2 rounded-lg"
+        >
+          Reset to Today
+        </button>
 
-  <button
-    onClick={() => {
-      const today = new Date();
-      setStartDate(today);
-      setEndDate(new Date(today.getTime() + 9 * 24 * 60 * 60 * 1000));  // Set end date to 9 days from today
-    }}
-    className="bg-green-600 text-white px-4 py-2 rounded-lg"
-  >
-    Reset to Today
-  </button>
-
-  <button
-    onClick={() => {
-      const newStart = new Date(startDate);
-      newStart.setDate(startDate.getDate() + 10);  // Move ahead 10 days
-      setStartDate(newStart);
-      setEndDate(new Date(newStart.getTime() + 9 * 24 * 60 * 60 * 1000));  // Set the end date 9 days after the new start date
-    }}
-    className="bg-blue-600 text-white px-4 py-2 rounded-lg"
-  >
-    Next 10 Days
-  </button>
-</div>
-
+        <button
+          onClick={() => {
+            const newStart = new Date(startDate);
+            newStart.setDate(startDate.getDate() + 10);
+            setStartDate(newStart);
+            setEndDate(new Date(newStart.getTime() + 9 * 24 * 60 * 60 * 1000));
+          }}
+          className="bg-blue-600 text-white px-4 py-2 rounded-lg"
+        >
+          Next 10 Days
+        </button>
+      </div>
     </div>
   );
 };
