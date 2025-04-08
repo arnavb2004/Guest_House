@@ -47,10 +47,7 @@ export const getAllRooms = async (req, res) => {
     // Map through each room to filter and update booking data
     const updatedRooms = await Promise.all(rooms.map(async (room) => {
       // Filter future bookings based on endDate
-      const futureBookings = room.bookings.filter((booking) => {
-        const bookingEndDate = new Date(booking.endDate);
-        return bookingEndDate >= currentDate; // Keep only future bookings
-      });
+      const futureBookings = room.bookings;
 
       // For each future booking, find the corresponding reservation
       const updatedBookings = await Promise.all(futureBookings.map(async (booking) => {
