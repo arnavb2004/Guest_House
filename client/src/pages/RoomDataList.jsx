@@ -10,6 +10,7 @@ const RoomDataList = () => {
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date(new Date().setDate(startDate.getDate() + 9)));
   const [occupancyFilter, setOccupancyFilter] = useState("all");
+  const [clicked, setClicked] = useState(false);
 
   useEffect(() => {
     const fetchRooms = async () => {
@@ -91,9 +92,13 @@ const RoomDataList = () => {
             const today = new Date();
             setStartDate(today);
             setEndDate(new Date(today.getTime()));
+            setClicked(true);
           }}
-          className="bg-green-600 text-white px-4 py-2 rounded-lg"
-        >
+          className={`${
+            clicked
+              ? "bg-green-600"
+              : "bg-blue-500 hover:bg-blue-600"
+          } text-white px-4 py-2 rounded-lg transition-colors duration-200`}        >
           Current Date
         </button>
         <select
@@ -191,10 +196,11 @@ const RoomDataList = () => {
             const today = new Date();
             setStartDate(today);
             setEndDate(new Date(today.getTime() + 9 * 24 * 60 * 60 * 1000));
+            setClicked(false);
           }}
           className="bg-green-600 text-white px-4 py-2 rounded-lg"
         >
-          Reset to Today
+          Reset to Current 10 Days
         </button>
 
         <button

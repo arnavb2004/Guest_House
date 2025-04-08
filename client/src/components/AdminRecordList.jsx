@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-
+import JSZip from "jszip";
 import List from "@mui/material/List";
 import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
@@ -18,7 +18,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import http from "../utils/httpService";
 import { useSelector } from "react-redux";
-
+import VisibilityIcon from '@mui/icons-material/Visibility';
 export default function AdminRecordList({ status = "pending" }) {
   const [checked, setChecked] = useState([]);
   const [values, setValues] = useState([]);
@@ -439,17 +439,44 @@ export default function AdminRecordList({ status = "pending" }) {
                       />
                     </IconButton>
                     <IconButton edge="end" aria-label="download">
-                      <DownloadIcon
+                    <VisibilityIcon
                         onClick={async () => {
                           try {
-                            const res = await http.get(
-                              "/reservation/documents/" + record._id,
-                              { responseType: "blob" }
-                            );
-                            var file = window.URL.createObjectURL(res.data);
-                            window.location.assign(file);
-                          } catch (error) {
-                            toast.error("Something went wrong");
+                            const res = await http.get(`/reservation/documents/${record._id}`, {
+                              responseType: "blob",
+                            });
+                        
+                            const zip = await JSZip.loadAsync(res.data);
+                        
+                            for (const [filename, file] of Object.entries(zip.files)) {
+                              if (file.dir) continue;
+                        
+                              const extension = filename.split(".").pop().toLowerCase();
+                              // Support common formats
+                              if (["txt", "html", "json", "csv"].includes(extension)) {
+                                const textContent = await file.async("text");
+                                const win = window.open("", "_blank");
+                                win.document.write(`<pre>${textContent}</pre>`);
+                                win.document.title = filename;
+                              } else if (["png", "jpg", "jpeg", "gif", "svg", "webp"].includes(extension)) {
+                                const blob = await file.async("blob");
+                                const url = URL.createObjectURL(blob);
+                                const win = window.open("", "_blank");
+                                win.document.write(`<img src="${url}" style="max-width:100%"/>`);
+                                win.document.title = filename;
+                              } else if (extension === "pdf") {
+                                const blob = await file.async("blob");
+                                const pdfBlob = new Blob([blob], { type: "application/pdf" });
+                                const url = URL.createObjectURL(pdfBlob);
+                                window.open(url, "_blank");
+
+                              } else {
+                                console.log(`Skipping unsupported file: ${filename}`);
+                                // You can optionally display a notice or download link
+                              }
+                            }
+                          } catch (err) {
+                            toast.error("Could not preview ZIP file");
                           }
                         }}
                         color="black"
