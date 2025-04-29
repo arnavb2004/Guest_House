@@ -17,6 +17,33 @@ const port = process.env.PORT || 4751;
 dotenv.config();
 const app = express();
 
+const allowedOrigins = ["https://guest-house-psi.vercel.app", "http://localhost:3000"]
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    methods: "GET,POST,PUT,DELETE,PATCH",
+    credentials: true, // Allow cookies and authentication headers
+  })
+);
+app.use((req, res, next) => {
+  if (allowedOrigins.includes(req.headers.origin)) {
+    res.header("Access-Control-Allow-Origin", req.headers.origin);
+  }  
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE,PATCH");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.header("Access-Control-Allow-Credentials", "true");
+  next();
+});
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 if (process.env.NODE_ENV === "production") {
   console.log = () => {};
 }
@@ -38,15 +65,15 @@ mongoose
 
 
 // Add this after your app is initialized
-app.use((req, res, next) => {
-  res.header('Cross-Origin-Opener-Policy', 'same-origin-allow-popups');
-  next();
-});
+// app.use((req, res, next) => {
+//   res.header('Cross-Origin-Opener-Policy', 'same-origin-allow-popups');
+//   next();
+// });
 
-app.use(cors());
-app.use(express.json()); //for parsing application/json
-// app.use(upload.array('files',10));
-app.use(express.urlencoded({ extended: true }));
+// app.use(cors());
+// app.use(express.json()); //for parsing application/json
+// // app.use(upload.array('files',10));
+// app.use(express.urlencoded({ extended: true }));
 
 app.get("/", (req, res) => {
   console.log(req.files);
