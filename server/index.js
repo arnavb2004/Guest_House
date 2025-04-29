@@ -20,24 +20,23 @@ const app = express();
 if (process.env.NODE_ENV === "production") {
   console.log = () => {};
 }
-// var storage,upload;
-const connection = mongoose
+
+mongoose
   .connect(process.env.MONGO_URL)
   .then(() => {
     console.log("Connected to database");
-    // storage= new GridFsStorage({db:mongoose.connection.db})
-    // upload=multer({storage});)
+
+    const storage = new GridFsStorage({ url: process.env.MONGO_URL });
+    storage.on("connection", () => {});
+    const upload = multer({ storage });
+
     app.listen(port, () => {
-      console.log(`Server is runnning at port ${port}`);
+      console.log(`Server is running at port ${port}`);
     });
   })
-  .catch((err) => console.log(err));
+  .catch((err) => console.log("MongoDB Connection Error:", err));
 
-await connection;
-// var upload
-const storage = new GridFsStorage({ url: process.env.MONGO_URL });
-storage.on("connection", () => {});
-const upload = multer({ storage });
+
 // Add this after your app is initialized
 app.use((req, res, next) => {
   res.header('Cross-Origin-Opener-Policy', 'same-origin-allow-popups');
