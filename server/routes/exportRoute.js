@@ -395,7 +395,8 @@ async function addSheetToSpreadsheet(sheetTitle, headers, data, options = {}) {
     
     console.log('Authorizing Google client...');
     try {
-      await auth.authorize();
+      const authClient = await auth.getClient();
+
       console.log('Successfully authorized Google client');
     } catch (error) {
       console.error('Google auth error:', error);
