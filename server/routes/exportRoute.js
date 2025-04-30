@@ -61,10 +61,31 @@ if (!serviceAccountJson) {
 
 const credentials = JSON.parse(serviceAccountJson)
 const googleSheets = google.sheets("v4");
-const getAuthClient = new google.auth.GoogleAuth({
-    credentials,
-    scopes: ["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"]
-  });
+const getAuthClient = () => {
+  try {
+    console.log("Creating Google Auth client with:");
+    console.log("- client_email:", credentials.client_email ? `Present (length: ${credentials.client_email.length})` : "Missing");
+    console.log("- private_key:", credentials.private_key ? `Present (length: ${credentials.private_key.length})` : "Missing");
+    console.log("- project_id:", credentials.project_id || "Missing");
+
+    if (!credentials.client_email || !credentials.private_key) {
+      throw new Error("Missing required Google Sheets credentials");
+    }
+
+    const auth = new google.auth.GoogleAuth({
+      credentials,
+      scopes: [
+        "https://www.googleapis.com/auth/spreadsheets",
+        "https://www.googleapis.com/auth/drive"
+      ]
+    });
+
+    return auth;
+  } catch (error) {
+    console.error("Error creating Google Auth client:", error);
+    throw error;
+  }
+};
 
 router.get('/all', checkAuth, async (req, res) => {
   try {
