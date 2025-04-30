@@ -17,7 +17,7 @@ const processEnvVar = (envVar) => {
 };
 
 const client_email = processEnvVar(process.env.client_email);
-const private_key = process.env.GOOGLE_SERVICE_ACCOUNT.private_key;
+const private_key = process.env.private_key;
 const spreadsheetId = processEnvVar(process.env.GOOGLE_SHEET_ID);
 
 // Log the credentials (without showing the full private key)
@@ -27,32 +27,44 @@ console.log('- private_key:', private_key ? `${private_key.substring(0, 15)}... 
 console.log('- spreadsheetId:', spreadsheetId || 'Missing');
 
 // Create JWT auth client
-const getAuthClient = () => {
-  try {
-    console.log('Creating Google Auth client with:');
-    console.log('- client_email:', client_email ? 'Present (length: ' + client_email.length + ')' : 'Missing');
-    console.log('- private_key:', private_key ? 'Present (length: ' + private_key.length + ')' : 'Missing');
-    console.log('- spreadsheetId:', spreadsheetId || 'Missing');
+// const getAuthClient = () => {
+//   try {
+//     console.log('Creating Google Auth client with:');
+//     console.log('- client_email:', client_email ? 'Present (length: ' + client_email.length + ')' : 'Missing');
+//     console.log('- private_key:', private_key ? 'Present (length: ' + private_key.length + ')' : 'Missing');
+//     console.log('- spreadsheetId:', spreadsheetId || 'Missing');
     
-    if (!client_email || !private_key || !spreadsheetId) {
-      throw new Error('Missing required Google Sheets credentials');
-    }
+//     if (!client_email || !private_key || !spreadsheetId) {
+//       throw new Error('Missing required Google Sheets credentials');
+//     }
     
-    return new google.auth.JWT(
-      client_email,
-      null,
-      private_key,
-      [
-        'https://www.googleapis.com/auth/spreadsheets',
-        'https://www.googleapis.com/auth/drive'
-      ]
-    );
-  } catch (error) {
-    console.error('Error creating Google Auth client:', error);
-    throw error;
-  }
-};
+//     return new google.auth.JWT(
+//       client_email,
+//       null,
+//       private_key,
+//       [
+//         'https://www.googleapis.com/auth/spreadsheets',
+//         'https://www.googleapis.com/auth/drive'
+//       ]
+//     );
+//   } catch (error) {
+//     console.error('Error creating Google Auth client:', error);
+//     throw error;
+//   }
+// };
 
+const serviceAccountJson = process.env.GOOGLE_SERVICE_ACCOUNT;
+
+if (!serviceAccountJson) {
+    throw new Error("Missing GOOGLE_SERVICE_ACCOUNT environment variable.");
+}
+
+const credentials = JSON.parse(serviceAccountJson)
+const googleSheets = google.sheets("v4");
+const getAuthClient = new google.auth.GoogleAuth({
+    credentials,
+    scopes: ["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"]
+  });
 
 router.get('/all', checkAuth, async (req, res) => {
   try {
