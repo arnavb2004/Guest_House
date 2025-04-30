@@ -17,7 +17,7 @@ const processEnvVar = (envVar) => {
 };
 
 const client_email = processEnvVar(process.env.client_email);
-const private_key = processEnvVar(process.env.private_key);
+const private_key = process.env.GOOGLE_SERVICE_ACCOUNT.private_key;
 const spreadsheetId = processEnvVar(process.env.GOOGLE_SHEET_ID);
 
 // Log the credentials (without showing the full private key)
