@@ -127,7 +127,7 @@ export default function RecordPage() {
 
   return (
     <>
-    {userRecord && userRecord.role=="User" && (
+    {userRecord  && (
 
 <div className="flex justify-center py-5">
 
