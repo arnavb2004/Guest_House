@@ -61,21 +61,21 @@ export default function RecordPage() {
     return date.toISOString().split("T")[1].slice(0, 5); // Extract HH:MM
   };
 
-  useEffect(() => {
-    const now = new Date();
-  const formattedDate = formatDate(now); // YYYY-MM-DD
-  const formattedTime = formatTime(now); // HH:MM
-  setArrivalDateInput(formattedDate);
-  setArrivalTimeInput(formattedTime); 
-  }, [showModal]);
+  // useEffect(() => {
+  //   const now = new Date();
+  // const formattedDate = formatDate(now); // YYYY-MM-DD
+  // const formattedTime = formatTime(now); // HH:MM
+  // setArrivalDateInput(formattedDate);
+  // setArrivalTimeInput(formattedTime); 
+  // }, [showModal]);
   
-  useEffect(() => {
-    const now = new Date();
-  const formattedDate = formatDate(now); // YYYY-MM-DD
-  const formattedTime = formatTime(now); // HH:MM
-  setDepartureDateInput(formattedDate);
-  setDepartureTimeInput(formattedTime); 
-  }, [showModal2]);
+  // useEffect(() => {
+  //   const now = new Date();
+  // const formattedDate = formatDate(now); // YYYY-MM-DD
+  // const formattedTime = formatTime(now); // HH:MM
+  // setDepartureDateInput(formattedDate);
+  // setDepartureTimeInput(formattedTime); 
+  // }, [showModal2]);
   const roomPricesB = { 'Single Occupancy': 600, 'Double Occupancy': 850 }
   const roomPricesC = { 'Single Occupancy': 900, 'Double Occupancy': 1250 }
   const roomPricesD = { 'Single Occupancy': 1300, 'Double Occupancy': 1800 }
@@ -85,7 +85,7 @@ export default function RecordPage() {
   useEffect(() => {
     const fetchRecord = async () => {
       try {
-        const response = await http.get(`/reservation/${id}`);
+        const response = await http.get(`/reservation/details/${id}`);
         console.log("I am response:");
         console.log(response.data.reservation);
         setStatus("Success");
