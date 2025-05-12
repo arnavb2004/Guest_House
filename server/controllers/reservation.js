@@ -1027,8 +1027,10 @@ export const sendReminder = async (req, res) => {
 
   if(reservation.payment.source==="DEPARTMENT"){
     const deptName = reservation.payment.sourceName;
-    const departmentMap = process.env.departmentMap;
+    const departmentMap = JSON.parse(process.env.departmentMap);
+    console.log(departmentMap);
     const email = departmentMap[deptName.toLowerCase()];
+    console.log("Department Email: ", email);
     if (email) {
       sendVerificationEmail(
         [email], 
@@ -1103,7 +1105,7 @@ export const sendReminderAll = async (req, res) => {
       "computer engineering": "computer science",
     };
     
-    const departmentEmailMap = process.env.departmentMap;
+    const departmentEmailMap = JSON.parse(process.env.departmentMap);
     
     // Normalize the input
     const rawDeptName = reservation.payment.sourceName.toLowerCase().trim();
