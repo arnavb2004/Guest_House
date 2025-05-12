@@ -1027,10 +1027,7 @@ export const sendReminder = async (req, res) => {
 
   if(reservation.payment.source==="DEPARTMENT"){
     const deptName = reservation.payment.sourceName;
-    const departmentMap = {
-      "electrical": "arnavbansal17559.6@gmail.com",
-      "computer science": "arnav.020704@gmail.com",
-    };
+    const departmentMap = process.env.departmentMap;
     const email = departmentMap[deptName.toLowerCase()];
     if (email) {
       sendVerificationEmail(
@@ -1106,10 +1103,7 @@ export const sendReminderAll = async (req, res) => {
       "computer engineering": "computer science",
     };
     
-    const departmentEmailMap = {
-      "electrical": "arnavbansal17559.6@gmail.com",
-      "computer science": "arnav.020704@gmail.com",
-    };
+    const departmentEmailMap = process.env.departmentMap;
     
     // Normalize the input
     const rawDeptName = reservation.payment.sourceName.toLowerCase().trim();
