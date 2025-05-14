@@ -137,7 +137,7 @@ const Workflow = ({ id, userRecord, reviewers, setReviewers }) => {
             <div className="justify-center flex w-full">
               <button
                 className="p-3 px-4  mt-8 bg-[rgb(54,88,153)] rounded-lg text-white"
-                onClick={() => {
+                onClick={async() => {
                   if (paymentId.id !== paymentId.confirmId) {
                     toast.error("Payment ID does not match Confirm Payment ID");
                     return;
@@ -146,13 +146,7 @@ const Workflow = ({ id, userRecord, reviewers, setReviewers }) => {
                   userRecord.payment.status = "PAID";
                   console.log(userRecord);
                   try {
-                    http.put("/reservation/" + id, userRecord)
-                      .then(response => {                   
-    console.log("Updated:", response.data);
-                      })
-                      .catch(error => {
-                        console.error("Update failed:", error);
-                      });                    
+                    const response = await http.put("/reservation/" + id, userRecord);          
                       toast.success("Payment Confirmed");
                     window.location.reload();
                   } catch (error) {
