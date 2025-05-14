@@ -1766,7 +1766,7 @@ export const checkoutReservation = async (req, res) => {
     console.log("days", days);
     const room_cost = calculateRoomCost(category, roomType, numberOfRooms, days);
     reservation.payment.amount = room_cost; // Update the payment amount
-    await appendReservationToSheetAfterCheckout(reservation);
+    // await appendReservationToSheetAfterCheckout(reservation);
     await reservation.save();
     console.log("check res:", reservation);
     res.status(200).json({ message: "Checkout successful" });
