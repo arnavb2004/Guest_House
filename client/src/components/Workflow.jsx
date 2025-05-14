@@ -146,8 +146,14 @@ const Workflow = ({ id, userRecord, reviewers, setReviewers }) => {
                   userRecord.payment.status = "PAID";
                   console.log(userRecord);
                   try {
-                    http.put("/reservation/" + id, userRecord);
-                    toast.success("Payment Confirmed");
+                    http.put("/reservation/" + id, userRecord)
+                      .then(response => {                   
+    console.log("Updated:", response.data);
+                      })
+                      .catch(error => {
+                        console.error("Update failed:", error);
+                      });                    
+                      toast.success("Payment Confirmed");
                     window.location.reload();
                   } catch (error) {
                     if (error.response?.data?.message)
