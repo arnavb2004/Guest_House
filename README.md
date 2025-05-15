@@ -4,7 +4,6 @@ Welcome to the Guest House Management Portal! This web application allows you to
 
 ## Features
 * **Room Booking:** Easily book rooms by filling in the reservation form
-* **Meal Booking:** Select meal options for your stay
 * **User Authentication:** Secure login system to manage your bookings and preferences
 * **Admin Dashboard:** Administrators can manage rooms, meals, and bookings efficiently
 * **Different roles:** Different roles for authorities with different set of permissions to review the requests received
@@ -20,7 +19,7 @@ Welcome to the Guest House Management Portal! This web application allows you to
   
 ## Technologies Used
 * **Frontend:** HTML, CSS, TailwindCSS, ReactJS, MUI
-* **Backend:** NodeJs, ExpressJS
+* **Backend:** NodeJs (version = v20.15.0), ExpressJS
 * **Database:** MongoDB
 
 ## Software usage info
@@ -31,10 +30,11 @@ Welcome to the Guest House Management Portal! This web application allows you to
 ## Installation
 To run the project locally, follow these steps:
 
-1. Clone this repository: `git clone https://github.com/Hardik329/DEP24-P04-GuestHouse`
-2. Navigate to the project directory: `cd DEP24-P04-GuestHouse`
+1. Clone this repository: `git clone https://github.com/arnavb2004/DEP25-G24-GuestHouse-Portal`
+2. Navigate to the project directory: `cd DEP25-G24-GuestHouse-Portal`
 3. Install dependencies: `npm install`
-4. Run client and server: `npm start`
+4. Run client : `npm start`
+5. Run server : `node index.js`
 
 The web application will automatically start on your web browser
 
